@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/starburst"     >
+    <ProgressBar 
+          android:id="@+id/spinner"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:layout_marginTop="100dp"
+	     android:tint="#a0ffcb00"
+	     android:endColor="#a0ffcb00"
+	     android:startColor="#a0ffcb00"
+	     
+android:indeterminateDrawable="@drawable/custom_progress"
+	      
+        />
+
+	<ImageView 
+	    android:id="@+id/imgSmash"
+	    android:src="@drawable/logo_2"
+	    android:contentDescription="@string/logo"
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:layout_centerInParent="true"
+	    />
+	<ImageView 
+	    android:src="@drawable/riotapps_1"
+	    android:contentDescription="@string/logo"
+	     android:layout_width="100dp"
+	     android:layout_height="wrap_content"
+	     android:scaleType="centerInside"
+	     android:layout_alignParentBottom="true"
+	     android:baselineAlignBottom="true"
+	     android:layout_centerHorizontal="true"
+	     android:layout_marginBottom="0dp"
+	     android:paddingBottom="0dp"
+	    
+	     
+	    />
+
+</RelativeLayout>
