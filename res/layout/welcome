@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@drawable/starburst" 
+    android:background="@drawable/bg" 
       android:paddingLeft="25dp"
     android:paddingRight="25dp" >
 	<ImageView 
-	    android:src="@drawable/logo_2"
+	    android:src="@drawable/wordsmash_logo1"
 	    android:contentDescription="@string/logo"
 	     android:layout_width="wrap_content"
         android:layout_height="wrap_content"

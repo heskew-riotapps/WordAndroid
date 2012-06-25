@@ -1,6 +1,7 @@
 package com.riotapps.word;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 public class WordAndroidActivity extends Activity {
@@ -9,5 +10,7 @@ public class WordAndroidActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        startActivity(new Intent(this, Splash.class));
     }
 }

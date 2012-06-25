@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/starburst"     >
+    android:background="@drawable/bg" 
+    >
     <ProgressBar 
           android:id="@+id/spinner"
         android:layout_centerHorizontal="true"
@@ -12,21 +13,19 @@
 	     android:tint="#a0ffcb00"
 	     android:endColor="#a0ffcb00"
 	     android:startColor="#a0ffcb00"
-	     
-android:indeterminateDrawable="@drawable/custom_progress"
-	      
+		android:indeterminateDrawable="@drawable/custom_progress"    
         />
 
 	<ImageView 
 	    android:id="@+id/imgSmash"
-	    android:src="@drawable/logo_2"
+	    android:src="@drawable/wordsmash_logo1"
 	    android:contentDescription="@string/logo"
 	     android:layout_width="wrap_content"
 	     android:layout_height="wrap_content"
 	     android:layout_centerInParent="true"
 	    />
 	<ImageView 
-	    android:src="@drawable/riotapps_1"
+	    android:src="@drawable/riotapps_logo1"
 	    android:contentDescription="@string/logo"
 	     android:layout_width="100dp"
 	     android:layout_height="wrap_content"

@@ -57,6 +57,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	     String urlString = urlArray[0];   
 	     ServerResponse serverResponseObject = null;   
 
+	     /*
 	     switch(requestType){  
 
 	         case Constants.GET_REQUEST:  
@@ -67,7 +68,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	             serverResponseObject = new MyHttpClient().createPostRequest(urlString, nameValuePairs);  
 	             break;  
 	     }//end of switch  
-
+*/
 	     return serverResponseObject;  
 
 	 }//end method doInBackground()
@@ -80,7 +81,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	 protected void onPostExecute(ServerResponse serverResponseObject){
 		 dialogAccessingSpurstone.dismiss();
 
-		 new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject);				
+		// new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject);				
 	 }//end method onPostExecute
 
 }//end class RequestSentToServerAsyncTask

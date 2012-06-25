@@ -3,22 +3,21 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@drawable/starburst"
+    android:background="@drawable/bg"
     android:paddingLeft="25dp"
     android:paddingRight="25dp" 
     >
-   <ImageView 
+     <ImageView 
        android:id="@+id/logo"
-	    android:src="@drawable/logo_2"
+	    android:src="@drawable/wordsmash_logo1"
 	    android:contentDescription="@string/logo"
 	     android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="20dp"
-        
 	    />
- <TextView
-    	android:id="@+id/email_label"
-    	android:layout_width="wrap_content"
+      <TextView
+     	android:id="@+id/email_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/email" 
         android:paddingLeft="4.0dip"
@@ -26,24 +25,21 @@
  	<TextView
      	android:id="@+id/email_guarantee"
         android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/never_share_email" 
-       android:paddingLeft="4.0dip"
-       android:layout_toRightOf="@id/email_label"
+        android:paddingLeft="4.0dip"
+        android:layout_toRightOf="@id/email_label"
         android:layout_below="@id/logo" />
-   
-	<EditText 
+ 		<EditText 
 	    android:id="@+id/email"
 	    android:layout_width="300dp"
         android:layout_height="40dp"
         android:hint="@string/enter_email"
         android:inputType="textEmailAddress"
   	    android:layout_centerHorizontal="true"
- 	    android:layout_below="@id/email_label"
+  	    android:layout_below="@id/email_label"
   	   android:typeface="normal"
 	  />
-
-	
 	 <TextView
      	android:id="@+id/nickname_label"
      	android:text="@string/nickname"   
@@ -52,7 +48,6 @@
         android:layout_below="@id/email" 
         android:paddingLeft="4.0dip"
      />
-    
 	<EditText 
 	    android:id="@+id/nickname"
 	    android:layout_width="300dp"
@@ -61,7 +56,7 @@
   	    android:layout_centerHorizontal="true"
   	    android:layout_below="@id/nickname_label" 
 	    />
-	 <TextView
+	<TextView
 	    android:id="@+id/password_label" 
 	    android:text="@string/password"     	
         android:layout_width="fill_parent"
