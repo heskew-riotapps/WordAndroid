@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, WordAndroidActivity!</string>
-    <string name="app_name">WordAndroid</string>
-
+    <string name="hello">Hello World, WordActivity!</string>
+    <string name="app_name">Word</string>
+    <string name="facebook_app_id">314938401925933</string>
+    <string name="join_via_facebook">by Facebook</string>
+	<string name="join_via_native">by Email</string>
+	<string name="join_title">Join WordSmash to get started</string>
+	<string name="logo">logo</string>
+	<string name="enter_email">enter email</string>
+	<string name="enter_password">enter password</string>
+	<string name="enter_nickname">enter nickname (optional)</string>
+	<string name="email">email address</string>
+	<string name="nickname">nickname</string>
+	<string name="password">password</string>
+	<string name="save">Save</string>
+	<string name="try_again">Try Again</string>
+	<string name="cancel">Cancel</string>
+	<string name="never_share_email">(will never be shared!)</string>
+	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
+	
 </resources>
