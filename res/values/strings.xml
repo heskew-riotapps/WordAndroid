@@ -2,7 +2,7 @@
 <resources>
 
     <string name="hello">Hello World, WordActivity!</string>
-    <string name="app_name">Word</string>
+    <string name="app_name">WordSmash</string>
     <string name="join_via_facebook">by Facebook</string>
 	<string name="join_via_native">by Email</string>
 	<string name="join_title">Join WordSmash to get started</string>

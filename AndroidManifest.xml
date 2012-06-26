@@ -12,6 +12,7 @@
         android:name="android.permission.ACCESS_NETWORK_STATE" /> 
 
     <application
+        android:name="com.riotapps.word.utils.ApplicationContext"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" 
         android:debuggable="true" 

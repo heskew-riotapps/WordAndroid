@@ -39,7 +39,7 @@ public class JoinNative extends Activity {
 					// TODO Auto-generated method stub
 					PlayerService playerSvc = new PlayerService();
 					
-					playerSvc.SavePlayer(id)
+				//	playerSvc.SavePlayer(id)
 					
 				}
 			});
