@@ -2,8 +2,9 @@ package com.riotapps.word.hooks;
 
 public class Player {
 	private String id;
-	private String name;
+	private String nickname;
 	private String email;
+	private String password;
 
 	public void setId(String id) {
 		this.id = id;
@@ -11,11 +12,11 @@ public class Player {
 	public String getId() {
 		return this.id;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
-	public String getName() {
-		return this.name;
+	public String getNickname() {
+		return this.nickname;
 	}
 	public void setEmail(String email) {
 		this.email = email;
@@ -23,5 +24,5 @@ public class Player {
 	public String getEmail() {
 		return this.email;
 	}
-
+	
 }

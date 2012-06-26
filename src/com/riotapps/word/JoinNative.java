@@ -1,5 +1,7 @@
 package com.riotapps.word;
 
+import com.riotapps.word.hooks.PlayerService;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,7 +37,9 @@ public class JoinNative extends Activity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					PlayerService playerSvc = new PlayerService();
 					
+					playerSvc.SavePlayer(id)
 					
 				}
 			});

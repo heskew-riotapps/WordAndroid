@@ -61,6 +61,7 @@ public final class R {
         public static final int password=0x7f05000b;
         public static final int save=0x7f05000c;
         public static final int try_again=0x7f05000d;
+        public static final int validation_email_required=0x7f050011;
     }
     public static final class style {
         public static final int MainStyle=0x7f040000;
