@@ -57,18 +57,18 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	     String urlString = urlArray[0];   
 	     ServerResponse serverResponseObject = null;   
 
-	     /*
+	   
 	     switch(requestType){  
 
 	         case Constants.GET_REQUEST:  
-	             serverResponseObject = new MyHttpClient().createGetRequest(urlString);  
+	             serverResponseObject = new WebClient().createGetRequest(urlString);  
 	             break;  
 
 	         case Constants.POST_REQUEST:  
-	             serverResponseObject = new MyHttpClient().createPostRequest(urlString, nameValuePairs);  
+	             serverResponseObject = new WebClient().createPostRequest(urlString, nameValuePairs);  
 	             break;  
 	     }//end of switch  
-*/
+ 
 	     return serverResponseObject;  
 
 	 }//end method doInBackground()

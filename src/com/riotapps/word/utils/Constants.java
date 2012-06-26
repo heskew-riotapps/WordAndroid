@@ -7,6 +7,9 @@ public class Constants {
 	 *=============================================*/
 	public static final int GET_REQUEST = 1;
 	public static final int POST_REQUEST = 2;
+	public static final int PUT_REQUEST = 3;
+	public static final int DELETE_REQUEST = 4;
+
 
 	/**=============================================
 	 * responseHandleBy
@@ -19,7 +22,7 @@ public class Constants {
 	 * creatingXMLParser for class
 	 *==============================================*/
 	public static final int XML_PARSER_FOR_USERS = 200;
-	static final int XML_PARSER_FOR_ERRORS = 201;
+	public static final int XML_PARSER_FOR_ERRORS = 201;
 
 	/**=============================================
 	 * mode of page
@@ -29,8 +32,17 @@ public class Constants {
 	public static final int PAGE_EDIT = 301;	
 
 	/**=============================================
-	 * others
+	 * the web
 	 *==============================================*/
-	public static final String POSITION_OF_USER_IN_LIST = "POSITION_OF_USER";
+	public static final String REST_URL_SITE = "http://";
+	public static final String FACEBOOK_API_ID = "314938401925933";
+	public static final String REST_CREATE_PLAYER = "players/create";
+	
+	/**=============================================
+	 * rails
+	 *==============================================*/
+	public static final String REST_METHOD = "_method";
+	public static final String PUT_VERB = "PUT";
+	public static final String DELETE_VERB = "DELETE";
 }//end class Constants
  
