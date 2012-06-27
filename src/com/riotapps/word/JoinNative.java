@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,6 +59,8 @@ public class JoinNative extends Activity {
 				 	
 				 	
 				 	final Dialog dialog = new Dialog(context, R.style.DialogStyle);
+				 //dialog.getWindow().(Window.));
+				 
 					//dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 					dialog.setContentView(R.layout.dialog);
 			 
@@ -80,14 +83,6 @@ public class JoinNative extends Activity {
 						}
 					});
 					
-					Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-					//if button is clicked, close the custom dialog
-					dialogButton.setOnClickListener(new View.OnClickListener() {
-				 		@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
 		 
 					dialog.show();
 				 	

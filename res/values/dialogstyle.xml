@@ -5,7 +5,11 @@
     parent="android:Theme.Dialog">
     <item name="android:windowBackground">@null</item>
     <item name="android:windowNoTitle">true</item>
-    <item name="android:maxWidth">300dp</item>
+   
     <item name="android:textSize">16dp</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:background">@drawable/dialog_background</item>
+   
+        
 </style>
 </resources>

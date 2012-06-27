@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
-    android:background="#00a8ff" 
- 
+    android:layout_height="wrap_content"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp" 
+    android:background="@null"
 	>
- 
-	
+  
     <TextView
         android:id="@+id/dialog_title"
         android:layout_width="fill_parent"
-        android:layout_height="30dp"
-        android:textColor="#000"
-       
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:layout_centerHorizontal="true"
         android:background="#ff6600"
-        android:padding="4dp"
+        android:padding="6dp"
 
     />
     <ImageView
@@ -35,19 +37,7 @@
         android:textColor="#FFF" 
         android:layout_below="@id/dialog_title"
         android:padding="10dp"
-        />
- 
-     <Button
-        android:id="@+id/dialogButtonOK"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/ok"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_below="@id/dialog_text"
-        android:layout_centerInParent="true"
-        android:paddingLeft="10dp"
-		android:paddingRight="10dp"
+        android:background="@null"
         />
  
 </RelativeLayout>
