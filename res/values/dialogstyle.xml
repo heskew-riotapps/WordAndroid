@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="DialogStyle"
+    parent="android:Theme.Dialog">
+    <item name="android:windowBackground">@null</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:maxWidth">300dp</item>
+    <item name="android:textSize">16dp</item>
+</style>
+</resources>

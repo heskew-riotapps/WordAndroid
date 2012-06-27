@@ -28,16 +28,16 @@ public class PlayerService {
 	}
 	
 	
-	public Player PutPlayer(String email, String nickname, String password) throws DesignByContractException{
+	public Player PutPlayer(String email){//, String nickname, String password) throws DesignByContractException{
 		//retrieve player from server
 		//convert using gson
 		//return player to caller
-		Player player = new Player();
+		//Player player = new Player();
 		
-		player.setEmail(email);
+		//player.setEmail(email);
 	//	player.se
 		
-		Check.Require(player.getEmail().length() > 0, ApplicationContext.getAppContext().getString(R.string.validation_email_required));
+	//	Check.Require(player.getEmail().length() > 0, ApplicationContext.getAppContext().getString(R.string.validation_email_required));
 	 
 		
 		

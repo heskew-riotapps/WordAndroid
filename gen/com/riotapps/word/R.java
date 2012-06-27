@@ -12,36 +12,43 @@ public final class R {
     }
     public static final class drawable {
         public static final int bg=0x7f020000;
-        public static final int custom_progress=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int riotapps_logo1=0x7f020003;
-        public static final int spinner_white_48=0x7f020004;
-        public static final int wordsmash_logo1=0x7f020005;
+        public static final int close=0x7f020001;
+        public static final int close_button=0x7f020002;
+        public static final int custom_progress=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int riotapps_logo1=0x7f020005;
+        public static final int spinner_white_48=0x7f020006;
+        public static final int wordsmash_logo1=0x7f020007;
     }
     public static final class id {
-        public static final int bCancel=0x7f060009;
-        public static final int bSave=0x7f060008;
-        public static final int bTryAgain=0x7f06000b;
-        public static final int btnFacebook=0x7f06000e;
-        public static final int btnNative=0x7f06000f;
-        public static final int email=0x7f060003;
-        public static final int email_guarantee=0x7f060002;
-        public static final int email_label=0x7f060001;
-        public static final int imgSmash=0x7f06000d;
-        public static final int logo=0x7f060000;
-        public static final int msg=0x7f06000a;
-        public static final int nickname=0x7f060005;
-        public static final int nickname_label=0x7f060004;
-        public static final int password=0x7f060007;
-        public static final int password_label=0x7f060006;
-        public static final int spinner=0x7f06000c;
+        public static final int bCancel=0x7f06000d;
+        public static final int bSave=0x7f06000c;
+        public static final int bTryAgain=0x7f06000f;
+        public static final int btnFacebook=0x7f060012;
+        public static final int btnNative=0x7f060013;
+        public static final int dialogButtonOK=0x7f060003;
+        public static final int dialog_text=0x7f060002;
+        public static final int dialog_title=0x7f060000;
+        public static final int email_guarantee=0x7f060006;
+        public static final int email_label=0x7f060005;
+        public static final int imgSmash=0x7f060011;
+        public static final int img_close=0x7f060001;
+        public static final int logo=0x7f060004;
+        public static final int msg=0x7f06000e;
+        public static final int nickname_label=0x7f060008;
+        public static final int password_label=0x7f06000a;
+        public static final int spinner=0x7f060010;
+        public static final int tEmail=0x7f060007;
+        public static final int tNickname=0x7f060009;
+        public static final int tPassword=0x7f06000b;
     }
     public static final class layout {
-        public static final int joinnative=0x7f030000;
-        public static final int main=0x7f030001;
-        public static final int notconnected=0x7f030002;
-        public static final int splash=0x7f030003;
-        public static final int welcome=0x7f030004;
+        public static final int dialog=0x7f030000;
+        public static final int joinnative=0x7f030001;
+        public static final int main=0x7f030002;
+        public static final int notconnected=0x7f030003;
+        public static final int splash=0x7f030004;
+        public static final int welcome=0x7f030005;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
@@ -58,12 +65,15 @@ public final class R {
         public static final int msg_not_connected=0x7f050010;
         public static final int never_share_email=0x7f05000f;
         public static final int nickname=0x7f05000a;
+        public static final int ok=0x7f050012;
         public static final int password=0x7f05000b;
         public static final int save=0x7f05000c;
         public static final int try_again=0x7f05000d;
         public static final int validation_email_required=0x7f050011;
     }
     public static final class style {
-        public static final int MainStyle=0x7f040000;
+        public static final int DialogStyle=0x7f040000;
+        public static final int DialogTitleStyle=0x7f040001;
+        public static final int MainStyle=0x7f040002;
     }
 }

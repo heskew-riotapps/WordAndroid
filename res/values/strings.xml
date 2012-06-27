@@ -19,4 +19,5 @@
 	<string name="never_share_email">(will never be shared!)</string>
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="validation_email_required">Please enter your email to register.</string>
+	<string name="ok">OK</string>
 </resources>
