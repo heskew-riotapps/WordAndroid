@@ -7,7 +7,7 @@ public class Validations{
 	/**===================================================
 	 * method validateEmail
 	 *====================================================*/
-	boolean validateEmail(String email){
+	public static boolean ValidateEmail(String email){
 
 		boolean isValid = false; 
 
@@ -23,7 +23,7 @@ public class Validations{
 	/**===================================================
 	 * method validateString
 	 *====================================================*/
-	boolean validateString(String string){
+	public static boolean ValidateString(String string){
 		boolean isValid;
 		if(string == null || string.equalsIgnoreCase("")){
 			isValid = false; 
@@ -37,11 +37,11 @@ public class Validations{
 	/**===================================================
 	 * method validateUserAddOrEditForm
 	 *====================================================*/
-	public boolean validateUserAddOrEditForm(String userName, String email){
+	public static boolean ValidateUserAddOrEditForm(String userName, String email){
 
 		boolean isUserAddOrEditFormValid = false; 
 
-		if(validateString(userName) && validateEmail(email)){
+		if(ValidateString(userName) && ValidateEmail(email)){
 			isUserAddOrEditFormValid = true;
 		}
 		return isUserAddOrEditFormValid;

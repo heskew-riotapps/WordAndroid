@@ -29,8 +29,9 @@
         android:text="@string/never_share_email" 
         android:paddingLeft="4.0dip"
         android:layout_toRightOf="@id/email_label"
-        android:layout_below="@id/logo" />
- 		<EditText 
+        android:layout_below="@id/logo" 
+       />
+ 	<EditText 
 	    android:id="@+id/tEmail"
 	    android:layout_width="300dp"
         android:layout_height="40dp"
@@ -83,17 +84,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tPassword">
   	<Button 
+  	    style="@style/ButtonStyle"
   	    android:id="@+id/bSave"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
-        android:layout_height="wrap_content"
         android:text="@string/save"
     />
     <Button 
+        style="@style/ButtonStyle"
         android:id="@+id/bCancel"
         android:layout_width="0dp"
         android:layout_weight="1.0"
-        android:layout_height="wrap_content"
         android:text="@string/cancel"
     />
     </LinearLayout>

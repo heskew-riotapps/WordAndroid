@@ -5,6 +5,7 @@ import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.PreconditionException;
 import com.riotapps.word.utils.Check;
+import com.riotapps.word.utils.Validations;
  
 
 public class PlayerService {
@@ -28,7 +29,7 @@ public class PlayerService {
 	}
 	
 	
-	public Player PutPlayer(String email){//, String nickname, String password) throws DesignByContractException{
+	public Player PutPlayer(String email, String nickname, String password) throws DesignByContractException{
 		//retrieve player from server
 		//convert using gson
 		//return player to caller
@@ -37,7 +38,8 @@ public class PlayerService {
 		//player.setEmail(email);
 	//	player.se
 		
-	//	Check.Require(player.getEmail().length() > 0, ApplicationContext.getAppContext().getString(R.string.validation_email_required));
+		Check.Require(email.length() > 0, ApplicationContext.getAppContext().getString(R.string.validation_email_required));
+		Check.Require(Validations.ValidateEmail(email) == true, ApplicationContext.getAppContext().getString(R.string.validation_email_invalid));
 	 
 		
 		

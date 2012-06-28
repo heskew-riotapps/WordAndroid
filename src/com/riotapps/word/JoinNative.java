@@ -2,6 +2,7 @@ package com.riotapps.word;
 
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.ApplicationContext;
+import com.riotapps.word.utils.DesignByContractException;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -49,51 +50,26 @@ public class JoinNative extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					PlayerService playerSvc = new PlayerService();
 					
-					tEmail = (EditText) findViewById(R.id.tEmail);
+					EditText tEmail = (EditText) findViewById(R.id.tEmail);
+					EditText tNickname = (EditText) findViewById(R.id.tNickname);
+					EditText tPassword = (EditText) findViewById(R.id.tPassword);
 					
-				 	playerSvc.PutPlayer(tEmail.getText().toString());
-				 	
-				 	
-				 	
-				 	final Dialog dialog = new Dialog(context, R.style.DialogStyle);
-				 //dialog.getWindow().(Window.));
+					try{
+						playerSvc.PutPlayer(tEmail.getText().toString(), 
+								tNickname.getText().toString(), 
+								tPassword.getText().toString());
+					} 
+					catch (DesignByContractException dbEx) {
+					 	DialogManager.SetupOKDialog(context, getString(R.string.oops), dbEx.getMessage());					}
+					catch (Exception ex) {
+						//log this, figure out logging
+					 	DialogManager.SetupOKDialog(context, getString(R.string.error_title), getString(R.string.error_message));						
+					}
 				 
-					//dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-					dialog.setContentView(R.layout.dialog);
-			 
-		 
-					// set the custom dialog components - text, image and button
-					TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
-					text.setText("Android custom dialog example!");
-
-					TextView title = (TextView) dialog.findViewById(R.id.dialog_title);
-					title.setText("title");
-				//	ImageView image = (ImageView) dialog.findViewById(R.id.image);
-				//	image.setImageResource(R.drawable.ic_launcher);
-		 
-					ImageView close = (ImageView) dialog.findViewById(R.id.img_close);
-					//if button is clicked, close the custom dialog
-					close.setOnClickListener(new View.OnClickListener() {
-				 		@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					
-		 
-					dialog.show();
-				 	
-					
 				}
 			});
 	    }
 
-	//	@Override
-	//	protected Dialog onCreateDialog(int id) {
-	//		// TODO Auto-generated method stub
-	//		return super.onCreateDialog(id);
-	//	}
 	}

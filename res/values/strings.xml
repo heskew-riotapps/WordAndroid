@@ -18,6 +18,10 @@
 	<string name="cancel">Cancel</string>
 	<string name="never_share_email">(will never be shared!)</string>
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
-	<string name="validation_email_required">Please enter your email to register.</string>
+	<string name="validation_email_required">Please enter your email to register to play.  Never fear, it will not be shared.</string>
+	<string name="validation_email_invalid">Please enter a valid email to register to play.  We\'ll never share it, we just may send game-related emails out every now and then.  Did we mention we\'ll never share it?</string>
 	<string name="ok">OK</string>
+	<string name="oops">Oops</string>
+	<string name="error_title">Holy Gandalf!!</string>
+	<string name="error_message">Unfortunately, something messy happened back in the bowels of the code. Not to worry, we will get it fixed.  In the meantime, you might want to restart WordSmash.</string>
 </resources>

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginRight="20dp"
     android:layout_marginLeft="20dp" 
     android:background="@null"
+    android:paddingBottom="10dp"
 	>
   
     <TextView
         android:id="@+id/dialog_title"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#fff"
         android:layout_centerHorizontal="true"
-        android:background="#ff6600"
-        android:padding="6dp"
+        android:textStyle="bold"
+        android:paddingBottom="6dp"
+        android:paddingTop="3dp"
 
     />
     <ImageView
@@ -24,10 +24,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/close_button"
-        android:layout_alignRight="@id/dialog_title"
-        android:paddingRight="8dp"
+        android:layout_alignParentRight="true"
+        android:paddingRight="3dp"
         android:paddingTop="3dp"
-        android:paddingBottom="3dp"
 		>        
     </ImageView>
     <TextView
@@ -39,5 +38,12 @@
         android:padding="10dp"
         android:background="@null"
         />
- 
+      <Button
+        style="@style/ButtonStyle"
+        android:id="@+id/dialogButtonOK"
+        android:text="@string/ok"
+   		android:layout_below="@id/dialog_text"
+   		android:layout_centerHorizontal="true"
+        
+        />
 </RelativeLayout>

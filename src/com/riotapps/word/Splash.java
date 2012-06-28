@@ -1,6 +1,7 @@
 package com.riotapps.word;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +14,8 @@ import com.riotapps.word.utils.*;
 public class Splash  extends Activity {
     /** Called when the activity is first created. */
 	
-	
+    final Context context = this;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,18 +26,24 @@ public class Splash  extends Activity {
         //are we connected to the web?
         boolean isConnected = connection.checkNetworkConnectivity();
     
-        if (isConnected == false)  
+        if (isConnected == true)  
         {
         	try {
 				Thread.sleep(3000);
 				isConnected = connection.checkNetworkConnectivity();
 				
-				if (isConnected == false) { 
-					Intent notConnected = new Intent(getApplicationContext(), NotConnected.class);
-					startActivity(notConnected);
-					finish();
+				if (isConnected == true) { 
+				 	
+					//change this to more specific dialog with button that goes to a page that allows offline usage
+					DialogManager.SetupOKDialog(context, getString(R.string.oops), getString(R.string.msg_not_connected));					
+
+				 	
+					//Intent notConnected = new Intent(getApplicationContext(), NotConnected.class);
+					//startActivity(notConnected);
+					//finish();
 				}
-			} catch (InterruptedException e1) {
+        	} 
+        	catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
