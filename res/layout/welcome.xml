@@ -16,27 +16,18 @@
         android:id="@+id/logo"
 	    />
 
-	<View 
-	    android:layout_below="@id/logo"
-	    android:layout_height="100dp"
-	     android:layout_width="fill_parent"
-	     android:background="#ffffff"
-	     android:id="@+id/bg"
-	     android:padding="15dp"
-	    
-    />
-	
-	<View 
-	    android:layout_below="@id/logo"
-	    android:layout_height="wrap_content"
-	     android:layout_width="fill_parent"
-	     android:background="@drawable/inner_form_background"
-	     android:id="@+id/bgInner"
-	     android:layout_margin="5dp"
-	    
-    />
+	 
+<RelativeLayout
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/form_background"
+			 android:layout_below="@id/logo"
+			 android:padding="5dp"
+			 android:layout_marginTop="20dp"
+			>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
         android:textSize="18dp"
@@ -44,28 +35,38 @@
         android:text="@string/welcome_message" 
        android:id="@+id/welcome_msg"
         android:layout_below="@id/logo"
-        android:layout_centerVertical="true"
-		android:layout_centerInParent="true"
-		android:layout_marginTop="10dp"
-		android:layout_marginLeft="10dp"
-		android:layout_marginRight="10dp"
+	 android:gravity="center_horizontal"
+	  android:paddingTop="8dp"
+			android:typeface="sans"
+		android:background="@drawable/form_top_background"
         />
-
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:text="@string/welcome_sub_message" 
+       android:id="@+id/welcome_sub_msg"
+        android:layout_below="@id/welcome_msg"
+	 	android:gravity="center_horizontal"
+	 	 android:paddingBottom="8dp"
+	 
+ 	android:typeface="sans"
+		android:background="#f97a05"
+        />
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textColor="#1874CD"
-        android:background="#f8f8ff"
+        android:background="#fff5ee"
         android:textSize="16dp"
         android:textStyle="bold"
         android:text="@string/join_via_facebook" 
         android:id="@+id/byFacebook"
-        android:layout_below="@id/welcome_msg"
-        android:layout_centerVertical="true"
-		android:layout_centerInParent="true"
-		android:layout_marginTop="10dp"
-		android:layout_marginLeft="5dp"
-		android:layout_marginRight="5dp"
+        android:layout_below="@id/welcome_sub_msg"
+   		 android:gravity="center_horizontal"
+android:layout_marginTop=".5dp"
 		android:clickable="true"
 		android:typeface="sans"
         />	
@@ -73,20 +74,20 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textColor="#1874CD"
-        android:background="#f8f8ff"
+        android:background="@drawable/form_item_bottom"
         android:textSize="16dp"
         android:textStyle="bold"
-
+	 
         android:text="@string/join_via_native" 
         android:id="@+id/byEmail"
         android:layout_below="@id/byFacebook"
-        android:layout_centerVertical="true"
-		android:layout_centerInParent="true"
-		android:layout_marginTop="1dp"
-		android:layout_marginLeft="5dp"
-		android:layout_marginRight="5dp"
+     
+		android:layout_gravity="center"
+		android:layout_marginTop=".5dp"
+ 
 		android:layout_marginBottom="15dp"
 		android:clickable="true"
 		android:typeface="sans"
         />	
+        </RelativeLayout>
 </RelativeLayout>

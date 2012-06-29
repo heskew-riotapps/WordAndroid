@@ -22,6 +22,7 @@
 	<string name="oops">Oops</string>
 	<string name="error_title">Holy Gandalf!!</string>
 	<string name="error_message">Unfortunately, something messy happened back in the bowels of the code. Not to worry, we will get it fixed.  In the meantime, you might want to restart WordSmash.</string>
-	<string name="welcome_message">To get started, simply choose how you want to connect with WordSmash.</string>
+	<string name="welcome_message">welcome to WordSmash</string>
+	<string name="welcome_sub_message">come on in&#8230;competition is waiting!!</string>
  
 </resources>

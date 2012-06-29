@@ -23,22 +23,22 @@ public final class R {
         public static final int dialog_background=0x7f020009;
         public static final int drop_shadow=0x7f02000a;
         public static final int form_background=0x7f02000b;
-        public static final int ic_launcher=0x7f02000c;
-        public static final int inner_form_background=0x7f02000d;
-        public static final int inner_form_base_background=0x7f02000e;
-        public static final int riotapps_logo1=0x7f02000f;
-        public static final int spinner_white_48=0x7f020010;
-        public static final int text_clickable_main=0x7f020011;
-        public static final int wordsmash_logo1=0x7f020012;
+        public static final int form_item_bottom=0x7f02000c;
+        public static final int form_top_background=0x7f02000d;
+        public static final int ic_launcher=0x7f02000e;
+        public static final int inner_form_background=0x7f02000f;
+        public static final int inner_form_base_background=0x7f020010;
+        public static final int riotapps_logo1=0x7f020011;
+        public static final int spinner_white_48=0x7f020012;
+        public static final int text_clickable_main=0x7f020013;
+        public static final int wordsmash_logo1=0x7f020014;
     }
     public static final class id {
         public static final int bCancel=0x7f06000d;
         public static final int bSave=0x7f06000c;
         public static final int bTryAgain=0x7f06000f;
-        public static final int bg=0x7f060012;
-        public static final int bgInner=0x7f060013;
-        public static final int byEmail=0x7f060016;
-        public static final int byFacebook=0x7f060015;
+        public static final int byEmail=0x7f060015;
+        public static final int byFacebook=0x7f060014;
         public static final int dialogButtonOK=0x7f060003;
         public static final int dialog_text=0x7f060002;
         public static final int dialog_title=0x7f060000;
@@ -54,7 +54,8 @@ public final class R {
         public static final int tEmail=0x7f060007;
         public static final int tNickname=0x7f060009;
         public static final int tPassword=0x7f06000b;
-        public static final int welcome_msg=0x7f060014;
+        public static final int welcome_msg=0x7f060012;
+        public static final int welcome_sub_msg=0x7f060013;
     }
     public static final class layout {
         public static final int dialog=0x7f030000;
@@ -88,6 +89,7 @@ public final class R {
         public static final int validation_email_invalid=0x7f050011;
         public static final int validation_email_required=0x7f050010;
         public static final int welcome_message=0x7f050016;
+        public static final int welcome_sub_message=0x7f050017;
     }
     public static final class style {
         public static final int ButtonStyle=0x7f040000;
