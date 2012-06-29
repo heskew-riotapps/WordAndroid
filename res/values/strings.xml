@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WordSmash</string>
-    <string name="join_via_facebook">by Facebook</string>
-	<string name="join_via_native">by Email</string>
+    <string name="join_via_facebook">connect with facebook</string>
+	<string name="join_via_native">join with your email address</string>
 	<string name="join_title">Join WordSmash to get started</string>
 	<string name="logo">logo</string>
 	<string name="enter_email">enter email</string>

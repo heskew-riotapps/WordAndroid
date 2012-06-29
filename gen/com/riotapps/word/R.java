@@ -37,8 +37,7 @@ public final class R {
         public static final int bTryAgain=0x7f06000f;
         public static final int bg=0x7f060012;
         public static final int bgInner=0x7f060013;
-        public static final int btnFacebook=0x7f060016;
-        public static final int btnNative=0x7f060017;
+        public static final int byEmail=0x7f060016;
         public static final int byFacebook=0x7f060015;
         public static final int dialogButtonOK=0x7f060003;
         public static final int dialog_text=0x7f060002;

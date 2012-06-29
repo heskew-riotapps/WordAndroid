@@ -17,16 +17,16 @@ public class Welcome  extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
         
-        bNative = (Button) findViewById(R.id.btnNative);
-        bNative.setOnClickListener(new View.OnClickListener() {
+     //   bNative = (Button) findViewById(R.id.btnNative);
+     //   bNative.setOnClickListener(new View.OnClickListener() {
 			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent goToNextActivity = new Intent(getApplicationContext(), JoinNative.class);
-				startActivity(goToNextActivity);
-			}
-		});
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				Intent goToNextActivity = new Intent(getApplicationContext(), JoinNative.class);
+//				startActivity(goToNextActivity);
+//			}
+//		});
         
     }
 }

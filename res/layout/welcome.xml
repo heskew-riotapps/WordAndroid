@@ -6,7 +6,7 @@
     android:background="@drawable/bg" 
       android:paddingLeft="25dp"
     android:paddingRight="25dp" 
-    android:paddingBottom="25dp">
+    >
 	<ImageView 
 	    android:src="@drawable/wordsmash_logo1"
 	    android:contentDescription="@string/logo"
@@ -15,11 +15,12 @@
         android:maxWidth="20dp" 
         android:id="@+id/logo"
 	    />
+
 	<View 
 	    android:layout_below="@id/logo"
-	    android:layout_height="fill_parent"
+	    android:layout_height="100dp"
 	     android:layout_width="fill_parent"
-	     android:background="@drawable/form_background"
+	     android:background="#ffffff"
 	     android:id="@+id/bg"
 	     android:padding="15dp"
 	    
@@ -27,7 +28,7 @@
 	
 	<View 
 	    android:layout_below="@id/logo"
-	    android:layout_height="fill_parent"
+	    android:layout_height="wrap_content"
 	     android:layout_width="fill_parent"
 	     android:background="@drawable/inner_form_background"
 	     android:id="@+id/bgInner"
@@ -52,10 +53,10 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:textColor="#fff"
-        android:background="#f97a05"
-        android:textSize="14dp"
+        android:layout_height="50dp"
+        android:textColor="#1874CD"
+        android:background="#f8f8ff"
+        android:textSize="16dp"
         android:textStyle="bold"
         android:text="@string/join_via_facebook" 
         android:id="@+id/byFacebook"
@@ -66,15 +67,26 @@
 		android:layout_marginLeft="5dp"
 		android:layout_marginRight="5dp"
 		android:clickable="true"
+		android:typeface="sans"
         />	
-  	<Button android:id="@+id/btnFacebook"
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"
-         android:text="@string/join_via_facebook"
-        />
-    <Button android:id="@+id/btnNative"
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"
-        android:text="@string/join_via_native"
-        />
+   <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:textColor="#1874CD"
+        android:background="#f8f8ff"
+        android:textSize="16dp"
+        android:textStyle="bold"
+
+        android:text="@string/join_via_native" 
+        android:id="@+id/byEmail"
+        android:layout_below="@id/byFacebook"
+        android:layout_centerVertical="true"
+		android:layout_centerInParent="true"
+		android:layout_marginTop="1dp"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		android:layout_marginBottom="15dp"
+		android:clickable="true"
+		android:typeface="sans"
+        />	
 </RelativeLayout>
