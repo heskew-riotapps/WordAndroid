@@ -26,13 +26,13 @@ public class Splash  extends Activity {
         //are we connected to the web?
         boolean isConnected = connection.checkNetworkConnectivity();
     
-        if (isConnected == true)  
+        if (isConnected == false)  
         {
         	try {
 				Thread.sleep(3000);
 				isConnected = connection.checkNetworkConnectivity();
 				
-				if (isConnected == true) { 
+				if (isConnected == false) { 
 				 	
 					//change this to more specific dialog with button that goes to a page that allows offline usage
 					DialogManager.SetupOKDialog(context, getString(R.string.oops), getString(R.string.msg_not_connected));					
@@ -54,7 +54,7 @@ public class Splash  extends Activity {
 	        Thread setup = new Thread(){
 	        	public void run(){
 	        		try {
-	        			sleep(10000);
+	        			sleep(3000);
 	        		}
 	        		catch (InterruptedException e){
 	        			e.printStackTrace();
