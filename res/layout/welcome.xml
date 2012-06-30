@@ -53,36 +53,28 @@
 	 	 android:paddingBottom="8dp"
 	 
  	android:typeface="sans"
-		android:background="#00a8ff"
+		android:background="#f97a05"
         />
-  	
+  
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textColor="#1874CD"
-        android:background="#fff5ee"
+        android:background="@drawable/text_selector"
         android:textSize="16dp"
         android:textStyle="bold"
         android:text="@string/join_via_facebook" 
         android:id="@+id/byFacebook"
-        android:gravity="center_vertical"
         android:layout_below="@id/welcome_sub_msg"
-     
-   		android:paddingLeft="10dp"
-		android:layout_marginTop=".5dp"
+    	android:paddingLeft="20dp"
 		android:clickable="true"
 		android:typeface="sans"
-	
+		android:gravity="center_vertical"
+		 android:drawableLeft="@drawable/f_logo"
+		 android:drawablePadding="5dp"
         />
-     <ImageView 
-        android:src="@drawable/f_logo"
-         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/welcome_sub_msg"
-        android:paddingTop="8dp"
-        android:paddingLeft="3dp"
-        android:id="@+id/imgFb"
-        /> 
+
+      	
    <TextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -94,7 +86,7 @@
         android:text="@string/join_via_native" 
         android:id="@+id/byEmail"
         android:layout_below="@id/byFacebook"
-     
+    
 		android:layout_gravity="center"
 		android:layout_marginTop=".5dp"
  

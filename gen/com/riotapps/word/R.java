@@ -29,23 +29,27 @@ public final class R {
         public static final int ic_launcher=0x7f02000f;
         public static final int inner_form_background=0x7f020010;
         public static final int inner_form_base_background=0x7f020011;
+        /** custom color for pressed state 
+         */
+        public static final int normal_color=0x7f020018;
+        public static final int pressed_color=0x7f020017;
         public static final int riotapps_logo1=0x7f020012;
         public static final int spinner_white_48=0x7f020013;
         public static final int text_clickable_main=0x7f020014;
-        public static final int wordsmash_logo1=0x7f020015;
+        public static final int text_selector=0x7f020015;
+        public static final int wordsmash_logo1=0x7f020016;
     }
     public static final class id {
         public static final int bCancel=0x7f06000d;
         public static final int bSave=0x7f06000c;
         public static final int bTryAgain=0x7f06000f;
-        public static final int byEmail=0x7f060016;
-        public static final int byFacebook=0x7f060015;
+        public static final int byEmail=0x7f060015;
+        public static final int byFacebook=0x7f060014;
         public static final int dialogButtonOK=0x7f060003;
         public static final int dialog_text=0x7f060002;
         public static final int dialog_title=0x7f060000;
         public static final int email_guarantee=0x7f060006;
         public static final int email_label=0x7f060005;
-        public static final int imgFb=0x7f060014;
         public static final int imgSmash=0x7f060011;
         public static final int img_close=0x7f060001;
         public static final int logo=0x7f060004;
