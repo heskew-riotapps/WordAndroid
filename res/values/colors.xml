@@ -2,5 +2,5 @@
 <resources>
 
      <drawable name="pressed_color">#D3D3D3</drawable> <!--custom color for pressed state -->
-    <drawable name="normal_color">#fffff0</drawable> <!--transperent color for normal state -->
+    <drawable name="normal_color">#fff5ee</drawable> <!--transperent color for normal state -->
 </resources>

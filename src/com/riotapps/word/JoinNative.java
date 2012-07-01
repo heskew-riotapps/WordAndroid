@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class JoinNative extends Activity {
+public class JoinNative extends Activity implements View.OnClickListener{
 	    /** Called when the activity is first created. */
 		
 	    final Context context = this;		
@@ -72,4 +72,9 @@ public class JoinNative extends Activity {
 			});
 	    }
 
+	    @Override 
+	    public void onClick(View v) {
+	        // do something when the button is clicked
+	      }
+	    
 	}

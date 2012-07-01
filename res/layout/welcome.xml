@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@drawable/bg" 
-      android:paddingLeft="25dp"
-    android:paddingRight="25dp" 
-    >
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:orientation="vertical"
+    	android:background="@drawable/bg" 
+      	android:paddingLeft="25dp"
+    	android:paddingRight="25dp" 
+    	>
 	<ImageView 
 	    android:src="@drawable/wordsmash_logo1"
 	    android:contentDescription="@string/logo"
-	     android:layout_width="wrap_content"
+	    android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="20dp" 
         android:id="@+id/logo"
 	    />
-
-	 
-<RelativeLayout
-			android:orientation="vertical"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:background="@drawable/form_background"
-			 android:layout_below="@id/logo"
-			 android:padding="3dp"
-			 android:layout_marginTop="20dp"
-			>
+	<RelativeLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/form_background"
+		android:layout_below="@id/logo"
+		android:padding="3dp"
+		android:layout_marginTop="20dp"
+	>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -33,11 +31,10 @@
         android:textSize="18dp"
         android:textStyle="bold"
         android:text="@string/welcome_message" 
-       android:id="@+id/welcome_msg"
+       	android:id="@+id/welcome_msg"
         android:layout_below="@id/logo"
-	 android:gravity="center_horizontal"
-	  android:paddingTop="8dp"
-			android:typeface="serif"
+	 	android:gravity="center_horizontal"
+	  	android:paddingTop="8dp"
 		android:background="@drawable/form_top_background"
         />
     <TextView
@@ -47,15 +44,13 @@
         android:textSize="12dp"
         android:textStyle="bold"
         android:text="@string/welcome_sub_message" 
-       android:id="@+id/welcome_sub_msg"
+       	android:id="@+id/welcome_sub_msg"
         android:layout_below="@id/welcome_msg"
 	 	android:gravity="center_horizontal"
-	 	 android:paddingBottom="8dp"
-	 
- 	android:typeface="sans"
-		android:background="#f97a05"
+	 	android:paddingBottom="8dp"
+ 		android:typeface="sans"
+		android:background="#ff6600"
         />
-  
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -68,31 +63,25 @@
         android:layout_below="@id/welcome_sub_msg"
     	android:paddingLeft="20dp"
 		android:clickable="true"
-		android:typeface="sans"
 		android:gravity="center_vertical"
-		 android:drawableLeft="@drawable/f_logo"
-		 android:drawablePadding="5dp"
+		android:drawableLeft="@drawable/f_logo"
+		android:drawablePadding="5dp"
         />
-
-      	
    <TextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textColor="#1874CD"
-        android:background="@drawable/form_item_bottom"
+        android:background="@drawable/text_selector_bottom"
         android:textSize="16dp"
         android:textStyle="bold"
-	 android:gravity="center"
+	 	android:gravity="center"
         android:text="@string/join_via_native" 
         android:id="@+id/byEmail"
         android:layout_below="@id/byFacebook"
-    
 		android:layout_gravity="center"
 		android:layout_marginTop=".5dp"
- 
 		android:layout_marginBottom="15dp"
 		android:clickable="true"
-		android:typeface="sans"
         />	
-        </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>
