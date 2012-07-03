@@ -65,7 +65,14 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	             break;  
 
 	         case Constants.POST_REQUEST:  
-	             serverResponseObject = new WebClient().createPostRequest(urlString, nameValuePairs);  
+	             serverResponseObject = new WebClient().createPostRequest(urlString, nameValuePairs); 
+	             
+	         case Constants.PUT_REQUEST:  
+	             serverResponseObject = new WebClient().createPutRequest(urlString, nameValuePairs); 
+	             
+	         case Constants.DELETE_REQUEST:  
+	             serverResponseObject = new WebClient().createDeleteRequest(urlString, nameValuePairs); 
+	             
 	             break;  
 	     }//end of switch  
  
