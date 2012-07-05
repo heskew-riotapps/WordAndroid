@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="HeaderTextStyle" >
+   	<item name="android:textColor">#fff5ee</item>
+   	<item name="android:textSize">18dp</item>
+   	<item name="android:textStyle">bold</item>
+</style>
+</resources>

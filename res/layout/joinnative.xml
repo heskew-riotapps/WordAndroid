@@ -3,13 +3,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg"
+    android:background="@drawable/bg6"
     android:paddingLeft="25dp"
     android:paddingRight="25dp" 
     >
      <ImageView 
        android:id="@+id/logo"
-	    android:src="@drawable/wordsmash_logo1"
+	    android:src="@drawable/wordsmash_logo6"
 	    android:contentDescription="@string/logo"
 	     android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +24,15 @@
 		android:padding="3dp"
 		android:layout_marginTop="20dp"
 	>
-	  <TextView
+    <RelativeLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/form_top_background"
+		android:layout_below="@id/logo"
+		android:id="@+id/header"
+	>
+    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -35,7 +43,6 @@
         android:layout_below="@id/logo"
 	 	android:gravity="center_horizontal"
 	  	android:paddingTop="8dp"
-		android:background="@drawable/form_top_background"
         />
     <TextView
         android:layout_width="fill_parent"
@@ -48,35 +55,38 @@
         android:layout_below="@id/title_join_native"
 	 	android:gravity="center_horizontal"
 	 	android:paddingBottom="8dp"
- 		android:typeface="sans"
-		android:background="#ff6600"
+ 	 
+		 
         />
+    </RelativeLayout> 
      <RelativeLayout
 		android:orientation="vertical"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		       android:background="@drawable/normal_color" 
 
-		android:layout_below="@id/sub_title_join_native"
+		android:layout_below="@id/header"
 		android:padding="3dp"
 		android:layout_marginTop="1dp"
 		android:id="@+id/inner_form"
 	>
      <TextView
+         style="@style/SubTextStyle"
      	android:id="@+id/email_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/email" 
         android:paddingLeft="4.0dip"
-        android:layout_below="@id/sub_title_join_native"/>
+        android:layout_below="@id/header"/>
  	<TextView
+ 	    style="@style/SubTextStyle"
      	android:id="@+id/email_guarantee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/never_share_email" 
         android:paddingLeft="4.0dip"
         android:layout_toRightOf="@id/email_label"
-        android:layout_below="@id/sub_title_join_native"
+        android:layout_below="@id/header"
         />
  	<EditText 
 	    android:id="@+id/tEmail"
@@ -89,6 +99,7 @@
   	   android:typeface="normal"
 	  />
 	 <TextView
+	     style="@style/SubTextStyle"
      	android:id="@+id/nickname_label"
      	android:text="@string/nickname"   
         android:layout_width="fill_parent"
@@ -105,6 +116,7 @@
   	    android:layout_below="@id/nickname_label" 
 	    />
 	<TextView
+	    style="@style/SubTextStyle"
 	    android:id="@+id/password_label" 
 	    android:text="@string/password"     	
         android:layout_width="fill_parent"
@@ -125,9 +137,9 @@
 	 <LinearLayout
         android:orientation="horizontal"
         android:paddingLeft="4.0dip"
-        android:paddingTop="18.0dip"
+        android:paddingTop="2.0dip"
         android:paddingRight="4.0dip"
-        android:paddingBottom="1.0dip"
+        android:paddingBottom="2.0dip"
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"
         android:layout_below="@+id/inner_form" >

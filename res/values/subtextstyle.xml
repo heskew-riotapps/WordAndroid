@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="SubTextStyle" >
+   	<item name="android:textColor">#1874CD</item>
+   	<item name="android:textSize">12dp</item>
+   	<item name="android:textStyle">bold</item>
+</style>
+</resources>
