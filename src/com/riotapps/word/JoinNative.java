@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -36,6 +37,16 @@ public class JoinNative extends Activity implements View.OnClickListener{
 	        
 	        bCancel = (Button) findViewById(R.id.bCancel);
 	        bSave = (Button) findViewById(R.id.bSave);
+	        TextView tvTitle =(TextView)findViewById(R.id.title_join_native);
+	        TextView tvSubTitle =(TextView)findViewById(R.id.sub_title_join_native);
+	        TextView tvEmailLabel =(TextView)findViewById(R.id.email_label);
+	        TextView tvEmailGuarantee =(TextView)findViewById(R.id.email_guarantee);
+	        Typeface face=Typeface.createFromAsset(getAssets(),"fonts/FullDeceSans1.0.ttf");
+
+	        tvTitle.setTypeface(face);
+	        tvSubTitle.setTypeface(face);
+	        tvEmailLabel.setTypeface(face);
+	        tvEmailGuarantee.setTypeface(face);
 	        
 	        bCancel.setOnClickListener(new View.OnClickListener() {
 				
@@ -57,7 +68,8 @@ public class JoinNative extends Activity implements View.OnClickListener{
 					EditText tPassword = (EditText) findViewById(R.id.tPassword);
 					
 					try{
-						playerSvc.PutPlayer(tEmail.getText().toString(), 
+						//show spinner
+						playerSvc.CreatePlayer(context, tEmail.getText().toString(), 
 								tNickname.getText().toString(), 
 								tPassword.getText().toString());
 					} 

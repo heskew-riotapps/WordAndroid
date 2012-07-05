@@ -5,18 +5,11 @@ public class Constants {
 	/**============================================
 	 * requestType
 	 *=============================================*/
-	public static final int GET_REQUEST = 1;
-	public static final int POST_REQUEST = 2;
-	public static final int PUT_REQUEST = 3;
-	public static final int DELETE_REQUEST = 4;
+//	public static final int GET_REQUEST = 1;
+//	public static final int POST_REQUEST = 2;
+//	public static final int PUT_REQUEST = 3;
+//	public static final int DELETE_REQUEST = 4;
 
-
-	/**=============================================
-	 * responseHandleBy
-	 *==============================================*/
-	public static final int USER_LISTING = 100;
-	public static final int USER_ADD_OR_EDIT_DONE = 101;	
-	public static final int USER_LISTING_DELETE = 102;
 
 	/**=============================================
 	 * creatingXMLParser for class
@@ -34,9 +27,9 @@ public class Constants {
 	/**=============================================
 	 * the web
 	 *==============================================*/
-	public static final String REST_URL_SITE = "http://";
+	public static final String REST_URL_SITE = "http://10.0.2.2:3000/";
 	public static final String FACEBOOK_API_ID = "314938401925933";
-	public static final String REST_CREATE_PLAYER = "players/create";
+	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	
 	/**=============================================
 	 * rails

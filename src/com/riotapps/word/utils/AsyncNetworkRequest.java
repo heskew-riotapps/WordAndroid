@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
 
+import com.riotapps.word.utils.Enums.RequestType;
+import com.riotapps.word.utils.Enums.ResponseHandlerType;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -12,17 +15,18 @@ import android.os.AsyncTask;
 public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse> {
 
 	Context ctx = null;
-	int requestType;
-	int responseHandleBy;
+	RequestType requestType;
+	ResponseHandlerType responseHandleBy;
 	String shownOnProgressDialog = null;
 
 	ProgressDialog dialogAccessingSpurstone = null;
 	ArrayList<NameValuePair> nameValuePairs = null;
+	String jsonPost = null;
 
 	/**====================================================================================   
 	  * 1st Constructor   
 	  * ====================================================================================*/   
-	 public AsyncNetworkRequest(Context ctx,int requestType, int responseHandleBy, String shownOnProgressDialog){
+	 public AsyncNetworkRequest(Context ctx, RequestType requestType, ResponseHandlerType responseHandleBy, String shownOnProgressDialog){
 		this.ctx = ctx;
 		this.requestType = requestType;
 		this.responseHandleBy = responseHandleBy;
@@ -33,11 +37,19 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	 /**====================================================================================   
 	  * 2nd Constructor   
 	  * ====================================================================================*/  
-	 public AsyncNetworkRequest(Context ctx, int requestType, int responseHandleBy, String shownOnProgressDialog, ArrayList<NameValuePair> nameValuePairs){
+	 public AsyncNetworkRequest(Context ctx, RequestType requestType, ResponseHandlerType responseHandleBy, String shownOnProgressDialog, ArrayList<NameValuePair> nameValuePairs){
 		this(ctx,requestType, responseHandleBy, shownOnProgressDialog);
 		this.nameValuePairs = nameValuePairs;
 	 }
 
+	 /**====================================================================================   
+	  * 3rd Constructor   
+	  * ====================================================================================*/  
+	 public AsyncNetworkRequest(Context ctx, RequestType requestType, ResponseHandlerType responseHandleBy, String shownOnProgressDialog, String jsonPost){
+		this(ctx,requestType, responseHandleBy, shownOnProgressDialog);
+		this.jsonPost = jsonPost;
+	 }
+	 
 	 /**====================================================================================   
 	  * method onPreExecute   
 	  * ====================================================================================*/  
@@ -58,21 +70,34 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	     ServerResponse serverResponseObject = null;   
 
 	   
-	     switch(requestType){  
+	     switch(this.requestType){  
 
-	         case Constants.GET_REQUEST:  
+	         case GET:  
 	             serverResponseObject = new WebClient().createGetRequest(urlString);  
 	             break;  
-
-	         case Constants.POST_REQUEST:  
-	             serverResponseObject = new WebClient().createPostRequest(urlString, nameValuePairs); 
-	             
-	         case Constants.PUT_REQUEST:  
-	             serverResponseObject = new WebClient().createPutRequest(urlString, nameValuePairs); 
-	             
-	         case Constants.DELETE_REQUEST:  
-	             serverResponseObject = new WebClient().createDeleteRequest(urlString, nameValuePairs); 
-	             
+	         case POST:  
+	        	 if (this.jsonPost.length() > 0){
+	        		 serverResponseObject = new WebClient().createPostRequest(urlString, this.jsonPost); 
+	        	 }
+	        	 else {
+	        		 serverResponseObject = new WebClient().createPostRequest(urlString, nameValuePairs); 
+	        	 }
+	        	 break;
+	         case PUT:  
+	        	 if (this.jsonPost.length() > 0){
+	        		 serverResponseObject = new WebClient().createPutRequest(urlString, this.jsonPost); 
+	        	 }
+	        	 else {
+	        		 serverResponseObject = new WebClient().createPutRequest(urlString, nameValuePairs); 
+	        	 }
+	        	 break;
+	         case DELETE:  
+	        	 if (this.jsonPost.length() > 0){
+	        		 serverResponseObject = new WebClient().createDeleteRequest(urlString, this.jsonPost); 
+	        	 }
+	        	 else {
+	        		 serverResponseObject = new WebClient().createDeleteRequest(urlString, nameValuePairs); 
+	        	 }
 	             break;  
 	     }//end of switch  
  
@@ -88,7 +113,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	 protected void onPostExecute(ServerResponse serverResponseObject){
 		 dialogAccessingSpurstone.dismiss();
 
-		// new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject);				
+		 new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject);			
 	 }//end method onPostExecute
 
 }//end class RequestSentToServerAsyncTask

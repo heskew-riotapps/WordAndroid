@@ -43,28 +43,31 @@ public final class R {
         public static final int wordsmash_logo1=0x7f020019;
     }
     public static final class id {
-        public static final int bCancel=0x7f06000d;
-        public static final int bSave=0x7f06000c;
-        public static final int bTryAgain=0x7f06000f;
-        public static final int byEmail=0x7f060015;
-        public static final int byFacebook=0x7f060014;
+        public static final int bCancel=0x7f060010;
+        public static final int bSave=0x7f06000f;
+        public static final int bTryAgain=0x7f060012;
+        public static final int byEmail=0x7f060018;
+        public static final int byFacebook=0x7f060017;
         public static final int dialogButtonOK=0x7f060003;
         public static final int dialog_text=0x7f060002;
         public static final int dialog_title=0x7f060000;
-        public static final int email_guarantee=0x7f060006;
-        public static final int email_label=0x7f060005;
-        public static final int imgSmash=0x7f060011;
+        public static final int email_guarantee=0x7f060009;
+        public static final int email_label=0x7f060008;
+        public static final int imgSmash=0x7f060014;
         public static final int img_close=0x7f060001;
+        public static final int inner_form=0x7f060007;
         public static final int logo=0x7f060004;
-        public static final int msg=0x7f06000e;
-        public static final int nickname_label=0x7f060008;
-        public static final int password_label=0x7f06000a;
-        public static final int spinner=0x7f060010;
-        public static final int tEmail=0x7f060007;
-        public static final int tNickname=0x7f060009;
-        public static final int tPassword=0x7f06000b;
-        public static final int welcome_msg=0x7f060012;
-        public static final int welcome_sub_msg=0x7f060013;
+        public static final int msg=0x7f060011;
+        public static final int nickname_label=0x7f06000b;
+        public static final int password_label=0x7f06000d;
+        public static final int spinner=0x7f060013;
+        public static final int sub_title_join_native=0x7f060006;
+        public static final int tEmail=0x7f06000a;
+        public static final int tNickname=0x7f06000c;
+        public static final int tPassword=0x7f06000e;
+        public static final int title_join_native=0x7f060005;
+        public static final int welcome_msg=0x7f060015;
+        public static final int welcome_sub_msg=0x7f060016;
     }
     public static final class layout {
         public static final int dialog=0x7f030000;
@@ -86,6 +89,8 @@ public final class R {
         public static final int join_title=0x7f050003;
         public static final int join_via_facebook=0x7f050001;
         public static final int join_via_native=0x7f050002;
+        public static final int join_with_email_subtitle=0x7f05001a;
+        public static final int join_with_email_title=0x7f050019;
         public static final int logo=0x7f050004;
         public static final int msg_not_connected=0x7f05000f;
         public static final int never_share_email=0x7f05000e;
@@ -93,6 +98,7 @@ public final class R {
         public static final int ok=0x7f050012;
         public static final int oops=0x7f050013;
         public static final int password=0x7f05000a;
+        public static final int response_in_error=0x7f050018;
         public static final int save=0x7f05000b;
         public static final int try_again=0x7f05000c;
         public static final int validation_email_invalid=0x7f050011;

@@ -15,13 +15,60 @@
         android:layout_height="wrap_content"
         android:maxWidth="20dp"
 	    />
-      <TextView
+     <RelativeLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/form_background"
+		android:layout_below="@id/logo"
+		android:padding="3dp"
+		android:layout_marginTop="20dp"
+	>
+	  <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:text="@string/join_with_email_title" 
+       	android:id="@+id/title_join_native"
+        android:layout_below="@id/logo"
+	 	android:gravity="center_horizontal"
+	  	android:paddingTop="8dp"
+		android:background="@drawable/form_top_background"
+        />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:text="@string/join_with_email_subtitle" 
+       	android:id="@+id/sub_title_join_native"
+        android:layout_below="@id/title_join_native"
+	 	android:gravity="center_horizontal"
+	 	android:paddingBottom="8dp"
+ 		android:typeface="sans"
+		android:background="#ff6600"
+        />
+     <RelativeLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		       android:background="@drawable/normal_color" 
+
+		android:layout_below="@id/sub_title_join_native"
+		android:padding="3dp"
+		android:layout_marginTop="1dp"
+		android:id="@+id/inner_form"
+	>
+     <TextView
      	android:id="@+id/email_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/email" 
         android:paddingLeft="4.0dip"
-        android:layout_below="@id/logo"/>
+        android:layout_below="@id/sub_title_join_native"/>
  	<TextView
      	android:id="@+id/email_guarantee"
         android:layout_width="wrap_content"
@@ -29,8 +76,8 @@
         android:text="@string/never_share_email" 
         android:paddingLeft="4.0dip"
         android:layout_toRightOf="@id/email_label"
-        android:layout_below="@id/logo" 
-       />
+        android:layout_below="@id/sub_title_join_native"
+        />
  	<EditText 
 	    android:id="@+id/tEmail"
 	    android:layout_width="300dp"
@@ -74,6 +121,7 @@
   	    android:layout_centerHorizontal="true"
   	    android:layout_below="@id/password_label"
 	    />
+	</RelativeLayout>
 	 <LinearLayout
         android:orientation="horizontal"
         android:paddingLeft="4.0dip"
@@ -82,8 +130,9 @@
         android:paddingBottom="1.0dip"
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tPassword">
-  	<Button 
+        android:layout_below="@+id/inner_form" >
+	 
+	<Button 
   	    style="@style/ButtonStyle"
   	    android:id="@+id/bSave"
         android:layout_width="0dp" 
@@ -98,4 +147,5 @@
         android:text="@string/cancel"
     />
     </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>
