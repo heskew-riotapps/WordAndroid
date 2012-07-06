@@ -14,7 +14,7 @@
 	<string name="save">Save</string>
 	<string name="try_again">Try Again</string>
 	<string name="cancel">Cancel</string>
-	<string name="never_share_email">(will never be shared!)</string>
+	<string name="never_share_email">(will never be shared)</string>
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="validation_email_required">Please enter your email to connect to play.  Never fear, it will not be shared.</string>
 	<string name="validation_email_invalid">Please enter a valid email to connect to play.  We\'ll never share it, we just may send game-related emails out every now and then.  Did we mention we\'ll never share it?</string>

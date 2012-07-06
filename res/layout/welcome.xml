@@ -21,7 +21,7 @@
 		android:layout_height="wrap_content"
 		android:background="@drawable/form_background"
 		android:layout_below="@id/logo"
-		android:padding="3dp"
+		android:padding="2dp"
 		android:layout_marginTop="20dp"
 	>
 	<RelativeLayout
@@ -32,7 +32,7 @@
 		android:layout_below="@id/logo"
 		android:id="@+id/header"
 	>
-    <TextView
+    <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -44,7 +44,7 @@
 	 	android:gravity="center_horizontal"
 	  	android:paddingTop="8dp"
         />
-    <TextView
+    <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -59,7 +59,7 @@
 		 
         />
     </RelativeLayout> 
-    <TextView
+    <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textColor="#1874CD"
@@ -75,7 +75,7 @@
 		android:drawablePadding="5dp"
 		android:layout_below="@id/header"
         />
-   <TextView
+   <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textColor="#1874CD"

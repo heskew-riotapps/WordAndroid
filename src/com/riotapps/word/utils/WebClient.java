@@ -98,7 +98,10 @@ public class WebClient{
 
        HttpPost httpPost = new HttpPost(urlString);
        httpPost.addHeader("X-Http-Method-Override","put");
-       httpPost.setHeader("Content-Type","application/json; charset=utf-8");
+       httpPost.setHeader("Accept", "application/json");
+       httpPost.setHeader("Content-Type", "application/json");
+
+//       httpPost.setHeader("Content-Type","application/json; charset=utf-8");
        try {
     	   StringEntity json = new StringEntity(jsonPost);
     	   json.setContentType("application/json; charset=utf-8");
@@ -134,7 +137,10 @@ public class WebClient{
    ServerResponse createPostRequest(String urlString, String jsonPost){
 
        HttpPost httpPost = new HttpPost(urlString);
-       httpPost.setHeader("Content-Type","application/json; charset=utf-8");
+     //  httpPost.setHeader("Content-Type","application/json; charset=utf-8");
+       httpPost.setHeader("Accept", "application/json");
+       httpPost.setHeader("Content-Type", "application/json");
+
        try {
     	   StringEntity json = new StringEntity(jsonPost);
     	   json.setContentType("application/json; charset=utf-8");
@@ -171,7 +177,9 @@ public class WebClient{
 
        HttpPost httpPost = new HttpPost(urlString);
        httpPost.addHeader("X-Http-Method-Override","delete");
-       httpPost.setHeader("Content-Type","application/json; charset=utf-8");
+      // httpPost.setHeader("Content-Type","application/json; charset=utf-8");
+       httpPost.setHeader("Accept", "application/json");
+       httpPost.setHeader("Content-Type", "application/json");
        try {
     	   StringEntity json = new StringEntity(jsonPost);
     	   json.setContentType("application/json; charset=utf-8");

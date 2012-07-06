@@ -3,9 +3,9 @@ package com.riotapps.word.utils;
 public class Constants {
 
 	/**============================================
-	 * requestType
+	 * misc
 	 *=============================================*/
-//	public static final int GET_REQUEST = 1;
+ 	public static final String MAIN_FONT = "fonts/FullDeceSans1.0.ttf";
 //	public static final int POST_REQUEST = 2;
 //	public static final int PUT_REQUEST = 3;
 //	public static final int DELETE_REQUEST = 4;

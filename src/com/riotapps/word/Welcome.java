@@ -37,16 +37,11 @@ public class Welcome  extends Activity implements View.OnClickListener{
         setContentView(R.layout.welcome);
         
 
-        TextView tvWelcome =(TextView)findViewById(R.id.welcome_msg);
-        TextView tvSubWelcome =(TextView)findViewById(R.id.welcome_sub_msg);
-        TextView tvFB =(TextView)findViewById(R.id.byFacebook);
-        TextView tvNative =(TextView)findViewById(R.id.byEmail);
-        Typeface face=Typeface.createFromAsset(getAssets(),"fonts/FullDeceSans1.0.ttf");
-
-        tvWelcome.setTypeface(face);
-        tvSubWelcome.setTypeface(face);
-        tvFB.setTypeface(face);
-        tvNative.setTypeface(face);
+    //    TextView tvWelcome =(TextView)findViewById(R.id.welcome_msg);
+    //    TextView tvSubWelcome =(TextView)findViewById(R.id.welcome_sub_msg);
+    //    TextView tvFB =(TextView)findViewById(R.id.byFacebook);
+     //   TextView tvNative =(TextView)findViewById(R.id.byEmail);
+   
         
 
         
