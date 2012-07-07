@@ -6,6 +6,7 @@ public class Player {
 	private String email;
 	private String password;
 	private String fb;
+	private String auth_token;
 
 	public void setId(String id) {
 		this.id = id;
@@ -36,6 +37,12 @@ public class Player {
 	}
 	public String getFB() {
 		return this.fb;
+	}
+	public void setAuthToken(String auth_token) {
+		this.auth_token = auth_token.trim();
+	}
+	public String getAuthToken() {
+		return this.auth_token;
 	}
 
 }

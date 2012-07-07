@@ -60,8 +60,8 @@ public class Splash  extends Activity {
 	        			e.printStackTrace();
 	        		}
 	        		finally {
-	        		//	Intent goToFirstActivity = new Intent(getApplicationContext(), Welcome.class);
-	    			//	startActivity(goToFirstActivity);
+	        			Intent goToFirstActivity = new Intent(getApplicationContext(), Welcome.class);
+	    				startActivity(goToFirstActivity);
 	        		}
 	        		
 	        	}

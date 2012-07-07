@@ -1,6 +1,17 @@
 package com.riotapps.word.hooks;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.riotapps.word.R;
@@ -73,7 +84,34 @@ public class PlayerService {
 	}
 	
 	public void HandleCreatePlayerResponse(final Context ctx, ServerResponse serverResponseObject){
-		Toast t = Toast.makeText(ctx, "HandleCreatePlayerResponse", Toast.LENGTH_LONG);  
-        t.show();  
+  
+	        try {
+	            
+	        	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
+	 	        
+	 	        Reader reader = new InputStreamReader(serverResponseObject.response.getEntity().getContent());
+	 	        
+	 	        Type type = new TypeToken<Player>() {}.getType();
+	 	        Player response = gson.fromJson(reader, type);
+	 	        
+	 	       Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  
+	 	        t.show(); 
+	            
+	         } 
+	         catch (IOException e) {
+	            //getRequest.abort();
+	            Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse ", e);
+	            
+	            Toast t = Toast.makeText(ctx, "oops", Toast.LENGTH_LONG);  //change this to real error handling
+	            t.show(); 
+	         }
+	        catch (Exception e) {
+	            //getRequest.abort();
+	            Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
+	            
+	            Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
+	            t.show(); 
+	         }
+		 
 	}
 }
