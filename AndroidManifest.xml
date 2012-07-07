@@ -29,6 +29,7 @@
   		<activity android:name=".JoinNative" android:label="@string/app_name" />
  		
 		<activity android:name=".NotConnected" android:label="@string/app_name" />
+		<activity android:name=".GamesLanding" android:label="@string/app_name" />
     </application>
 
 </manifest>

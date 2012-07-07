@@ -6,11 +6,18 @@ public class Constants {
 	 * misc
 	 *=============================================*/
  	public static final String MAIN_FONT = "fonts/FullDeceSans1.0.ttf";
-//	public static final int POST_REQUEST = 2;
-//	public static final int PUT_REQUEST = 3;
-//	public static final int DELETE_REQUEST = 4;
+ 	
 
-
+ 	/**============================================
+	 * storage
+	 *=============================================*/
+ 	public static final String USER_PREFS = "user_";
+ 	public static final String USER_PREFS_USER_ID = "user_uid";
+ 	public static final String USER_PREFS_AUTH_TOKEN = "user_at";
+ 	public static final String USER_PREFS_EMAIL = "user_em";
+ 	public static final String USER_PREFS_PWD = "user_pw";
+ 	
+ 	
 	/**=============================================
 	 * creatingXMLParser for class
 	 *==============================================*/

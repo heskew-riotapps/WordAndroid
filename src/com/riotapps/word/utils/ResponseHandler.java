@@ -2,14 +2,10 @@ package com.riotapps.word.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-
 import org.apache.http.HttpResponse;
-
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.riotapps.word.R;
 import com.riotapps.word.hooks.*;
 import com.riotapps.word.utils.Enums.ResponseHandlerType;
@@ -19,7 +15,7 @@ class ResponseHandler {
 	 /**=======================================================================================   
 	  * method handleResponse   
 	  * =======================================================================================*/   
-	 @SuppressWarnings("unchecked")
+	// @SuppressWarnings("unchecked")
 	void handleResponse(final Context ctx, ResponseHandlerType responseHandleBy, ServerResponse serverResponseObject) {   
 
 	     HttpResponse response = serverResponseObject.response;   
@@ -51,7 +47,7 @@ class ResponseHandler {
 	                             Toast t = Toast.makeText(ctx, ctx.getString(R.string.response_in_error), Toast.LENGTH_LONG);  
 	                             t.show();  
 	                         }else{  
-	                             new PlayerService().HandleCreatePlayerResponse(ctx, serverResponseObject);         
+	                             new PlayerService().HandleCreatePlayerResponse(ctx, iStream);         
 	                         }  
 	                         break;  
 	                     }
