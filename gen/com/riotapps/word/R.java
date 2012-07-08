@@ -49,8 +49,8 @@ containing a value of this type.
         public static final int inner_form_base_background=0x7f02001b;
         /** custom color for pressed state 
          */
-        public static final int normal_color=0x7f020029;
-        public static final int pressed_color=0x7f020028;
+        public static final int normal_color=0x7f02002a;
+        public static final int pressed_color=0x7f020029;
         public static final int riotapps_logo1=0x7f02001c;
         public static final int spinner_white_48=0x7f02001d;
         public static final int splash_riot_background=0x7f02001e;
@@ -63,43 +63,51 @@ containing a value of this type.
         public static final int wordsmash_logo4=0x7f020025;
         public static final int wordsmash_logo5=0x7f020026;
         public static final int wordsmash_logo6=0x7f020027;
+        public static final int wordsmash_logo_small1=0x7f020028;
     }
     public static final class id {
         public static final int bCancel=0x7f060011;
         public static final int bSave=0x7f060010;
-        public static final int bTryAgain=0x7f060013;
-        public static final int byEmail=0x7f060019;
-        public static final int byFacebook=0x7f060018;
+        public static final int bTryAgain=0x7f060019;
+        public static final int byEmail=0x7f06001f;
+        public static final int byFacebook=0x7f06001e;
         public static final int dialogButtonOK=0x7f060003;
         public static final int dialog_text=0x7f060002;
         public static final int dialog_title=0x7f060000;
         public static final int email_guarantee=0x7f06000a;
         public static final int email_label=0x7f060009;
         public static final int header=0x7f060005;
-        public static final int imgSmash=0x7f060015;
+        public static final int imgSmash=0x7f06001b;
         public static final int img_close=0x7f060001;
         public static final int inner_form=0x7f060008;
         public static final int logo=0x7f060004;
-        public static final int msg=0x7f060012;
+        public static final int msg=0x7f060018;
         public static final int nickname_label=0x7f06000c;
         public static final int password_label=0x7f06000e;
-        public static final int spinner=0x7f060014;
+        public static final int spinner=0x7f06001a;
+        public static final int startByEmail=0x7f060016;
+        public static final int startByFacebook=0x7f060014;
+        public static final int startByOpponent=0x7f060015;
+        public static final int startByRandom=0x7f060017;
+        public static final int start_game_sub_text=0x7f060013;
+        public static final int start_game_text=0x7f060012;
         public static final int sub_title_join_native=0x7f060007;
         public static final int tEmail=0x7f06000b;
         public static final int tNickname=0x7f06000d;
         public static final int tPassword=0x7f06000f;
         public static final int title_join_native=0x7f060006;
-        public static final int welcome_msg=0x7f060016;
-        public static final int welcome_sub_msg=0x7f060017;
+        public static final int welcome_msg=0x7f06001c;
+        public static final int welcome_sub_msg=0x7f06001d;
     }
     public static final class layout {
         public static final int dialog=0x7f030000;
         public static final int gameslanding=0x7f030001;
         public static final int joinnative=0x7f030002;
         public static final int main=0x7f030003;
-        public static final int notconnected=0x7f030004;
-        public static final int splash=0x7f030005;
-        public static final int welcome=0x7f030006;
+        public static final int mainlanding=0x7f030004;
+        public static final int notconnected=0x7f030005;
+        public static final int splash=0x7f030006;
+        public static final int welcome=0x7f030007;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
@@ -124,6 +132,12 @@ containing a value of this type.
         public static final int password=0x7f05000a;
         public static final int response_in_error=0x7f050018;
         public static final int save=0x7f05000b;
+        public static final int start_game=0x7f05001b;
+        public static final int start_game_by_email_or_nickname=0x7f05001f;
+        public static final int start_game_by_random=0x7f050020;
+        public static final int start_game_fb_friends=0x7f05001d;
+        public static final int start_game_prev_opponents=0x7f05001e;
+        public static final int start_game_sub=0x7f05001c;
         public static final int try_again=0x7f05000c;
         public static final int validation_email_invalid=0x7f050011;
         public static final int validation_email_required=0x7f050010;

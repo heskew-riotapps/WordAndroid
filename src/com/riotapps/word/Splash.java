@@ -3,6 +3,7 @@ package com.riotapps.word;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -60,8 +61,21 @@ public class Splash  extends Activity {
 	        			e.printStackTrace();
 	        		}
 	        		finally {
-	        			Intent goToFirstActivity = new Intent(getApplicationContext(), Welcome.class);
-	    				startActivity(goToFirstActivity);
+	        			SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
+	        			
+	        			String auth_token = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
+	        			
+	        			if (auth_token.length() > 0) {
+	        				Intent goToMainActivity = new Intent(getApplicationContext(), MainLanding.class);
+	        				startActivity(goToMainActivity);
+	        				finish();
+    					}
+    					else{
+    						Intent goToWelcomeActivity = new Intent(getApplicationContext(), Welcome.class);
+	        				startActivity(goToWelcomeActivity);
+	        				finish();
+    						
+    					}
 	        		}
 	        		
 	        	}

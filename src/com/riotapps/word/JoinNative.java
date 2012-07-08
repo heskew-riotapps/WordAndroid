@@ -37,6 +37,7 @@ public class JoinNative extends Activity implements View.OnClickListener{
 	        
 	        bCancel = (Button) findViewById(R.id.bCancel);
 	        bSave = (Button) findViewById(R.id.bSave);
+	       
 	    //    TextView tvTitle =(TextView)findViewById(R.id.title_join_native);
 	    //    TextView tvSubTitle =(TextView)findViewById(R.id.sub_title_join_native);
 	     ////   TextView tvEmailLabel =(TextView)findViewById(R.id.email_label);

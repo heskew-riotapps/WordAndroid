@@ -5,8 +5,11 @@ public class Player {
 	private String nickname;
 	private String email;
 	private String password;
-	private String fb;
+	private String fb = "";
 	private String auth_token;
+	private int numWins = 0;
+	private int numLosses = 0;
+	private int numDraws = 0;
 
 	public void setId(String id) {
 		this.id = id;
@@ -43,6 +46,14 @@ public class Player {
 	}
 	public String getAuthToken() {
 		return this.auth_token;
+	}
+	
+	public boolean isFacebookUser(){
+		return this.fb.length() > 0;
+	}
+	
+	public int getNumGames(){
+		return this.numWins + this.numLosses + this.numDraws;
 	}
 
 }

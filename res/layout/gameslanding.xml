@@ -9,11 +9,12 @@
     >
      <ImageView 
        android:id="@+id/logo"
-	    android:src="@drawable/wordsmash_logo6"
+	    android:src="@drawable/wordsmash_logo_small1"
 	    android:contentDescription="@string/logo"
 	     android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="20dp"
+        android:layout_centerHorizontal="true"
 	    />
      <RelativeLayout
 		android:orientation="vertical"
