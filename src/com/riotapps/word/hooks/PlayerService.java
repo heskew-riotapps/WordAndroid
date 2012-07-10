@@ -37,11 +37,14 @@ public class PlayerService {
 	Gson gson = new Gson();
 	NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 	
-	public Player GetPlayer(String id){
+	public void GetPlayerFromServer(Context ctx, String id){
 		//retrieve player from server
 		//convert using gson
 		//return player to caller
-		return new Player();
+		String url = String.format(Constants.REST_CREATE_PLAYER_URL,id);
+		new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.GET_PLAYER, "abcd").execute(url);
+		
+		//return new Player();
 	}
 	
 	
@@ -56,14 +59,8 @@ public class PlayerService {
 	}
 	
 	
-	public Player CreatePlayer(Context ctx, String email, String nickname, String password) throws DesignByContractException{
-		//retrieve player from server
-		//convert using gson
-		//return player to caller
-		//Player player = new Player();
-	       
-		
-		//player.setEmail(email);
+	public void CreatePlayer(Context ctx, String email, String nickname, String password) throws DesignByContractException{
+
 		//are we connected to the web?
 		Check.Require(connection.checkNetworkConnectivity() == true, ApplicationContext.getAppContext().getString(R.string.msg_not_connected));
 		Check.Require(email.length() > 0, ApplicationContext.getAppContext().getString(R.string.validation_email_required));
@@ -75,7 +72,6 @@ public class PlayerService {
 		player.setPassword(password);
 		
 		String json = gson.toJson(player);
-		//ok lets call the server now
 		
 	//	  String shownOnProgressDialog = "progress test";//ctx.getString(R.string.progressDialogMessageSplashScreenRetrievingUserListing);
 		  
@@ -84,9 +80,11 @@ public class PlayerService {
 		editor.putString(Constants.USER_PREFS_PWD, player.getPassword());
 		editor.putString(Constants.USER_PREFS_EMAIL, player.getEmail());
 		editor.commit();
+		
+		//ok lets call the server now
 		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, "abcd", json).execute(Constants.REST_CREATE_PLAYER_URL);
 		
-		return player;
+		//return player;
 	}
 	
 	public void HandleCreatePlayerResponse(final Context ctx, InputStream iStream){
@@ -109,6 +107,42 @@ public class PlayerService {
  	        
  	      Intent goToGamesLanding = new Intent(ctx, com.riotapps.word.GamesLanding.class);
 			ctx.startActivity(goToGamesLanding);
+ 	       //redirect to game landing page
+ 	       
+ 	       //Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  
+ 	       // t.show(); 
+            
+         } 
+         catch (Exception e) {
+            //getRequest.abort();
+            Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
+            
+            Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
+            t.show(); 
+         }
+	 
+	}
+	
+	public void HandleGetPlayerResponse(final Context ctx, InputStream iStream){
+        try {
+            
+        	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
+ 	        
+ 	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+ 	        
+ 	        Type type = new TypeToken<Player>() {}.getType();
+ 	        Player player = gson.fromJson(reader, type);
+ 	        
+ 	        ///save player info to shared preferences
+ 	        //userId and auth_token ...email and password should have been stored before this call
+ 	       SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+ 	       SharedPreferences.Editor editor = settings.edit();
+ 	       editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
+ 	       editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
+ 	       editor.commit();  
+ 	        
+ 	      Intent goToMainLanding = new Intent(ctx, com.riotapps.word.MainLanding.class);
+			ctx.startActivity(goToMainLanding);
  	       //redirect to game landing page
  	       
  	       //Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  

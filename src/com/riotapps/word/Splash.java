@@ -10,12 +10,16 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.*;
 
 public class Splash  extends Activity {
     /** Called when the activity is first created. */
 	
     final Context context = this;
+    
+    public void test(){}
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,23 +56,29 @@ public class Splash  extends Activity {
         
         if (isConnected == true)
         {
-	        Thread setup = new Thread(){
-	        	public void run(){
-	        		try {
-	        			sleep(3000);
-	        		}
-	        		catch (InterruptedException e){
-	        			e.printStackTrace();
-	        		}
-	        		finally {
+	        //Thread setup = new Thread(){
+	        //	public void run(){
+	        	//	try {
+	        	//		sleep(3000);
+	        	//	}
+	        	//	catch (InterruptedException e){
+	        	//		e.printStackTrace();
+	        	//	}
+	        	//	finally {
 	        			SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
 	        			
 	        			String auth_token = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
+	        			String playerId = settings.getString(Constants.USER_PREFS_USER_ID, "");
+
 	        			
 	        			if (auth_token.length() > 0) {
-	        				Intent goToMainActivity = new Intent(getApplicationContext(), MainLanding.class);
-	        				startActivity(goToMainActivity);
-	        				finish();
+	        				//get player from rails server
+	        				PlayerService playerSvc = new PlayerService();
+
+	        				playerSvc.GetPlayerFromServer(context, playerId);
+	        			//	Intent goToMainActivity = new Intent(getApplicationContext(), MainLanding.class);
+	        			//	startActivity(goToMainActivity);
+	        			//	finish();
     					}
     					else{
     						Intent goToWelcomeActivity = new Intent(getApplicationContext(), Welcome.class);
@@ -76,11 +86,11 @@ public class Splash  extends Activity {
 	        				finish();
     						
     					}
-	        		}
+	        		//}
 	        		
-	        	}
-	        };
-       setup.start();
+	        	//}
+	       // };
+      // setup.start();
         }
     
      }

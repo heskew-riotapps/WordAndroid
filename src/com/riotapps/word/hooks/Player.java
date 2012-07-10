@@ -7,9 +7,9 @@ public class Player {
 	private String password;
 	private String fb = "";
 	private String auth_token;
-	private int numWins = 0;
-	private int numLosses = 0;
-	private int numDraws = 0;
+	private int n_w = 0; //num wins
+	private int n_l = 0; //num losses
+	private int n_d = 0; //num draws
 
 	public void setId(String id) {
 		this.id = id;
@@ -53,7 +53,7 @@ public class Player {
 	}
 	
 	public int getNumGames(){
-		return this.numWins + this.numLosses + this.numDraws;
+		return this.n_w + this.n_l + this.n_d;
 	}
 
 }

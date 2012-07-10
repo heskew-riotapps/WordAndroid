@@ -58,8 +58,18 @@ class ResponseHandler {
 	                     case CREATE_GAME: {  
 	                         
 	                         break;  
-	                     }//end case USER_LISTING_DELETE:      
-	                 }//end of switch response handle by  
+	                     }
+	                     case GET_PLAYER: {  
+
+	                         if(iStream == null){  
+	                             Toast t = Toast.makeText(ctx, ctx.getString(R.string.response_in_error), Toast.LENGTH_LONG);  
+	                             t.show();  
+	                         }else{  
+	                             new PlayerService().HandleCreatePlayerResponse(ctx, iStream);         
+	                         }  
+	                         break;  
+	                     }  
+	                 } 
 
 	                 break;  
 

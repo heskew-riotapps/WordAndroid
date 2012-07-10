@@ -19,7 +19,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	ResponseHandlerType responseHandleBy;
 	String shownOnProgressDialog = null;
 
-	ProgressDialog dialogAccessingSpurstone = null;
+	CustomProgressDialog dialogAccessingSpurstone = null;
 	ArrayList<NameValuePair> nameValuePairs = null;
 	String jsonPost = null;
 
@@ -55,7 +55,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * ====================================================================================*/  
 	 @Override
 	 protected void onPreExecute() {
-		 dialogAccessingSpurstone = new ProgressDialog(ctx);
+		 dialogAccessingSpurstone = new CustomProgressDialog(ctx);
 		 dialogAccessingSpurstone.setMessage(shownOnProgressDialog);	
 		 dialogAccessingSpurstone.show();
 	 }

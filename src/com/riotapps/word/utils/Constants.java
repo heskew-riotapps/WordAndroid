@@ -37,6 +37,7 @@ public class Constants {
 	public static final String REST_URL_SITE = "http://10.0.2.2:3000/";
 	public static final String FACEBOOK_API_ID = "314938401925933";
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
+	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
 	
 	/**=============================================
 	 * rails

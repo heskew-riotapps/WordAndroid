@@ -4,7 +4,8 @@ public class Enums {
 	public static enum ResponseHandlerType {
 	    CREATE_PLAYER,
 	    UPDATE_PLAYER,
-	    CREATE_GAME
+	    CREATE_GAME,
+	    GET_PLAYER
 	}
 	
 	public static enum RequestType {

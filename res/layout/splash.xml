@@ -4,17 +4,6 @@
     android:layout_height="fill_parent"
     android:background="@drawable/bg6" 
     >
-    <ProgressBar 
-          android:id="@+id/spinner"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-	     android:layout_height="wrap_content"
-	     android:layout_marginTop="100dp"
-	     android:tint="#a0ffcb00"
-	     android:endColor="#a0ffcb00"
-	     android:startColor="#a0ffcb00"
-		android:indeterminateDrawable="@drawable/custom_progress"    
-        />
 
 	<ImageView 
 	    android:id="@+id/imgSmash"
@@ -27,7 +16,7 @@
 	<ImageView 
 	    android:src="@drawable/riotapps_logo1"
 	    android:contentDescription="@string/logo"
-	     android:layout_width="80dp"
+	     android:layout_width="100dp"
 	     android:layout_height="40dp"
 	     android:scaleType="centerInside"
 	     android:layout_alignParentBottom="true"
