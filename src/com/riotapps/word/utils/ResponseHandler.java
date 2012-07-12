@@ -65,7 +65,7 @@ class ResponseHandler {
 	                             Toast t = Toast.makeText(ctx, ctx.getString(R.string.response_in_error), Toast.LENGTH_LONG);  
 	                             t.show();  
 	                         }else{  
-	                             new PlayerService().HandleCreatePlayerResponse(ctx, iStream);         
+	                             new PlayerService().HandleGetPlayerResponse(ctx, iStream);         
 	                         }  
 	                         break;  
 	                     }  

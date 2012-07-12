@@ -6,6 +6,7 @@ public class Constants {
 	 * misc
 	 *=============================================*/
  	public static final String MAIN_FONT = "fonts/FullDeceSans1.0.ttf";
+ 	public static final String EMPTY_JSON = "{}";
  	
 
  	/**============================================
@@ -16,6 +17,7 @@ public class Constants {
  	public static final String USER_PREFS_AUTH_TOKEN = "user_at";
  	public static final String USER_PREFS_EMAIL = "user_em";
  	public static final String USER_PREFS_PWD = "user_pw";
+ 	public static final String USER_PREFS_PLAYER_JSON = "player_json";
  	
  	
 	/**=============================================

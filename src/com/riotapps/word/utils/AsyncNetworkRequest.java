@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
 
+import com.riotapps.word.R;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Enums.ResponseHandlerType;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -56,8 +56,11 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	 @Override
 	 protected void onPreExecute() {
 		 dialogAccessingSpurstone = new CustomProgressDialog(ctx);
-		 dialogAccessingSpurstone.setMessage(shownOnProgressDialog);	
+		// dialogAccessingSpurstone.setMessage(shownOnProgressDialog);	
+		 //dialogAccessingSpurstone.setContentView(R.layout.progress);
+		// dialogAccessingSpurstone.setView(dialogAccessingSpurstone.getLayoutInflater().inflate(R.layout.progress, null));
 		 dialogAccessingSpurstone.show();
+		
 	 }
 
 	 /**====================================================================================   

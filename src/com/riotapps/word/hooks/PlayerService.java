@@ -41,7 +41,7 @@ public class PlayerService {
 		//retrieve player from server
 		//convert using gson
 		//return player to caller
-		String url = String.format(Constants.REST_CREATE_PLAYER_URL,id);
+		String url = String.format(Constants.REST_GET_PLAYER_URL,id);
 		new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.GET_PLAYER, "abcd").execute(url);
 		
 		//return new Player();
@@ -85,6 +85,14 @@ public class PlayerService {
 		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, "abcd", json).execute(Constants.REST_CREATE_PLAYER_URL);
 		
 		//return player;
+	}
+	
+	public Player GetPlayerFromLocal(){
+		 Gson gson = new Gson(); 
+		 Type type = new TypeToken<Player>() {}.getType();
+	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);
+	     Player player = gson.fromJson(settings.getString(Constants.USER_PREFS_PLAYER_JSON, Constants.EMPTY_JSON), type);
+	     return player;
 	}
 	
 	public void HandleCreatePlayerResponse(final Context ctx, InputStream iStream){
@@ -135,14 +143,16 @@ public class PlayerService {
  	        
  	        ///save player info to shared preferences
  	        //userId and auth_token ...email and password should have been stored before this call
- 	       SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
- 	       SharedPreferences.Editor editor = settings.edit();
- 	       editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
- 	       editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
- 	       editor.commit();  
- 	        
- 	      Intent goToMainLanding = new Intent(ctx, com.riotapps.word.MainLanding.class);
-			ctx.startActivity(goToMainLanding);
+ 	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+ 	        SharedPreferences.Editor editor = settings.edit();
+ 	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
+ 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
+ 	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+ 	        editor.commit();  
+	 	        
+ 	        Intent goToMainLanding = new Intent(ctx, com.riotapps.word.MainLanding.class);
+ 	      	ctx.startActivity(goToMainLanding);
+ 	      	
  	       //redirect to game landing page
  	       
  	       //Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  

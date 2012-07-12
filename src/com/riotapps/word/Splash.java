@@ -70,12 +70,15 @@ public class Splash  extends Activity {
 	        			String auth_token = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
 	        			String playerId = settings.getString(Constants.USER_PREFS_USER_ID, "");
 
-	        			
+
+
+	        	 	       
 	        			if (auth_token.length() > 0) {
 	        				//get player from rails server
 	        				PlayerService playerSvc = new PlayerService();
-
 	        				playerSvc.GetPlayerFromServer(context, playerId);
+	        				
+
 	        			//	Intent goToMainActivity = new Intent(getApplicationContext(), MainLanding.class);
 	        			//	startActivity(goToMainActivity);
 	        			//	finish();

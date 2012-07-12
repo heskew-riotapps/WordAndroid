@@ -1,5 +1,7 @@
 package com.riotapps.word;
 
+import com.riotapps.word.hooks.Player;
+import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.Constants;
 
 import android.app.Activity;
@@ -20,18 +22,21 @@ public class MainLanding  extends Activity{
         setContentView(R.layout.mainlanding);
         
        // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
+
+        PlayerService playerSvc = new PlayerService();
+        Player player = playerSvc.GetPlayerFromLocal();
         
-        //Toast t = Toast.makeText(this, "Hello " + settings.getString(Constants.USER_PREFS_USER_ID, "bywbyw"), Toast.LENGTH_LONG);  
-	    //t.show();
+        Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
+	    t.show();
         
        
         TextView tvFB =(TextView)findViewById(R.id.startByFacebook);
         TextView tvByOpponent =(TextView)findViewById(R.id.startByOpponent);
 
         //if not in by facebook, hide this option
-        tvFB.setVisibility(View.GONE);
+      //  tvFB.setVisibility(View.GONE);
         //if num complete games = zero, hide this option
-        tvByOpponent.setVisibility(View.GONE);
+      //  tvByOpponent.setVisibility(View.GONE);
         
     }
 }
