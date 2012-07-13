@@ -1,17 +1,21 @@
 package com.riotapps.word.utils;
 
 import com.riotapps.word.R;
-
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.TextView;
 
-public class CustomProgressDialog extends ProgressDialog{
+public class CustomProgressDialog extends AlertDialog{
+	
+	  private String dialogText = "";
+	  
+	 // public void SetText(String text){
+	//	  this.dialogText = text;
+	 // }
 	
 	  public CustomProgressDialog(Context context) {  
 	        super(context);
@@ -38,12 +42,22 @@ public class CustomProgressDialog extends ProgressDialog{
 	                                        (ViewGroup) findViewById(R.id.progress_root));
 	     
 	        
-	     	TextView text = (TextView) layout.findViewById(R.id.dialog_title);
-	 		text.setText("TTTTTTTTTT");
-	  //     this.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.custom_progress));    
-	       
-	      //  this.setProgressStyle(R.style.CustomProgressStyle); 
-	 		this.setView(layout);
+	     	TextView text = (TextView) layout.findViewById(R.id.dialog_text);
+	     	if (this.dialogText.length() > 0) {
+	     		text.setText(this.dialogText);
+	     	}
+	     	else {
+	     		text.setVisibility(View.GONE);
+	     	}
+
+	 		this.setContentView(layout);
+	}
+
+	@Override
+	public void setMessage(CharSequence message) {
+		// TODO Auto-generated method stub
+	//	super.setMessage(message);
+		  this.dialogText = (String)message;
 	}  
 	  
 	  

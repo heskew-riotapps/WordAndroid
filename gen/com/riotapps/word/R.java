@@ -49,35 +49,37 @@ containing a value of this type.
         public static final int inner_form_base_background=0x7f02001b;
         /** custom color for pressed state 
          */
-        public static final int normal_color=0x7f02002a;
-        public static final int pressed_color=0x7f020029;
-        public static final int riotapps_logo1=0x7f02001c;
-        public static final int spinner_white_48=0x7f02001d;
-        public static final int splash_riot_background=0x7f02001e;
-        public static final int text_clickable_main=0x7f02001f;
-        public static final int text_selector=0x7f020020;
-        public static final int text_selector_bottom=0x7f020021;
-        public static final int wordsmash_logo1=0x7f020022;
-        public static final int wordsmash_logo2=0x7f020023;
-        public static final int wordsmash_logo3=0x7f020024;
-        public static final int wordsmash_logo4=0x7f020025;
-        public static final int wordsmash_logo5=0x7f020026;
-        public static final int wordsmash_logo6=0x7f020027;
-        public static final int wordsmash_logo_small1=0x7f020028;
+        public static final int normal_color=0x7f02002c;
+        public static final int pressed_color=0x7f02002b;
+        public static final int progress_inner_background=0x7f02001c;
+        public static final int riotapps_logo1=0x7f02001d;
+        public static final int spinner_small=0x7f02001e;
+        public static final int spinner_white_48=0x7f02001f;
+        public static final int splash_riot_background=0x7f020020;
+        public static final int text_clickable_main=0x7f020021;
+        public static final int text_selector=0x7f020022;
+        public static final int text_selector_bottom=0x7f020023;
+        public static final int wordsmash_logo1=0x7f020024;
+        public static final int wordsmash_logo2=0x7f020025;
+        public static final int wordsmash_logo3=0x7f020026;
+        public static final int wordsmash_logo4=0x7f020027;
+        public static final int wordsmash_logo5=0x7f020028;
+        public static final int wordsmash_logo6=0x7f020029;
+        public static final int wordsmash_logo_small1=0x7f02002a;
     }
     public static final class id {
         public static final int bCancel=0x7f060011;
         public static final int bSave=0x7f060010;
         public static final int bTryAgain=0x7f060019;
-        public static final int byEmail=0x7f06001f;
-        public static final int byFacebook=0x7f06001e;
+        public static final int byEmail=0x7f060020;
+        public static final int byFacebook=0x7f06001f;
         public static final int dialogButtonOK=0x7f060003;
         public static final int dialog_text=0x7f060002;
         public static final int dialog_title=0x7f060000;
         public static final int email_guarantee=0x7f06000a;
         public static final int email_label=0x7f060009;
         public static final int header=0x7f060005;
-        public static final int imgSmash=0x7f06001b;
+        public static final int imgSmash=0x7f06001c;
         public static final int img_close=0x7f060001;
         public static final int inner_form=0x7f060008;
         public static final int logo=0x7f060004;
@@ -85,6 +87,7 @@ containing a value of this type.
         public static final int nickname_label=0x7f06000c;
         public static final int password_label=0x7f06000e;
         public static final int progress_root=0x7f06001a;
+        public static final int progress_spinner=0x7f06001b;
         public static final int startByEmail=0x7f060016;
         public static final int startByFacebook=0x7f060014;
         public static final int startByOpponent=0x7f060015;
@@ -96,8 +99,8 @@ containing a value of this type.
         public static final int tNickname=0x7f06000d;
         public static final int tPassword=0x7f06000f;
         public static final int title_join_native=0x7f060006;
-        public static final int welcome_msg=0x7f06001c;
-        public static final int welcome_sub_msg=0x7f06001d;
+        public static final int welcome_msg=0x7f06001d;
+        public static final int welcome_sub_msg=0x7f06001e;
     }
     public static final class layout {
         public static final int dialog=0x7f030000;

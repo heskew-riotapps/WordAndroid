@@ -1,16 +1,11 @@
 package com.riotapps.word.utils;
 
 import java.util.ArrayList;
-
 import org.apache.http.NameValuePair;
-
-import com.riotapps.word.R;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Enums.ResponseHandlerType;
-
 import android.content.Context;
 import android.os.AsyncTask;
-
 
 public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse> {
 
@@ -19,7 +14,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	ResponseHandlerType responseHandleBy;
 	String shownOnProgressDialog = null;
 
-	CustomProgressDialog dialogAccessingSpurstone = null;
+	CustomProgressDialog progress = null;
 	ArrayList<NameValuePair> nameValuePairs = null;
 	String jsonPost = null;
 
@@ -55,12 +50,9 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * ====================================================================================*/  
 	 @Override
 	 protected void onPreExecute() {
-		 dialogAccessingSpurstone = new CustomProgressDialog(ctx);
-		// dialogAccessingSpurstone.setMessage(shownOnProgressDialog);	
-		 //dialogAccessingSpurstone.setContentView(R.layout.progress);
-		// dialogAccessingSpurstone.setView(dialogAccessingSpurstone.getLayoutInflater().inflate(R.layout.progress, null));
-		 dialogAccessingSpurstone.show();
-		
+		 progress = new CustomProgressDialog(ctx);
+		 progress.setMessage(shownOnProgressDialog);
+		 progress.show();
 	 }
 
 	 /**====================================================================================   
@@ -114,7 +106,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * ====================================================================================*/  
 	 @Override
 	 protected void onPostExecute(ServerResponse serverResponseObject){
-		 dialogAccessingSpurstone.dismiss();
+		 progress.dismiss();
 
 		 new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject);			
 	 }//end method onPostExecute

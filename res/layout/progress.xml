@@ -2,24 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginRight="20dp"
-    android:layout_marginLeft="20dp" 
-    android:background="@null"
-    android:paddingBottom="10dp"
+    android:padding="2dp"
     android:id="@+id/progress_root"
+    style="@style/DialogStyle"
 	>
-  
-    <TextView
-        android:id="@+id/dialog_title"
+ <RelativeLayout  
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/progress_inner_background"
+	>
+	
+  <ProgressBar
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_margin="10dp"
+         android:background="@drawable/custom_progress"
+         android:id="@+id/progress_spinner"
+         />
+    <com.riotapps.word.utils.TypefaceTextView
+         android:id="@+id/dialog_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:paddingBottom="6dp"
-        android:paddingTop="3dp"
-        android:text="gogogog"
-        android:background="#ffffff"
-
+		android:textColor="#ffffff"
+		android:textSize="11dp"
+		android:layout_alignBottom="@id/progress_spinner"
+		android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/progress_spinner"
     />
+   </RelativeLayout>
  </RelativeLayout>
