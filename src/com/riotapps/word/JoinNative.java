@@ -67,7 +67,8 @@ public class JoinNative extends Activity implements View.OnClickListener{
 					
 					try{
 						//show spinner
-						playerSvc.CreatePlayer(context, tEmail.getText().toString(), 
+						playerSvc.CreatePlayer(context, 
+								tEmail.getText().toString(), 
 								tNickname.getText().toString(), 
 								tPassword.getText().toString());
 					} 

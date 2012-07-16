@@ -33,4 +33,7 @@
  	<string name="start_game_prev_opponents">choose a previous opponent</string>
  	<string name="start_game_by_email_or_nickname">find by email or nickname</string>
  	<string name="start_game_by_random">random opponent</string>
+ 	<string name="progress_loading">loading...</string>
+ 	<string name="progress_saving">saving...</string>
+ 	<string name="progress_syncing">syncing...</string>
 </resources>

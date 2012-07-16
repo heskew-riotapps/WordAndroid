@@ -42,9 +42,7 @@ public class PlayerService {
 		//convert using gson
 		//return player to caller
 		String url = String.format(Constants.REST_GET_PLAYER_URL,id);
-		new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.GET_PLAYER, "abcd").execute(url);
-		
-		//return new Player();
+		new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.GET_PLAYER, ctx.getString(R.string.progress_syncing)).execute(url);
 	}
 	
 	
@@ -62,9 +60,9 @@ public class PlayerService {
 	public void CreatePlayer(Context ctx, String email, String nickname, String password) throws DesignByContractException{
 
 		//are we connected to the web?
-		Check.Require(connection.checkNetworkConnectivity() == true, ApplicationContext.getAppContext().getString(R.string.msg_not_connected));
-		Check.Require(email.length() > 0, ApplicationContext.getAppContext().getString(R.string.validation_email_required));
-		Check.Require(Validations.ValidateEmail(email) == true, ApplicationContext.getAppContext().getString(R.string.validation_email_invalid));
+		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
+		Check.Require(Validations.ValidateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
 	 
 		Player player = new Player();
 		player.setEmail(email);
@@ -82,7 +80,7 @@ public class PlayerService {
 		editor.commit();
 		
 		//ok lets call the server now
-		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, "abcd", json).execute(Constants.REST_CREATE_PLAYER_URL);
+		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json).execute(Constants.REST_CREATE_PLAYER_URL);
 		
 		//return player;
 	}
@@ -113,8 +111,10 @@ public class PlayerService {
  	       editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
  	       editor.commit();  
  	        
- 	      Intent goToGamesLanding = new Intent(ctx, com.riotapps.word.GamesLanding.class);
-			ctx.startActivity(goToGamesLanding);
+ 	       Intent goToMainLanding = new Intent(ctx, com.riotapps.word.MainLanding.class);
+	       ctx.startActivity(goToMainLanding);
+ 	       //Intent goToGamesLanding = new Intent(ctx, com.riotapps.word.GamesLanding.class);
+		   //ctx.startActivity(goToGamesLanding);
  	       //redirect to game landing page
  	       
  	       //Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  

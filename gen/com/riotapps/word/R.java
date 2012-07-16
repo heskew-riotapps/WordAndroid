@@ -134,6 +134,9 @@ containing a value of this type.
         public static final int ok=0x7f050012;
         public static final int oops=0x7f050013;
         public static final int password=0x7f05000a;
+        public static final int progress_loading=0x7f050021;
+        public static final int progress_saving=0x7f050022;
+        public static final int progress_syncing=0x7f050023;
         public static final int response_in_error=0x7f050018;
         public static final int save=0x7f05000b;
         public static final int start_game=0x7f05001b;

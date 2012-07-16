@@ -10,23 +10,24 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/progress_inner_background"
+    android:padding="20dp"
 	>
 	
   <ProgressBar
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_margin="10dp"
-         android:background="@drawable/custom_progress"
+		android:background="@drawable/custom_progress"
          android:id="@+id/progress_spinner"
+         style="@android:style/Widget.ProgressBar.Small"
          />
     <com.riotapps.word.utils.TypefaceTextView
          android:id="@+id/dialog_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:textColor="#ffffff"
-		android:textSize="11dp"
+		android:textSize="12dp"
 		android:layout_alignBottom="@id/progress_spinner"
-		android:layout_marginLeft="10dp"
+		android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/progress_spinner"
     />
    </RelativeLayout>
