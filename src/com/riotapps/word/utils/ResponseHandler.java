@@ -90,6 +90,9 @@ class ResponseHandler {
 //	                 break;  
 //	             }//end case 422: 
 	             case 500:
+	            	 ///////do something here
+	  
+	            	 new ShowAlertDialog(ctx, ctx.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase()).showDialog();  
 	         }  
 	     }else if(exception != null){  
 	         new ShowAlertDialog(ctx, ctx.getString(R.string.oops), ctx.getString(R.string.msg_not_connected)).showDialog();  

@@ -31,6 +31,8 @@ public class Splash  extends Activity {
         //are we connected to the web?
         boolean isConnected = connection.checkNetworkConnectivity();
     
+        com.riotapps.word.utils.DialogManager.SetupAlert(context, getString(R.string.oops), "Yoohoo!!!");	
+        
         if (isConnected == false)  
         {
         	try {
@@ -40,7 +42,7 @@ public class Splash  extends Activity {
 				if (isConnected == false) { 
 				 	
 					//change this to more specific dialog with button that goes to a page that allows offline usage
-					DialogManager.SetupOKDialog(context, getString(R.string.oops), getString(R.string.msg_not_connected));					
+					DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.msg_not_connected));					
 
 				 	
 					//Intent notConnected = new Intent(getApplicationContext(), NotConnected.class);
@@ -54,7 +56,7 @@ public class Splash  extends Activity {
 			}
         }
         
-        if (isConnected == true)
+        if (isConnected == false)////change back
         {
 	        //Thread setup = new Thread(){
 	        //	public void run(){

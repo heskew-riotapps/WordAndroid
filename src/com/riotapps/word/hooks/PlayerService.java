@@ -109,6 +109,7 @@ public class PlayerService {
  	       SharedPreferences.Editor editor = settings.edit();
  	       editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
  	       editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
+ 	      editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
  	       editor.commit();  
  	        
  	       Intent goToMainLanding = new Intent(ctx, com.riotapps.word.MainLanding.class);

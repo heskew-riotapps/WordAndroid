@@ -5,6 +5,7 @@
     android:padding="2dp"
     android:id="@+id/progress_root"
     style="@style/DialogStyle"
+    android:background="@drawable/dialog_background"
 	>
  <RelativeLayout  
     android:layout_width="wrap_content"

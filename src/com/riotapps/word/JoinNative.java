@@ -3,6 +3,7 @@ package com.riotapps.word;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.DesignByContractException;
+import com.riotapps.word.utils.DialogManager;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -73,10 +74,10 @@ public class JoinNative extends Activity implements View.OnClickListener{
 								tPassword.getText().toString());
 					} 
 					catch (DesignByContractException dbEx) {
-					 	DialogManager.SetupOKDialog(context, getString(R.string.oops), dbEx.getMessage());					}
+					 	DialogManager.SetupAlert(context, getString(R.string.oops), dbEx.getMessage());					}
 					catch (Exception ex) {
 						//log this, figure out logging
-					 	DialogManager.SetupOKDialog(context, getString(R.string.error_title), getString(R.string.error_message));						
+					 	DialogManager.SetupAlert(context, getString(R.string.error_title), getString(R.string.error_message));						
 					}
 				 
 				}
