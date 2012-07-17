@@ -144,14 +144,14 @@
         android:layout_below="@+id/inner_form" 
         android:background="@drawable/button_area_background" >
 	 
-	<Button 
+	<com.riotapps.word.utils.TypefaceButton 
   	    style="@style/ButtonStyle"
   	    android:id="@+id/bSave"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
         android:text="@string/save"
     />
-    <Button 
+    <com.riotapps.word.utils.TypefaceButton 
         style="@style/ButtonStyle"
         android:id="@+id/bCancel"
         android:layout_width="0dp"

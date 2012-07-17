@@ -1,5 +1,6 @@
 package com.riotapps.word.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
@@ -10,11 +11,17 @@ import com.riotapps.word.R;
 
 public class DialogManager {
 	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage){
-		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""));
+		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""), false);
+	}
+
+	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, boolean onOkClickFinishActivity){
+		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""), onOkClickFinishActivity);
 	}
 	
-	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, String okText){
+	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, String okText, boolean onOkClickFinishActivity){
     	final Dialog dialog = new Dialog(context, R.style.DialogStyle);
+    	final boolean onClickFinishActivity = onOkClickFinishActivity;
+    	final Context ctx = context;
 		dialog.setContentView(R.layout.alert);
  
 		// set the custom dialog components - text, image and button
@@ -31,6 +38,9 @@ public class DialogManager {
 		@Override
 		public void onClick(View v) {
 			dialog.dismiss();
+			if(onClickFinishActivity){
+            	((Activity)ctx).finish();
+            }
 		}
 	});
 
@@ -40,6 +50,9 @@ public class DialogManager {
 	 		@Override
 			public void onClick(View v) {
 				dialog.dismiss();
+				if(onClickFinishActivity){
+	            	((Activity)ctx).finish();
+	            }
 			}
 		});
 //		Button dialogButton = (Button) dialog.findViewById(R.id.bAlertOk);

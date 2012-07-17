@@ -30,8 +30,6 @@ public class Splash  extends Activity {
         NetworkConnectivity connection = new NetworkConnectivity(this);
         //are we connected to the web?
         boolean isConnected = connection.checkNetworkConnectivity();
-    
-        com.riotapps.word.utils.DialogManager.SetupAlert(context, getString(R.string.oops), "Yoohoo!!!");	
         
         if (isConnected == false)  
         {
@@ -42,12 +40,7 @@ public class Splash  extends Activity {
 				if (isConnected == false) { 
 				 	
 					//change this to more specific dialog with button that goes to a page that allows offline usage
-					DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.msg_not_connected));					
-
-				 	
-					//Intent notConnected = new Intent(getApplicationContext(), NotConnected.class);
-					//startActivity(notConnected);
-					//finish();
+					DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.msg_not_connected), true);					
 				}
         	} 
         	catch (InterruptedException e1) {
@@ -56,46 +49,29 @@ public class Splash  extends Activity {
 			}
         }
         
-        if (isConnected == false)////change back
+        if (isConnected == true) 
         {
-	        //Thread setup = new Thread(){
-	        //	public void run(){
-	        	//	try {
-	        	//		sleep(3000);
-	        	//	}
-	        	//	catch (InterruptedException e){
-	        	//		e.printStackTrace();
-	        	//	}
-	        	//	finally {
-	        			SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
-	        			
-	        			String auth_token = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
-	        			String playerId = settings.getString(Constants.USER_PREFS_USER_ID, "");
+
+			SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
+			
+			String auth_token = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
+			String playerId = settings.getString(Constants.USER_PREFS_USER_ID, "");
 
 
 
-	        	 	       
-	        			if (auth_token.length() > 0) {
-	        				//get player from rails server
-	        				PlayerService playerSvc = new PlayerService();
-	        				playerSvc.GetPlayerFromServer(context, playerId);
-	        				
-
-	        			//	Intent goToMainActivity = new Intent(getApplicationContext(), MainLanding.class);
-	        			//	startActivity(goToMainActivity);
-	        			//	finish();
-    					}
-    					else{
-    						Intent goToWelcomeActivity = new Intent(getApplicationContext(), Welcome.class);
-	        				startActivity(goToWelcomeActivity);
-	        				finish();
-    						
-    					}
-	        		//}
-	        		
-	        	//}
-	       // };
-      // setup.start();
+	 	       
+			if (auth_token.length() > 0) {
+				//get player from rails server
+				PlayerService playerSvc = new PlayerService();
+				playerSvc.GetPlayerFromServer(context, playerId);
+				
+			}
+			else{
+				Intent goToWelcomeActivity = new Intent(getApplicationContext(), Welcome.class);
+				startActivity(goToWelcomeActivity);
+				finish();
+				
+			}
         }
     
      }

@@ -77,15 +77,14 @@ containing a value of this type.
         public static final int bCancel=0x7f060016;
         public static final int bSave=0x7f060015;
         public static final int bTryAgain=0x7f06001e;
-        public static final int byEmail=0x7f060024;
-        public static final int byFacebook=0x7f060023;
+        public static final int byEmail=0x7f060023;
+        public static final int byFacebook=0x7f060022;
         public static final int dialogButtonOK=0x7f060009;
         public static final int dialog_text=0x7f060008;
         public static final int dialog_title=0x7f060007;
         public static final int email_guarantee=0x7f06000f;
         public static final int email_label=0x7f06000e;
         public static final int header=0x7f060002;
-        public static final int imgSmash=0x7f060020;
         public static final int img_close=0x7f060004;
         public static final int inner_form=0x7f06000d;
         public static final int logo=0x7f06000a;
@@ -105,8 +104,8 @@ containing a value of this type.
         public static final int tNickname=0x7f060012;
         public static final int tPassword=0x7f060014;
         public static final int title_join_native=0x7f06000b;
-        public static final int welcome_msg=0x7f060021;
-        public static final int welcome_sub_msg=0x7f060022;
+        public static final int welcome_msg=0x7f060020;
+        public static final int welcome_sub_msg=0x7f060021;
     }
     public static final class layout {
         public static final int alert=0x7f030000;
@@ -117,8 +116,9 @@ containing a value of this type.
         public static final int mainlanding=0x7f030005;
         public static final int notconnected=0x7f030006;
         public static final int progress=0x7f030007;
-        public static final int splash=0x7f030008;
-        public static final int welcome=0x7f030009;
+        public static final int rules=0x7f030008;
+        public static final int splash=0x7f030009;
+        public static final int welcome=0x7f03000a;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
@@ -164,11 +164,14 @@ containing a value of this type.
         public static final int DialogStyle=0x7f040002;
         public static final int DialogTitleStyle=0x7f040003;
         public static final int HeaderTextStyle=0x7f040004;
-        public static final int MainStyle=0x7f040005;
-        public static final int MiniTextStyle=0x7f040006;
-        public static final int SubTextStyle=0x7f040007;
-        public static final int TextClickableStyle=0x7f040008;
-        public static final int TextStyle=0x7f040009;
+        public static final int LayoutFormStyle=0x7f040005;
+        public static final int LayoutStyle=0x7f040006;
+        public static final int MainStyle=0x7f040007;
+        public static final int MiniTextStyle=0x7f040008;
+        public static final int SubTextStyle=0x7f040009;
+        public static final int TextClickableStyle=0x7f04000a;
+        public static final int TextStyle=0x7f04000b;
+        public static final int TopLogoStyle=0x7f04000c;
     }
     public static final class styleable {
         /** Attributes that can be used with a TypefacedTextView.
