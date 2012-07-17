@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:orientation="vertical"
-    	android:background="@drawable/bg6" 
-      	android:paddingLeft="25dp"
-    	android:paddingRight="25dp" 
-    	>
-	<ImageView 
-	    android:src="@drawable/wordsmash_logo6"
-	    android:contentDescription="@string/logo"
-	    android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxWidth="20dp" 
-        android:id="@+id/logo"
-	    />
+    style="@style/LayoutStyle" >
+     <ImageView 
+       android:id="@+id/logo"
+       android:contentDescription="@string/logo"
+	    style="@style/TopLogoStyle" 
+	  />
 	<RelativeLayout
 		android:orientation="vertical"
 		android:layout_width="wrap_content"

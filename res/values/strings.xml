@@ -33,7 +33,17 @@
  	<string name="start_game_prev_opponents">choose a previous opponent</string>
  	<string name="start_game_by_email_or_nickname">find by email or nickname</string>
  	<string name="start_game_by_random">random opponent</string>
- 	<string name="progress_loading">loading...</string>
- 	<string name="progress_saving">saving...</string>
- 	<string name="progress_syncing">syncing...</string>
+ 	<string name="progress_loading">loading&#8230;</string>
+ 	<string name="progress_saving">saving&#8230;</string>
+ 	<string name="progress_syncing">syncing&#8230;</string>
+ 	<string name="quick_rules_title">quick rules</string>
+ 	<string name="quick_rules_subtitle">enough to get you started</string>
+ 	<string name="quick_rules_summary">Take turns placing letters that form valid words and are connected to (or on top of) letters already placed on the board.  Points accumulate based on letter values and bonuses. To win, outscore your opponent.</string>
+ 	<string name="quick_rules_1">To start the game, a letter of the first word must be placed on at least one of the smiley faces.</string>
+  	<string name="quick_rules_2">Then take turns forming valid words by dragging letters from your tray to the board. At least one of your placed letters must connect to (or be placed on top of) letters already placed on the board in previous turns.</string>	
+ 	<string name="quick_rules_3">During a turn, be sure to place all of your letters in a single line, either vertically or horizontally.</string>	
+ 	<string name="quick_rules_4">If it\'s your turn, you can also skip the turn or swap letters.</string>
+ 	<string name="quick_rules_5">Keep it up until all the letters are used.  The player with the highest score wins.</string>	
+ 	<string name="full_rules_title">full rules</string>
+ 	<string name="full_rules_subtitle">all the details</string>
 </resources>

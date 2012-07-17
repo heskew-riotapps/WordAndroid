@@ -77,8 +77,8 @@ containing a value of this type.
         public static final int bCancel=0x7f060016;
         public static final int bSave=0x7f060015;
         public static final int bTryAgain=0x7f06001e;
-        public static final int byEmail=0x7f060023;
-        public static final int byFacebook=0x7f060022;
+        public static final int byEmail=0x7f060028;
+        public static final int byFacebook=0x7f060027;
         public static final int dialogButtonOK=0x7f060009;
         public static final int dialog_text=0x7f060008;
         public static final int dialog_title=0x7f060007;
@@ -93,6 +93,11 @@ containing a value of this type.
         public static final int password_label=0x7f060013;
         public static final int progress_root=0x7f060000;
         public static final int progress_spinner=0x7f06001f;
+        public static final int quick_rule1=0x7f060022;
+        public static final int quick_rule2=0x7f060023;
+        public static final int quick_rule3=0x7f060024;
+        public static final int quick_rule4=0x7f060025;
+        public static final int quick_rule5=0x7f060026;
         public static final int startByEmail=0x7f06001b;
         public static final int startByFacebook=0x7f060019;
         public static final int startByOpponent=0x7f06001a;
@@ -129,6 +134,8 @@ containing a value of this type.
         public static final int enter_password=0x7f050006;
         public static final int error_message=0x7f050015;
         public static final int error_title=0x7f050014;
+        public static final int full_rules_subtitle=0x7f05002d;
+        public static final int full_rules_title=0x7f05002c;
         public static final int join_title=0x7f050003;
         public static final int join_via_facebook=0x7f050001;
         public static final int join_via_native=0x7f050002;
@@ -144,6 +151,14 @@ containing a value of this type.
         public static final int progress_loading=0x7f050021;
         public static final int progress_saving=0x7f050022;
         public static final int progress_syncing=0x7f050023;
+        public static final int quick_rules_1=0x7f050027;
+        public static final int quick_rules_2=0x7f050028;
+        public static final int quick_rules_3=0x7f050029;
+        public static final int quick_rules_4=0x7f05002a;
+        public static final int quick_rules_5=0x7f05002b;
+        public static final int quick_rules_subtitle=0x7f050025;
+        public static final int quick_rules_summary=0x7f050026;
+        public static final int quick_rules_title=0x7f050024;
         public static final int response_in_error=0x7f050018;
         public static final int save=0x7f05000b;
         public static final int start_game=0x7f05001b;
@@ -163,15 +178,17 @@ containing a value of this type.
         public static final int CustomProgressStyle=0x7f040001;
         public static final int DialogStyle=0x7f040002;
         public static final int DialogTitleStyle=0x7f040003;
-        public static final int HeaderTextStyle=0x7f040004;
-        public static final int LayoutFormStyle=0x7f040005;
-        public static final int LayoutStyle=0x7f040006;
-        public static final int MainStyle=0x7f040007;
-        public static final int MiniTextStyle=0x7f040008;
-        public static final int SubTextStyle=0x7f040009;
-        public static final int TextClickableStyle=0x7f04000a;
-        public static final int TextStyle=0x7f04000b;
-        public static final int TopLogoStyle=0x7f04000c;
+        public static final int FormBackgroundStyle=0x7f040004;
+        public static final int HeaderTextStyle=0x7f040005;
+        public static final int HeaderTopLayoutStyle=0x7f040006;
+        public static final int LayoutFormStyle=0x7f040007;
+        public static final int LayoutStyle=0x7f040008;
+        public static final int MainStyle=0x7f040009;
+        public static final int MiniTextStyle=0x7f04000a;
+        public static final int SubTextStyle=0x7f04000b;
+        public static final int TextClickableStyle=0x7f04000c;
+        public static final int TextStyle=0x7f04000d;
+        public static final int TopLogoStyle=0x7f04000e;
     }
     public static final class styleable {
         /** Attributes that can be used with a TypefacedTextView.
