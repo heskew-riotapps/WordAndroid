@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="TopLogoStyle">
-        <item name="android:src">@drawable/wordsmash_logo6</item>
+        <item name="android:src">@drawable/wordsmash_logo7</item>
 	    <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">20dp</item>
-        <item name="android:paddingRight">20dp</item>
         <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 </resources>

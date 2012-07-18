@@ -37,7 +37,7 @@
  	<string name="progress_saving">saving&#8230;</string>
  	<string name="progress_syncing">syncing&#8230;</string>
  	<string name="quick_rules_title">quick rules</string>
- 	<string name="quick_rules_subtitle">enough to get you started</string>
+ 	<string name="quick_rules_subtitle">enough to get you off and running</string>
  	<string name="quick_rules_summary">Take turns placing letters that form valid words and are connected to (or on top of) letters already placed on the board.  Points accumulate based on letter values and bonuses. To win, outscore your opponent.</string>
  	<string name="quick_rules_1">To start the game, a letter of the first word must be placed on at least one of the smiley faces.</string>
   	<string name="quick_rules_2">Then take turns forming valid words by dragging letters from your tray to the board. At least one of your placed letters must connect to (or be placed on top of) letters already placed on the board in previous turns.</string>	

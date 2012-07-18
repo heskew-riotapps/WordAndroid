@@ -151,7 +151,7 @@ public class PlayerService {
  	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
  	        editor.commit();  
 	 	        
- 	        Intent goToMainLanding = new Intent(ctx, com.riotapps.word.Rules.class);
+ 	        Intent goToMainLanding = new Intent(ctx, com.riotapps.word.RulesTab.class);
  	      	ctx.startActivity(goToMainLanding);
  	      	
  	       //redirect to game landing page

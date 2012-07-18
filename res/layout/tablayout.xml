@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabsLayout" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dip" 
+    android:gravity="center" 
+    android:orientation="vertical"
+    android:background="@drawable/tab_selector">
+    <com.riotapps.word.utils.TypefaceTextView
+        android:id="@+id/tabsText" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+         style="@style/HeaderTopLayoutStyle"/>
+     <com.riotapps.word.utils.TypefaceTextView
+        android:id="@+id/tabsSubText" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:textColor="#fff"
+        android:textSize="12dp"
+        android:textStyle="bold" />
+</LinearLayout>
