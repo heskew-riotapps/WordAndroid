@@ -3,11 +3,11 @@
 	android:shape="rectangle" 
 	android:padding="10dp"
 	 >
-    <solid android:color="@drawable/tab_background_color" /> 
+    <solid android:color="@drawable/tab_off_color" /> 
     <corners 
         android:radius="2dp"
-        android:topRightRadius="0dp" 
-        android:topLeftRadius="8dp"
+        android:topRightRadius="8dp" 
+        android:topLeftRadius="0dp"
         android:bottomRightRadius="0dp" 
         android:bottomLeftRadius="0dp"
 	/>

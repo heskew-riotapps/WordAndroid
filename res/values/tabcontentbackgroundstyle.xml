@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="TabContentBackgroundStyle" >
+   	<item name="android:orientation">vertical</item>
+	<item name="android:layout_width">wrap_content</item>
+	<item name="android:layout_height">wrap_content</item>
+	<item name="android:background">@drawable/tab_content_background</item>
+	<item name="android:layout_below">@id/logo</item>
+	<item name="android:paddingBottom">2dp</item>
+	<item name="android:paddingLeft">2dp</item>
+	<item name="android:paddingRight">2dp</item>
+	<item name="android:paddingTop">6dp</item>
+</style>
+</resources>

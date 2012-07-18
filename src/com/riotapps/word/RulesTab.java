@@ -38,7 +38,7 @@ public class RulesTab extends TabActivity{
 		TabHost tabHost = getTabHost(); 
 		tabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
 		
-		View view1 = LayoutInflater.from(this).inflate(R.layout.tablayout, null);
+		View view1 = LayoutInflater.from(this).inflate(R.layout.lefttablayout, null);
 		TextView tv1 = (TextView) view1.findViewById(R.id.tabsText);
 		tv1.setText("rule overview");
 		TextView tvSub1 = (TextView) view1.findViewById(R.id.tabsSubText);
@@ -53,14 +53,14 @@ public class RulesTab extends TabActivity{
 	//	  .setIndicator("Quick", resources.getDrawable(R.drawable.tab_selector))		
 		// Full tab
 		
-		View view2 = LayoutInflater.from(this).inflate(R.layout.tablayout, null);
+		View view2 = LayoutInflater.from(this).inflate(R.layout.righttablayout, null);
 		TextView tv2 = (TextView) view2.findViewById(R.id.tabsText);
 		tv2.setText("all rules");
 		TextView tvSub2 = (TextView) view2.findViewById(R.id.tabsSubText);
 		tvSub2.setText("the kitchen sink");
 		
 		
-		Intent intentFull = new Intent().setClass(this, Rules.class);
+		Intent intentFull = new Intent().setClass(this, FullRules.class);
 		TabSpec tabSpecFull = tabHost
 		  .newTabSpec("Full")
 		  .setIndicator(view2)
@@ -72,7 +72,7 @@ public class RulesTab extends TabActivity{
 
  
 		//set Windows tab as default (zero based)
-		//tabHost.setCurrentTab(0); 
+		tabHost.setCurrentTab(0); 
 	}
 	
 	private void setupTab(final View view, final String tag) {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item android:drawable="@drawable/left_tab_pressed_background"
+          android:state_pressed="true" 
+    />    
+    <item
+		android:state_selected="false" 
+		android:drawable="@drawable/left_tab_off_background" />
+    
+    <item android:drawable="@drawable/left_tab_background" />
+    
+    
+</selector>
