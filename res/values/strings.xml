@@ -38,12 +38,22 @@
  	<string name="progress_syncing">syncing&#8230;</string>
  	<string name="quick_rules_title">quick rules</string>
  	<string name="quick_rules_subtitle">enough to get you off and running</string>
- 	<string name="quick_rules_summary">Take turns placing letters that form valid words and are connected to (or on top of) letters already placed on the board.  Points accumulate based on letter values and bonuses. To win, outscore your opponent.</string>
- 	<string name="quick_rules_1">To start the game, a letter of the first word must be placed on at least one of the smiley faces.</string>
+  	<string name="quick_rules_1">To start the game, a letter of the first word must be placed on at least one of the smiley faces.</string>
   	<string name="quick_rules_2">Then take turns forming valid words by dragging letters from your tray to the board. At least one of your placed letters must connect to (or be placed on top of) letters already placed on the board in previous turns.</string>	
  	<string name="quick_rules_3">During a turn, be sure to place all of your letters in a single line, either vertically or horizontally.</string>	
  	<string name="quick_rules_4">If it\'s your turn, you can also skip the turn or swap letters.</string>
  	<string name="quick_rules_5">Keep it up until all the letters are used.  The player with the highest score wins.</string>	
  	<string name="full_rules_title">full rules</string>
  	<string name="full_rules_subtitle">all the details</string>
+ 	<string name="full_rules_1">The idea is to score more points than your opponent by forming valid words out of the letters in your tray. 
+                   Letters must be placed on the board in a single axis, either horizontally or vertically.  As you win more games, 
+                   you\'ll earn new badges.</string>
+   	<string name="full_rules_2">To start the game, the letters of the first word must placed on at least one of the smiley faces.  All words must contain 2 or more letters. 
+                       The players alternate turns. Each turn after the first must 
+                       place at least one letter next to a previously placed letter on the board, either to the left or right or above or below, OR overlaying 
+                       a previously played letter.</string>                
+ 	<string name="full_rules_3">Overlays are letters that are played over a letter that was placed on the 
+                       board in a previous turn.  Just remember that a player must overlay a letter with a different letter.  In other words, one 
+                       cannot overlay an \"A\" with another \"A\".  The letters must be different.</string>  
+ 	
 </resources>

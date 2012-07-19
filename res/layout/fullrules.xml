@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
 		style="@style/TabContentBackgroundStyle"
 	>
-	<View
-	    android:layout_width="fill_parent"
-        android:layout_height="6dp"
-        android:background="#666666"
-	    />
     <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -14,9 +13,11 @@
         android:background="#fff5ee"
         android:textSize="12dp"
         android:textStyle="bold"
-        android:text="@string/quick_rules_2" 
+        android:text="@string/full_rules_1" 
         android:id="@+id/quick_rule1"
-    	android:padding="5dp"
+    	android:paddingTop="5dp"
+    	android:paddingLeft="5dp"
+    	android:paddingRight="5dp"
         />
    <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
@@ -25,12 +26,13 @@
         android:background="#fff5ee"
         android:textSize="12dp"
         android:textStyle="bold"
-	 	android:padding="5dp"
-        android:text="@string/quick_rules_2" 
+    	android:paddingLeft="5dp"
+    	android:paddingRight="5dp"
+        android:text="@string/full_rules_2" 
         android:id="@+id/quick_rule2"
         android:layout_below="@id/quick_rule1"
-		android:layout_marginTop=".25dp"
-		android:clickable="true"
+    	android:drawableTop="@drawable/horiz_divider"
+    	android:drawablePadding="3dp"
         />	
     <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
@@ -39,12 +41,13 @@
         android:background="#fff5ee"
         android:textSize="12dp"
         android:textStyle="bold"
-	 	android:padding="5dp"
-        android:text="@string/quick_rules_3" 
+    	android:paddingLeft="5dp"
+    	android:paddingRight="5dp"
+        android:text="@string/full_rules_3" 
         android:id="@+id/quick_rule3"
         android:layout_below="@id/quick_rule2"
-		android:layout_marginTop=".25dp"
-		android:clickable="true"
+    	android:drawableTop="@drawable/horiz_divider"
+    	android:drawablePadding="3dp"
         />
      <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
@@ -53,12 +56,13 @@
         android:background="#fff5ee"
         android:textSize="12dp"
         android:textStyle="bold"
-	 	android:padding="5dp"
+    	android:paddingLeft="5dp"
+    	android:paddingRight="5dp"
         android:text="@string/quick_rules_4" 
         android:id="@+id/quick_rule4"
         android:layout_below="@id/quick_rule3"
-		android:layout_marginTop=".25dp"
-		android:clickable="true"
+    	android:drawableTop="@drawable/horiz_divider"
+    	android:drawablePadding="3dp"
         />	
       <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
@@ -67,11 +71,13 @@
         android:background="#fff5ee"
         android:textSize="12dp"
         android:textStyle="bold"
-	 	android:padding="5dp"
+    	android:paddingLeft="5dp"
+    	android:paddingRight="5dp"
         android:text="@string/quick_rules_5" 
         android:id="@+id/quick_rule5"
         android:layout_below="@id/quick_rule4"
-		android:layout_marginTop=".25dp"
-		android:clickable="true"
+    	android:drawableTop="@drawable/horiz_divider"
+    	android:drawablePadding="3dp"
         />	
 </RelativeLayout>
+</ScrollView>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="ContentAreaTextAreaStyle" parent="ContentAreaTextStyle" >
+	<item name="android:drawableTop">@drawable/horiz_divider5</item>
+	<item name="android:drawablePadding">5dp</item>
+</style>
+</resources>
