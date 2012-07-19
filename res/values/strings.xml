@@ -53,7 +53,10 @@
                        place at least one letter next to a previously placed letter on the board, either to the left or right or above or below, OR overlaying 
                        a previously played letter.</string>                
  	<string name="full_rules_3">Overlays are letters that are played over a letter that was placed on the 
-                       board in a previous turn.  Just remember that a player must overlay a letter with a different letter.  In other words, one 
+                       board in any previous turn.  Just remember that a player must overlay a letter with a different letter.  In other words, one 
                        cannot overlay an \"A\" with another \"A\".  The letters must be different.</string>  
- 	
+ 	<string name="full_rules_4">A player can skip a turn or swap letters.  
+                       Swapped letters are returned to the hopper, the hopper is reshuffled, and the amount of swapped letters are pulled out of the hopper
+                       and given to the player.  The player\'s turn is then skipped.  Swapping is not allowed after the hopper is empty.</string>  
+ 	<string name="full_rules_5">Points per Letter</string>                         
 </resources>

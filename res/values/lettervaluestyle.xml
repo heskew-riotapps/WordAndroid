@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="LetterValueStyle" >
+    <item name="android:textColor">@drawable/content_font_color</item>
+	<item name="android:layout_width">60dp</item>
+</style>
+</resources>

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:layout_height="fill_parent" >
 <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-		style="@style/TabContentBackgroundStyle"
-	>
-
+		style="@style/TabContentBackgroundStyle">
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/ContentAreaTextStyle"
         android:text="@string/quick_rules_1" 
@@ -15,49 +12,17 @@
        style="@style/ContentAreaTextAreaStyle"
         android:text="@string/quick_rules_2" 
         />	
-    <com.riotapps.word.utils.TypefaceTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#1874CD"
-        android:background="#fff5ee"
-        android:textSize="12dp"
-        android:textStyle="bold"
-    	android:paddingLeft="8dp"
-    	android:paddingRight="5dp"
-    	android:paddingBottom="5dp"
+   <com.riotapps.word.utils.TypefaceTextView
+       style="@style/ContentAreaTextAreaStyle"
         android:text="@string/quick_rules_3" 
-        android:id="@+id/quick_rule3"
-    	android:drawableTop="@drawable/horiz_divider5"
-    	android:drawablePadding="5dp"
         />
-     <com.riotapps.word.utils.TypefaceTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#1874CD"
-        android:background="#fff5ee"
-        android:textSize="12dp"
-        android:textStyle="bold"
-    	android:paddingLeft="8dp"
-    	android:paddingRight="5dp"
-    	android:paddingBottom="5dp"
+   <com.riotapps.word.utils.TypefaceTextView
+       style="@style/ContentAreaTextAreaStyle"
         android:text="@string/quick_rules_4" 
-        android:id="@+id/quick_rule4"
-    	android:drawableTop="@drawable/horiz_divider5"
-    	android:drawablePadding="5dp"
-        />	
-      <com.riotapps.word.utils.TypefaceTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#1874CD"
-        android:background="#fff5ee"
-        android:textSize="12dp"
-        android:textStyle="bold"
-    	android:paddingLeft="8dp"
-    	android:paddingRight="5dp"
-    	android:paddingBottom="5dp"
+        />
+   <com.riotapps.word.utils.TypefaceTextView
+       style="@style/ContentAreaTextAreaBottomStyle"
         android:text="@string/quick_rules_5" 
-    	android:drawableTop="@drawable/horiz_divider5"
-    	android:drawablePadding="5dp"
-        />	
+        />
 </LinearLayout>
 </ScrollView>
