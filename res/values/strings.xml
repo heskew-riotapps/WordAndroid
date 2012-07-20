@@ -48,7 +48,7 @@
  	<string name="full_rules_1">The idea is to score more points than your opponent by forming valid words out of the letters in your tray. 
                    Letters must be placed on the board in a single axis, either horizontally or vertically.  As you win more games, 
                    you\'ll earn new badges.</string>
-   	<string name="full_rules_2">To start the game, the letters of the first word must placed on at least one of the smiley faces.  All words must contain 2 or more letters. 
+   	<string name="full_rules_2">To start the <a href="com.riotapps.word://rulestab">testing</a> game, the letters of the first word must placed on at least one of the smiley faces.  All words must contain 2 or more letters. 
                        The players alternate turns. Each turn after the first must 
                        place at least one letter next to a previously placed letter on the board, either to the left or right or above or below, OR overlaying 
                        a previously played letter.</string>                
@@ -58,5 +58,12 @@
  	<string name="full_rules_4">A player can skip a turn or swap letters.  
                        Swapped letters are returned to the hopper, the hopper is reshuffled, and the amount of swapped letters are pulled out of the hopper
                        and given to the player.  The player\'s turn is then skipped.  Swapping is not allowed after the hopper is empty.</string>  
- 	<string name="full_rules_5">Points per Letter</string>                         
+ 	<string name="full_rules_letters_1">The Letters</string>
+ 	<string name="full_rules_letters_2">105 letters are shuffled and stored in the hopper until they are dispersed into the player\'s trays.  The mix of the first 100 letters is as follows:</string>                      
+ 	<string name="full_rules_letters_3">The final 5 letters are made up of 3 randomly chosen consonants and 2 randomly chosen vowels (A, E, I, O, or U).  The random letters will 
+                        be unique, meaning that the random consonants chosen might be "P", "R", and "C", but would never be "P", "R", and "R".</string>   
+	<string name="full_rules_scoring_1">Scoring</string>
+	<string name="full_rules_scoring_2">Each letter has an assigned value as follows:</string>		
+	<string name="full_rules_scoring_3">The codes on the board represent bonus values that are multiplied times various letter values that 
+                            are placed during a turn.  </string>	
 </resources>

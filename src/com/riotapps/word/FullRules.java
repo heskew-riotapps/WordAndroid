@@ -2,6 +2,8 @@ package com.riotapps.word;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 public class FullRules extends Activity{
 	
@@ -9,6 +11,10 @@ public class FullRules extends Activity{
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.fullrules);
+	        
+	        TextView t2 = (TextView) findViewById(R.id.fullRules2);
+	        t2.setMovementMethod(LinkMovementMethod.getInstance());
+
 	        
 	 }
 	    

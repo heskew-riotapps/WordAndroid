@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-		style="@style/TabContentBackgroundStyle">
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" 
+    	android:fadingEdge="none">
+<LinearLayout 
+    style="@style/TabContentBackgroundStyle"
+    >
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/ContentAreaTextStyle"
         android:text="@string/full_rules_1" 
+       
         />
    <com.riotapps.word.utils.TypefaceTextView
        style="@style/ContentAreaTextAreaStyle"
         android:text="@string/full_rules_2" 
+        android:id="@+id/fullRules2"
         />	
    <com.riotapps.word.utils.TypefaceTextView
        style="@style/ContentAreaTextAreaStyle"
@@ -20,15 +24,207 @@
        style="@style/ContentAreaTextAreaStyle"
         android:text="@string/full_rules_4" 
         />
+   <!-- the letters -->
    <com.riotapps.word.utils.TypefaceTextView
        style="@style/ContentAreaTextAreaStyle"
-        android:text="@string/full_rules_5" 
+        android:text="@string/full_rules_letters_1" 
         android:paddingBottom="1dp"
+        />
+      <com.riotapps.word.utils.TypefaceTextView
+       style="@style/ContentAreaTextStyle"
+        android:text="@string/full_rules_letters_2" 
+        android:paddingLeft="10dp"
+        android:paddingBottom="1dp"
+        android:paddingTop="1dp"
         />
    <TableLayout
        style="@style/ContentAreaTextAreaStyle" 
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent" 
+    android:stretchColumns="*">
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" 
+        android:paddingBottom="3dp" 
+       >
+        <com.riotapps.word.utils.TypefaceTextView
+            android:text="A - 8"
+      		style="@style/LetterValueStyle"
+		/>
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="B - 2"
+      		style="@style/LetterValueStyle"       
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="C - 2"
+      		style="@style/LetterValueStyle"          
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="D - 4"
+      		style="@style/LetterValueStyle"
+        />
+
+    </TableRow>
+   <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" 
+        android:paddingBottom="3dp" 
+		> 
+        <com.riotapps.word.utils.TypefaceTextView
+            android:text="E - 12"
+      		style="@style/LetterValueStyle"
+        />
+        <com.riotapps.word.utils.TypefaceTextView
+            android:text="F - 2"
+            style="@style/LetterValueStyle"
+		/>
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="G - 2"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="H - 4"
+            style="@style/LetterValueStyle"
+ 
+        />
+     </TableRow>
+       <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" 
+        android:paddingBottom="3dp"
+        >
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="I - 8"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="J - 1"
+            style="@style/LetterValueStyle"
+		/>
+        <com.riotapps.word.utils.TypefaceTextView
+            android:text="K - 1"
+            style="@style/LetterValueStyle"
+		/>
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="L - 4"
+            style="@style/LetterValueStyle"
+        />
+    </TableRow>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" 
+        android:paddingBottom="3dp"
+        >
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="M - 2"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="N - 6"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="O - 8"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="P - 2"
+            style="@style/LetterValueStyle"
+        />
+    </TableRow>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" 
+        android:paddingBottom="3dp"
+        >
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="Q - 1"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="R - 6"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="S - 5"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="T - 9"
+            style="@style/LetterValueStyle"
+        />
+    </TableRow>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" 
+        android:paddingBottom="3dp"
+        >
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="U - 4"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="V - 1"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="W - 2"
+            style="@style/LetterValueStyle"
+        />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="X - 1"
+            style="@style/LetterValueStyle"
+        />
+    </TableRow>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" 
+        android:paddingBottom="3dp"
+        >
+ 		<com.riotapps.word.utils.TypefaceTextView
+ 		    style="@style/LetterValueStyle"
+            android:text="Y - 2"
+         />
+ 		<com.riotapps.word.utils.TypefaceTextView
+            android:text="Z - 1"
+            style="@style/LetterValueStyle"
+        />
+
+    </TableRow>
+ 	</TableLayout>
+ 	<com.riotapps.word.utils.TypefaceTextView
+       style="@style/ContentAreaTextStyle"
+        android:text="@string/full_rules_letters_3" 
+        android:paddingLeft="10dp"
+        android:paddingBottom="5dp"
+
+        />
+  <!-- scoring -->
+ 	
+   <com.riotapps.word.utils.TypefaceTextView
+       style="@style/ContentAreaTextAreaStyle"
+        android:text="@string/full_rules_scoring_1" 
+        android:paddingBottom="1dp"
+        />
+      <com.riotapps.word.utils.TypefaceTextView
+       style="@style/ContentAreaTextStyle"
+        android:text="@string/full_rules_scoring_2" 
+        android:paddingLeft="10dp"
+        android:paddingBottom="1dp"
+        android:paddingTop="1dp"
+        />
+   <TableLayout
+       style="@style/ContentAreaTextAreaStyle" 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:stretchColumns="*">
     <TableRow
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -81,7 +277,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp" 
-        android:paddingBottom="3dp">
+        android:paddingBottom="3dp"
+        >
  		<com.riotapps.word.utils.TypefaceTextView
             android:text="I - 1"
             style="@style/LetterValueStyle"
@@ -103,7 +300,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp" 
-        android:paddingBottom="3dp">
+        android:paddingBottom="3dp"
+        >
  		<com.riotapps.word.utils.TypefaceTextView
             android:text="M - 5"
             style="@style/LetterValueStyle"
@@ -125,7 +323,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp" 
-        android:paddingBottom="3dp">
+        android:paddingBottom="3dp"
+        >
  		<com.riotapps.word.utils.TypefaceTextView
             android:text="Q - 10"
             style="@style/LetterValueStyle"
@@ -147,7 +346,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp" 
-        android:paddingBottom="3dp">
+        android:paddingBottom="3dp"
+        >
  		<com.riotapps.word.utils.TypefaceTextView
             android:text="U - 2"
             style="@style/LetterValueStyle"
@@ -169,12 +369,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp" 
-        android:paddingBottom="3dp">
+        android:paddingBottom="3dp"
+        >
  		<com.riotapps.word.utils.TypefaceTextView
  		    style="@style/LetterValueStyle"
             android:text="Y - 6"
-            android:layout_width="55dp"
-        />
+         />
  		<com.riotapps.word.utils.TypefaceTextView
             android:text="Z - 10"
             style="@style/LetterValueStyle"
@@ -182,5 +382,14 @@
 
     </TableRow>
  	</TableLayout>
+ 		<com.riotapps.word.utils.TypefaceTextView
+       style="@style/ContentAreaTextStyle"
+        android:text="@string/full_rules_scoring_3" 
+        android:paddingLeft="10dp"
+        android:paddingBottom="5dp"
+
+        />
+ 
+
 </LinearLayout>
-</ScrollView>
+ </ScrollView>   
