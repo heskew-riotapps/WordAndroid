@@ -9,5 +9,6 @@
     <drawable name="tab_off_color">#CFCFCF</drawable>
     <drawable name="content_area_font_color">#1874CD</drawable>
     <drawable name="content_area_background_color">#fff5ee</drawable>
-    <drawable name="content_font_color">#1874CD</drawable>   
+    <drawable name="content_font_color">#1874CD</drawable>
+    <drawable name="form_border_color">#3366dd</drawable> <!-- previously 330066 -->   
 </resources>

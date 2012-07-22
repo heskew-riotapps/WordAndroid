@@ -7,6 +7,7 @@ public class Constants {
 	 *=============================================*/
  	public static final String MAIN_FONT = "fonts/FullDeceSans1.0.ttf";
  	public static final String EMPTY_JSON = "{}";
+ 	public static final String WN_KEY = "48f31f368d20791114b01067e1d05b68ca177aabdbab4150b";
  	
 
  	/**============================================

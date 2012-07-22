@@ -3,7 +3,7 @@
 	android:shape="rectangle" 
 	android:padding="10dp"
 	 >
-    <solid android:color="#D3D3D3"/>
+    <solid android:color="@drawable/pressed_color"/>
     
     <corners 
         android:radius="2dp"

@@ -24,6 +24,7 @@ import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
+import com.riotapps.word.utils.DialogManager;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
 import com.riotapps.word.utils.ServerResponse;
@@ -151,7 +152,7 @@ public class PlayerService {
  	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
  	        editor.commit();  
 	 	        
- 	        Intent goToMainLanding = new Intent(ctx, com.riotapps.word.RulesTab.class);
+ 	        Intent goToMainLanding = new Intent(ctx, com.riotapps.word.TestLanding.class);
  	      	ctx.startActivity(goToMainLanding);
  	      	
  	       //redirect to game landing page
@@ -164,8 +165,9 @@ public class PlayerService {
             //getRequest.abort();
             Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
             
-            Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
-            t.show(); 
+            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage());
+           // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
+           // t.show(); 
          }
 	 
 	}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     style="@style/LayoutFormStyle" >
+     <ImageView 
+       android:id="@+id/logo"
+       android:contentDescription="@string/logo"
+	    style="@style/TopLogoStyle" 
+	  />
+     <RelativeLayout
+		style="@style/FormBackgroundStyle"
+		android:layout_marginTop="20dp"
+	>
+    <RelativeLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/form_top_background"
+		android:layout_below="@id/logo"
+		android:id="@+id/header"
+	>
+    <com.riotapps.word.utils.TypefaceTextView
+        style="@style/HeaderTextStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/join_with_email_title" 
+       	android:id="@+id/title_join_native"
+        android:layout_below="@id/logo"
+	 	android:gravity="center_horizontal"
+	  	android:paddingTop="8dp"
+        />
+    <com.riotapps.word.utils.TypefaceTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:text="@string/join_with_email_subtitle" 
+       	android:id="@+id/sub_title_join_native"
+        android:layout_below="@id/title_join_native"
+	 	android:gravity="center_horizontal"
+	 	android:paddingBottom="8dp"
+ 	 
+		 
+        />
+    </RelativeLayout> 
+     <RelativeLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		       android:background="@drawable/normal_color" 
+
+		android:layout_below="@id/header"
+		android:padding="3dp"
+		android:layout_marginTop="1dp"
+		android:id="@+id/inner_form"
+	>
+     <com.riotapps.word.utils.TypefaceTextView
+         style="@style/SubTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email" 
+        android:paddingLeft="4.0dip"
+        android:layout_below="@id/header"/>
+ 
+	</RelativeLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

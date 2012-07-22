@@ -14,6 +14,9 @@ public class FullRules extends Activity{
 	        
 	        TextView t2 = (TextView) findViewById(R.id.fullRules2);
 	        t2.setMovementMethod(LinkMovementMethod.getInstance());
+	        
+	        TextView fullRulesDictionary2 = (TextView) findViewById(R.id.fullRulesDictionary2);
+	        fullRulesDictionary2.setMovementMethod(LinkMovementMethod.getInstance());
 
 	        
 	 }

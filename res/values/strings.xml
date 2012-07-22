@@ -48,7 +48,7 @@
  	<string name="full_rules_1">The idea is to score more points than your opponent by forming valid words out of the letters in your tray. 
                    Letters must be placed on the board in a single axis, either horizontally or vertically.  As you win more games, 
                    you\'ll earn new badges.</string>
-   	<string name="full_rules_2">To start the <a href="com.riotapps.word://rulestab">testing</a> game, the letters of the first word must placed on at least one of the smiley faces.  All words must contain 2 or more letters. 
+   	<string name="full_rules_2">To start the game, the letters of the first word must placed on at least one of the smiley faces.  All words must contain 2 or more letters. 
                        The players alternate turns. Each turn after the first must 
                        place at least one letter next to a previously placed letter on the board, either to the left or right or above or below, OR overlaying 
                        a previously played letter.</string>                
@@ -63,7 +63,104 @@
  	<string name="full_rules_letters_3">The final 5 letters are made up of 3 randomly chosen consonants and 2 randomly chosen vowels (A, E, I, O, or U).  The random letters will 
                         be unique, meaning that the random consonants chosen might be "P", "R", and "C", but would never be "P", "R", and "R".</string>   
 	<string name="full_rules_scoring_1">Scoring</string>
-	<string name="full_rules_scoring_2">Each letter has an assigned value as follows:</string>		
-	<string name="full_rules_scoring_3">The codes on the board represent bonus values that are multiplied times various letter values that 
-                            are placed during a turn.  </string>	
+	<string name="full_rules_scoring_2">Each letter has an assigned value as follows:</string>	
+	<string name="full_rules_scoring_3">Bonuses</string>	
+	<string name="full_rules_scoring_4">The codes on the board represent bonus values that are multiplied times various letter values that 
+                            are placed during a turn.  </string>
+    <string name="full_rules_scoring_bonus_2l">the value of the individual letter is multiplied by 2. </string>	
+    <string name="full_rules_scoring_bonus_3l">the value of the individual letter is multiplied by 3. </string>	
+    <string name="full_rules_scoring_bonus_4l">the value of the individual letter is multiplied by 4. </string>	
+    <string name="full_rules_scoring_bonus_2w">the value of the word is multiplied by 2. </string>	
+    <string name="full_rules_scoring_bonus_3w">the value of the word is multiplied by 3. </string>
+    <string name="full_rules_scoring_5">If an overlay is placed on a bonus tile the bonus does not count.  Only the overlay\'s letter value counts.  Other bonus tiles in the same turn 
+                                count normally, just not overlays. An overlays\'s letter values are are calculated as part of the value of the word if 
+                                another letter is placed on a 2W or 3W.</string>  
+    <string name="full_rules_scoring_6">If more than one word is formed during a turn, bonus tiles values are only assigned to the word that contained the bonus tiles.</string>
+    <string name="full_rules_scoring_7">Letter multipliers are calculated before word multipliers when the score is calculated for a turn.
+                                If a word lands on more than one word multiplier bonus tile, each bonus multipliers is used to determine the final score.</string>                            
+    <string name="full_rules_scoring_smasher_1">Smashers</string>
+    <string name="full_rules_scoring_smasher_2">Another way to earn points is to use all 7 letters in your tray in a single turn. If you use 7 letters in a single turn,
+                            you\'ve played a smasher, which is worth 40 bonus points.</string>
+    <string name="full_rules_finish_1">Win, Lose, or Draw</string>                        
+    <string name="full_rules_finish_2">Normally, the game ends when a player uses all of the letters in his or her tray after the hopper has been emptied. 
+                            The first person to finish the letters gets a bonus value added to his or her score.
+                            The bonus is equal to the accumulated value of all of the letters left in the opponent\'s tray.  For instance, if a player finished out the 
+                            letters (and the hopper was empty) and the opponent still had a "K", a "U", and a "B" left in the tray, a bonus of 15 points would be awarded
+                            to the player in addition to the points that the turn earned.  The player with the most points after the bonus is awarded is declared the 
+                            winner.  If both players have the same score, a draw is declared.</string>
+    <string name="full_rules_finish_3">If 4 skips in a row happen (2 by one player and 2 by the opponent), the game is automatically stopped and a winner is determined based on the 
+                                points already earned by the 2 players.  No bonus points are awarded in this situation.  If both players have the same score, a draw is declared.</string>
+    <string name="full_rules_finish_4">If a player concedes the game, the opponent automatically wins, even if the player was leading at the time or the score was tied.  
+                               If the player was leading (or the score was tied) when the concede button was clicked, the opponent\'s score is adjusted to be 1 point higher
+                               than the player\'s score, making the opponent the winner.</string>
+    <string name="full_rules_finish_5">If a turn has not been taken for 2 weeks (or so), the player whose turn is pending will automatically "concede".</string>                            
+    <string name="full_rules_dictionary_1">The Dictionary</string>                                                                 		
+    <string name="full_rules_dictionary_2">The original source for the dictionary is 
+                        <a href="http://code.google.com/p/dotnetperls-controls/downloads/detail?name=enable1.txt">Enhanced North American Benchmark Lexicon (ENABLE)</a>. 
+                         We are continually expanding our dictionary. If you determine that we are missing a word, please leave us a 
+                        <a href="com.riotapps.word://suggestions">word suggestion</a> and we will verify the word and add it to the dictionary as quickly as we can.
+                        The definitions lookups are from <a href="http://www.wordnik.com">wordnik image here</a>.  Thanks to the wordnik folks for providing such a great service!
+	</string>
+	<string name="full_rules_letter1_value">A - 1</string>
+	<string name="full_rules_letter2_value">B - 6</string>
+	<string name="full_rules_letter3_value">C - 5</string>
+	<string name="full_rules_letter4_value">D - 3</string>
+	<string name="full_rules_letter5_value">E - 1</string>
+	<string name="full_rules_letter6_value">F - 5</string>
+	<string name="full_rules_letter7_value">G - 5</string>
+	<string name="full_rules_letter8_value">H - 2</string>
+	<string name="full_rules_letter9_value">I - 1</string>
+	<string name="full_rules_letter10_value">J - 10</string>
+	<string name="full_rules_letter11_value">K - 7</string>
+	<string name="full_rules_letter12_value">L - 3</string>
+	<string name="full_rules_letter13_value">M - 5</string>
+	<string name="full_rules_letter14_value">N - 2</string>
+	<string name="full_rules_letter15_value">O - 1</string>
+	<string name="full_rules_letter16_value">P - 6</string>
+	<string name="full_rules_letter17_value">Q - 10</string>
+	<string name="full_rules_letter18_value">R - 2</string>
+	<string name="full_rules_letter19_value">S - 1</string>
+	<string name="full_rules_letter20_value">T - 1</string>
+	<string name="full_rules_letter21_value">U - 2</string>
+	<string name="full_rules_letter22_value">V - 7</string>
+	<string name="full_rules_letter23_value">W - 5</string>
+	<string name="full_rules_letter24_value">X - 10</string>
+	<string name="full_rules_letter25_value">Y - 6</string>
+	<string name="full_rules_letter26_value">Z - 10</string>
+	
+	<string name="full_rules_letter1_num">A - 8</string>
+	<string name="full_rules_letter2_num">B - 2</string>
+	<string name="full_rules_letter3_num">C - 2</string>
+	<string name="full_rules_letter4_num">D - 4</string>
+	<string name="full_rules_letter5_num">E - 12</string>
+	<string name="full_rules_letter6_num">F - 2</string>
+	<string name="full_rules_letter7_num">G - 2</string>
+	<string name="full_rules_letter8_num">H - 4</string>
+	<string name="full_rules_letter9_num">I - 8</string>
+	<string name="full_rules_letter10_num">J - 1</string>
+	<string name="full_rules_letter11_num">K - 1</string>
+	<string name="full_rules_letter12_num">L - 4</string>
+	<string name="full_rules_letter13_num">M - 2</string>
+	<string name="full_rules_letter14_num">N - 6</string>
+	<string name="full_rules_letter15_num">O - 8</string>
+	<string name="full_rules_letter16_num">P - 2</string>
+	<string name="full_rules_letter17_num">Q - 1</string>
+	<string name="full_rules_letter18_num">R - 6</string>
+	<string name="full_rules_letter19_num">S - 5</string>
+	<string name="full_rules_letter20_num">T - 9</string>
+	<string name="full_rules_letter21_num">U - 4</string>
+	<string name="full_rules_letter22_num">V - 1</string>
+	<string name="full_rules_letter23_num">W - 2</string>
+	<string name="full_rules_letter24_num">X - 1</string>
+	<string name="full_rules_letter25_num">Y - 2</string>
+	<string name="full_rules_letter26_num">Z - 1</string>
+	
+	<string name="test_landing_title">Test Landing</string>
+	<string name="test_landing_main_landing">Main Landing</string>
+	<string name="test_landing_join_native">Join Native</string>
+	<string name="test_landing_welcome">Welcome</string>
+	<string name="test_landing_rules">Rules</string>
+	<string name="test_landing_badges">Badges</string>
+			
+ 
 </resources>
