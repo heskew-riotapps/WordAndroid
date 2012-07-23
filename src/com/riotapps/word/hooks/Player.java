@@ -10,6 +10,7 @@ public class Player {
 	private int n_w = 0; //num wins
 	private int n_l = 0; //num losses
 	private int n_d = 0; //num draws
+	private String badge_drawable = "";
 
 	public void setId(String id) {
 		this.id = id;

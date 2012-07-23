@@ -66,52 +66,52 @@
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_5_9" 
-		android:drawableLeft="@drawable/badge_1_4"
+		android:drawableLeft="@drawable/badge_5_9"
         />
    <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_10_14" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_10_14"
         />
    <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_15_19" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_15_19"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_20_24" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_20_24"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_25_29" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_25_29"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_30_39" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_30_39"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_40_49" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_40_49"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_50_59" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_50_59"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_60_69" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_60_69"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_70_79" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_70_79"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
