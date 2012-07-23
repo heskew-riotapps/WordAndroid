@@ -162,5 +162,37 @@
 	<string name="test_landing_rules">Rules</string>
 	<string name="test_landing_badges">Badges</string>
 			
- 
+	
+	<string name="badges_title">badges</string>
+	<string name="badges_subtitle">step up to more prestige as you win</string>
+	<string name="badges_0">no wins yet</string>	
+	<string name="badges_1_4">under 5 wins</string>
+	<string name="badges_5_9">between 5 and 9 wins</string>
+ 	<string name="badges_10_14">between 10 and 14 wins</string>	
+ 	<string name="badges_15_19">between 15 and 19 wins</string>	
+ 	<string name="badges_20_24">between 20 and 24 wins</string>	
+ 	<string name="badges_25_29">between 25 and 29 wins</string>	
+ 	<string name="badges_30_39">between 30 and 39 wins</string>	
+ 	<string name="badges_40_49">between 40 and 49 wins</string>	
+ 	<string name="badges_50_59">between 50 and 59 wins</string>	
+ 	<string name="badges_60_69">between 60 and 69 wins</string>	
+ 	<string name="badges_70_79">between 70 and 79 wins</string>	
+ 	<string name="badges_80_89">between 80 and 89 wins</string>	
+ 	<string name="badges_90_99">between 90 and 99 wins</string>	
+ 	<string name="badges_100_124">between 100 and 124 wins</string>
+ 	<string name="badges_125_149">between 125 and 149 wins</string>
+ 	<string name="badges_150_174">between 150 and 174 wins</string>
+ 	<string name="badges_175_199">between 175 and 199 wins</string>
+ 	<string name="badges_200_224">between 200 and 224 wins</string>
+ 	<string name="badges_225_249">between 225 and 249 wins</string>
+ 	<string name="badges_250_274">between 250 and 274 wins</string>
+ 	<string name="badges_275_299">between 275 and 299 wins</string>
+ 	<string name="badges_300_349">between 300 and 349 wins</string>
+ 	<string name="badges_350_399">between 350 and 399 wins</string>
+ 	<string name="badges_400_449">between 400 and 449 wins</string>
+ 	<string name="badges_450_499">between 450 and 499 wins</string>	
+ 	<string name="badges_500_549">between 500 and 549 wins</string>	
+ 	<string name="badges_550_599">between 550 and 599 wins</string>	
+ 	<string name="badges_600_649">between 600 and 649 wins</string>	
+ 	<string name="badges_650_699">between 650 and 699 wins</string>	
 </resources>

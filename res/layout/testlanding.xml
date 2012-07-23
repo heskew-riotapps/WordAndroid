@@ -14,9 +14,8 @@
 	<RelativeLayout
 		android:orientation="vertical"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_height="45dp"
 		android:background="@drawable/form_top_background"
-		android:layout_below="@id/logo"
 		android:id="@+id/header"
 	>
     <com.riotapps.word.utils.TypefaceTextView
@@ -39,8 +38,8 @@
     <LinearLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-         android:background="@drawable/text_selector"
          android:orientation="vertical"
+  
         >
     <com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
@@ -99,6 +98,7 @@
         android:id="@+id/testLandingWelcome"
 		android:layout_marginTop="1dp"
 		android:clickable="true"
+		android:paddingLeft="20dp"
         />
     </LinearLayout>	
     </ScrollView>

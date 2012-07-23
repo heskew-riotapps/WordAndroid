@@ -43,18 +43,23 @@ public class TestLanding extends Activity implements View.OnClickListener{
 	        case R.id.testLandingJoinNative:  
 	        	goToActivity = new Intent(getApplicationContext(), JoinNative.class);
 				startActivity(goToActivity);
+				break;
 	       	case R.id.testLandingMainLanding:  
         		goToActivity = new Intent(getApplicationContext(), MainLanding.class);
         		startActivity(goToActivity);
+        		break;
 	       	case R.id.testLandingRules:  
         		goToActivity = new Intent(getApplicationContext(), RulesTab.class);
         		startActivity(goToActivity);
+        		break;
 	       	case R.id.testLandingBadges:  
         		goToActivity = new Intent(getApplicationContext(), Badges.class);
-        		startActivity(goToActivity);      		
+        		startActivity(goToActivity);
+        		break;
 	       	case R.id.testLandingWelcome:  
         		goToActivity = new Intent(getApplicationContext(), Welcome.class);
-        		startActivity(goToActivity);       		
+        		startActivity(goToActivity);   
+        		break;
 	    	}
         }  
 	 }
