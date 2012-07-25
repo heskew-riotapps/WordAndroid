@@ -3,10 +3,12 @@
     style="@style/LayoutFormStyle"
     android:orientation="vertical" >
     <com.riotapps.word.utils.TypefaceButton 
-  	    style="@style/ButtonStyle"
   	    android:id="@+id/bBack"
-  	    android:layout_width="30dp"
-  	    android:background="@drawable/back_button"
+  	    android:layout_width="wrap_content"
+  	    android:layout_height="wrap_content"
+  	    android:background="@drawable/backbutton"
+  	    android:layout_marginTop="3dp"
+   
     />
      <ImageView 
        android:id="@+id/logo"

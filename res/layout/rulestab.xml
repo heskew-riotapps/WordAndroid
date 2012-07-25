@@ -3,12 +3,20 @@
     android:id="@android:id/tabhost"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    style="@style/LayoutFormStyle">
-    <LinearLayout
+    >
+    <RelativeLayout
+        style="@style/LayoutFormStyle"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:padding="5dp">
+    <com.riotapps.word.utils.TypefaceButton 
+  	    android:id="@+id/bBack"
+  	    android:layout_width="wrap_content"
+  	    android:layout_height="wrap_content"
+  	    android:background="@drawable/backbutton"
+  	    android:layout_marginTop="3dp"
+    />
      <ImageView 
        android:id="@+id/logo"
        android:contentDescription="@string/logo"
@@ -27,5 +35,5 @@
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
-    </LinearLayout>
+    </RelativeLayout>
 </TabHost>

@@ -3,6 +3,5 @@
 <style
     name="LetterValueStyle" >
     <item name="android:textColor">@drawable/content_font_color</item>
-	
 </style>
 </resources>
