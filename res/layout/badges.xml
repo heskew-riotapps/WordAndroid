@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutFormStyle"
     android:orientation="vertical" >
+    <com.riotapps.word.utils.TypefaceButton 
+  	    style="@style/ButtonStyle"
+  	    android:id="@+id/bBack"
+  	    android:layout_width="30dp"
+  	    android:background="@drawable/back_button"
+    />
      <ImageView 
        android:id="@+id/logo"
        android:contentDescription="@string/logo"
@@ -126,33 +132,33 @@
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_100_124" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_100_124"
         />
     
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_125_149" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_125_149"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_150_174" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_150_174"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_175_199" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_175_199"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_200_224" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_200_224"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_225_249" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_225_249"
         />
     <com.riotapps.word.utils.TypefaceTextView
         style="@style/BadgeLineStyle"
@@ -207,4 +213,4 @@
     </LinearLayout>	
     </ScrollView>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

@@ -24,15 +24,15 @@ public class Constants {
 	/**=============================================
 	 * creatingXMLParser for class
 	 *==============================================*/
-	public static final int XML_PARSER_FOR_USERS = 200;
-	public static final int XML_PARSER_FOR_ERRORS = 201;
+	//public static final int XML_PARSER_FOR_USERS = 200;
+	//public static final int XML_PARSER_FOR_ERRORS = 201;
 
 	/**=============================================
 	 * mode of page
 	 *==============================================*/
-	public static final String MODE_OF_PAGE = "MODE_OF_PAGE";
-	public static final int PAGE_ADD = 300;
-	public static final int PAGE_EDIT = 301;	
+	//public static final String MODE_OF_PAGE = "MODE_OF_PAGE";
+	///public static final int PAGE_ADD = 300;
+	//public static final int PAGE_EDIT = 301;	
 
 	/**=============================================
 	 * the web
@@ -48,5 +48,50 @@ public class Constants {
 	public static final String REST_METHOD = "_method";
 	public static final String PUT_VERB = "PUT";
 	public static final String DELETE_VERB = "DELETE";
+	
+	
+	/**=============================================
+	 * badge drawables
+	 *==============================================*/
+	public static final String BADGE_0 = "badge_0";
+	public static final String BADGE_1_4 = "badge_1_4";
+	public static final String BADGE_5_9 = "badge_5_9";
+	public static final String BADGE_10_14 = "badge_10_14";
+	public static final String BADGE_15_19 = "badge_15_19";
+	public static final String BADGE_20_24 = "badge_20_24";
+	public static final String BADGE_25_29 = "badge_25_29";
+	public static final String BADGE_30_39 = "badge_30_39";
+	public static final String BADGE_40_49 = "badge_40_49";
+	public static final String BADGE_50_59 = "badge_50_59";
+	public static final String BADGE_60_69 = "badge_60_69";
+	public static final String BADGE_70_79 = "badge_70_79";
+	public static final String BADGE_80_89 = "badge_80_89";
+    public static final String BADGE_90_99 = "badge_90_99";
+	public static final String BADGE_100_124 = "badge_100_124";
+	public static final String BADGE_125_149 = "badge_125_149";
+	public static final String BADGE_150_174 = "badge_150_174";
+	public static final String BADGE_175_199 = "badge_175_199";
+	public static final String BADGE_200_224 = "badge_200_224";
+	public static final String BADGE_225_249 = "badge_225_249";
+	public static final String BADGE_250_274 = "badge_250_274";
+	public static final String BADGE_275_299 = "badge_275_299";
+	public static final String BADGE_300_349 = "badge_300_349";
+	public static final String BADGE_350_399 = "badge_350_399";
+	public static final String BADGE_400_449 = "badge_400_449";
+	public static final String BADGE_450_499 = "badge_450_499";
+	public static final String BADGE_500_599 = "badge_500_599";
+	public static final String BADGE_600_699 = "badge_600_699";
+	public static final String BADGE_700_799 = "badge_700_799";
+	public static final String BADGE_800_899 = "badge_800_899";
+	public static final String BADGE_900_999 = "badge_900_999";
+	public static final String BADGE_1000_1249 = "badge_1000_1249";
+	public static final String BADGE_1250_1499 = "badge_1250_1499";
+	public static final String BADGE_1500_1749 = "badge_1500_1749";
+	public static final String BADGE_1750_1999 = "badge_1750_1999";
+	public static final String BADGE_2000_2499 = "badge_2000_2449";
+	public static final String BADGE_2500_2999 = "badge_2500_2999";
+	public static final String BADGE_3000_3999 = "badge_3000_3999";
+	public static final String BADGE_4000_4999 = "badge_4000_4999";
+	public static final String BADGE_5000 = "badge_5000";
 }//end class Constants
  

@@ -11,9 +11,10 @@
 	<string name="email">email address</string>
 	<string name="nickname">nickname</string>
 	<string name="password">password</string>
-	<string name="save">Save</string>
+	<string name="save">save</string>
+	<string name="back">back</string>
 	<string name="try_again">Try Again</string>
-	<string name="cancel">Cancel</string>
+	<string name="cancel">cancel</string>
 	<string name="never_share_email">(will never be shared)</string>
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="validation_email_required">Please enter your email to connect to play.  Never fear, it will not be shared.</string>
@@ -164,7 +165,7 @@
 			
 	
 	<string name="badges_title">badges</string>
-	<string name="badges_subtitle">level up for more prestige</string>
+	<string name="badges_subtitle">a better badge means better skills</string>
 	<string name="badges_0">no wins yet</string>	
 	<string name="badges_1_4">under 5 wins</string>
 	<string name="badges_5_9">between 5 and 9 wins</string>
