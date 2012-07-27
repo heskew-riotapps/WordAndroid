@@ -37,7 +37,7 @@
  	<string name="progress_loading">loading&#8230;</string>
  	<string name="progress_saving">saving&#8230;</string>
  	<string name="progress_syncing">syncing&#8230;</string>
- 	<string name="quick_rules_title">quick rules</string>
+ 	<string name="quick_rules_title">condensed rules</string>
  	<string name="quick_rules_subtitle">enough to get you off and running</string>
   	<string name="quick_rules_1">To start the game, a letter of the first word must be placed on at least one of the smiley faces.</string>
   	<string name="quick_rules_2">Then take turns forming valid words by dragging letters from your tray to the board. At least one of your placed letters must connect to (or be placed on top of) letters already placed on the board in previous turns.</string>	
@@ -162,7 +162,7 @@
 	<string name="test_landing_welcome">Welcome</string>
 	<string name="test_landing_rules">Rules</string>
 	<string name="test_landing_badges">Badges</string>
-			
+	<string name="test_landing_game_play">Game Play</string>		
 	
 	<string name="badges_title">badges</string>
 	<string name="badges_subtitle">a better badge means better skills</string>

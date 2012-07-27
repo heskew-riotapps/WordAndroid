@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutStyle" >
+     <View 
+	    android:id="@+id/topControlsPlaceholder"
+	     android:layout_width="fill_parent"
+	     android:layout_height="50dp"
+	     android:scaleType="centerInside"
+	     android:layout_alignParentTop="true"
+	     android:background="#555555"
+	    />
+	<View 
+	    android:id="@+id/bottomControlsPlaceholder"
+	     android:layout_width="fill_parent"
+	     android:layout_height="60dp"
+	     android:scaleType="centerInside"
+	     android:layout_alignParentBottom="true"
+	     android:layout_marginBottom="0dp"
+	     android:background="#888888"
+	    />
+
+</RelativeLayout>

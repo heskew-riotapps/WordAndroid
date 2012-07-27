@@ -57,6 +57,7 @@
 			</intent-filter>
 		</activity> 
 		<activity android:name=".TestLanding" android:label="@string/app_name" />
+		<activity android:name=".GamePlay" android:label="@string/app_name" />
     </application>
 
 </manifest>
