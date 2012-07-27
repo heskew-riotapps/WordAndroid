@@ -195,5 +195,17 @@
  	<string name="badges_500_549">between 500 and 549 wins</string>	
  	<string name="badges_550_599">between 550 and 599 wins</string>	
  	<string name="badges_600_649">between 600 and 649 wins</string>	
- 	<string name="badges_650_699">between 650 and 699 wins</string>	
+ 	<string name="badges_650_699">between 650 and 699 wins</string>
+ 	<string name="badges_700_799">between 700 and 799 wins</string>
+ 	<string name="badges_800_899">between 800 and 899 wins</string>
+ 	<string name="badges_900_999">between 900 and 999 wins</string>
+ 	<string name="badges_1000_1249">between 1000 and 1249 wins</string>
+ 	<string name="badges_1250_1499">between 1250 and 1499 wins</string>
+ 	<string name="badges_1500_1749">between 1500 and 1749 wins</string>
+ 	<string name="badges_1750_1999">between 1750 and 1999 wins</string>
+ 	<string name="badges_2000_2499">between 2000 and 2499 wins</string>
+ 	<string name="badges_2500_2999">between 2500 and 2999 wins</string>
+ 	<string name="badges_3000_3999">between 3000 and 3999 wins</string>
+ 	<string name="badges_4000_4999">between 4000 and 4999 wins</string>
+ 	<string name="badges_5000">5000 or more wins</string>
 </resources>

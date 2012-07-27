@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 public class Badges extends Activity implements View.OnClickListener{
 	
-	final Context context = this;
-	Button bBack;
+	private final Context context = this;
+	private Button bBack;
 	
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {

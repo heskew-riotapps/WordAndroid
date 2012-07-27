@@ -52,26 +52,30 @@ public class Splash  extends Activity {
         if (isConnected == true) 
         {
 
-			SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
+        	
+        	Intent goToMainLanding = new Intent(this, com.riotapps.word.TestLanding.class);
+ 	      	this.startActivity(goToMainLanding);
+ 	      	
+//			SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
 			
-			String auth_token = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
-			String playerId = settings.getString(Constants.USER_PREFS_USER_ID, "");
+//			String auth_token = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
+//			String playerId = settings.getString(Constants.USER_PREFS_USER_ID, "");
 
 
 
 	 	       
-			if (auth_token.length() > 0) {
-				//get player from rails server
-				PlayerService playerSvc = new PlayerService();
-				playerSvc.GetPlayerFromServer(context, playerId);
+//			if (auth_token.length() > 0) {
+//				//get player from rails server
+//				PlayerService playerSvc = new PlayerService();
+//				playerSvc.GetPlayerFromServer(context, playerId);
 				
-			}
-			else{
-				Intent goToWelcomeActivity = new Intent(getApplicationContext(), Welcome.class);
-				startActivity(goToWelcomeActivity);
-				finish();
+//			}
+//			else{
+//				Intent goToWelcomeActivity = new Intent(getApplicationContext(), Welcome.class);
+//				startActivity(goToWelcomeActivity);
+//				finish();
 				
-			}
+//			}
         }
     
      }

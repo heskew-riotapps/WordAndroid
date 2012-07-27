@@ -3,37 +3,54 @@
     android:id="@android:id/tabhost"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    style="@style/LayoutFormStyle"
+    android:paddingBottom="15dp"
     >
     <RelativeLayout
-        style="@style/LayoutFormStyle"
+        android:id="@+id/headerArea"
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="5dp">
+        >
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
     <com.riotapps.word.utils.TypefaceButton 
   	    android:id="@+id/bBack"
   	    android:layout_width="wrap_content"
   	    android:layout_height="wrap_content"
   	    android:background="@drawable/backbutton"
   	    android:layout_marginTop="3dp"
+   
     />
      <ImageView 
        android:id="@+id/logo"
        android:contentDescription="@string/logo"
 	   style="@style/TopLogoStyle" 
-	   android:layout_gravity="center_horizontal"
 	   />
+     </RelativeLayout>
+     <RelativeLayout
+        android:layout_below="@id/header"
+        android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+		>
         <TabWidget
+            android:layout_below="@id/header"
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+         />
         <View 
+            android:id="@+id/filler"
+            android:layout_below="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="6dp"
             android:background="@drawable/tab_content_background"            />
         <FrameLayout
+            android:layout_below="@id/filler"
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
+    </RelativeLayout>
     </RelativeLayout>
 </TabHost>

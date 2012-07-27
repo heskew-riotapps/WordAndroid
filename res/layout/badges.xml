@@ -211,7 +211,73 @@
         style="@style/BadgeLineStyle"
         android:text="@string/badges_650_699" 
 		android:drawableLeft="@drawable/badge_0"
-        />   
+        /> 
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_700_799" 
+		android:drawableLeft="@drawable/badge_0"
+        /> 
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_800_899" 
+		android:drawableLeft="@drawable/badge_0"
+        /> 
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_900_999" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_1000_1249" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_1250_1499" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_1500_1749" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_1750_1999" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_2000_2499" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_2500_2999" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_3000_3999" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_4000_4999" 
+		android:drawableLeft="@drawable/badge_0"
+        />
+     <com.riotapps.word.utils.TypefaceTextView
+        style="@style/BadgeLineStyle"
+        android:text="@string/badges_5000" 
+		android:drawableLeft="@drawable/badge_0"
+ 
+        />
+     <View 
+        android:background="@drawable/content_area_bottom"
+		android:layout_height="15dp"
+        android:layout_width="fill_parent" 
+         />
     </LinearLayout>	
     </ScrollView>
     </LinearLayout>

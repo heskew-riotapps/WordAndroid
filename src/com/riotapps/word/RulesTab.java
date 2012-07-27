@@ -1,5 +1,6 @@
 package com.riotapps.word;
 
+import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,14 +8,17 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.TabHost.TabContentFactory;
 
-public class RulesTab extends TabActivity{
+public class RulesTab extends TabActivity implements View.OnClickListener{
 	
 	private TabHost tabHost;
+	private final Context context = this;
+	private Button bBack;
 	
     private void setupTabHost() {
     	tabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -32,10 +36,11 @@ public class RulesTab extends TabActivity{
 	//	setupTab(new TextView(this), "Rule Overview");
 	//	setupTab(new TextView(this), "Full Rules");
 		//setupTab(new TextView(this), "Tab 3");
-		
+		bBack = (Button) findViewById(R.id.bBack);
+	    bBack.setOnClickListener(this);
 		
  		//Resources resources = getResources(); 
-		TabHost tabHost = getTabHost(); 
+		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost); //getTabHost(); 
 		tabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
 		
 		View view1 = LayoutInflater.from(this).inflate(R.layout.lefttablayout, null);
@@ -89,4 +94,14 @@ public class RulesTab extends TabActivity{
 		tv.setText(text);
 		return view;
 	}
+	
+	@Override 
+    public void onClick(View v) {
+    	switch(v.getId()){  
+        case R.id.bBack:  
+        	((Activity)context).finish();
+			break;
+    	}
+  }  
+
 }
