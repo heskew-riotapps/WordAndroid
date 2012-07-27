@@ -9,6 +9,7 @@
 	     android:layout_alignParentTop="true"
 	     android:background="#555555"
 	    />
+
 	<View 
 	    android:id="@+id/bottomControlsPlaceholder"
 	     android:layout_width="fill_parent"
@@ -18,5 +19,337 @@
 	     android:layout_marginBottom="0dp"
 	     android:background="#888888"
 	    />
-
+	<RelativeLayout
+	    android:layout_below="@id/topControlsPlaceholder"
+	    android:layout_above="@id/bottomControlsPlaceholder"
+	    android:layout_width="fill_parent"
+	     android:layout_height="fill_parent"
+	     android:padding="5dp"
+	>
+     <TableLayout
+         android:id="@+id/gameBoardWrapper"
+         android:layout_width="fill_parent"
+	     android:layout_height="fill_parent"
+	     android:scaleType="centerInside"
+	     android:layout_alignParentTop="true"
+	     android:stretchColumns="*"
+	     >
+  
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+     <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+    <TableRow 
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="0dp" >
+        <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+       <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+      <View android:background="#f4f4f4" android:padding="0dp" android:layout_margin="0dp" android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                                                 
+    </TableRow>
+     </TableLayout>
+     	</RelativeLayout>
 </RelativeLayout>
