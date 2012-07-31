@@ -7,6 +7,9 @@ import android.view.SurfaceView;
 
 public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callback {
 
+	GameThread gameThread = null;
+	SurfaceHolder surfaceHolder;
+	
 	public GameSurfaceView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -37,6 +40,34 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	public void onResume() {
+	//	  random = new Random();
+		  surfaceHolder = getHolder();
+		  getHolder().addCallback(this);
+		   
+		  //Create and start background Thread
+		  gameThread = new GameThread(this, 500);
+		  gameThread.setRunning(true);
+		  gameThread.start();
+		
+	}
+
+	public void onPause() {
+		  //Kill the background Thread
+		  boolean retry = true;
+		  gameThread.setRunning(false);
+		   
+		  while(retry){
+		   try {
+		    gameThread.join();
+		    retry = false; 
+		   } catch (InterruptedException e) {
+		    e.printStackTrace(); 
+		   } 
+		  }
 		
 	}
 
