@@ -162,7 +162,8 @@
 	<string name="test_landing_welcome">Welcome</string>
 	<string name="test_landing_rules">Rules</string>
 	<string name="test_landing_badges">Badges</string>
-	<string name="test_landing_game_play">Game Play</string>		
+	<string name="test_landing_game_play">Game Play</string>
+	<string name="test_landing_game_surface">Game Surface</string>			
 	
 	<string name="badges_title">badges</string>
 	<string name="badges_subtitle">a better badge means better skills</string>

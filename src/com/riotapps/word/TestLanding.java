@@ -16,6 +16,7 @@ public class TestLanding extends Activity implements View.OnClickListener{
 		TextView txtBadges;
 		TextView txtWelcome;
 		TextView txtGamePlay;
+		TextView txtGameSurface;
 			
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,8 @@ public class TestLanding extends Activity implements View.OnClickListener{
 	        txtWelcome.setOnClickListener(this); 
 	        txtGamePlay = (TextView) findViewById(R.id.testLandingGamePlay);
 	        txtGamePlay.setOnClickListener(this); 
+	        txtGameSurface = (TextView) findViewById(R.id.testLandingGameSurface);
+	        txtGameSurface.setOnClickListener(this); 
 	      
 	        
 	    }
@@ -66,6 +69,10 @@ public class TestLanding extends Activity implements View.OnClickListener{
         		break;
 	       	case R.id.testLandingRules:  
         		goToActivity = new Intent(getApplicationContext(), RulesTab.class);
+        		startActivity(goToActivity);
+        		break;
+	     	case R.id.testLandingGameSurface:  
+        		goToActivity = new Intent(getApplicationContext(), GameSurface.class);
         		startActivity(goToActivity);
         		break;
 	    	}

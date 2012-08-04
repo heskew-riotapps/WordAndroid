@@ -15,7 +15,7 @@ public class GameSurface extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gamesurface);
 		
-		gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
+		this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
 		
 	}
 	
@@ -23,16 +23,15 @@ public class GameSurface extends Activity {
 	 protected void onResume() {
 	  // TODO Auto-generated method stub
 	  super.onResume();
-	  gameSurfaceView.onResume();
+	  this.gameSurfaceView.onResume();
 	 }
 	 
 	 @Override
 	 protected void onPause() {
 	  // TODO Auto-generated method stub
 	  super.onPause();
-	  gameSurfaceView.onPause();
+	  this.gameSurfaceView.onPause();
 	 }
 	 
-	}
 
 }

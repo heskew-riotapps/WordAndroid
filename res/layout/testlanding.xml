@@ -99,7 +99,19 @@
 		android:layout_marginTop="1dp"
 		android:clickable="true"
 		android:paddingLeft="20dp"
-        />     
+        />  
+     <com.riotapps.word.utils.TypefaceTextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/text_selector"
+        style="@style/TextStyle"
+	 	android:gravity="center_vertical"
+        android:text="@string/test_landing_game_surface" 
+        android:id="@+id/testLandingGameSurface"
+		android:layout_marginTop="1dp"
+		android:clickable="true"
+		android:paddingLeft="20dp"
+        />    
    	<com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"
         android:layout_height="40dp"

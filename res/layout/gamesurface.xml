@@ -27,7 +27,7 @@
 	     android:padding="5dp"
 	>
   
-    <com.riotapps.word.GameSurfaceView 
+    <com.riotapps.word.ui.GameSurfaceView 
         android:id="@+id/gameSurface"
         />
     	</RelativeLayout>
