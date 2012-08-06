@@ -7,7 +7,7 @@
 	     android:layout_height="50dp"
 	     android:scaleType="centerInside"
 	     android:layout_alignParentTop="true"
-	     android:background="#555555"
+	     android:background="@null"
 	    />
 
 	<View 
@@ -17,7 +17,7 @@
 	     android:scaleType="centerInside"
 	     android:layout_alignParentBottom="true"
 	     android:layout_marginBottom="0dp"
-	     android:background="#888888"
+	     android:background="@null"
 	    />
 	<RelativeLayout
 	    android:layout_below="@id/topControlsPlaceholder"

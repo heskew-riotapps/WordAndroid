@@ -24,29 +24,15 @@ public class GameSurface extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.gamesurface);
-		setContentView(new GameSurfaceView2(this));
+		setContentView(R.layout.gamesurface);
+		//setContentView(new GameSurfaceView2(this));
 		
-	 	//this._gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
+	 	this._gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
 		//this._surfaceView = new GameSurfaceView(this); 
 	}
 	
  
-	
-	 @Override
-	 protected void onResume() {
-	  // TODO Auto-generated method stub
-	  super.onResume();
-	   this._gameSurfaceView.onResume();
-	 }
-	 
-	 @Override
-	 protected void onPause() {
-	  // TODO Auto-generated method stub
-	  super.onPause();
-	   this._gameSurfaceView.onPause();
-	 }
-	 
+		 
 	 class GameSurfaceView2 extends SurfaceView  implements SurfaceHolder.Callback {
 
 			GameThread2 _gameThread = null;
