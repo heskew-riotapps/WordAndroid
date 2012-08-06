@@ -14,7 +14,7 @@ import android.view.SurfaceView;
 
 public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callback {
 
-	GameThread gameThread = null;
+	GameThread _gameThread = null;
 	SurfaceHolder surfaceHolder;
 	private int _x = 20;
     private int _y = 20;
@@ -32,7 +32,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	private void construct() {
 		 getHolder().addCallback(this);
-		 gameThread = new GameThread(getHolder(), this);
+		 _gameThread = new GameThread(getHolder(), this);
 		 setFocusable(true);	
 	}
 //	public GameSurfaceView(Context context, AttributeSet attrs, int defStyle) {
@@ -48,8 +48,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		gameThread.setRunning(true);
-		gameThread.start();
+		_gameThread.setRunning(true);
+		_gameThread.start();
 	}
 
 	@Override
@@ -58,10 +58,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    // we have to tell thread to shut down & wait for it to finish, or else
 	    // it might touch the Surface after we return and explode
 	    boolean retry = true;
-	    gameThread.setRunning(false);
+	    _gameThread.setRunning(false);
 	    while (retry) {
 	        try {
-	        	gameThread.join();
+	        	_gameThread.join();
 	            retry = false;
 	        } catch (InterruptedException e) {
 	            // we will try it again and again...
@@ -76,20 +76,20 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		  getHolder().addCallback(this);
 		   
 		  //Create and start background Thread
-		  gameThread = new GameThread(this, 500);
-		  gameThread.setRunning(true);
-		  gameThread.start();
+		  _gameThread = new GameThread(this, 500);
+		  _gameThread.setRunning(true);
+		  _gameThread.start();
 		
 	}
 
 	public void onPause() {
 		  //Kill the background Thread
 		  boolean retry = true;
-		  gameThread.setRunning(false);
+		  _gameThread.setRunning(false);
 		   
 		  while(retry){
 		   try {
-		    gameThread.join();
+			   _gameThread.join();
 		    retry = false; 
 		   } catch (InterruptedException e) {
 		    e.printStackTrace(); 
@@ -100,7 +100,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	 @Override
 	 protected void onDraw(Canvas canvas) {
-		 super.onDraw(canvas);
+		// super.onDraw(canvas);
 	        Bitmap _scratch = BitmapFactory.decodeResource(getResources(), R.drawable.bonus_3l);
 	        canvas.drawColor(Color.CYAN);
 	        canvas.drawBitmap(_scratch, 10, 10, null);

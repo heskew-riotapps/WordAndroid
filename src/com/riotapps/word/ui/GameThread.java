@@ -5,36 +5,36 @@ import android.view.SurfaceHolder;
 
 public class GameThread extends Thread {
 	 private SurfaceHolder _surfaceHolder;
-	 volatile boolean running = false;
+	 volatile boolean _running = false;
 	  
-	 GameSurfaceView parent;
+	 GameSurfaceView _parent;
 	 long sleepTime;
 	  
 	 public GameThread(GameSurfaceView sv, long st){
 	  super();
-	  parent = sv;
+	  _parent = sv;
 	  sleepTime = st;
 	 }
 	 
 	  public GameThread(SurfaceHolder surfaceHolder, GameSurfaceView surfaceView) {
-	        _surfaceHolder = surfaceHolder;
-	        parent = surfaceView;
-	    }
+	    _surfaceHolder = surfaceHolder;
+	    _parent = surfaceView;
+	 }
 	  
 	 public void setRunning(boolean r){
-	  running = r;
+	  _running = r;
 	 }
 	  
 	 @Override
 	 public void run() {
 	  // TODO Auto-generated method stub
 		 Canvas c;
-		    while (running) {
+		    while (_running) {
 		        c = null;
 		        try {
 		            c = _surfaceHolder.lockCanvas(null);
 		            synchronized (_surfaceHolder) {
-		            	parent.onDraw(c);
+		            	_parent.onDraw(c);
 		            }
 		        } finally {
 		            // do this in a finally so that if an exception is thrown

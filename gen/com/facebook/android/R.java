@@ -146,8 +146,8 @@ containing a value of this type.
         public static final int bonus4l=0x7f060015;
         public static final int bonus4l_img=0x7f060016;
         public static final int bottomControlsPlaceholder=0x7f06001f;
-        public static final int byEmail=0x7f06004c;
-        public static final int byFacebook=0x7f06004b;
+        public static final int byEmail=0x7f06004d;
+        public static final int byFacebook=0x7f06004c;
         public static final int dialogButtonOK=0x7f06000c;
         public static final int dialog_text=0x7f06000b;
         public static final int dialog_title=0x7f06000a;
@@ -188,13 +188,14 @@ containing a value of this type.
         public static final int tabsLayoutw=0x7f06002e;
         public static final int tabsSubText=0x7f060030;
         public static final int tabsText=0x7f06002f;
+        public static final int testLanding2d=0x7f06004a;
         public static final int testLandingBadges=0x7f060047;
         public static final int testLandingGamePlay=0x7f060048;
         public static final int testLandingGameSurface=0x7f060049;
         public static final int testLandingJoinNative=0x7f060044;
         public static final int testLandingMainLanding=0x7f060045;
         public static final int testLandingRules=0x7f060046;
-        public static final int testLandingWelcome=0x7f06004a;
+        public static final int testLandingWelcome=0x7f06004b;
         public static final int title=0x7f060009;
         public static final int title_join_native=0x7f060021;
         public static final int topControlsPlaceholder=0x7f06001e;

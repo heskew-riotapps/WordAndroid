@@ -58,6 +58,7 @@
 		<activity android:name=".TestLanding" android:label="@string/app_name" />
 		<activity android:name=".GamePlay" android:label="@string/app_name" />
 		<activity android:name=".GameSurface" android:label="@string/app_name" />
+		<activity android:name=".Tutorial2d" android:label="@string/app_name" />
     </application>
 
 </manifest>
