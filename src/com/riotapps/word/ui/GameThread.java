@@ -21,6 +21,11 @@ public class GameThread extends Thread {
 	    _parent = surfaceView;
 	 }
 	  
+	  public SurfaceHolder getSurfaceHolder() {
+		    return _surfaceHolder;
+	  }
+	  
+	  
 	 public void setRunning(boolean r){
 	  _running = r;
 	 }
