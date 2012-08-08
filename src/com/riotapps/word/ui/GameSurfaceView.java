@@ -9,34 +9,41 @@ import com.riotapps.word.hooks.TileLayoutService;
 import com.riotapps.word.utils.Constants;
 
 import android.content.Context;
+ 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.Toast;
 
 public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callback {
 
 	GameSurfaceView me = this;
 	Context _context;
-	GameThread _gameThread = null;
+	GameThread gameThread = null;
 	SurfaceHolder surfaceHolder;
 	Typeface _typeface;
-	private int _x = 20;
-    private int _y = 20;
+	private int currentX = 0;
+    private int currentY = 20;
     private int fullWidth;
     private int smallTileWidth;
     private int top;
     private int left;
-    private boolean _fullView;
+    private boolean isZoomed = false;
     private int excessWidth;
+    private boolean isZoomAllowed = true; //if width of board greater than x disable zooming.  it means we are on a tablet and zooming not needed.
+    private int activeTileWidth; 
+    private long tapCheck = 0;
+    
     
     List<GameTile> list = new ArrayList<GameTile>();
     TileLayout layout;
@@ -60,11 +67,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.layoutService = new TileLayoutService();
 		this.layout = layoutService.GetDefaultLayout(context);
 		//
-		this._fullView = true; 
 		this.setZOrderOnTop(true);
 		 SurfaceHolder holder = getHolder();
 		 holder.addCallback(this);
-		 _gameThread = new GameThread(holder, this);
+		 gameThread = new GameThread(holder, this);
 		 setFocusable(true);
 		 _typeface = Typeface.createFromAsset(context.getAssets(), Constants.MAIN_FONT);
 		  
@@ -85,7 +91,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			    t.show();            
 		        }
 		    });
-		 
+	
 
 	}
 
@@ -97,8 +103,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		this._gameThread.setRunning(true);
-		this._gameThread.start();
+		this.gameThread.setRunning(true);
+		this.gameThread.start();
 	}
 
 	@Override
@@ -107,10 +113,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    // we have to tell thread to shut down & wait for it to finish, or else
 	    // it might touch the Surface after we return and explode
 	    boolean retry = true;
-	    this._gameThread.setRunning(false);
+	    this.gameThread.setRunning(false);
 	    while (retry) {
 	        try {
-	        	this._gameThread.join();
+	        	this.gameThread.join();
 	            retry = false;
 	        } catch (InterruptedException e) {
 	            // we will try it again and again...
@@ -125,20 +131,20 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		  getHolder().addCallback(this);
 		   
 		  //Create and start background Thread
-		  _gameThread = new GameThread(this, 500);
-		  _gameThread.setRunning(true);
-		  _gameThread.start();
+		  gameThread = new GameThread(this, 500);
+		  gameThread.setRunning(true);
+		  gameThread.start();
 		
 	}
 
 	public void onPause() {
 		  //Kill the background Thread
 		  boolean retry = true;
-		  _gameThread.setRunning(false);
+		  gameThread.setRunning(false);
 		   
 		  while(retry){
 		   try {
-			   _gameThread.join();
+			   gameThread.join();
 		    retry = false; 
 		   } catch (InterruptedException e) {
 		    e.printStackTrace(); 
@@ -152,36 +158,65 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		// super.onDraw(canvas);
 		// this.setLayoutParams(params)
 		 //canvas.co
-		 int tileFontSize;
 		 
-		 if (this._fullView == true){
-	        Bitmap _scratch = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);
-	       Bitmap _scaled = Bitmap.createScaledBitmap(_scratch, smallTileWidth , smallTileWidth, false);
+		 canvas.drawColor(0, Mode.CLEAR);
+		 int tileFontSize;
+		 Bitmap _scratch;
+		 Bitmap _scaled;
+		 int left = 0;
+		 int top = 0;
+		 
+		 if (this.isZoomed == false || this.isZoomAllowed == false){
+			 this.activeTileWidth = this.smallTileWidth;
+	        _scratch = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);
+	        _scaled = Bitmap.createScaledBitmap(_scratch, smallTileWidth , smallTileWidth, false);
 	      //  canvas.drawColor(Color.TRANSPARENT);
-	  
+	        left = 1 + (this.excessWidth / 2);
+	        top = 1;
+		 }
+		 else {
+			// canvas.drawColor(Color.CYAN);
+			 this.activeTileWidth = this.smallTileWidth * 2;
+			 _scratch = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);
+		     _scaled = Bitmap.createScaledBitmap(_scratch, activeTileWidth , activeTileWidth, false);
+			 //calculate left and top based on pointer
+		     
+		     left = this.currentX;
+		     top = this.currentY;
+		     
+		     //left needs to be centered, top needs to be centered in zoomed view
+		 }
+     	 
+    	// Toast t = Toast.makeText(me._context, "width: " + String.valueOf(activeTileWidth), Toast.LENGTH_LONG);  
+		 //   t.show(); 
 	     //make sure full view is centered so grab remainder of 15 division 
 	     //determine if font text can be used so that fewer images must be maintained
 	     //use font size based on 80% of tile size
 	       //keep array of tiles
 	       
-	     tileFontSize = (int) Math.round(this.smallTileWidth * .8);
+	     tileFontSize = (int) Math.round(this.activeTileWidth * .8);
 	  //   canvas.drawColor(Color.GREEN);
-	     this.temp(_scaled,canvas,0);
-	     this.temp(_scaled,canvas,1);
-	     this.temp(_scaled,canvas,2);
-	     this.temp(_scaled,canvas,3);
-	     this.temp(_scaled,canvas,4);
-	     this.temp(_scaled,canvas,5);
-	     this.temp(_scaled,canvas,6);
-	     this.temp(_scaled,canvas,7);
-	     this.temp(_scaled,canvas,8);
-	     this.temp(_scaled,canvas,9);
-	     this.temp(_scaled,canvas,10);
-	     this.temp(_scaled,canvas,11);
-	     this.temp(_scaled,canvas,12);
-	     this.temp(_scaled,canvas,13);
-	     this.temp(_scaled,canvas,14);
-		 }
+	     for (int x = 0; x<15 ;x++){
+	    	 this.temp(_scaled,canvas,x, left, top);
+	    	 
+	     }
+	//     this.temp(_scaled,canvas,0, left);
+	//     this.temp(_scaled,canvas,1);
+	//     this.temp(_scaled,canvas,2);
+	//     this.temp(_scaled,canvas,3);
+	//     this.temp(_scaled,canvas,4);
+	//     this.temp(_scaled,canvas,5);
+	//     this.temp(_scaled,canvas,6);
+	//     this.temp(_scaled,canvas,7);
+	//     this.temp(_scaled,canvas,8);
+	//     this.temp(_scaled,canvas,9);
+	//     this.temp(_scaled,canvas,10);
+	//     this.temp(_scaled,canvas,11);
+	//     this.temp(_scaled,canvas,12);
+	//     this.temp(_scaled,canvas,13);
+	//     this.temp(_scaled,canvas,14);
+		 
+	 
 	       
 	       // canvas.drawBitmap(_scaled, _x  - (_scaled.getWidth() / 2), _y - (_scaled.getWidth() / 2), null);
 	       // canvas.drawBitmap(_scratch, _x + 22 - (_scratch.getWidth() / 2), _y - (_scaled.getWidth() / 2), null);
@@ -194,23 +229,23 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 
 	 }
 	 
-	 private void temp(Bitmap bm, Canvas canvas, int x){
-	      canvas.drawBitmap(bm,1  + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1, null);
-	      canvas.drawBitmap(bm, 1  + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + smallTileWidth + 1, null);
-	      canvas.drawBitmap(bm, 1  + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x,1 + (smallTileWidth * 2) + 2, null);
-	      canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x,1 + (smallTileWidth * 3) + 3, null);
-	      canvas.drawBitmap(bm, 1  + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x,1 + (smallTileWidth * 4) + 4, null);
-	      canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x,1 + (smallTileWidth * 5) + 5, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 6) + 6, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 7) + 7, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 8) + 8, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 9) + 9, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 10) + 10, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2) + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 11) + 11, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 12) + 12, null);
-          canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 13) + 13, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 14) + 14, null);
-		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 15) + 15, null);
+	 private void temp(Bitmap bm, Canvas canvas, int x, int left, int top){
+	      canvas.drawBitmap(bm,left  + (this.activeTileWidth * x) + x, top, null);
+	      canvas.drawBitmap(bm, left + (this.activeTileWidth * x) + x, top + activeTileWidth + 1, null);
+	      canvas.drawBitmap(bm, left + (this.activeTileWidth * x) + x,top + (activeTileWidth * 2) + 2, null);
+	      canvas.drawBitmap(bm, left + (this.activeTileWidth * x) + x,top + (activeTileWidth * 3) + 3, null);
+	      canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x,top + (activeTileWidth * 4) + 4, null);
+	      canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x,top + (activeTileWidth * 5) + 5, null);
+		  canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x, top + (activeTileWidth * 6) + 6, null);
+		  canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x, top + (activeTileWidth * 7) + 7, null);
+		  canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x, top + (activeTileWidth * 8) + 8, null);
+		  canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x, top + (activeTileWidth * 9) + 9, null);
+		  canvas.drawBitmap(bm, left   + (this.activeTileWidth * x) + x, top + (activeTileWidth * 10) + 10, null);
+		  canvas.drawBitmap(bm, left + (this.activeTileWidth * x) + x, top + (activeTileWidth * 11) + 11, null);
+		  canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x, top + (activeTileWidth * 12) + 12, null);
+          canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x, top + (activeTileWidth * 13) + 13, null);
+		  canvas.drawBitmap(bm, left  + (this.activeTileWidth * x) + x, top + (activeTileWidth * 14) + 14, null);
+		  canvas.drawBitmap(bm, left   + (this.activeTileWidth * x) + x, top + (activeTileWidth * 15) + 15, null);
 	 
 	 
 	 }
@@ -218,10 +253,34 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 
 	 @Override
 	 public boolean onTouchEvent(MotionEvent event) {
-	     _x = (int) event.getX();
-	     _y = (int) event.getY();
-	     return true;
-
+	     this.currentX = (int) event.getX();
+	     this.currentY = (int) event.getY();
+	     //return true;
+	     
+	     synchronized (this.gameThread.getSurfaceHolder()) {
+             switch (event.getAction()) {
+             
+             case MotionEvent.ACTION_DOWN:
+            
+                 //where is the click, which object within view???
+            	 //get tile from coordinates.  if tile is null, do nothing
+            	 //for now act like this is a click/tap...
+            	 
+            	 this.tapCheck = System.nanoTime();
+            	// this.invalidate();
+            	 
+            	 break;
+             case MotionEvent.ACTION_UP:
+            	 if (this.tapCheck > 0 && System.nanoTime() - this.tapCheck <= 500000000) {
+            		 this.isZoomed = !this.isZoomed;
+            	 }
+            	 this.tapCheck = 0;
+            	 break;
+             case MotionEvent.ACTION_MOVE:
+             }
+             
+             return true;
+         }
 
 	 }
 	 
