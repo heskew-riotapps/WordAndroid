@@ -1,6 +1,11 @@
 package com.riotapps.word.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.riotapps.word.R;
+import com.riotapps.word.hooks.TileLayout;
+import com.riotapps.word.hooks.TileLayoutService;
 import com.riotapps.word.utils.Constants;
 
 import android.content.Context;
@@ -26,11 +31,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	Typeface _typeface;
 	private int _x = 20;
     private int _y = 20;
-    private int _fullWidth;
-    private int _smallTileWidth;
-    private int _top;
-    private int _left;
-	
+    private int fullWidth;
+    private int smallTileWidth;
+    private int top;
+    private int left;
+    private boolean _fullView;
+    private int excessWidth;
+    
+    List<GameTile> list = new ArrayList<GameTile>();
+    TileLayout layout;
+    TileLayoutService layoutService;
+
+ 
 	public GameSurfaceView(Context context) {
 		super(context);
 		this.construct(context);
@@ -45,6 +57,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	private void construct(Context context) {
 		this._context = context;
+		this.layoutService = new TileLayoutService();
+		this.layout = layoutService.GetDefaultLayout(context);
+		//
+		this._fullView = true; 
 		this.setZOrderOnTop(true);
 		 SurfaceHolder holder = getHolder();
 		 holder.addCallback(this);
@@ -60,24 +76,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		        @Override
 		        public void run() {
 		        	
-		        	me._fullWidth = me.getWidth();
-		   		 me._smallTileWidth = (int) Math.round(_fullWidth/15) - 1; //-1 for the space between each tile
-		   		 me._top = me.getTop();
-		   		 me._left = me.getLeft();
-		           // Log.i("In onCreate", "" + hello.getHeight());
-		            
-		            Toast t = Toast.makeText(me._context, String.valueOf(me._fullWidth) + " " +  String.valueOf(me._smallTileWidth), Toast.LENGTH_LONG);  
-				    t.show();
+		        me.fullWidth = me.getWidth();
+		   		me.smallTileWidth = (int) Math.round(fullWidth/15) - 1; //-1 for the space between each tile
+		   		me.top = me.getTop();
+		   		me.left = me.getLeft();
+		   		me.excessWidth = me.fullWidth - ((me.smallTileWidth * 15) + 14);
+		   	 Toast t = Toast.makeText(me._context, String.valueOf(me.smallTileWidth)  + " " + String.valueOf(me.left)  + " " + String.valueOf(me.top) + " " + String.valueOf(me.fullWidth), Toast.LENGTH_LONG);  
+			    t.show();            
 		        }
 		    });
 		 
-		 
-		// this.setBackgroundColor(Color.TRANSPARENT);
+
 	}
-//	public GameSurfaceView(Context context, AttributeSet attrs, int defStyle) {
-//		super(context, attrs, defStyle);
-//		// TODO Auto-generated constructor stub
-//	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -142,31 +152,69 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		// super.onDraw(canvas);
 		// this.setLayoutParams(params)
 		 //canvas.co
+		 int tileFontSize;
+		 
+		 if (this._fullView == true){
 	        Bitmap _scratch = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);
-	       Bitmap _scaled = Bitmap.createScaledBitmap(_scratch, _smallTileWidth , _smallTileWidth, false);
+	       Bitmap _scaled = Bitmap.createScaledBitmap(_scratch, smallTileWidth , smallTileWidth, false);
 	      //  canvas.drawColor(Color.TRANSPARENT);
-	       canvas.drawBitmap(_scaled, this._left, this._top, null);
-	      canvas.drawBitmap(_scaled, this._left, this._top + _smallTileWidth + 1, null);
-	      canvas.drawBitmap(_scaled, this._left, this._top +  (_smallTileWidth * 2) + 2, null);
-	      canvas.drawBitmap(_scaled, this._left, this._top + (_smallTileWidth * 3) + 3, null);
-	       canvas.drawBitmap(_scaled, this._left, this._top + (_smallTileWidth * 4) + 4, null);
-	     canvas.drawBitmap(_scaled, this._left, this._top + (_smallTileWidth * 5) + 5, null);
+	  
+	     //make sure full view is centered so grab remainder of 15 division 
+	     //determine if font text can be used so that fewer images must be maintained
+	     //use font size based on 80% of tile size
+	       //keep array of tiles
 	       
-	      canvas.drawBitmap(_scaled,this._left + this._top + _smallTileWidth + 1, _smallTileWidth + 1, null);
-	       canvas.drawBitmap(_scaled,this._left + this._top +  _smallTileWidth + 1, (_smallTileWidth * 2) + 2, null);
-	       canvas.drawBitmap(_scaled,this._left + this._top +  _smallTileWidth + 1, (_smallTileWidth * 3) + 3, null);
-	       canvas.drawBitmap(_scaled,this._left + this._top +  _smallTileWidth + 1, (_smallTileWidth * 4) + 4, null);
-	       canvas.drawBitmap(_scaled,this._left + this._top +  _smallTileWidth + 1, (_smallTileWidth * 5) + 5, null);
+	     tileFontSize = (int) Math.round(this.smallTileWidth * .8);
+	  //   canvas.drawColor(Color.GREEN);
+	     this.temp(_scaled,canvas,0);
+	     this.temp(_scaled,canvas,1);
+	     this.temp(_scaled,canvas,2);
+	     this.temp(_scaled,canvas,3);
+	     this.temp(_scaled,canvas,4);
+	     this.temp(_scaled,canvas,5);
+	     this.temp(_scaled,canvas,6);
+	     this.temp(_scaled,canvas,7);
+	     this.temp(_scaled,canvas,8);
+	     this.temp(_scaled,canvas,9);
+	     this.temp(_scaled,canvas,10);
+	     this.temp(_scaled,canvas,11);
+	     this.temp(_scaled,canvas,12);
+	     this.temp(_scaled,canvas,13);
+	     this.temp(_scaled,canvas,14);
+		 }
 	       
 	       // canvas.drawBitmap(_scaled, _x  - (_scaled.getWidth() / 2), _y - (_scaled.getWidth() / 2), null);
 	       // canvas.drawBitmap(_scratch, _x + 22 - (_scratch.getWidth() / 2), _y - (_scaled.getWidth() / 2), null);
-	       // Paint p = new Paint();
+	        // Paint p = new Paint();
 	       // p.setTextSize(24);
 	       // p.setAntiAlias(true);
 	       // p.setTypeface(_typeface);
 	       // canvas.drawText("4L", 50, 50, p);
 	//        canvas.d
+		 
 	 }
+	 
+	 private void temp(Bitmap bm, Canvas canvas, int x){
+	      canvas.drawBitmap(bm,1  + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1, null);
+	      canvas.drawBitmap(bm, 1  + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + smallTileWidth + 1, null);
+	      canvas.drawBitmap(bm, 1  + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x,1 + (smallTileWidth * 2) + 2, null);
+	      canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x,1 + (smallTileWidth * 3) + 3, null);
+	      canvas.drawBitmap(bm, 1  + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x,1 + (smallTileWidth * 4) + 4, null);
+	      canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x,1 + (smallTileWidth * 5) + 5, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 6) + 6, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 7) + 7, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 8) + 8, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 9) + 9, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 10) + 10, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2) + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 11) + 11, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 12) + 12, null);
+          canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 13) + 13, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)  + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 14) + 14, null);
+		  canvas.drawBitmap(bm, 1 + (this.excessWidth / 2)   + (this.smallTileWidth * x) + x, 1 + (smallTileWidth * 15) + 15, null);
+	 
+	 
+	 }
+	 
 	 
 	 @Override
 	 public boolean onTouchEvent(MotionEvent event) {

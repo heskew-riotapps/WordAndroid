@@ -1,0 +1,70 @@
+{
+    StarterTiles:
+		[
+			{ id: "97" },
+			{ id: "111" },
+			{ id: "113" },
+			{ id: "127" }
+		],
+    BonusTiles:
+		[ //M = multiplier, S = scope
+			{id: "0", multiplier: "4", scope: "L" },
+			{ id: "3", multiplier: "3", scope: "W" },
+			{ id: "6", multiplier: "3", scope: "L" },
+   			{ id: "8", multiplier: "3", scope: "L" },
+   			{ id: "11", multiplier: "3", scope: "W" },
+   			{ id: "14", multiplier: "4", scope: "L" },
+        { id: "22", multiplier: "2", scope: "W" },
+
+            { id: "33", multiplier: "2", scope: "L" },
+
+            { id: "41", multiplier: "2", scope: "L" },
+            { id: "45", multiplier: "3", scope: "W" },
+            { id: "47", multiplier: "2", scope: "L" },
+            { id: "52", multiplier: "2", scope: "L" },
+            { id: "57", multiplier: "2", scope: "L" },
+            { id: "59", multiplier: "3", scope: "W" },
+            { id: "65", multiplier: "2", scope: "W" },
+            { id: "69", multiplier: "2", scope: "W" },
+            { id: "79", multiplier: "2", scope: "L" },
+            { id: "85", multiplier: "2", scope: "L" },
+            { id: "90", multiplier: "3", scope: "L" },
+
+              { id: "96", multiplier: "2", scope: "L" },
+              { id: "98", multiplier: "2", scope: "L" },
+
+            { id: "104", multiplier: "3", scope: "L" },
+            { id: "106", multiplier: "2", scope: "W" },
+            { id: "108", multiplier: "2", scope: "L" },
+            { id: "116", multiplier: "2", scope: "L" },
+            { id: "118", multiplier: "2", scope: "W" },
+            { id: "120", multiplier: "3", scope: "L" },
+
+            { id: "126", multiplier: "2", scope: "L" },
+            { id: "128", multiplier: "2", scope: "L" },
+
+            { id: "134", multiplier: "3", scope: "L" },
+            { id: "139", multiplier: "2", scope: "L" },
+            { id: "145", multiplier: "2", scope: "L" },
+            { id: "155", multiplier: "2", scope: "W" },
+            { id: "159", multiplier: "2", scope: "W" },
+            { id: "165", multiplier: "3", scope: "W" },
+            { id: "167", multiplier: "2", scope: "L" },
+            { id: "172", multiplier: "2", scope: "L" },
+            { id: "177", multiplier: "2", scope: "L" },
+            { id: "179", multiplier: "3", scope: "W" },
+            { id: "183", multiplier: "2", scope: "L" },
+            { id: "191", multiplier: "2", scope: "L" },
+           { id: "202", multiplier: "2", scope: "W" },
+
+            { id: "210", multiplier: "4", scope: "L" },
+            { id: "213", multiplier: "3", scope: "W" },
+            { id: "216", multiplier: "3", scope: "L" },
+            { id: "218", multiplier: "3", scope: "L" },
+            { id: "221", multiplier: "3", scope: "W" },
+            { id: "224", multiplier: "4", scope: "L" }
+
+		]
+
+}
+

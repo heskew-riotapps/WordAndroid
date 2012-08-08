@@ -8,6 +8,7 @@
 	     android:scaleType="centerInside"
 	     android:layout_alignParentTop="true"
 	     android:background="@null"
+	     
 	    />
 
 	<View 
@@ -24,11 +25,12 @@
 	    android:layout_above="@id/bottomControlsPlaceholder"
 	    android:layout_width="fill_parent"
 	     android:layout_height="fill_parent"
-	     android:padding="5dp"
+	      
 	>
   
     <com.riotapps.word.ui.GameSurfaceView 
         android:id="@+id/gameSurface"
+        android:layout_margin="4dp"
         />
     	</RelativeLayout>
 </RelativeLayout>
