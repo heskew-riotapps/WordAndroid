@@ -18,6 +18,4 @@ public class TileLayoutService {
 		return gson.fromJson(FileUtils.ReadRawTextFile(context, R.raw.tile_layout), type);
 	}
 	
-	//public find tile that meets params
-	
 }

@@ -3,34 +3,31 @@
     style="@style/LayoutStyle" >
      <View 
 	    android:id="@+id/topControlsPlaceholder"
-	     android:layout_width="fill_parent"
-	     android:layout_height="50dp"
-	     android:scaleType="centerInside"
-	     android:layout_alignParentTop="true"
-	     android:background="@null"
-	     
+	    android:layout_width="fill_parent"
+	    android:layout_height="50dp"
+	    android:scaleType="centerInside"
+	    android:layout_alignParentTop="true"
+	    android:background="@null" 
 	    />
 
 	<View 
 	    android:id="@+id/bottomControlsPlaceholder"
-	     android:layout_width="fill_parent"
-	     android:layout_height="60dp"
-	     android:scaleType="centerInside"
-	     android:layout_alignParentBottom="true"
-	     android:layout_marginBottom="0dp"
-	     android:background="@null"
+	    android:layout_width="fill_parent"
+	    android:layout_height="60dp"
+	    android:scaleType="centerInside"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginBottom="0dp"
+	    android:background="@null"
 	    />
 	<RelativeLayout
 	    android:layout_below="@id/topControlsPlaceholder"
 	    android:layout_above="@id/bottomControlsPlaceholder"
 	    android:layout_width="fill_parent"
-	     android:layout_height="fill_parent"
-	      
-	>
-  
-    <com.riotapps.word.ui.GameSurfaceView 
-        android:id="@+id/gameSurface"
-        android:layout_margin="4dp"
+	    android:layout_height="fill_parent"    
+	 >
+    	<com.riotapps.word.ui.GameSurfaceView 
+        	android:id="@+id/gameSurface"
+        	android:layout_margin="2dp"
         />
-    	</RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

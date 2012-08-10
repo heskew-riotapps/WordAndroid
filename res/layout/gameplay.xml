@@ -19,6 +19,7 @@
 	     android:layout_marginBottom="0dp"
 	     android:background="#888888"
 	    />
+	
 	<RelativeLayout
 	    android:layout_below="@id/topControlsPlaceholder"
 	    android:layout_above="@id/bottomControlsPlaceholder"
@@ -26,6 +27,7 @@
 	     android:layout_height="fill_parent"
 	     android:padding="5dp"
 	>
+ 
      <TableLayout
          android:id="@+id/gameBoardWrapper"
          android:layout_width="fill_parent"
@@ -351,5 +353,7 @@
                                                  
     </TableRow>
      </TableLayout>
+    
      	</RelativeLayout>
+     	
 </RelativeLayout>

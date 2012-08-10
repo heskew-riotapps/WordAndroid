@@ -10,6 +10,10 @@ public class GameTile {
 	private int yPosition = 0;
 	private Bitmap currentBitmap;
 	private Bitmap originalBitmap;
+	private Bitmap originalBitmapZoomed;
+	private int xPositionZoomed = 0;
+	private int yPositionZoomed = 0;
+
 	private int row;
 	private int column;
     private boolean isLastPlayed = false;
@@ -19,10 +23,12 @@ public class GameTile {
     private Canvas canvas;
 
 
-	public GameTile(Canvas canvas){
-		this.canvas = canvas;
+	public GameTile(){
+		
 	}
-
+	public GameTile(Canvas canvas){
+		this.canvas = canvas; //???is canvas needed?
+	}
 
 	public int getId() {
 		return id;
@@ -133,7 +139,26 @@ public class GameTile {
 		this.placedLetter = placedLetter;
 	}
 
-
+	public Bitmap getOriginalBitmapZoomed() {
+		return originalBitmapZoomed;
+	}
+	public void setOriginalBitmapZoomed(Bitmap originalBitmapZoomed) {
+		this.originalBitmapZoomed = originalBitmapZoomed;
+	}
+	public int getxPositionZoomed() {
+		return xPositionZoomed;
+	}
+	public void setxPositionZoomed(int xPositionZoomed) {
+		this.xPositionZoomed = xPositionZoomed;
+	}
+	public int getyPositionZoomed() {
+		return yPositionZoomed;
+	}
+	public void setyPositionZoomed(int yPositionZoomed) {
+		this.yPositionZoomed = yPositionZoomed;
+	}
+	
+	
 }
 
 
