@@ -31,7 +31,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	Context _context;
 	GameThread gameThread = null;
 	SurfaceHolder surfaceHolder;
-	Typeface _typeface;
+	Typeface letterTypeface;
 	private int currentX = 0;
     private int currentY = 20;
     private int fullWidth;
@@ -45,6 +45,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private long tapCheck = 0;
     private float zoomMultiplier = 2.0f;
     private int tileGap = 1;
+    private int zoomedTileWidth;
+    private int midpoint;
+    private int fullViewTextSize;
+    private int zoomedTextSize;
  
     
     List<GameTile> tiles = new ArrayList<GameTile>();
@@ -74,7 +78,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 holder.addCallback(this);
 		 gameThread = new GameThread(holder, this);
 		 setFocusable(true);
-		 _typeface = Typeface.createFromAsset(context.getAssets(), Constants.MAIN_FONT);
+		 this.letterTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_BOARD_FONT);
 		  
 		 holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
@@ -87,10 +91,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		        public void run() {
 		        	
 		        me.fullWidth = me.getWidth();
-		   		me.fullViewTileWidth = (int) Math.round(fullWidth/15) - me.tileGap; //-1 for the space between each tile
+		   		me.fullViewTileWidth = Math.round(me.fullWidth/15) - me.tileGap; //-1 for the space between each tile
 		   		//me.top = me.getTop();
 		   		//me.left = me.getLeft();
 		   		me.excessWidth = me.fullWidth - ((me.fullViewTileWidth * 15) + (14 * me.tileGap));
+		   		me.zoomedTileWidth = Math.round(me.fullViewTileWidth * me.zoomMultiplier);
+		   		me.midpoint = Math.round(me.fullWidth / 2);
 		   		
 		   	    me.LoadTiles();
 		   	 Toast t = Toast.makeText(me._context, String.valueOf(me.fullViewTileWidth)  + " " + String.valueOf(me.excessWidth)  + " "  + String.valueOf(me.fullWidth), Toast.LENGTH_LONG);  
@@ -186,23 +192,49 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 }
 		 else {
 			// canvas.drawColor(Color.CYAN);
+			 //only if in tapped mode
 			 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
 			 
-			 this.activeTileWidth = Math.round(this.fullViewTileWidth * this.zoomMultiplier);
+			 //this.activeTileWidth = Math.round(this.fullViewTileWidth * this.zoomMultiplier);  //do this in oncreate/calculate
+			// int midpoint = Math.round(fullWidth / 2);
+		 
+			 
 			 _scratch = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);
 		     _scaled = Bitmap.createScaledBitmap(_scratch, activeTileWidth , activeTileWidth, false);
 			 //calculate left and top based on pointer
 		     
-		     left = this.currentX;
-		     top = this.currentY;
+		  //   left = this.currentX;
+		   //  top = this.currentY;
 		     
-		     int maxLeft = 1 - (Math.round(this.zoomMultiplier * this.fullWidth) / 2);
-		     int maxRight = this.fullWidth + (Math.round(this.zoomMultiplier * this.fullWidth) / 2);
-		     int maxTop = 1 - (Math.round(this.zoomMultiplier * this.fullWidth) / 2);
-		     int maxBottom = this.fullWidth + (Math.round(this.zoomMultiplier * this.fullWidth) / 2);
+		     int outerZoomLeft = this.fullWidth - Math.round((this.zoomedTileWidth + 1) * 15);//1 - (Math.round(this.zoomMultiplier * this.fullWidth) / 2) + 14; //31;
+		    // int outerZoomRight = this.fullWidth + (Math.round(this.zoomMultiplier * this.fullWidth) / 2);
+		     int outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15); //1 - (Math.round(this.zoomMultiplier * this.fullWidth) / 2) + 14; //25;
+		    // int outerZoomBottom = this.fullWidth + (Math.round(this.zoomMultiplier * this.fullWidth) / 2);
 		     
-		     for (GameTile tile : this.tiles) { 
-		    	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPosition(), tile.getyPosition(), null);
+		     
+		   //  int innerZoomLeft = 1;
+		    // int innerZoomRight = this.fullWidth;
+		    // int innerZoomTop = 1; //this will vary depending on whether or not top scoreboard slides away
+		   //  int innerZoomBottom = this.fullWidth;
+		     
+		     int tappedTop = midpoint - ((tappedTile.getRow() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+		     if (tappedTop < outerZoomTop) {tappedTop = outerZoomTop;}
+		     if (tappedTop > 1) {tappedTop = 1;}
+		     
+		     int tappedLeft = midpoint - ((tappedTile.getColumn() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+		     if (tappedLeft < outerZoomLeft) {tappedLeft = outerZoomLeft;}
+		     if (tappedLeft > 1) {tappedLeft = 1;}
+		     
+		     for (GameTile tile : this.tiles) {
+		    	 tile.setxPositionZoomed(tappedLeft + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
+				 tile.setyPositionZoomed(tappedTop + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
+			
+		    	// int loopTop = ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap);
+		    //	 int loopLeft = ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap);
+		    //	 tile.setxPositionZoomed(loopLeft);
+		    //	 tile.setyPositionZoomed(loopTop);
+		    	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
+		    	 //tile.setZoomedx and to determine which tile was clicked
 		     }
 		     
 		     //so just determine where the tap was and move that position to the middle
@@ -342,12 +374,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
  
 	 private void LoadTiles() {
 		 
-		 Bitmap baseBG = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);
+		 Bitmap baseBG = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
 		 Bitmap baseBGScaled = Bitmap.createScaledBitmap(baseBG, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 
-		 int zoomedTileWidth = Math.round(this.fullViewTileWidth * this.zoomMultiplier);
-		 Bitmap baseBGZoomed = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);  //changed this to zoomed version
-		 Bitmap baseBGScaleZoomed = Bitmap.createScaledBitmap(baseBGZoomed, zoomedTileWidth , zoomedTileWidth, false);
+	
+		 Bitmap baseBGZoomed = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);  //changed this to zoomed version
+		 Bitmap baseBGScaleZoomed = Bitmap.createScaledBitmap(baseBGZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 		 
 		 //for each row load each column 15x15
 		 //row = y
@@ -357,6 +388,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 GameTile tile = new GameTile();
 				 tile.setxPosition((this.excessWidth / 2) + (x * this.fullViewTileWidth) + (x * this.tileGap));
 				 tile.setyPosition(1 + (y * this.fullViewTileWidth) + (y * this.tileGap));
+				 tile.setColumn(x + 1);
+				 tile.setRow(y + 1);
 				 tile.setOriginalBitmap(baseBGScaled); //this will change as default bonus and played tiles are incorporated
 				 if (this.isZoomAllowed == true){
 					 tile.setOriginalBitmapZoomed(baseBGScaleZoomed);
