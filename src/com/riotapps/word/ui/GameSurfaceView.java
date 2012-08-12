@@ -54,9 +54,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int outerZoomLeft;
     private int outerZoomTop; 
     private int fullViewTileMidpoint;
+    private boolean loopAnimation;
  
     
-    List<GameTile> tiles = new ArrayList<GameTile>();
+    public boolean isLoopAnimation() {
+		return loopAnimation;
+	}
+
+	public void setLoopAnimation(boolean loopAnimation) {
+		this.loopAnimation = loopAnimation;
+	}
+
+	List<GameTile> tiles = new ArrayList<GameTile>();
     TileLayout defaultLayout;
     TileLayoutService layoutService;
 
@@ -87,7 +96,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		  
 		 holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
-		
+		 this.loopAnimation = true;
 		 
 		 
 		 this.post(new Runnable() 
@@ -98,8 +107,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		        me.fullWidth = me.getWidth();
 		   		me.SetDerivedValues();
 		   	    me.LoadTiles();
-		   	 Toast t = Toast.makeText(me._context, String.valueOf(me.fullViewTileWidth)  + " " + String.valueOf(me.excessWidth)  + " "  + String.valueOf(me.fullWidth), Toast.LENGTH_LONG);  
-			    t.show();            
+		   //	 Toast t = Toast.makeText(me._context, String.valueOf(me.fullViewTileWidth)  + " " + String.valueOf(me.excessWidth)  + " "  + String.valueOf(me.fullWidth), Toast.LENGTH_LONG);  
+			//    t.show();            
 		        }
 		    });
 	
@@ -148,33 +157,33 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 	}
 
-	public void onResume() {
-	//	  random = new Random();
-		  surfaceHolder = getHolder();
-		  getHolder().addCallback(this);
-		   
-		  //Create and start background Thread
-		  gameThread = new GameThread(this, 500);
-		  gameThread.setRunning(true);
-		  gameThread.start();
-		
-	}
+//	public void onResume() {
+//	//	  random = new Random();
+//		  surfaceHolder = getHolder();
+//		  getHolder().addCallback(this);
+//		   
+//		  //Create and start background Thread
+//		  gameThread = new GameThread(this, 500);
+//		  gameThread.setRunning(true);
+//		  gameThread.start();
+//		
+//	}
 
-	public void onPause() {
-		  //Kill the background Thread
-		  boolean retry = true;
-		  gameThread.setRunning(false);
-		   
-		  while(retry){
-		   try {
-			   gameThread.join();
-		    retry = false; 
-		   } catch (InterruptedException e) {
-		    e.printStackTrace(); 
-		   } 
-		  }
-		
-	}
+//	public void onPause() {
+//		  //Kill the background Thread
+//		  boolean retry = true;
+//		  gameThread.setRunning(false);
+//		   
+//		  while(retry){
+//		   try {
+//			   gameThread.join();
+//		    retry = false; 
+//		   } catch (InterruptedException e) {
+//		    e.printStackTrace(); 
+//		   } 
+//		  }
+//		
+//	}
 	
 	 @Override
 	 protected void onDraw(Canvas canvas) {
@@ -304,7 +313,21 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	       // p.setTypeface(_typeface);
 	       // canvas.drawText("4L", 50, 50, p);
 	//        canvas.d
-		 
+		 this.loopAnimation = false;
+		 switch (this.touchMotion) {
+         
+	         case MotionEvent.ACTION_DOWN:
+	         case MotionEvent.ACTION_UP:
+	        	 this.loopAnimation = false;
+	        	 break;
+	         case MotionEvent.ACTION_MOVE:
+	        	 this.loopAnimation = false;
+	        	 break; 
+	         default:
+	        	 this.loopAnimation = false;
+        	 	break;
+         }
+		 this.loopAnimation = false;
 	 }
 	 
 	 
@@ -314,6 +337,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.currentX = (int) event.getX();
 	     this.currentY = (int) event.getY();
 	     this.touchMotion = event.getAction();
+	     this.loopAnimation = true;
 	     //return true;
 	     
 	     synchronized (this.gameThread.getSurfaceHolder()) {
@@ -345,29 +369,29 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	 }
 	 
-	 public void updateStates(){
-	  //Dummy method() to handle the States
-	 }
+//	 public void updateStates(){
+//	  //Dummy method() to handle the States
+//	 }
 	 
-	 public void updateSurfaceView(){
-	  //The function run in background thread, not ui thread.
+//	 public void updateSurfaceView(){
+//	  //The function run in background thread, not ui thread.
 	   
-	  Canvas canvas = null;
+//	  Canvas canvas = null;
 	    
-	  try{
-	   canvas = surfaceHolder.lockCanvas();
-	 
-	   synchronized (surfaceHolder) {
-	    updateStates();
-	    onDraw(canvas);
-	   }
-	  }
-	  finally{
-	   if(canvas != null){
-	    surfaceHolder.unlockCanvasAndPost(canvas);
-	   }
-	  } 
-	 }
+//	  try{
+//	   canvas = surfaceHolder.lockCanvas();
+//	 
+//	   synchronized (surfaceHolder) {
+//	    updateStates();
+//	    onDraw(canvas);
+//	   }
+//	  }
+//	  finally{
+//	   if(canvas != null){
+//	    surfaceHolder.unlockCanvasAndPost(canvas);
+//	   }
+//	  } 
+//	 }
 	 
  
 	 private void LoadTiles() {

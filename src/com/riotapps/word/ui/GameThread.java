@@ -10,11 +10,11 @@ public class GameThread extends Thread {
 	 GameSurfaceView _parent;
 	 long sleepTime;
 	  
-	 public GameThread(GameSurfaceView sv, long st){
-	  super();
-	  _parent = sv;
-	  sleepTime = st;
-	 }
+//	 public GameThread(GameSurfaceView sv, long st){
+//	  super();
+//	  _parent = sv;
+//	  sleepTime = st;
+//	 }
 	 
 	  public GameThread(SurfaceHolder surfaceHolder, GameSurfaceView surfaceView) {
 	    _surfaceHolder = surfaceHolder;
@@ -39,7 +39,10 @@ public class GameThread extends Thread {
 		        try {
 		            c = _surfaceHolder.lockCanvas(null);
 		            synchronized (_surfaceHolder) {
-		            	_parent.onDraw(c);
+		            	//while (_parent.isLoopAnimation() == true) {
+		            		_parent.onDraw(c);
+		            	//	_parent.setLoopAnimation(false);
+		            	//}
 		            }
 		        } finally {
 		            // do this in a finally so that if an exception is thrown
