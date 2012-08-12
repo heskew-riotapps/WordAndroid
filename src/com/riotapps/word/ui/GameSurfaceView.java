@@ -29,7 +29,7 @@ import android.widget.Toast;
 public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callback {
 
 	GameSurfaceView me = this;
-	Context _context;
+	Context context;
 	GameThread gameThread = null;
 	SurfaceHolder surfaceHolder;
 	Typeface letterTypeface;
@@ -54,16 +54,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int outerZoomLeft;
     private int outerZoomTop; 
     private int fullViewTileMidpoint;
-    private boolean loopAnimation;
+    private int zoomedTileMidpoint;
+    private boolean isDrawn;
+    private int scaleInProcess = 0;
  
-    
-    public boolean isLoopAnimation() {
-		return loopAnimation;
-	}
-
-	public void setLoopAnimation(boolean loopAnimation) {
-		this.loopAnimation = loopAnimation;
-	}
+ 
 
 	List<GameTile> tiles = new ArrayList<GameTile>();
     TileLayout defaultLayout;
@@ -83,7 +78,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 
 	private void construct(Context context) {
-		this._context = context;
+		this.context = context;
 		this.layoutService = new TileLayoutService();
 		this.defaultLayout = layoutService.GetDefaultLayout(context);
 		//
@@ -96,26 +91,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		  
 		 holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
-		 this.loopAnimation = true;
-		 
-		 
+		 this.isDrawn = false;
+		 		 
 		 this.post(new Runnable() 
 		    {   
 		        @Override
 		        public void run() {
 		        	
-		        me.fullWidth = me.getWidth();
+		       
 		   		me.SetDerivedValues();
 		   	    me.LoadTiles();
 		   //	 Toast t = Toast.makeText(me._context, String.valueOf(me.fullViewTileWidth)  + " " + String.valueOf(me.excessWidth)  + " "  + String.valueOf(me.fullWidth), Toast.LENGTH_LONG);  
 			//    t.show();            
 		        }
 		    });
-	
-
 	}
 
 	private void SetDerivedValues(){
+		this.fullWidth = this.getWidth();
 		this.fullViewTileWidth = Math.round(this.fullWidth/15) - this.tileGap; //-1 for the space between each tile
    		//me.top = me.getTop();
    		//me.left = me.getLeft();
@@ -125,6 +118,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.outerZoomLeft = this.fullWidth - Math.round((this.zoomedTileWidth + 1) * 15); 
 		this.outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15);  
 		this.fullViewTileMidpoint = Math.round(this.fullViewTileWidth / 2);
+		this.zoomedTileMidpoint = Math.round(this.zoomedTileWidth / 2);
 	}
 	
 	@Override
@@ -157,39 +151,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 	}
 
-//	public void onResume() {
-//	//	  random = new Random();
-//		  surfaceHolder = getHolder();
-//		  getHolder().addCallback(this);
-//		   
-//		  //Create and start background Thread
-//		  gameThread = new GameThread(this, 500);
-//		  gameThread.setRunning(true);
-//		  gameThread.start();
-//		
-//	}
-
-//	public void onPause() {
-//		  //Kill the background Thread
-//		  boolean retry = true;
-//		  gameThread.setRunning(false);
-//		   
-//		  while(retry){
-//		   try {
-//			   gameThread.join();
-//		    retry = false; 
-//		   } catch (InterruptedException e) {
-//		    e.printStackTrace(); 
-//		   } 
-//		  }
-//		
-//	}
 	
 	 @Override
 	 protected void onDraw(Canvas canvas) {
 		// super.onDraw(canvas);
 		// this.setLayoutParams(params)
 		 //canvas.co
+		// if (this.isDrawn) {return;}
+		// this.isDrawn = true;
 		 
 		 if (this.touchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { return; }
 		 
@@ -211,16 +180,19 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	        for (GameTile tile : this.tiles) { 
 		    	 canvas.drawBitmap(tile.getOriginalBitmap(),tile.getxPosition(), tile.getyPosition(), null);
 		    	 
-		    	 Paint p = new Paint();
-			     p.setTextSize(this.fullViewTileWidth - 10);
-			     p.setAntiAlias(true);
-			     p.setTypeface(this.letterTypeface);
-			     Rect bounds = new Rect();
-			     p.getTextBounds("4L", 0, "4L".length(), bounds);
-			     int textLeft =  tile.getxPosition() + this.fullViewTileMidpoint - (Math.round(bounds.width() / 2));
-			     int textTop =  tile.getyPosition() + this.fullViewTileMidpoint - (Math.round(bounds.height() / 2));
-			     
-			     canvas.drawText("4L", textLeft, textTop, p);
+		    	 if (tile.getCurrentText().length() > 0){
+			    	 Paint p = new Paint();
+			    	 p.setColor(Color.WHITE);
+				     p.setTextSize(Math.round(this.fullViewTileWidth * .6));
+				     p.setAntiAlias(true);
+				     p.setTypeface(this.letterTypeface);
+				     Rect bounds = new Rect();
+				     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
+				     int textLeft =  tile.getxPosition() + this.fullViewTileMidpoint - (Math.round(bounds.width() / 2));
+				     int textTop =  tile.getyPosition() + this.fullViewTileMidpoint + (Math.round(bounds.height() / 2));
+				     
+				     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
+		    	 }
 		    }
 		 }
 		 else {
@@ -266,16 +238,35 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		     if (tappedLeft > 1) {tappedLeft = 1;}
 		     
 		     for (GameTile tile : this.tiles) {
-		    	 tile.setxPositionZoomed(tappedLeft + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
-				 tile.setyPositionZoomed(tappedTop + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
-			
-		    	// int loopTop = ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap);
-		    //	 int loopLeft = ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap);
-		    //	 tile.setxPositionZoomed(loopLeft);
-		    //	 tile.setyPositionZoomed(loopTop);
-		    	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
-		    	 //tile.setZoomedx and to determine which tile was clicked
-		     }
+		     	 tile.setxPositionZoomed(tappedLeft + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
+		 		 tile.setyPositionZoomed(tappedTop + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
+		     	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
+		     	 
+		     	 if (tile.getCurrentText().length() > 0){
+			     	 Paint p = new Paint();
+			     	 p.setColor(Color.WHITE);
+			     	 p.setTextSize(Math.round(this.zoomedTileWidth * .6));
+				     p.setAntiAlias(true);
+				     p.setTypeface(this.letterTypeface);
+				     Rect bounds = new Rect();
+				     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
+				     int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
+				     int textTop =  tile.getyPositionZoomed() + this.zoomedTileMidpoint + (Math.round(bounds.height() / 2));
+				     
+				     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
+		     	 }
+		      }
+		     
+		      
+		   //  if (this.scaleInProcess < this.zoomedTileWidth){
+		//	     for (GameTile tile : this.tiles) {
+		//	    	 tile.setxPositionZoomed(tappedLeft + ((tile.getColumn() - 1) * this.scaleInProcess) + ((tile.getColumn() - 1) * this.tileGap));
+		//			 tile.setyPositionZoomed(tappedTop + ((tile.getRow() - 1) * this.scaleInProcess) + ((tile.getRow() - 1) * this.tileGap));
+		//	    	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
+			//     }
+		    // }
+		   //  this.scaleInProcess += 1;
+		     
 		     
 		     //so just determine where the tap was and move that position to the middle
 		     //if any of the above boundaries are breached, simply use the breached boundary position instead
@@ -313,21 +304,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	       // p.setTypeface(_typeface);
 	       // canvas.drawText("4L", 50, 50, p);
 	//        canvas.d
-		 this.loopAnimation = false;
-		 switch (this.touchMotion) {
-         
-	         case MotionEvent.ACTION_DOWN:
-	         case MotionEvent.ACTION_UP:
-	        	 this.loopAnimation = false;
-	        	 break;
-	         case MotionEvent.ACTION_MOVE:
-	        	 this.loopAnimation = false;
-	        	 break; 
-	         default:
-	        	 this.loopAnimation = false;
-        	 	break;
-         }
-		 this.loopAnimation = false;
+		  
+		 
+		 
 	 }
 	 
 	 
@@ -337,7 +316,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.currentX = (int) event.getX();
 	     this.currentY = (int) event.getY();
 	     this.touchMotion = event.getAction();
-	     this.loopAnimation = true;
+	     
+	     this.isDrawn = false;
+
 	     //return true;
 	     
 	     synchronized (this.gameThread.getSurfaceHolder()) {
@@ -356,6 +337,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
              case MotionEvent.ACTION_UP:
             	 if (this.tapCheck > 0 && System.nanoTime() - this.tapCheck <= 300000000) {
             		 this.isZoomed = !this.isZoomed;
+            	 
             	 }
             	 this.tapCheck = 0;
             	 break;
@@ -396,27 +378,84 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
  
 	 private void LoadTiles() {
 		 
-		 Bitmap baseBG = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
-		 Bitmap baseBGScaled = Bitmap.createScaledBitmap(baseBG, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-	
-		 Bitmap baseBGZoomed = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);  //changed this to zoomed version
-		 Bitmap baseBGScaleZoomed = Bitmap.createScaledBitmap(baseBGZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
+		 Bitmap bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 Bitmap bgBaseZoomed = Bitmap.createScaledBitmap(bgBase, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
+		 Bitmap bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 Bitmap bg4LZoomed = Bitmap.createScaledBitmap(bg4L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg3L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3l_bg);
+		 Bitmap bg3LScaled = Bitmap.createScaledBitmap(bg3L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 Bitmap bg3LZoomed = Bitmap.createScaledBitmap(bg3L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg3W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3w_bg);
+		 Bitmap bg3WScaled = Bitmap.createScaledBitmap(bg3W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 Bitmap bg3WZoomed = Bitmap.createScaledBitmap(bg3W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg2L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2l_bg);
+		 Bitmap bg2LScaled = Bitmap.createScaledBitmap(bg2L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 Bitmap bg2LZoomed = Bitmap.createScaledBitmap(bg2L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg2W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2w_bg);
+		 Bitmap bg2WScaled = Bitmap.createScaledBitmap(bg2W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 Bitmap bg2WZoomed = Bitmap.createScaledBitmap(bg2W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		
+		 //starter
+	//	 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
+	//	 Bitmap bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+	//	 Bitmap bg4LZoomed = Bitmap.createScaledBitmap(bg4L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 		 
 		 //for each row load each column 15x15
 		 //row = y
 	     //column = x
+		 int id = 1;
 		 for(int y = 0; y < 15; y++){
 			 for(int x = 0; x < 15; x++){
 				 GameTile tile = new GameTile();
+				 tile.setId(id);
+				 id += 1;
 				 tile.setxPosition((this.excessWidth / 2) + (x * this.fullViewTileWidth) + (x * this.tileGap));
 				 tile.setyPosition(1 + (y * this.fullViewTileWidth) + (y * this.tileGap));
 				 tile.setColumn(x + 1);
 				 tile.setRow(y + 1);
-				 tile.setOriginalBitmap(baseBGScaled); //this will change as default bonus and played tiles are incorporated
-				 if (this.isZoomAllowed == true){
-					 tile.setOriginalBitmapZoomed(baseBGScaleZoomed);
-				 }
+
+				 //check game object for already played letter
 				 //check defaultLayout for bonus tiles etc
+				 switch (this.layoutService.GetDefaultTile(tile.getId(), this.defaultLayout)) {
+				 case FourLetter:
+					 tile.setOriginalBitmap(bg4LScaled); //this will change as default bonus and played tiles are incorporated
+					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg4LZoomed); }
+					 tile.setOriginalText(this.context.getString(R.string.tile_4L));
+					 break;
+				 case ThreeWord:
+					 tile.setOriginalBitmap(bg3WScaled); //this will change as default bonus and played tiles are incorporated
+					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg3WZoomed); }
+					 tile.setOriginalText(this.context.getString(R.string.tile_3W));
+					 break;
+				 case ThreeLetter:
+					 tile.setOriginalBitmap(bg3LScaled); //this will change as default bonus and played tiles are incorporated
+					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg3LZoomed); }
+					 tile.setOriginalText(this.context.getString(R.string.tile_3L));
+					 break;
+				 case TwoWord:
+					 tile.setOriginalBitmap(bg2WScaled); //this will change as default bonus and played tiles are incorporated
+					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg2WZoomed); }
+					 tile.setOriginalText(this.context.getString(R.string.tile_2W));
+					 break;
+				 case TwoLetter:
+					 tile.setOriginalBitmap(bg2LScaled); //this will change as default bonus and played tiles are incorporated
+					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg2LZoomed); }
+					 tile.setOriginalText(this.context.getString(R.string.tile_2L));
+					 break;
+				 case Starter:
+				 case None:
+					 tile.setOriginalBitmap(bgBaseScaled); //this will change as default bonus and played tiles are incorporated
+					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgBaseZoomed); }
+					 break;
+				 }
+				 
 				 this.tiles.add(tile);
 			 }
 		 }

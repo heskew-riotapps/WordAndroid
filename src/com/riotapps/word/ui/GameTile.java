@@ -13,13 +13,15 @@ public class GameTile {
 	private Bitmap originalBitmapZoomed;
 	private int xPositionZoomed = 0;
 	private int yPositionZoomed = 0;
+	private String originalText = "";
+	private String placedText = "";
 
 	private int row;
 	private int column;
     private boolean isLastPlayed = false;
     private boolean isOverlay = false;
     private boolean isPlacement = false;
-    private String placedLetter = "";
+    private int placedLetter = 0;
     private Canvas canvas;
 
 
@@ -129,16 +131,6 @@ public class GameTile {
 		this.isPlacement = isPlacement;
 	}
 
-
-	public String getPlacedLetter() {
-		return placedLetter;
-	}
-
-
-	public void setPlacedLetter(String placedLetter) {
-		this.placedLetter = placedLetter;
-	}
-
 	public Bitmap getOriginalBitmapZoomed() {
 		return originalBitmapZoomed;
 	}
@@ -158,7 +150,26 @@ public class GameTile {
 		this.yPositionZoomed = yPositionZoomed;
 	}
 	
+
+	public String getOriginalText() {
+		return originalText;
+	}
+	public void setOriginalText(String originalText) {
+		this.originalText = originalText;
+	}
+	public String getPlacedText() {
+		return placedText;
+	}
+	public void setPlacdeText(String placeText) {
+		this.placedText = placedText;
+	}
+	public void setPlacedLetter(int placedLetter) {
+		this.placedLetter = placedLetter;
+	}
 	
+	public String getCurrentText() {
+		return placedText.length() > 0 ? placedText : originalText;
+	}
 }
 
 

@@ -38,8 +38,6 @@ public class TestLanding extends Activity implements View.OnClickListener{
 	        txtGamePlay.setOnClickListener(this); 
 	        txtGameSurface = (TextView) findViewById(R.id.testLandingGameSurface);
 	        txtGameSurface.setOnClickListener(this); 
-	        txt2d = (TextView) findViewById(R.id.testLanding2d);
-	        txt2d.setOnClickListener(this); 
 	        
 	    }
 	
@@ -48,10 +46,6 @@ public class TestLanding extends Activity implements View.OnClickListener{
 	    	Intent goToActivity;
 	    	
 	    	switch(v.getId()){  
-	     	case R.id.testLanding2d:  
-        		goToActivity = new Intent(getApplicationContext(), Tutorial2d.class);
-        		startActivity(goToActivity);
-        		break;
 	        case R.id.testLandingJoinNative:  
 	        	goToActivity = new Intent(getApplicationContext(), JoinNative.class);
 				startActivity(goToActivity);

@@ -5,8 +5,8 @@ import java.util.List;
 
 public class TileLayout {
 
-	List<StarterTile> StarterTiles = new ArrayList<StarterTile>();
-	List<BonusTile> BonusTiles = new ArrayList<BonusTile>();
+	public List<StarterTile> StarterTiles = new ArrayList<StarterTile>();
+	public List<BonusTile> BonusTiles = new ArrayList<BonusTile>();
 	
 	class StarterTile {
 		private int id;

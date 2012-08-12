@@ -32,17 +32,13 @@ public class GameThread extends Thread {
 	  
 	 @Override
 	 public void run() {
-	  // TODO Auto-generated method stub
 		 Canvas c;
 		    while (_running) {
 		        c = null;
 		        try {
 		            c = _surfaceHolder.lockCanvas(null);
 		            synchronized (_surfaceHolder) {
-		            	//while (_parent.isLoopAnimation() == true) {
-		            		_parent.onDraw(c);
-		            	//	_parent.setLoopAnimation(false);
-		            	//}
+		            	_parent.onDraw(c);
 		            }
 		        } finally {
 		            // do this in a finally so that if an exception is thrown
@@ -53,19 +49,6 @@ public class GameThread extends Thread {
 		            }
 		        }
 		    }
-		 
-		 
-	  //while(running){
-	 
-	   //try {
-	   // sleep(sleepTime);
-	   // parent.updateSurfaceView();
-	  // } catch (InterruptedException e) {
-	  //  // TODO Auto-generated catch block
-	  //  e.printStackTrace();
-	  // }
-	 
-	 // }
 	 }
 	 
 	}

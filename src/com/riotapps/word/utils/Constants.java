@@ -10,6 +10,9 @@ public class Constants {
  	public static final String EMPTY_JSON = "{}";
  	public static final String WN_KEY = "48f31f368d20791114b01067e1d05b68ca177aabdbab4150b";
  	
+ 	public static final String LAYOUT_SCOPE_WORD = "W";
+ 	public static final String LAYOUT_SCOPE_LETTER = "L";
+ 	
 
  	/**============================================
 	 * storage

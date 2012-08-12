@@ -111,18 +111,6 @@
 		android:layout_marginTop="1dp"
 		android:clickable="true"
 		android:paddingLeft="20dp"
-        />  
-     <com.riotapps.word.utils.TypefaceTextView
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/text_selector"
-        style="@style/TextStyle"
-	 	android:gravity="center_vertical"
-        android:text="Test Surface View" 
-        android:id="@+id/testLanding2d"
-		android:layout_marginTop="1dp"
-		android:clickable="true"
-		android:paddingLeft="20dp"
         />    
    	<com.riotapps.word.utils.TypefaceTextView
         android:layout_width="fill_parent"

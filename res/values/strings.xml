@@ -209,4 +209,10 @@
  	<string name="badges_3000_3999">between 3000 and 3999 wins</string>
  	<string name="badges_4000_4999">between 4000 and 4999 wins</string>
  	<string name="badges_5000">5000 or more wins</string>
+ 	
+ 	<string name="tile_4L">4L</string>
+ 	<string name="tile_3L">3L</string>
+ 	<string name="tile_3W">3W</string>
+ 	<string name="tile_2L">2L</string>
+ 	<string name="tile_2W">2W</string>
 </resources>
