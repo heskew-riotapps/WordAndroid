@@ -57,7 +57,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int zoomedTileMidpoint;
     private boolean isDrawn;
     private int scaleInProcess = 0;
-    private boolean readyToDraw = true;
+    private boolean readyToDraw = false;
  
  
 
@@ -110,6 +110,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		       
 		   		me.SetDerivedValues();
 		   	    me.LoadTiles();
+		   	   me.readyToDraw = true;
 		   //	 Toast t = Toast.makeText(me._context, String.valueOf(me.fullViewTileWidth)  + " " + String.valueOf(me.excessWidth)  + " "  + String.valueOf(me.fullWidth), Toast.LENGTH_LONG);  
 			//    t.show();            
 		        }
@@ -128,6 +129,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15);  
 		this.fullViewTileMidpoint = Math.round(this.fullViewTileWidth / 2);
 		this.zoomedTileMidpoint = Math.round(this.zoomedTileWidth / 2);
+		
+		
 	}
 	
 	@Override
@@ -217,10 +220,26 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 //check for tray movement...
 				 //determine if whole board should be scrolled or should a tile be moved
 				 //can partial view be moved if just the tile is moving???
+	 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
+				 
+				 if (tappedTile == null) { return; }
+				 
+			//let's work on scroll
+			     
+			     int tappedTop =   (tappedTile.getRow() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2) ;
+			     if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
+			     if (tappedTop > 1) {tappedTop = 1;}
+			     
+			     int tappedLeft =  (tappedTile.getColumn() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2) ;
+			     if (tappedLeft < this.outerZoomLeft) {tappedLeft = this.outerZoomLeft;}
+			     if (tappedLeft > 1) {tappedLeft = 1;}
+			     
+			     this.loadZoomedBoard(canvas, tappedLeft, tappedTop);				 
+				 
 				 
 			 }
 			 
-			// if (this.touchMotion == MotionEvent.ACTION_DOWN){ 
+			if (this.touchMotion == MotionEvent.ACTION_DOWN){ 
 				// canvas.drawColor(Color.CYAN);
 				 //only if in tapped mode
 				 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
@@ -256,31 +275,31 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
 			     	 }
 			      }
-			// }
+			 }
 		 } 
 	 }
 	 
-//	private void loadZoomedBoard(int leftBasisPoint, int topBasisPoint) {
-//	     for (GameTile tile : this.tiles) {
-//	     	 tile.setxPositionZoomed(leftBasisPoint + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
-//	 		 tile.setyPositionZoomed(topBasisPoint + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
-//	     	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
-//	     	 
-//	     	 if (tile.getCurrentText().length() > 0){
-//		     	 Paint p = new Paint();
-//		     	 p.setColor(Color.WHITE);
-//		     	 p.setTextSize(Math.round(this.zoomedTileWidth * .6));
-//			     p.setAntiAlias(true);
-//			     p.setTypeface(this.letterTypeface);
-//			     Rect bounds = new Rect();
-//			     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
-//			     int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
-//			     int textTop =  tile.getyPositionZoomed() + this.zoomedTileMidpoint + (Math.round(bounds.height() / 2));
+	private void loadZoomedBoard(Canvas canvas, int leftBasisPoint, int topBasisPoint) {
+	     for (GameTile tile : this.tiles) {
+	     	 tile.setxPositionZoomed(leftBasisPoint + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
+	 		 tile.setyPositionZoomed(topBasisPoint + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
+	     	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
+	     	 
+	     	 if (tile.getCurrentText().length() > 0){
+		     	 Paint p = new Paint();
+		     	 p.setColor(Color.WHITE);
+		     	 p.setTextSize(Math.round(this.zoomedTileWidth * .6));
+			     p.setAntiAlias(true);
+			     p.setTypeface(this.letterTypeface);
+			     Rect bounds = new Rect();
+			     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
+			     int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
+			     int textTop =  tile.getyPositionZoomed() + this.zoomedTileMidpoint + (Math.round(bounds.height() / 2));
 			     
-//			     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
-//	     	 }
-	//      }
-
+			     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
+	     	 }
+	     }
+	}
 		
 //	}
 	 
@@ -376,6 +395,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 Bitmap bg2WScaled = Bitmap.createScaledBitmap(bg2W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 		 Bitmap bg2WZoomed = Bitmap.createScaledBitmap(bg2W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 		
+		 Bitmap bgStarter = BitmapFactory.decodeResource(getResources(), R.drawable.tile_starter_bg);
+		 Bitmap bgStarterScaled = Bitmap.createScaledBitmap(bgStarter, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 Bitmap bgStarterZoomed = Bitmap.createScaledBitmap(bgStarter, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
 		 //starter
 	//	 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
 	//	 Bitmap bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
@@ -424,6 +447,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 tile.setOriginalText(this.context.getString(R.string.tile_2L));
 					 break;
 				 case Starter:
+					 tile.setOriginalBitmap(bgStarterScaled); //this will change as default bonus and played tiles are incorporated
+					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgStarterZoomed); }
+					 break;
 				 case None:
 					 tile.setOriginalBitmap(bgBaseScaled); //this will change as default bonus and played tiles are incorporated
 					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgBaseZoomed); }
