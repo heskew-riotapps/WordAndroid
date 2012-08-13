@@ -28,20 +28,20 @@ public class TileLayout {
 			this.id = id;
 		}
 		public int getMultiplier() {
-			return multiplier;
+			return M;
 		}
 		public void setMultiplier(int multiplier) {
-			this.multiplier = multiplier;
+			this.M = multiplier;
 		}
 		public String getScope() {
-			return scope;
+			return S;
 		}
 		public void setScope(String scope) {
-			this.scope = scope;
+			this.S = scope;
 		}
 		private int id;
-		private int multiplier;
-		private String scope;
+		private int M;
+		private String S;
 	}
 	
 }

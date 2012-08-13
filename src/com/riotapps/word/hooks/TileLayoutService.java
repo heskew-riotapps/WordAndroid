@@ -34,16 +34,16 @@ public class TileLayoutService {
 	public eDefaultTile GetDefaultTile(int id, TileLayout layout){
 		
 		for(TileLayout.StarterTile x : layout.StarterTiles) {
-	        if(x.getId() == id){return eDefaultTile.Starter;}
+	        if(x.getId() == id - 1){return eDefaultTile.Starter;}
 	    }
 		
 		for(TileLayout.BonusTile x : layout.BonusTiles) {
-	        if(x.getId() == id){
+	        if(x.getId() == id - 1){
 	        	if (x.getMultiplier() == 4) {return eDefaultTile.FourLetter;}
-	        	if (x.getMultiplier() == 3 && x.getScope() == Constants.LAYOUT_SCOPE_WORD) {return eDefaultTile.ThreeWord;}	        	
-	        	if (x.getMultiplier() == 3 && x.getScope() == Constants.LAYOUT_SCOPE_LETTER) {return eDefaultTile.ThreeLetter;}
-	        	if (x.getMultiplier() == 2 && x.getScope() == Constants.LAYOUT_SCOPE_WORD) {return eDefaultTile.TwoWord;}
-	        	if (x.getMultiplier() == 2 && x.getScope() == Constants.LAYOUT_SCOPE_LETTER) {return eDefaultTile.TwoLetter;}
+	        	if (x.getMultiplier() == 3 && x.getScope().equals(Constants.LAYOUT_SCOPE_WORD)) {return eDefaultTile.ThreeWord;}	        	
+	        	if (x.getMultiplier() == 3 && x.getScope().equals(Constants.LAYOUT_SCOPE_LETTER)) {return eDefaultTile.ThreeLetter;}
+	        	if (x.getMultiplier() == 2 && x.getScope().equals(Constants.LAYOUT_SCOPE_WORD)) {return eDefaultTile.TwoWord;}
+	        	if (x.getMultiplier() == 2 && x.getScope().equals(Constants.LAYOUT_SCOPE_LETTER)) {return eDefaultTile.TwoLetter;}
 	        }
 	    }
 		return eDefaultTile.None;
