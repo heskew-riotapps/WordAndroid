@@ -50,15 +50,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int midpoint;
     private int fullViewTextSize;
     private int zoomedTextSize;
-    private int touchMotion;
+    private int touchMotion = 0;
     private int outerZoomLeft;
     private int outerZoomTop; 
     private int fullViewTileMidpoint;
     private int zoomedTileMidpoint;
     private boolean isDrawn;
     private int scaleInProcess = 0;
+    private boolean readyToDraw = true;
  
  
+
+	public boolean isReadyToDraw() {
+		return readyToDraw;
+	}
+
+	public void setReadyToDraw(boolean readyToDraw) {
+		this.readyToDraw = readyToDraw;
+	}
 
 	List<GameTile> tiles = new ArrayList<GameTile>();
     TileLayout defaultLayout;
@@ -155,11 +164,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 @Override
 	 protected void onDraw(Canvas canvas) {
 		// super.onDraw(canvas);
-		// this.setLayoutParams(params)
-		 //canvas.co
-		// if (this.isDrawn) {return;}
-		// this.isDrawn = true;
+	
+		 if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
 		 
+		//this will have to change if dragging a tile 
 		 if (this.touchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { return; }
 		 
 		 canvas.drawColor(0, Mode.CLEAR);
@@ -181,7 +189,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    	 canvas.drawBitmap(tile.getOriginalBitmap(),tile.getxPosition(), tile.getyPosition(), null);
 		    	 
 		    	 if (tile.getCurrentText().length() > 0){
-			    	 Paint p = new Paint();
+			    	 Paint p = new Paint(); 
 			    	 p.setColor(Color.WHITE);
 				     p.setTextSize(Math.round(this.fullViewTileWidth * .6));
 				     p.setAntiAlias(true);
@@ -196,120 +204,85 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    }
 		 }
 		 else {
-			 
+			// if (this.touchMotion == MotionEvent.ACTION_UP) {
+			//	 this.isZoomed = false; ///turn off zoom since we are handling now
+			// }
 			 if (this.touchMotion == MotionEvent.ACTION_MOVE) {
-				 
-				 if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {return;}
+				 //handle tile drag later, first drag the whole board around
+				 if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
+					 this.readyToDraw = false;
+					 return;
+				 }
 				 
 				 //check for tray movement...
 				 //determine if whole board should be scrolled or should a tile be moved
 				 //can partial view be moved if just the tile is moving???
 				 
 			 }
-			// canvas.drawColor(Color.CYAN);
-			 //only if in tapped mode
-			 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
 			 
-			 //this.activeTileWidth = Math.round(this.fullViewTileWidth * this.zoomMultiplier);  //do this in oncreate/calculate
-			// int midpoint = Math.round(fullWidth / 2);
-		 
-			 
-			// _scratch = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);
-		   //  _scaled = Bitmap.createScaledBitmap(_scratch, activeTileWidth , activeTileWidth, false);
-			 //calculate left and top based on pointer
-		     
-		  //   left = this.currentX;
-		   //  top = this.currentY;
-		     
-		    // int outerZoomBottom = this.fullWidth + (Math.round(this.zoomMultiplier * this.fullWidth) / 2);
-		     
-		     
-		   //  int innerZoomLeft = 1;
-		    // int innerZoomRight = this.fullWidth;
-		    // int innerZoomTop = 1; //this will vary depending on whether or not top scoreboard slides away
-		   //  int innerZoomBottom = this.fullWidth;
-		     
-		     int tappedTop = this.midpoint - ((tappedTile.getRow() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
-		     if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
-		     if (tappedTop > 1) {tappedTop = 1;}
-		     
-		     int tappedLeft = this.midpoint - ((tappedTile.getColumn() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
-		     if (tappedLeft < this.outerZoomLeft) {tappedLeft = this.outerZoomLeft;}
-		     if (tappedLeft > 1) {tappedLeft = 1;}
-		     
-		     for (GameTile tile : this.tiles) {
-		     	 tile.setxPositionZoomed(tappedLeft + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
-		 		 tile.setyPositionZoomed(tappedTop + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
-		     	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
-		     	 
-		     	 if (tile.getCurrentText().length() > 0){
-			     	 Paint p = new Paint();
-			     	 p.setColor(Color.WHITE);
-			     	 p.setTextSize(Math.round(this.zoomedTileWidth * .6));
-				     p.setAntiAlias(true);
-				     p.setTypeface(this.letterTypeface);
-				     Rect bounds = new Rect();
-				     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
-				     int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
-				     int textTop =  tile.getyPositionZoomed() + this.zoomedTileMidpoint + (Math.round(bounds.height() / 2));
-				     
-				     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
-		     	 }
-		      }
-		     
-		      
-		   //  if (this.scaleInProcess < this.zoomedTileWidth){
-		//	     for (GameTile tile : this.tiles) {
-		//	    	 tile.setxPositionZoomed(tappedLeft + ((tile.getColumn() - 1) * this.scaleInProcess) + ((tile.getColumn() - 1) * this.tileGap));
-		//			 tile.setyPositionZoomed(tappedTop + ((tile.getRow() - 1) * this.scaleInProcess) + ((tile.getRow() - 1) * this.tileGap));
-		//	    	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
-			//     }
-		    // }
-		   //  this.scaleInProcess += 1;
-		     
-		     
-		     //so just determine where the tap was and move that position to the middle
-		     //if any of the above boundaries are breached, simply use the breached boundary position instead
-		     
-		     //left needs to be centered, top needs to be centered in zoomed view
-		 }
-     	 
-    	// Toast t = Toast.makeText(me._context, "width: " + String.valueOf(activeTileWidth), Toast.LENGTH_LONG);  
-		 //   t.show(); 
-	     //make sure full view is centered so grab remainder of 15 division 
-	     //determine if font text can be used so that fewer images must be maintained
-	     //use font size based on 80% of tile size
-	       //keep array of tiles
-	       
-	  ////   tileFontSize = (int) Math.round(this.activeTileWidth * .8);
-	  //   canvas.drawColor(Color.GREEN);
-	//     for (int x = 0; x<15 ;x++){
-	  //  	 this.temp(_scaled,canvas,x, left, top);
-	    	 
-	   //  }
-	     
-	 //    for (GameTile tile : this.tiles) { 
-	  //  	 canvas.drawBitmap(tile.getOriginalBitmap(),tile.getxPosition(), tile.getyPosition(), null);
-	   // 	}
-	     
- 
-		 
-	 
-	       
-	       // canvas.drawBitmap(_scaled, _x  - (_scaled.getWidth() / 2), _y - (_scaled.getWidth() / 2), null);
-	       // canvas.drawBitmap(_scratch, _x + 22 - (_scratch.getWidth() / 2), _y - (_scaled.getWidth() / 2), null);
-	        // Paint p = new Paint();
-	       // p.setTextSize(24);
-	       // p.setAntiAlias(true);
-	       // p.setTypeface(_typeface);
-	       // canvas.drawText("4L", 50, 50, p);
-	//        canvas.d
-		  
-		 
-		 
+			// if (this.touchMotion == MotionEvent.ACTION_DOWN){ 
+				// canvas.drawColor(Color.CYAN);
+				 //only if in tapped mode
+				 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
+				 
+				 if (tappedTile == null) { return; }
+				 
+			//let's work on scroll
+			     
+			     int tappedTop = this.midpoint - ((tappedTile.getRow() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+			     if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
+			     if (tappedTop > 1) {tappedTop = 1;}
+			     
+			     int tappedLeft = this.midpoint - ((tappedTile.getColumn() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+			     if (tappedLeft < this.outerZoomLeft) {tappedLeft = this.outerZoomLeft;}
+			     if (tappedLeft > 1) {tappedLeft = 1;}
+			     
+			     for (GameTile tile : this.tiles) {
+			     	 tile.setxPositionZoomed(tappedLeft + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
+			 		 tile.setyPositionZoomed(tappedTop + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
+			     	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
+			     	 
+			     	 if (tile.getCurrentText().length() > 0){
+				     	 Paint p = new Paint();
+				     	 p.setColor(Color.WHITE);
+				     	 p.setTextSize(Math.round(this.zoomedTileWidth * .6));
+					     p.setAntiAlias(true);
+					     p.setTypeface(this.letterTypeface);
+					     Rect bounds = new Rect();
+					     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
+					     int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
+					     int textTop =  tile.getyPositionZoomed() + this.zoomedTileMidpoint + (Math.round(bounds.height() / 2));
+					     
+					     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
+			     	 }
+			      }
+			// }
+		 } 
 	 }
 	 
-	 
+//	private void loadZoomedBoard(int leftBasisPoint, int topBasisPoint) {
+//	     for (GameTile tile : this.tiles) {
+//	     	 tile.setxPositionZoomed(leftBasisPoint + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
+//	 		 tile.setyPositionZoomed(topBasisPoint + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
+//	     	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
+//	     	 
+//	     	 if (tile.getCurrentText().length() > 0){
+//		     	 Paint p = new Paint();
+//		     	 p.setColor(Color.WHITE);
+//		     	 p.setTextSize(Math.round(this.zoomedTileWidth * .6));
+//			     p.setAntiAlias(true);
+//			     p.setTypeface(this.letterTypeface);
+//			     Rect bounds = new Rect();
+//			     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
+//			     int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
+//			     int textTop =  tile.getyPositionZoomed() + this.zoomedTileMidpoint + (Math.round(bounds.height() / 2));
+			     
+//			     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
+//	     	 }
+	//      }
+
+		
+//	}
 	 
 	 @Override
 	 public boolean onTouchEvent(MotionEvent event) {
@@ -318,6 +291,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.touchMotion = event.getAction();
 	     
 	     this.isDrawn = false;
+	     this.readyToDraw = true;
 
 	     //return true;
 	     

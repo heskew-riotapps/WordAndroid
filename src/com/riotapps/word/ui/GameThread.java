@@ -7,18 +7,18 @@ public class GameThread extends Thread {
 	 private SurfaceHolder _surfaceHolder;
 	 volatile boolean _running = false;
 	  
-	 GameSurfaceView _parent;
+	 GameSurfaceView parent;
 	 long sleepTime;
 	  
 //	 public GameThread(GameSurfaceView sv, long st){
 //	  super();
-//	  _parent = sv;
+//	  parent = sv;
 //	  sleepTime = st;
 //	 }
 	 
 	  public GameThread(SurfaceHolder surfaceHolder, GameSurfaceView surfaceView) {
 	    _surfaceHolder = surfaceHolder;
-	    _parent = surfaceView;
+	    parent = surfaceView;
 	 }
 	  
 	  public SurfaceHolder getSurfaceHolder() {
@@ -34,11 +34,12 @@ public class GameThread extends Thread {
 	 public void run() {
 		 Canvas c;
 		    while (_running) {
+		    	if (parent.isReadyToDraw()) {
 		        c = null;
 		        try {
 		            c = _surfaceHolder.lockCanvas(null);
 		            synchronized (_surfaceHolder) {
-		            	_parent.onDraw(c);
+		            	 parent.onDraw(c); 
 		            }
 		        } finally {
 		            // do this in a finally so that if an exception is thrown
@@ -48,6 +49,7 @@ public class GameThread extends Thread {
 		                _surfaceHolder.unlockCanvasAndPost(c);
 		            }
 		        }
+		    	}
 		    }
 	 }
 	 
