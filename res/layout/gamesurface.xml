@@ -19,20 +19,18 @@
 	    android:layout_marginBottom="0dp"
 	    android:background="@null"
 	    />
+
 	<RelativeLayout
 	    android:layout_below="@id/topControlsPlaceholder"
 	    android:layout_above="@id/bottomControlsPlaceholder"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"    
 	 >
-	 <ScrollView 
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent" 
-    	android:fadingEdge="none">
+	
     	<com.riotapps.word.ui.GameSurfaceView 
         	android:id="@+id/gameSurface"
         	android:layout_margin="2dp"
         />
-    	</ScrollView>
-    </RelativeLayout>
+    
+    </RelativeLayout>	 
 </RelativeLayout>

@@ -58,6 +58,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private boolean isDrawn;
     private int scaleInProcess = 0;
     private boolean readyToDraw = false;
+    private long dblTapCheck = 0;
  
  
 
@@ -169,6 +170,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		// super.onDraw(canvas);
 	
 		 if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
+		 if (this.touchMotion == MotionEvent.ACTION_DOWN){ return;} 
 		 
 		//this will have to change if dragging a tile 
 		 if (this.touchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { return; }
@@ -217,29 +219,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 return;
 				 }
 				 
-				 //check for tray movement...
-				 //determine if whole board should be scrolled or should a tile be moved
-				 //can partial view be moved if just the tile is moving???
-	 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
-				 
-				 if (tappedTile == null) { return; }
-				 
-			//let's work on scroll
-			     
-			     int tappedTop =   (tappedTile.getRow() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2) ;
-			     if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
-			     if (tappedTop > 1) {tappedTop = 1;}
-			     
-			     int tappedLeft =  (tappedTile.getColumn() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2) ;
-			     if (tappedLeft < this.outerZoomLeft) {tappedLeft = this.outerZoomLeft;}
-			     if (tappedLeft > 1) {tappedLeft = 1;}
-			     
-			     this.loadZoomedBoard(canvas, tappedLeft, tappedTop);				 
-				 
+
 				 
 			 }
 			 
-			if (this.touchMotion == MotionEvent.ACTION_DOWN){ 
+			if (this.touchMotion == MotionEvent.ACTION_UP){ 
 				// canvas.drawColor(Color.CYAN);
 				 //only if in tapped mode
 				 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
@@ -308,10 +292,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.currentX = (int) event.getX();
 	     this.currentY = (int) event.getY();
 	     this.touchMotion = event.getAction();
+	     long nanoTime = System.nanoTime();
 	     
 	     this.isDrawn = false;
-	     this.readyToDraw = true;
-
+	     
 	     //return true;
 	     
 	     synchronized (this.gameThread.getSurfaceHolder()) {
@@ -322,20 +306,28 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
                  //where is the click, which object within view???
             	 //get tile from coordinates.  if tile is null, do nothing
             	 //for now act like this is a click/tap...
-            	 
-            	 this.tapCheck = System.nanoTime();
+            	 this.readyToDraw = false;
+            	 this.tapCheck = nanoTime;
+            	 if (this.dblTapCheck == 0){ this.dblTapCheck = nanoTime; }
             	// this.invalidate();
             	 
             	 break;
              case MotionEvent.ACTION_UP:
-            	 if (this.tapCheck > 0 && System.nanoTime() - this.tapCheck <= 300000000) {
+            	 //includes a check to ignore double taps
+            	 if (this.tapCheck > 0 && nanoTime - this.tapCheck <= 300000000) {
+            	 // && (nanoTime - this.dblTapCheck >= 800000000 || this.dblTapCheck == 0)) {
             		 this.isZoomed = !this.isZoomed;
+            		 this.readyToDraw = true;
+            		 this.dblTapCheck = 0;
             	 
             	 }
             	 this.tapCheck = 0;
             	 break;
              case MotionEvent.ACTION_MOVE:
             	 this.tapCheck = 0;
+            	 this.dblTapCheck = 0;
+            	 this.readyToDraw = true;
+
             	 break; 
              }
              

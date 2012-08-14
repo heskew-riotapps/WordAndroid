@@ -5,11 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.util.List;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +12,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.riotapps.word.JoinNative;
 import com.riotapps.word.R;
 import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.AsyncNetworkRequest;
@@ -27,7 +21,6 @@ import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.DialogManager;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
-import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Validations;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
