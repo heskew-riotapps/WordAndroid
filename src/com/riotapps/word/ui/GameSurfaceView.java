@@ -246,20 +246,33 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 
 					 //if (tappedTile == null) { return; } ///do something here, this is causing the board to disappear when scrolled out of bounds
 					 
-					 //grab top left tile and make sure it will be within bounds
-					 GameTile topLeftTile = this.tiles.get(1);
+					 //grab top left tile  
+					 GameTile topLeftTile = this.tiles.get(0);
 					 
+					 //make sure it will be within outer left bounds
 					 if (topLeftTile.getxPositionZoomed() - leftDiff < this.outerZoomLeft){
 						 //only scroll to the edge of the left outer boundary
-						 leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed() - leftDiff);
+						 //leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed() - leftDiff);
+						 leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());
 					 }
 					 
-					//grab top left tile and make sure it will be within bounds
+					 //make sure it will be within visible left bounds
+					 if (topLeftTile.getxPositionZoomed() - leftDiff > 1) {
+						 leftDiff = leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);
+					 }
+					 
+					//grab top left tile and make sure it will be within outer top bounds
 					 if (topLeftTile.getyPositionZoomed() - topDiff < this.outerZoomTop){
 						 //only scroll to the edge of the top outer boundary
-						 topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - leftDiff);
+						 topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - topDiff);
+						 topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed());
 					 }
 					  
+					 //make sure it will be within visible top bounds
+					 if (topLeftTile.getyPositionZoomed() - topDiff > 1) {
+						 topDiff = topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
+					 }
+					 
 				     this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);		
 				}
 			 }
@@ -352,7 +365,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     
 	     synchronized (this.gameThread.getSurfaceHolder()) {
              switch (event.getAction()) {
-             
+          
              case MotionEvent.ACTION_DOWN:
             
                  //where is the click, which object within view???
@@ -369,31 +382,32 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 break;
              case MotionEvent.ACTION_UP:
             	 //includes a check to ignore double taps
-            	 if ((this.tapCheck > 0 && nanoTime - this.tapCheck <= 300000000) && !this.isMoving) {
+            	 if (this.tapCheck > 0 && nanoTime - this.tapCheck <= 300000000) {
             	 // && (nanoTime - this.dblTapCheck >= 800000000 || this.dblTapCheck == 0)) {
             		 if (this.isMoving){
             			 //if we are coming out of a drag, up event just means drag is finished, nothing to do here, just move along
             			 this.isMoving = false;
             			 this.readyToDraw = false;
             		 }
-            		 else if (this.previousTouchMotion == MotionEvent.ACTION_DOWN){ //action up should immediately follow and action down to be a tap
+            		 else {// if (this.previousTouchMotion == MotionEvent.ACTION_DOWN){ //action up should immediately follow and action down to be a tap
 	            		 this.isZoomed = !this.isZoomed;
 	            		 this.readyToDraw = true;
 	            		 this.dblTapCheck = 0;
             		 }
+            		// else {
+            		//	 //if previous action was not a down, don't draw
+            		//	 this.readyToDraw = false;
+            		// }
             	 }
+            	 this.previousTouchMotion = MotionEvent.ACTION_UP;
             	 this.previousX = 0;
             	 this.previousY = 0;
             	 this.isMoving = false;
             	 this.tapCheck = 0;
             	 break;
              case MotionEvent.ACTION_MOVE:
-            	 try {
-					Thread.sleep(20);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	 
+            	 this.previousTouchMotion = MotionEvent.ACTION_MOVE;
             	 this.tapCheck = 0;
             	 this.dblTapCheck = 0;
             	 this.isMoving = true;
@@ -404,10 +418,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             		//calculate outerZoomRight and bottom
             		
             	 }
-            	 
-            	 ///set before and after points and calculate the difference, then adjust all of the tiles
-
             	 break; 
+             default:
+            	 this.readyToDraw = false;
              }
              this.previousTouchMotion = this.touchMotion;
              return true;
@@ -415,32 +428,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	 }
 	 
-//	 public void updateStates(){
-//	  //Dummy method() to handle the States
-//	 }
-	 
-//	 public void updateSurfaceView(){
-//	  //The function run in background thread, not ui thread.
-	   
-//	  Canvas canvas = null;
-	    
-//	  try{
-//	   canvas = surfaceHolder.lockCanvas();
-//	 
-//	   synchronized (surfaceHolder) {
-//	    updateStates();
-//	    onDraw(canvas);
-//	   }
-//	  }
-//	  finally{
-//	   if(canvas != null){
-//	    surfaceHolder.unlockCanvasAndPost(canvas);
-//	   }
-//	  } 
-//	 }
-	 
  
-	 private void LoadTiles() {
+	 private void LoadTiles() {		  
 		 
 		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
 		 Bitmap bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
