@@ -29,7 +29,7 @@ public class Game {
 //	  key :last_action_alert_text, String
 //	  key :status, Integer
 	
-	private 
+//	private 
 	
 	
 }

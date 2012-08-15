@@ -18,8 +18,10 @@ import android.view.SurfaceView;
 
 public class GameSurface extends Activity {
 
-	GameSurfaceView _gameSurfaceView;
-	SurfaceView _surfaceView;
+
+
+	GameSurfaceView gameSurfaceView;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +30,15 @@ public class GameSurface extends Activity {
 		setContentView(R.layout.gamesurface);
 		//setContentView(new GameSurfaceView2(this));
 		
-	 	this._gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
+	 	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
  
 		//this._surfaceView = new GameSurfaceView(this); 
 	}
 	
+		@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		this.gameSurfaceView.onDestroy();
+		}
 }

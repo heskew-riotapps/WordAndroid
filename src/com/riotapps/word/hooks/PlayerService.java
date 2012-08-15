@@ -25,7 +25,7 @@ import com.riotapps.word.utils.Validations;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
  
-
+////make this class statisc
 public class PlayerService {
 	
 	Gson gson = new Gson();
