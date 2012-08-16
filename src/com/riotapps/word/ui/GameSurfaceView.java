@@ -253,13 +253,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 if (topLeftTile.getxPositionZoomed() - leftDiff < this.outerZoomLeft){
 						 //only scroll to the edge of the left outer boundary
 						 //leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed() - leftDiff);
-						 leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());
-					 }
+						 leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
+					 } 
 					 
 					 //make sure it will be within visible left bounds
-					 if (topLeftTile.getxPositionZoomed() - leftDiff > 1) {
-						 leftDiff = leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);
-					 }
+					 if (topLeftTile.getxPositionZoomed() + leftDiff > 1) {
+						 leftDiff = leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);   
+					 } 
 					 
 					//grab top left tile and make sure it will be within outer top bounds
 					 if (topLeftTile.getyPositionZoomed() - topDiff < this.outerZoomTop){
@@ -269,7 +269,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 }
 					  
 					 //make sure it will be within visible top bounds
-					 if (topLeftTile.getyPositionZoomed() - topDiff > 1) {
+					 if (topLeftTile.getyPositionZoomed() + topDiff > 1) {
 						 topDiff = topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
 					 }
 					 
