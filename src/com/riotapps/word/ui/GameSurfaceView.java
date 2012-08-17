@@ -307,9 +307,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			     if (tappedLeft > 1) {tappedLeft = 1;}
 			     
 			     //draw the board to the canvas
-			     this.loadZoomedBoard(canvas, tappedLeft, tappedTop);
-			     
-			     //release the current tile context
+			     this.loadZoomedBoard(canvas, tappedLeft, tappedTop); 
+			      
+			     //release the current tile context 
 			     this.currentTile = null;  
 			  
 			 }
