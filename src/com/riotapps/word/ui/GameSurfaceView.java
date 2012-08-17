@@ -216,7 +216,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
 		    	 }
 		    }
-	        
+	        this.readyToDraw = false;
 	     //  canvas.dra
 		 }
 		 else {
@@ -258,7 +258,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 
 					 //make sure it will be within visible left bounds
 					 if (topLeftTile.getxPositionZoomed() + leftDiff > 1) {
-						 leftDiff = leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);   
+						 leftDiff = leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);     
 					 } 
 					 
 					//grab top left tile and make sure it will be within outer top bounds
@@ -306,9 +306,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			     //make sure we don't pass the visible left boundary (this is the visible left boundary of the surface view minus padding)
 			     if (tappedLeft > 1) {tappedLeft = 1;}
 			     
+			     //draw the board to the canvas
 			     this.loadZoomedBoard(canvas, tappedLeft, tappedTop);
 			     
-			     this.currentTile = null;
+			     //release the current tile context
+			     this.currentTile = null;  
 			  
 			 }
 		 } 
