@@ -7,7 +7,7 @@ import com.riotapps.word.R;
 import com.riotapps.word.hooks.TileLayout;
 import com.riotapps.word.hooks.TileLayoutService;
 import com.riotapps.word.utils.Constants;
-
+import android.util.Log;
 import android.content.Context;
  
 import android.graphics.Bitmap;
@@ -20,6 +20,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -37,8 +38,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int currentY = 20;
     private int fullWidth;
     private int fullViewTileWidth;
-    private int top;
-    private int left;
+  //  private int top;
+  //  private int left;
     private boolean isZoomed = false;
     private int excessWidth;
     private boolean isZoomAllowed = true; //if width of board greater than x disable zooming.  it means we are on a tablet and zooming not needed.
@@ -55,7 +56,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int outerZoomTop; 
     private int fullViewTileMidpoint;
     private int zoomedTileMidpoint;
-    private boolean isDrawn;
+ //   private boolean isDrawn;
     private int scaleInProcess = 0;
     private boolean readyToDraw = false;
     private long dblTapCheck = 0;
@@ -104,7 +105,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		  
 		 holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
-		 this.isDrawn = false;
+		// this.isDrawn = false;
 		 
 		// this.setScrollContainer(true);
 	///	 this.setVerticalScrollBarEnabled(true);
@@ -170,54 +171,125 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 	}
 
-	
+	 @Override
+	 public boolean onTouchEvent(MotionEvent event) {
+	     this.currentX = (int) event.getX();
+	     this.currentY = (int) event.getY();
+	     this.touchMotion = event.getAction();
+	     long nanoTime = System.nanoTime();
+	     
+ 
+         Log.w(getClass().getSimpleName() + "onTouchEvent", event.toString());
+
+    	 
+	     synchronized (this.gameThread.getSurfaceHolder()) {
+             switch (event.getAction()) {
+          
+
+             case MotionEvent.ACTION_DOWN:
+            
+                 //where is the click, which object within view???
+            	 //get tile from coordinates.  if tile is null, do nothing
+            	 //for now act like this is a click/tap...
+            	 this.readyToDraw = false;
+            	 this.tapCheck = nanoTime;
+            	 if (this.dblTapCheck == 0){ this.dblTapCheck = nanoTime; }
+            	// this.invalidate();
+            	 this.isMoving = false; 
+            	 
+          
+            	 this.previousX = this.currentX;
+            	 this.previousY = this.currentY;
+            	 currentTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
+            	 break;
+             case MotionEvent.ACTION_UP:
+            	 //includes a check to ignore double taps
+            	   Log.w(getClass().getSimpleName() + "onTouchEvent ActionUP ", this.tapCheck + " " + this.isMoving + " " + this.readyToDraw);
+            	   
+            	   
+            	   this.readyToDraw = false;
+            	   
+            	 if (this.tapCheck > 0 && nanoTime - this.tapCheck <= 300000000) {
+            	 // && (nanoTime - this.dblTapCheck >= 800000000 || this.dblTapCheck == 0)) {
+            	//	 if (this.isMoving){
+            	//		 //if we are coming out of a drag, up event just means drag is finished, nothing to do here, just move along
+            	//		 this.isMoving = false;
+             	
+            	//	 }
+            		// else {// if (this.previousTouchMotion == MotionEvent.ACTION_DOWN){ //action up should immediately follow and action down to be a tap
+	            	if (!this.isMoving) {
+            		 this.isZoomed = !this.isZoomed;
+	            		 this.readyToDraw = true;
+	            		 this.dblTapCheck = 0;
+            		 }
+            		// else {
+            		//	 //if previous action was not a down, don't draw
+            		//	 this.readyToDraw = false;
+            		// }
+            	 }
+            	 this.previousTouchMotion = MotionEvent.ACTION_UP;
+            	 this.previousX = 0;
+            	 this.previousY = 0;
+            	 this.isMoving = false;
+            	 this.tapCheck = 0;
+            	 break;
+             case MotionEvent.ACTION_MOVE:
+            	 
+            	 this.previousTouchMotion = MotionEvent.ACTION_MOVE;
+            	 this.tapCheck = 0;
+            	 this.dblTapCheck = 0;
+            	 this.isMoving = true;
+            	 if (this.previousTouchMotion == MotionEvent.ACTION_MOVE && this.previousX == this.currentX && this.previousY == this.currentY){
+            		 this.readyToDraw = false;
+            	 }
+            	 else {
+            		 this.readyToDraw = true;
+            	 }
+            	// this.readyToDraw = false;
+            	 if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
+            		//calculate outerZoomRight and bottom
+            		
+            	 }
+            	   Log.w(getClass().getSimpleName() + "onTouchEvent ACTION_MOVE ", this.previousX + " " + this.currentX + " " + this.readyToDraw);
+            	 break; 
+             default:
+            	 this.readyToDraw = false;
+             }
+             this.previousTouchMotion = this.touchMotion;
+             return true;
+         }
+
+	 }
+	 
 	 @Override
 	 protected void onDraw(Canvas canvas) {
 		// super.onDraw(canvas);
-	
+		 Log.w(getClass().getSimpleName() + "onDraw ",this.touchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
+				 + " " + this.currentX + " " + this.currentY);
+		 
+		 if (this.readyToDraw == false){ return; }
 		//  if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
 		 if (this.touchMotion == MotionEvent.ACTION_DOWN){ return;}  
 		 
 		//this will have to change if dragging a tile 
 		 if (this.touchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { return; }
 		 
+		 //if we are in middle of action move but we are not moving (the finger is pressed but not moving, don't redraw
+		 if (this.previousTouchMotion == MotionEvent.ACTION_MOVE && this.touchMotion == MotionEvent.ACTION_MOVE
+				 && this.previousX == this.currentX && this.previousY == this.currentY){ return; }
+		 Log.w(getClass().getSimpleName() + "onDraw2 ",this.touchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
+				 + " " + this.currentX + " " + this.currentY);
+		 
 		// if (this.touchMotion != MotionEvent.ACTION_MOVE ) {
 		 canvas.drawColor(0, Mode.CLEAR); ///clears out the previous drawing on the canvas
 		// canvas.drawColor(Color.YELLOW);
 		 //}
 		 int tileFontSize;
-		 Bitmap _scratch;
-		 Bitmap _scaled;
-		 int left = 0;
-		 int top = 0;
+		 this.readyToDraw = false;
 		 
 		 if (this.isZoomed == false || this.isZoomAllowed == false){
-			 this.activeTileWidth = this.fullViewTileWidth;
-	        _scratch = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile);
-	        _scaled = Bitmap.createScaledBitmap(_scratch, fullViewTileWidth , fullViewTileWidth, false);
-	     
-	        left = 1 + (this.excessWidth / 2);  
-	        top = 1;
-	        
-	        for (GameTile tile : this.tiles) { 
-		    	 canvas.drawBitmap(tile.getOriginalBitmap(),tile.getxPosition(), tile.getyPosition(), null);
-		    	 
-		    	 if (tile.getCurrentText().length() > 0){
-			    	 Paint p = new Paint(); 
-			    	 p.setColor(Color.WHITE);
-				     p.setTextSize(Math.round(this.fullViewTileWidth * .6));
-				     p.setAntiAlias(true);
-				     p.setTypeface(this.letterTypeface);
-				     Rect bounds = new Rect();
-				     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
-				     int textLeft =  tile.getxPosition() + this.fullViewTileMidpoint - (Math.round(bounds.width() / 2));
-				     int textTop =  tile.getyPosition() + this.fullViewTileMidpoint + (Math.round(bounds.height() / 2));
-				     
-				     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
-		    	 }
-		    }
-	        this.readyToDraw = false;
-	     //  canvas.dra
+			 this.drawFullView(canvas);
+			
 		 }
 		 else {
 			// if (this.touchMotion == MotionEvent.ACTION_UP) {
@@ -225,6 +297,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			// }
 			 if (this.touchMotion == MotionEvent.ACTION_MOVE) {
 				 
+				 this.readyToDraw = true;
+				   
 				 int leftDiff = this.previousX - this.currentX ;
 				 int topDiff =  this.previousY - this.currentY;
 				 
@@ -253,24 +327,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 if (topLeftTile.getxPositionZoomed() - leftDiff < this.outerZoomLeft){
 						 //only scroll to the edge of the left outer boundary
 						 //leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed() - leftDiff);
-						 leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
+						 leftDiff =  this.outerZoomLeft; //leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
 					 } 
 					 
 					 //make sure it will be within visible left bounds
 					 if (topLeftTile.getxPositionZoomed() + leftDiff > 1) {
-						 leftDiff = leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);     
+						 leftDiff = topLeftTile.getxPositionZoomed() + 1;//leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);      
 					 } 
 					 
 					//grab top left tile and make sure it will be within outer top bounds
 					 if (topLeftTile.getyPositionZoomed() - topDiff < this.outerZoomTop){
 						 //only scroll to the edge of the top outer boundary
-						 topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - topDiff);
-						 topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed());
+						 topDiff = this.outerZoomTop; //topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - topDiff);
+						 //topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed());
 					 }
 					  
 					 //make sure it will be within visible top bounds
 					 if (topLeftTile.getyPositionZoomed() + topDiff > 1) {
-						 topDiff = topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
+						 topDiff = topLeftTile.getyPositionZoomed() + 1;//topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
 					 }
 					 
 				     this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);		
@@ -311,6 +385,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			      
 			     //release the current tile context 
 			     this.currentTile = null;  
+ 
 			  
 			 }
 		 } 
@@ -354,82 +429,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 //	}
 	 
-	 @Override
-	 public boolean onTouchEvent(MotionEvent event) {
-	     this.currentX = (int) event.getX();
-	     this.currentY = (int) event.getY();
-	     this.touchMotion = event.getAction();
-	     long nanoTime = System.nanoTime();
-	     
-	     this.isDrawn = false;
-	     
-	     //return true;
-	     
-	     synchronized (this.gameThread.getSurfaceHolder()) {
-             switch (event.getAction()) {
-          
-             case MotionEvent.ACTION_DOWN:
-            
-                 //where is the click, which object within view???
-            	 //get tile from coordinates.  if tile is null, do nothing
-            	 //for now act like this is a click/tap...
-            	 this.readyToDraw = false;
-            	 this.tapCheck = nanoTime;
-            	 if (this.dblTapCheck == 0){ this.dblTapCheck = nanoTime; }
-            	// this.invalidate();
-            	 this.isMoving = false;            	
-            	 this.previousX = this.currentX;
-            	 this.previousY = this.currentY;
-            	 currentTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
-            	 break;
-             case MotionEvent.ACTION_UP:
-            	 //includes a check to ignore double taps
-            	 if (this.tapCheck > 0 && nanoTime - this.tapCheck <= 300000000) {
-            	 // && (nanoTime - this.dblTapCheck >= 800000000 || this.dblTapCheck == 0)) {
-            		 if (this.isMoving){
-            			 //if we are coming out of a drag, up event just means drag is finished, nothing to do here, just move along
-            			 this.isMoving = false;
-            			 this.readyToDraw = false;
-            		 }
-            		 else {// if (this.previousTouchMotion == MotionEvent.ACTION_DOWN){ //action up should immediately follow and action down to be a tap
-	            		 this.isZoomed = !this.isZoomed;
-	            		 this.readyToDraw = true;
-	            		 this.dblTapCheck = 0;
-            		 }
-            		// else {
-            		//	 //if previous action was not a down, don't draw
-            		//	 this.readyToDraw = false;
-            		// }
-            	 }
-            	 this.previousTouchMotion = MotionEvent.ACTION_UP;
-            	 this.previousX = 0;
-            	 this.previousY = 0;
-            	 this.isMoving = false;
-            	 this.tapCheck = 0;
-            	 break;
-             case MotionEvent.ACTION_MOVE:
-            	 
-            	 this.previousTouchMotion = MotionEvent.ACTION_MOVE;
-            	 this.tapCheck = 0;
-            	 this.dblTapCheck = 0;
-            	 this.isMoving = true;
-            	 this.readyToDraw = true;
-
-            	// this.readyToDraw = false;
-            	 if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
-            		//calculate outerZoomRight and bottom
-            		
-            	 }
-            	 break; 
-             default:
-            	 this.readyToDraw = false;
-             }
-             this.previousTouchMotion = this.touchMotion;
-             return true;
-         }
-
-	 }
-	 
+	
  
 	 private void LoadTiles() {		  
 		 
@@ -537,4 +537,25 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.surfaceDestroyed(this.surfaceHolder); 
 	 }
 
+	 private void drawFullView(Canvas canvas){
+        for (GameTile tile : this.tiles) { 
+	    	 canvas.drawBitmap(tile.getOriginalBitmap(),tile.getxPosition(), tile.getyPosition(), null);
+	    	 
+	    	 if (tile.getCurrentText().length() > 0){
+		    	 Paint p = new Paint(); 
+		    	 p.setColor(Color.WHITE);
+			     p.setTextSize(Math.round(this.fullViewTileWidth * .6));
+			     p.setAntiAlias(true);
+			     p.setTypeface(this.letterTypeface);
+			     Rect bounds = new Rect();
+			     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
+			     int textLeft =  tile.getxPosition() + this.fullViewTileMidpoint - (Math.round(bounds.width() / 2));
+			     int textTop =  tile.getyPosition() + this.fullViewTileMidpoint + (Math.round(bounds.height() / 2));
+			     
+			     canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
+	    	 }
+	    }
+        this.readyToDraw = false; 
+	 }
+	 
 }
