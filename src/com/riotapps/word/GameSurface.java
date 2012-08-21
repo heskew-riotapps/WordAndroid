@@ -1,20 +1,12 @@
 package com.riotapps.word;
 
 import com.riotapps.word.ui.GameSurfaceView;
-import com.riotapps.word.ui.GameThread;
-
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+
+import android.widget.ImageView;
+
+//import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class GameSurface extends Activity {
 
@@ -32,6 +24,18 @@ public class GameSurface extends Activity {
 		
 	 	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
  
+	 	
+	 	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
+//	 	 ImageView iv;
+ //        if (convertView == null)
+ //            convertView = iv = new ImageView(UrlImageViewHelperSample.this);
+ //        else
+ //            iv = (ImageView)convertView;
+         
+         // yep, that's it. it handles the downloading and showing an interstitial image automagically.
+         // UrlImageViewHelper.setUrlDrawable(ivPlayer, getItem(position), R.drawable.badge_0, null);
+         
+ //        return iv;
 		//this._surfaceView = new GameSurfaceView(this); 
 	}
 	
