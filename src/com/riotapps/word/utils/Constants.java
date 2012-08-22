@@ -13,7 +13,7 @@ public class Constants {
  	
  	public static final String LAYOUT_SCOPE_WORD = "W";
  	public static final String LAYOUT_SCOPE_LETTER = "L";
- 	
+ 	public static final String IMAGE_CACHE_DIR = "images";
 
  	/**============================================
 	 * storage
