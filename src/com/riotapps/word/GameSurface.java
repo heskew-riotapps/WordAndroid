@@ -26,9 +26,11 @@ public class GameSurface extends Activity {
 		setContentView(R.layout.gamesurface);
 		//setContentView(new GameSurfaceView2(this));
 		
-		String gravatar = "http://www.gravatar.com/avatar/" + Utils.md5("hunter.eskew@gmail.com");
+		//gravatar size = max size...default images
+		//https://graph.facebook.com/hunter.eskew/picture?return_ssl_resources=1
+		String gravatar = "http://graph.facebook.com/donna.guyton/picture?r=1&type=square"; //"http://www.gravatar.com/avatar/" + Utils.md5("hunter.eskew@gmail.com");
 		
-		imageLoader = new ImageFetcher(this, 40, 40);
+		imageLoader = new ImageFetcher(this, 100, 100);
 		imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
 		
 	 	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);

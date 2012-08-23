@@ -72,7 +72,7 @@ public abstract class ImageWorker {
 
         if (bitmap != null) {
             // Bitmap found in memory cache
-            imageView.setImageBitmap(bitmap);
+            imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 10, 3));
         } else if (cancelPotentialWork(data, imageView)) {
             final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
             final AsyncDrawable asyncDrawable =
@@ -317,8 +317,9 @@ public abstract class ImageWorker {
      * @param bitmap
      */
     private void setImageBitmap(ImageView imageView, Bitmap bitmap) {
+    	bitmap = ImageHelper.getRoundedCornerBitmap(bitmap, 10, 3);
         if (mFadeInBitmap) {
-            // Transition drawable with a transparent drwabale and the final bitmap
+            // Transition drawable with a transparent drawable and the final bitmap
             final TransitionDrawable td =
                     new TransitionDrawable(new Drawable[] {
                             new ColorDrawable(android.R.color.transparent),

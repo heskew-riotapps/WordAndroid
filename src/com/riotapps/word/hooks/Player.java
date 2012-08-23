@@ -6,6 +6,12 @@ import com.google.gson.annotations.SerializedName;
 public class Player {
 	private String id;
 	private String nickname;
+	
+	@SerializedName("f_name")
+	private String firstName;
+	
+	@SerializedName("l_name")
+	private String lastname;
 	private String email;
 	private String password;
 	private String fb = "";
@@ -59,6 +65,18 @@ public class Player {
 		return this.auth_token;
 	}
 	
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastname() {
+		return lastname;
+	}
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
 	public boolean isFacebookUser(){
 		return this.fb.length() > 0;
 	}

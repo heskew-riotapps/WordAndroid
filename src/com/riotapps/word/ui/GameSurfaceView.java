@@ -365,8 +365,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 						 }
 						 else { 
 							 //make sure it will be within visible top bounds
-							 if (topLeftTile.getyPositionZoomed() - topDiff > 1) {
-								 topDiff = topLeftTile.getyPositionZoomed() - 1;//topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
+							 if (topLeftTile.getyPositionZoomed() - topDiff > 0) {
+								 topDiff = topLeftTile.getyPositionZoomed();// - 1;//topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
 								 this.readyToDraw = false;
 								 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "555 " + topDiff);
 							 }
@@ -392,7 +392,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				     if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
 				     
 				     //make sure we don't pass the visible top boundary (this is the visible top boundary of the surface view minus padding)
-				     if (tappedTop > 1) {tappedTop = 1;}
+				     if (tappedTop > 0) {tappedTop = 0;}
 				     
 				     //find the equivalent tapped left location in zoomed layout
 				     int tappedLeft = this.midpoint - (((tappedTile.getColumn() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
@@ -504,7 +504,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 tile.setId(id);
 				 id += 1;
 				 tile.setxPosition((this.excessWidth / 2) + (x * this.fullViewTileWidth) + (x * this.tileGap));
-				 tile.setyPosition(1 + (y * this.fullViewTileWidth) + (y * this.tileGap));
+				 tile.setyPosition((y * this.fullViewTileWidth) + (y * this.tileGap));
 				 tile.setColumn(x + 1);
 				 tile.setRow(y + 1);
 

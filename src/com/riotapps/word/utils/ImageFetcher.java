@@ -102,7 +102,9 @@ public class ImageFetcher extends ImageResizer {
 
         if (f != null) {
             // Return a sampled down version
-            return decodeSampledBitmapFromFile(f.toString(), mImageWidth, mImageHeight);
+        	Bitmap resized = decodeSampledBitmapFromFile(f.toString(), mImageWidth, mImageHeight);
+        	return ImageHelper.getRoundedCornerBitmap(resized, 10, 3);
+            //return decodeSampledBitmapFromFile(f.toString(), mImageWidth, mImageHeight);
         }
 
         return null;

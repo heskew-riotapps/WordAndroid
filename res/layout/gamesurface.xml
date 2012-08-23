@@ -27,10 +27,17 @@
 		       	android:id="@+id/ivPlayerScoreboard"
  				android:layout_width="wrap_content"
 	   	 		android:layout_height="30dp"
-		 
+		 		android:layout_below="@id/logo"
 			   />
 	        
-	        
+	        <View 
+	    android:id="@+id/bottomControlsPlaceholder"
+	    android:layout_width="fill_parent"
+	    android:layout_height="2dp"
+ 
+	    android:layout_alignParentBottom="true"
+	    android:background="#eec591"
+	    />
 	    </RelativeLayout>
          
 	</RelativeLayout>
@@ -53,7 +60,7 @@
 	
     	<com.riotapps.word.ui.GameSurfaceView 
         	android:id="@+id/gameSurface"
-        	android:layout_margin="2dp"
+        	android:layout_margin="0dp"
         	android:scrollbars="horizontal|vertical"
         />
     
