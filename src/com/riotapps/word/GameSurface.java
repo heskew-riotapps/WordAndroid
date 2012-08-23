@@ -38,6 +38,15 @@ public class GameSurface extends Activity {
 	 	
 	 	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
 	 	imageLoader.loadImage(gravatar, ivPlayer); //default image
+	 	
+	 	Bundle extras = getIntent().getExtras(); 
+	 	if(extras !=null)
+	 	{
+	 		String value = extras.getString("gameId");
+	 	}
+	 	//retrieve game from server
+ 
+	 	
 //	 	 ImageView iv;
  //        if (convertView == null)
  //            convertView = iv = new ImageView(UrlImageViewHelperSample.this);

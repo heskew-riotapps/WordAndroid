@@ -5,7 +5,8 @@ public class Enums {
 	    CREATE_PLAYER,
 	    UPDATE_PLAYER,
 	    CREATE_GAME,
-	    GET_PLAYER
+	    GET_PLAYER,
+	    GET_GAME
 	}
 	
 	public static enum RequestType {

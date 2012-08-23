@@ -16,7 +16,7 @@ class ResponseHandler {
 	  * method handleResponse   
 	  * =======================================================================================*/   
 	// @SuppressWarnings("unchecked")
-	void handleResponse(final Context ctx, ResponseHandlerType responseHandleBy, ServerResponse serverResponseObject) {   
+	void handleResponse(final Context ctx, ResponseHandlerType responseHandleBy, ServerResponse serverResponseObject, Class<?> goToClass) {   
 
 	     HttpResponse response = serverResponseObject.response;   
 	     Exception exception = serverResponseObject.exception;   
@@ -66,6 +66,16 @@ class ResponseHandler {
 	                             t.show();  
 	                         }else{  
 	                             new PlayerService().HandleGetPlayerResponse(ctx, iStream);         
+	                         }  
+	                         break;  
+	                     } 
+	                     case GET_GAME: {  
+
+	                         if(iStream == null){  
+	                             Toast t = Toast.makeText(ctx, ctx.getString(R.string.response_in_error), Toast.LENGTH_LONG);  
+	                             t.show();  
+	                         }else{  
+	                             GameService.HandleGetGameResponse(ctx, iStream, goToClass);         
 	                         }  
 	                         break;  
 	                     }  

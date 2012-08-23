@@ -5,12 +5,38 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class Game {
-	
+	private String id;
 	@SerializedName("played_words")
-	List<PlayedWord> PlayedWords;
-
+	private List<PlayedWord> PlayedWords;
+	
 	@SerializedName("player_games")
-	List<PlayerGame> PlayerGames;
+	private List<PlayerGame> PlayerGames;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public List<PlayedWord> getPlayedWords() {
+		return PlayedWords;
+	}
+
+	public void setPlayedWords(List<PlayedWord> playedWords) {
+		PlayedWords = playedWords;
+	}
+
+	public List<PlayerGame> getPlayerGames() {
+		return PlayerGames;
+	}
+
+	public void setPlayerGames(List<PlayerGame> playerGames) {
+		PlayerGames = playerGames;
+	}
+
+	
 	
 //	 many :player_games #, :length => { :maximum => 2 }  
 //	  many :played_words

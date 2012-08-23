@@ -31,7 +31,7 @@ public class PlayerService {
 	Gson gson = new Gson();
 	NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 	
-	public void GetPlayerFromServer(Context ctx, String id){
+	public static void GetPlayerFromServer(Context ctx, String id){
 		//retrieve player from server
 		//convert using gson
 		//return player to caller
@@ -51,8 +51,10 @@ public class PlayerService {
 	}
 	
 	
-	public void CreatePlayer(Context ctx, String email, String nickname, String password) throws DesignByContractException{
+	public static void CreatePlayer(Context ctx, String email, String nickname, String password) throws DesignByContractException{
 
+	
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 		//are we connected to the web?
 		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
@@ -79,7 +81,7 @@ public class PlayerService {
 		//return player;
 	}
 	
-	public Player GetPlayerFromLocal(){
+	public static Player GetPlayerFromLocal(){
 		 Gson gson = new Gson(); 
 		 Type type = new TypeToken<Player>() {}.getType();
 	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);

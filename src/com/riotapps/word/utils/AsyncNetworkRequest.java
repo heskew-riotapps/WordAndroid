@@ -17,6 +17,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	CustomProgressDialog progress = null;
 	ArrayList<NameValuePair> nameValuePairs = null;
 	String jsonPost = null;
+	Class<?> goToClass = null;
 
 	/**====================================================================================   
 	  * 1st Constructor   
@@ -28,7 +29,16 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 		this.shownOnProgressDialog = shownOnProgressDialog;
 	}
 
-
+		/**====================================================================================   
+	  * 1st Constructor   
+	  * ====================================================================================*/   
+	 public AsyncNetworkRequest(Context ctx, RequestType requestType, ResponseHandlerType responseHandleBy, String shownOnProgressDialog, Class<?> goToClass){
+		this.ctx = ctx;
+		this.requestType = requestType;
+		this.responseHandleBy = responseHandleBy;
+		this.shownOnProgressDialog = shownOnProgressDialog;
+		this.goToClass =  goToClass;
+	}
 	 /**====================================================================================   
 	  * 2nd Constructor   
 	  * ====================================================================================*/  
@@ -40,9 +50,11 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	 /**====================================================================================   
 	  * 3rd Constructor   
 	  * ====================================================================================*/  
-	 public AsyncNetworkRequest(Context ctx, RequestType requestType, ResponseHandlerType responseHandleBy, String shownOnProgressDialog, String jsonPost){
+	 public AsyncNetworkRequest(Context ctx, RequestType requestType, ResponseHandlerType responseHandleBy, String shownOnProgressDialog, 
+			 String jsonPost, Class<?> goToClass){
 		this(ctx,requestType, responseHandleBy, shownOnProgressDialog);
 		this.jsonPost = jsonPost;
+		this.goToClass =  goToClass;
 	 }
 	 
 	 /**====================================================================================   
