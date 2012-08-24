@@ -15,6 +15,12 @@ public class Constants {
  	public static final String LAYOUT_SCOPE_LETTER = "L";
  	public static final String IMAGE_CACHE_DIR = "images";
 
+	/**============================================
+	 * intent extras
+	 *=============================================*/
+ 	public static final String EXTRA_GAME = "game";
+	public static final String EXTRA_GAME_ID = "gameId";
+	 	
  	/**============================================
 	 * storage
 	 *=============================================*/

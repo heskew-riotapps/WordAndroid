@@ -2,9 +2,15 @@ package com.riotapps.word.hooks;
 
 import java.util.List;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Game {
+ 
+public class Game implements Parcelable {
+	private int parcelableData;
+	
 	private String id;
 	@SerializedName("played_words")
 	private List<PlayedWord> PlayedWords;
@@ -36,8 +42,31 @@ public class Game {
 		PlayerGames = playerGames;
 	}
 
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeInt(parcelableData);
+	}
+
+	public static final Parcelable.Creator<Game> CREATOR
+		    = new Parcelable.Creator<Game>() {
+		public Game createFromParcel(Parcel in) {
+		    return new Game(in);
+		}
+		
+		public Game[] newArray(int size) {
+		    return new Game[size];
+		}
+	};
 	
-	
+	 private Game(Parcel in) {
+         parcelableData = in.readInt();
+     }
 //	 many :player_games #, :length => { :maximum => 2 }  
 //	  many :played_words
 //	#many :letters remaining vs played?#, :length => { :maximum => 2 }  

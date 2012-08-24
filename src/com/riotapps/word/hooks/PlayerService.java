@@ -52,7 +52,7 @@ public class PlayerService {
 	
 	
 	public static void CreatePlayer(Context ctx, String email, String nickname, String password) throws DesignByContractException{
-
+		Gson gson = new Gson();
 	
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 		//are we connected to the web?
@@ -76,7 +76,7 @@ public class PlayerService {
 		editor.commit();
 		
 		//ok lets call the server now
-		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json).execute(Constants.REST_CREATE_PLAYER_URL);
+	 	new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json, null).execute(Constants.REST_CREATE_PLAYER_URL);
 		
 		//return player;
 	}

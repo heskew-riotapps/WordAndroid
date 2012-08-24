@@ -120,7 +120,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	 protected void onPostExecute(ServerResponse serverResponseObject){
 		 progress.dismiss();
 
-		 new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject);			
+		 new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject, goToClass);			
 	 }//end method onPostExecute
 
 }//end class RequestSentToServerAsyncTask

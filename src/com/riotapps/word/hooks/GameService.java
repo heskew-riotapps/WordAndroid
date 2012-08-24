@@ -1,5 +1,6 @@
 package com.riotapps.word.hooks;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,6 +20,7 @@ import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.DialogManager;
+import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
 import com.riotapps.word.utils.Validations;
@@ -49,9 +51,9 @@ public class GameService {
 	}
 	
 	
-	public static void CreateGame(Context ctx, String email, String nickname, String password) throws DesignByContractException{
+	public static void CreateGame(Context ctx, String email, String nickname, String password, Class<?> goToClass) throws DesignByContractException{
 
-	
+		Gson gson = new Gson();
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 		//are we connected to the web?
 		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
@@ -74,7 +76,7 @@ public class GameService {
 		editor.commit();
 		
 		//ok lets call the server now
-		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json).execute(Constants.REST_CREATE_PLAYER_URL);
+		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json, goToClass).execute(Constants.REST_CREATE_PLAYER_URL);
 		
 		//return player;
 	}
@@ -136,6 +138,9 @@ public class GameService {
  	        
  	        Type type = new TypeToken<Game>() {}.getType();
  	        Game game = gson.fromJson(reader, type);
+ 	       
+ 	        //save game data to  	        
+ 	       // String s = IOHelper.streamToString(iStream);
  	        
  	        //save game data to 
  	        
@@ -149,8 +154,10 @@ public class GameService {
  	       // editor.commit();  
 	 	        
  	        Intent intent = new Intent(ctx, goToClass);
- 	        intent.putExtra("gameId", game.getId());
- 	      	ctx.startActivity(intent);
+ 	      //  intent.putExtra("gameId", game.getId());
+ 	      //	intent.putExtra("game", s);
+ 	      	intent.putExtra(Constants.EXTRA_GAME, game);
+ 	        ctx.startActivity(intent);
  	      	
  	       
  	      	
