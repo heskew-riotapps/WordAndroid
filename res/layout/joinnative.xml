@@ -18,7 +18,7 @@
 		android:layout_below="@id/logo"
 		android:id="@+id/header"
 	>
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/HeaderTextStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
 	 	android:gravity="center_horizontal"
 	  	android:paddingTop="8dp"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -54,7 +54,7 @@
 		android:layout_marginTop="1dp"
 		android:id="@+id/inner_form"
 	>
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
          style="@style/SubTextStyle"
      	android:id="@+id/email_label"
         android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
         android:text="@string/email" 
         android:paddingLeft="4.0dip"
         android:layout_below="@id/header"/>
- 	<com.riotapps.word.utils.TypefaceTextView
+ 	<com.riotapps.word.ui.MainFontTextView
  	    style="@style/SubTextStyle"
      	android:id="@+id/email_guarantee"
         android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
   	    android:layout_below="@id/email_label"
   	   android:typeface="normal"
 	  />
-	 <com.riotapps.word.utils.TypefaceTextView
+	 <com.riotapps.word.ui.MainFontTextView
 	     style="@style/SubTextStyle"
      	android:id="@+id/nickname_label"
      	android:text="@string/nickname"   
@@ -99,7 +99,7 @@
   	    android:layout_centerHorizontal="true"
   	    android:layout_below="@id/nickname_label" 
 	    />
-	<com.riotapps.word.utils.TypefaceTextView
+	<com.riotapps.word.ui.MainFontTextView
 	    style="@style/SubTextStyle"
 	    android:id="@+id/password_label" 
 	    android:text="@string/password"     	

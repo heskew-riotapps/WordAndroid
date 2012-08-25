@@ -23,7 +23,7 @@
 		android:layout_below="@id/logo"
 		android:id="@+id/header"
 	>
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -35,7 +35,7 @@
 	 	android:gravity="center"
 	  	android:paddingTop="8dp"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -48,7 +48,7 @@
 	 	android:paddingBottom="8dp"
         />
     </RelativeLayout> 
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/TextStyle"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -59,7 +59,7 @@
 		android:gravity="center"
 		android:layout_below="@id/header"
         />
-   <com.riotapps.word.utils.TypefaceTextView
+   <com.riotapps.word.ui.MainFontTextView
         style="@style/TextStyle"
         android:background="@drawable/text_selector"
         android:text="@string/start_game_prev_opponents" 
@@ -69,7 +69,7 @@
 		android:layout_below="@id/startByFacebook"
 		android:layout_marginTop=".5dp"
         />
-   <com.riotapps.word.utils.TypefaceTextView
+   <com.riotapps.word.ui.MainFontTextView
         style="@style/TextStyle"
         android:background="@drawable/text_selector"
         android:text="@string/start_game_by_email_or_nickname" 
@@ -79,7 +79,7 @@
 		android:layout_below="@id/startByOpponent"
 		android:layout_marginTop=".5dp"
         />
-   <com.riotapps.word.utils.TypefaceTextView
+   <com.riotapps.word.ui.MainFontTextView
        style="@style/TextStyle"
         android:background="@drawable/text_selector_bottom"
 	 	android:gravity="center"

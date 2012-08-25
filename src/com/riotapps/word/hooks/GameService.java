@@ -40,14 +40,14 @@ public class GameService {
 	}
 	
 	
-	public Player SaveGame(String id){
+	public Game SaveGame(String id){
 		//retrieve player from server
 		//convert using gson
 		//return player to caller
 		
 		//check validations here
 		
-		return new Player();
+		return new Game();
 	}
 	
 	

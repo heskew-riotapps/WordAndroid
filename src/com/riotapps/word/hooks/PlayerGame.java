@@ -2,9 +2,12 @@ package com.riotapps.word.hooks;
 
 import java.util.Date;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class PlayerGame {
+public class PlayerGame implements Parcelable{
 
 //	  key :player_id , ObjectId
 //	  key :score,     Integer, :default => 0
@@ -21,7 +24,7 @@ public class PlayerGame {
 	@SerializedName("player_id")
 	private String playerId; 
 	
-	private int Score;
+	private int score;
 	
 	@SerializedName("last_turn_date")
 	private Date lastTurnDate;
@@ -56,11 +59,11 @@ public class PlayerGame {
 	}
 
 	public int getScore() {
-		return Score;
+		return this.score;
 	}
 
 	public void setScore(int score) {
-		Score = score;
+		this.score = score;
 	}
 
 	public Date getLastTurnDate() {
@@ -126,6 +129,52 @@ public class PlayerGame {
 	public void setHasBeenAlertedToEndOfGame(boolean hasBeenAlertedToEndOfGame) {
 		this.hasBeenAlertedToEndOfGame = hasBeenAlertedToEndOfGame;
 	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		 
+		out.writeString(this.playerId); 
+		out.writeInt(this.score);
+		out.writeLong(this.lastTurnDate.getTime());
+		out.writeLong(this.lastAlertDate.getTime());
+		out.writeLong(this.lastReminderDate.getTime());
+		out.writeLong(this.lastChatterReceivedDate.getTime());
+		out.writeInt(this.winNum);
+		out.writeByte((byte) (this.isTurn ? 1 : 0));
+		out.writeByte((byte) (this.isWinner ? 1 : 0));
+		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0));  	
+	}
 	
+	public static final Parcelable.Creator<PlayerGame> CREATOR
+			= new Parcelable.Creator<PlayerGame>() {
+			public PlayerGame createFromParcel(Parcel in) {
+				return new PlayerGame(in);
+			}
+
+			public PlayerGame[] newArray(int size) {
+				return new PlayerGame[size];
+			}
+	};
 	
+	private PlayerGame(Parcel in) {
+		// same order as writeToParcel
+	//	this.playerId = in.readString();
+	//	this.score = in.readInt();
+	//	this.lastTurnDate = in.readValue()
+	//	this.lastAlertDate);
+	//	this.lastReminderDate);
+	//	this.lastChatterReceivedDate);
+	//	this.winNum = in.readString();
+	//	this.isTurn);
+	//	this.isWinner);
+	//	this.hasBeenAlertedToEndOfGame);
+	//	myBoolean = in.readByte() == 1; 
+		
+	}
 }

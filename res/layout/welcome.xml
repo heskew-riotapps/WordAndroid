@@ -18,7 +18,7 @@
 		android:layout_below="@id/logo"
 		android:id="@+id/header"
 	>
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -30,7 +30,7 @@
 	 	android:gravity="center_horizontal"
 	  	android:paddingTop="8dp"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -45,7 +45,7 @@
 		 
         />
     </RelativeLayout> 
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textColor="#1874CD"
@@ -61,7 +61,7 @@
 		android:drawablePadding="5dp"
 		android:layout_below="@id/header"
         />
-   <com.riotapps.word.utils.TypefaceTextView
+   <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textColor="#1874CD"

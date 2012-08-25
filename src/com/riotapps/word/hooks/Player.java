@@ -1,9 +1,15 @@
 package com.riotapps.word.hooks;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.riotapps.word.utils.Constants;
 import com.google.gson.annotations.SerializedName;
 
-public class Player {
+public class Player implements Parcelable{
+	
+	public Player(){}
+	
 	private String id;
 	private String nickname;
 	
@@ -212,6 +218,52 @@ public class Player {
 		//fallthrough
 		return Constants.BADGE_0;
 	}
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeString(this.id);
+		out.writeString(this.nickname);
+		out.writeString(this.firstName);
+		out.writeString(this.lastname);
+		out.writeString(this.email);
+		out.writeString(this.password);
+		out.writeString(this.fb);
+		out.writeString(this.auth_token);
+		out.writeInt(this.numWins);
+		out.writeInt(this.numLosses);
+		out.writeInt(this.numDraws);
+		out.writeString(this.badge_drawable);
+	}
 	
+	public static final Parcelable.Creator<Player> CREATOR
+    			= new Parcelable.Creator<Player>() {
+			public Player createFromParcel(Parcel in) {
+				return new Player(in);
+			}
+
+			public Player[] newArray(int size) {
+				return new Player[size];
+			}
+	};
+
+	private Player(Parcel in) {
+		// same order as writeToParcel
+		this.id = in.readString();
+		this.nickname = in.readString();
+		this.firstName = in.readString();
+		this.lastname = in.readString();
+		this.email = in.readString();
+		this.password = in.readString();
+		this.fb = in.readString();
+		this.auth_token = in.readString();
+		this.numWins = in.readInt();
+		this.numLosses = in.readInt();
+		this.numDraws = in.readInt();
+		this.badge_drawable = in.readString();
+	}
 
 }

@@ -9,14 +9,15 @@ import com.google.gson.annotations.SerializedName;
 
  
 public class Game implements Parcelable {
-	private int parcelableData;
+ 
+	public Game(){}
 	
 	private String id;
 	@SerializedName("played_words")
-	private List<PlayedWord> PlayedWords;
+	private List<PlayedWord> playedWords;
 	
 	@SerializedName("player_games")
-	private List<PlayerGame> PlayerGames;
+	private List<PlayerGame> playerGames;
 
 	public String getId() {
 		return id;
@@ -27,19 +28,19 @@ public class Game implements Parcelable {
 	}
 
 	public List<PlayedWord> getPlayedWords() {
-		return PlayedWords;
+		return playedWords;
 	}
 
 	public void setPlayedWords(List<PlayedWord> playedWords) {
-		PlayedWords = playedWords;
+		this.playedWords = playedWords;
 	}
 
 	public List<PlayerGame> getPlayerGames() {
-		return PlayerGames;
+		return playerGames;
 	}
 
 	public void setPlayerGames(List<PlayerGame> playerGames) {
-		PlayerGames = playerGames;
+		this.playerGames = playerGames;
 	}
 
 	@Override
@@ -50,7 +51,9 @@ public class Game implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeInt(parcelableData);
+		out.writeString(this.id);
+		out.writeList(this.playedWords);
+		out.writeList(this.playerGames);
 	}
 
 	public static final Parcelable.Creator<Game> CREATOR
@@ -65,7 +68,11 @@ public class Game implements Parcelable {
 	};
 	
 	 private Game(Parcel in) {
-         parcelableData = in.readInt();
+        // same order as writeToParcel
+         this.id = in.readString();
+     //    this.playedWords = in.readList(outVal, loader);
+     //    this.playerGames = in.readList(outVal, loader);
+     	 
      }
 //	 many :player_games #, :length => { :maximum => 2 }  
 //	  many :played_words

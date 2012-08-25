@@ -25,7 +25,7 @@
 		android:background="@drawable/form_top_background"
 		android:id="@+id/header"
 	>
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -37,7 +37,7 @@
 	  	android:paddingTop="8dp"
 	  	android:id="@+id/title"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -61,213 +61,213 @@
         android:layout_height="wrap_content"
          android:orientation="vertical"
         >
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_0" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_1_4" 
 		android:drawableLeft="@drawable/badge_1_4"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_5_9" 
 		android:drawableLeft="@drawable/badge_5_9"
         />
-   <com.riotapps.word.utils.TypefaceTextView
+   <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_10_14" 
 		android:drawableLeft="@drawable/badge_10_14"
         />
-   <com.riotapps.word.utils.TypefaceTextView
+   <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_15_19" 
 		android:drawableLeft="@drawable/badge_15_19"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_20_24" 
 		android:drawableLeft="@drawable/badge_20_24"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_25_29" 
 		android:drawableLeft="@drawable/badge_25_29"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_30_39" 
 		android:drawableLeft="@drawable/badge_30_39"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_40_49" 
 		android:drawableLeft="@drawable/badge_40_49"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_50_59" 
 		android:drawableLeft="@drawable/badge_50_59"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_60_69" 
 		android:drawableLeft="@drawable/badge_60_69"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_70_79" 
 		android:drawableLeft="@drawable/badge_70_79"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_80_89" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_90_99" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_100_124" 
 		android:drawableLeft="@drawable/badge_100_124"
         />
     
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_125_149" 
 		android:drawableLeft="@drawable/badge_125_149"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_150_174" 
 		android:drawableLeft="@drawable/badge_150_174"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_175_199" 
 		android:drawableLeft="@drawable/badge_175_199"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_200_224" 
 		android:drawableLeft="@drawable/badge_200_224"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_225_249" 
 		android:drawableLeft="@drawable/badge_225_249"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_250_274" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_275_299" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_300_349" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_350_399" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_400_449" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_450_499" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_500_549" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_550_599" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_600_649" 
 		android:drawableLeft="@drawable/badge_0"
         />
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_650_699" 
 		android:drawableLeft="@drawable/badge_0"
         /> 
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_700_799" 
 		android:drawableLeft="@drawable/badge_0"
         /> 
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_800_899" 
 		android:drawableLeft="@drawable/badge_0"
         /> 
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_900_999" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_1000_1249" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_1250_1499" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_1500_1749" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_1750_1999" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_2000_2499" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_2500_2999" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_3000_3999" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_4000_4999" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_5000" 
 		android:drawableLeft="@drawable/badge_0"

@@ -18,7 +18,7 @@
 		android:background="@drawable/form_top_background"
 		android:id="@+id/header"
 	>
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#fff"
@@ -41,7 +41,7 @@
          android:orientation="vertical"
   
         >
-    <com.riotapps.word.utils.TypefaceTextView
+    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         style="@style/TextStyle"
@@ -52,7 +52,7 @@
 		android:clickable="true"
 		android:gravity="center_vertical"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="@drawable/text_selector"
@@ -64,7 +64,7 @@
 		android:gravity="center_vertical"
 		android:layout_marginTop="1dp"
         />
-      <com.riotapps.word.utils.TypefaceTextView
+      <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="@drawable/text_selector"
@@ -76,7 +76,7 @@
 		android:gravity="center_vertical"
 		android:layout_marginTop="1dp"
         />
-      <com.riotapps.word.utils.TypefaceTextView
+      <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="@drawable/text_selector"
@@ -88,7 +88,7 @@
 		android:gravity="center_vertical"
 		android:layout_marginTop="1dp"
         />
-     <com.riotapps.word.utils.TypefaceTextView
+     <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="@drawable/text_selector"
@@ -100,7 +100,7 @@
 		android:clickable="true"
 		android:paddingLeft="20dp"
         />    
-   	<com.riotapps.word.utils.TypefaceTextView
+   	<com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="@drawable/text_selector_bottom"
