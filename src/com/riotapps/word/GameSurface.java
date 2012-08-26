@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.view.View;
 import android.widget.ImageView;
 
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -20,6 +21,7 @@ public class GameSurface extends Activity {
 	
 	GameSurfaceView gameSurfaceView;
 	ImageFetcher imageLoader;
+	View bottom;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class GameSurface extends Activity {
 	//	imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
 		
 	 	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
+	 	this.bottom = (View)findViewById(R.id.bottomControlsPlaceholder);
+	 	//this.bottom.se
  
 	 	
 	 //	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
