@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutStyle" >
-     <RelativeLayout 
+
+	      <TableLayout     
 	    android:id="@+id/topControlsPlaceholder"
-	    android:layout_width="wrap_content"
+	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:background="@null"  
-	    android:layout_marginBottom="3dp"
-	    >
-	     <RelativeLayout
-	       android:id="@+id/scoreboardTop"
+	    android:layout_marginBottom="3dp"		     >
+    		<TableRow>
+    	<RelativeLayout 
+            android:id="@+id/scoreboardTop"
 	    	android:layout_width="wrap_content"
 	   	 	android:layout_height="30dp"
 	   	 	android:background="@drawable/scoreboard_top"
 	    	android:layout_marginLeft="3dp" 
 	        android:layout_marginTop="-2dp" 
-	        android:layout_alignRight="@id/topControlsPlaceholder"
-	    
+
+	    android:layout_weight="1.0"
 	        android:paddingLeft="4dp"
 	        android:paddingRight="4dp" 
-	    >    
-	     	
+
+        >	     	
 	      <TableLayout     
 		    android:layout_width="wrap_content"
-		    android:layout_height="fill_parent" 
-		     >
+		    android:layout_height="fill_parent"
+			     >
     		<TableRow android:layout_marginTop="2dp">
     		     <ImageView 
 				       	android:id="@+id/logo"
@@ -84,7 +85,7 @@
 		       </TableRow>
 		       <TableRow>
 		         <ImageView 
-				       	android:id="@+id/logo"
+				       	android:id="@+id/opponentTurn_2"
 					   	android:layout_width="6dp"
 					   	android:src="@drawable/red_dot"
 	   	 				android:layout_height="6dp"
@@ -140,20 +141,20 @@
 	   	 				android:layout_marginLeft="2dp"
 				   />
 		       </TableRow>
-    		
-				</TableLayout> 
-	    </RelativeLayout>
+			</TableLayout> 
+		</RelativeLayout>
 	    <RelativeLayout
 	       android:id="@+id/scoreboardNumbers"
-	    	android:layout_width="100dp"
+	    	android:layout_width="120dp"
 	   	 	android:layout_height="18dp"
 	   	 	android:background="@drawable/scoreboard_top"
 	    	android:layout_marginRight="3dp" 
 	        android:layout_marginTop="-2dp" 
-	        android:layout_alignRight="@id/topControlsPlaceholder"
-	        android:layout_toRightOf="@id/scoreboardTop"
-	        android:paddingLeft="8dp"
-	        android:paddingRight="8dp" 
+	        android:layout_weight="1.0"
+	        android:gravity="right"
+	         
+	        android:paddingLeft="6dp"
+	        android:paddingRight="6dp" 
 	    >    
 	     	
 	     	<com.riotapps.word.ui.ScoreboardFontTextView
@@ -175,8 +176,11 @@
 	       		android:gravity="right"
 	         />
 	    </RelativeLayout>
-
-		</RelativeLayout>     
+       
+       </TableRow>
+    		
+				</TableLayout> 
+	        
 		<RelativeLayout
 		    android:layout_below="@id/topControlsPlaceholder"
 		    android:layout_width="fill_parent"
