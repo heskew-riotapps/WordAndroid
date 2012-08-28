@@ -91,6 +91,14 @@ public class Player implements Parcelable{
 		return this.numWins + this.numLosses + this.numDraws;
 	}
 	
+	public String getFullName(){
+		return this.firstName + " " + this.lastname;
+	}
+	
+	public String getAbbreviatedName(){
+		return this.firstName + (this.lastname.length() > 0 ? " " +this.lastname.substring(0,1) : "");
+	}
+	
 	public String getBadgeDrawable(){
 		if (this.numWins == 0) {
 			return Constants.BADGE_0;

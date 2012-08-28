@@ -4,24 +4,154 @@
      <RelativeLayout 
 	    android:id="@+id/topControlsPlaceholder"
 	    android:layout_width="wrap_content"
-	    android:layout_height="59dp"
+	    android:layout_height="wrap_content"
 	    android:background="@null"  
+	    android:layout_marginBottom="3dp"
 	    >
-	    <ImageView 
-	       android:id="@+id/logo"
-	       android:contentDescription="@string/logo"
-		   style="@style/TopLogoBoardStyle"
-		   android:layout_alignLeft="@id/topControlsPlaceholder"    
-	   />
-	    <RelativeLayout
+	     <RelativeLayout
 	       android:id="@+id/scoreboardTop"
 	    	android:layout_width="wrap_content"
+	   	 	android:layout_height="30dp"
+	   	 	android:background="@drawable/scoreboard_top"
+	    	android:layout_marginLeft="3dp" 
+	        android:layout_marginTop="-2dp" 
+	        android:layout_alignRight="@id/topControlsPlaceholder"
+	    
+	        android:paddingLeft="4dp"
+	        android:paddingRight="4dp" 
+	    >    
+	     	
+	      <TableLayout     
+		    android:layout_width="wrap_content"
+		    android:layout_height="fill_parent" 
+		     >
+    		<TableRow android:layout_marginTop="2dp">
+    		     <ImageView 
+				       	android:id="@+id/logo"
+					   	android:layout_width="6dp"
+					   	android:src="@drawable/red_dot"
+	   	 				android:layout_height="6dp"
+	   	 				android:layout_gravity="center_vertical"
+	   	 				android:layout_marginRight="2dp"
+				   />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/contextPlayer"
+		            android:text="Hunter E."
+		            android:textColor="#000000"
+		            android:textStyle="bold"
+		            android:textSize="10dp"
+		            android:layout_gravity="center_vertical"
+		            
+		            />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/contextPlayerScore"
+		            android:text="10"
+		            android:textColor="#000000"
+		          
+		            android:textSize="10dp"
+		            android:layout_marginRight="10dp"
+		            android:gravity="right"
+            		android:layout_weight="1.0"
+	            />
+		         <com.riotapps.word.ui.ScoreboardFontTextView
+		         	android:id="@+id/contextPlayerScore"
+		            android:text="428"
+		            android:textColor="#000000"
+		            android:textSize="10dp"
+		            android:gravity="left"
+		             
+	            />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		             android:id="@+id/opponent_3"
+		            android:text="Junior18"
+		            android:textColor="#000000"
+		  
+		            android:layout_below="@id/contextPlayer"
+		            android:textSize="10dp"
+		             android:layout_marginLeft="6dp"
+		             android:gravity="right"
+            		android:layout_weight="1.0"
+            		android:layout_gravity="center_vertical"
+		            />
+		         <ImageView 
+				       	android:id="@+id/logo"
+					   	android:layout_width="6dp"
+					   	android:src="@drawable/red_dot"
+	   	 				android:layout_height="6dp"
+	   	 				android:layout_gravity="center_vertical"
+	   	 				android:layout_marginLeft="2dp"
+				   />
+		       </TableRow>
+		       <TableRow>
+		         <ImageView 
+				       	android:id="@+id/logo"
+					   	android:layout_width="6dp"
+					   	android:src="@drawable/red_dot"
+	   	 				android:layout_height="6dp"
+	   	 				android:layout_gravity="center_vertical"
+	   	 				android:layout_marginRight="2dp"
+				   />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/opponent_2"
+		            android:text="Stephanie S."
+		            android:textColor="#000000"
+		            android:textStyle="bold"
+		            android:textSize="10dp"
+		            android:layout_gravity="center_vertical"
+		            
+		            />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/contextPlayerScore"
+		            android:text="2"
+		            android:textColor="#000000"
+		         
+		            android:textSize="10dp"
+		            android:gravity="right"
+            		android:layout_weight="1.0"
+            		android:layout_marginRight="15dp"
+	            />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/contextPlayerScore"
+		            android:text="56"
+		            android:textColor="#000000"
+		          
+		            android:textSize="10dp"
+	            />
+		        
+		         <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/opponent_4"
+		            android:text="Matt C."
+		            android:textColor="#000000"
+		       
+		            android:layout_below="@id/contextPlayer"
+		            android:textSize="10dp"
+		            android:layout_marginLeft="6dp"
+		          	android:gravity="right"
+            		android:layout_weight="1.0"
+            		android:layout_gravity="center_vertical"
+            
+		            />
+		         <ImageView 
+				       	android:id="@+id/logo"
+					   	android:layout_width="6dp"
+					   	android:src="@drawable/red_dot"
+	   	 				android:layout_height="6dp"
+	   	 				android:layout_gravity="center_vertical"
+	   	 				android:layout_marginLeft="2dp"
+				   />
+		       </TableRow>
+    		
+				</TableLayout> 
+	    </RelativeLayout>
+	    <RelativeLayout
+	       android:id="@+id/scoreboardNumbers"
+	    	android:layout_width="100dp"
 	   	 	android:layout_height="18dp"
 	   	 	android:background="@drawable/scoreboard_top"
 	    	android:layout_marginRight="3dp" 
 	        android:layout_marginTop="-2dp" 
 	        android:layout_alignRight="@id/topControlsPlaceholder"
-	        android:layout_toRightOf="@id/logo"
+	        android:layout_toRightOf="@id/scoreboardTop"
 	        android:paddingLeft="8dp"
 	        android:paddingRight="8dp" 
 	    >    
@@ -46,173 +176,7 @@
 	         />
 	    </RelativeLayout>
 
-	     <RelativeLayout 
-	        android:id="@+id/scoreboard"
-	    	android:layout_width="wrap_content"
-	   	 	android:layout_height="38dp"
-	   	 	android:background="@drawable/scoreboard_background"
-	    	android:layout_below="@id/logo"
-	    	android:layout_marginTop="2dp"
-	    	android:gravity="center"
-	    	android:layout_centerInParent="true"
-	        android:paddingLeft="6dp"
-	        android:paddingRight="6dp"
-	    	android:layout_marginBottom="-3dp"
-	    
-	     >
-		 <TableLayout     
-		    android:layout_width="wrap_content"
-		    android:layout_height="fill_parent" 
-		     >
-    		<TableRow android:layout_marginTop="4dp">
-    		     <ImageView 
-				       	android:id="@+id/logo"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/yellow_dot3"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginRight="2dp"
-				   />
-		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/contextPlayer"
-		            android:text="Hunter Eskew"
-		            android:textColor="#ffedc8"
-		            android:textStyle="bold"
-		            android:textSize="11dp"
-		            android:layout_gravity="center_vertical"
-		            
-		            />
-		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/contextPlayerScore"
-		            android:text="12"
-		            android:textColor="#ffffff"
-		            android:textStyle="bold"
-		            android:textSize="12dp"
-		            android:layout_marginRight="10dp"
-		            android:gravity="right"
-            		android:layout_weight="1.0"
-	            />
-		         <com.riotapps.word.ui.ScoreboardFontTextView
-		         	android:id="@+id/contextPlayerScore"
-		            android:text="428"
-		            android:textColor="#ffffff"
-		            android:textSize="12dp"
-		            android:gravity="left"
-		             
-	            />
-		        <com.riotapps.word.ui.ScoreboardFontTextView
-		             android:id="@+id/opponent_3"
-		            android:text="Junior18"
-		            android:textColor="#ffedc8"
-		            android:textStyle="bold"
-		            android:layout_below="@id/contextPlayer"
-		            android:textSize="11dp"
-		             android:layout_marginLeft="6dp"
-		             android:gravity="right"
-            		android:layout_weight="1.0"
-            		android:layout_gravity="center_vertical"
-		            />
-		         <ImageView 
-				       	android:id="@+id/logo"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/yellow_dot3"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginLeft="2dp"
-				   />
-		       </TableRow>
-		       <TableRow>
-		         <ImageView 
-				       	android:id="@+id/logo"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/yellow_dot3"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginRight="2dp"
-				   />
-		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/opponent_2"
-		            android:text="Stephanie Sharp"
-		            android:textColor="#ffedc8"
-		            android:textStyle="bold"
-		            android:textSize="11dp"
-		            android:layout_gravity="center_vertical"
-		            
-		            />
-		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/contextPlayerScore"
-		            android:text="2"
-		            android:textColor="#ffffff"
-		            android:textStyle="bold"
-		            android:textSize="12dp"
-		            android:gravity="right"
-            		android:layout_weight="1.0"
-            		android:layout_marginRight="15dp"
-	            />
-		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/contextPlayerScore"
-		            android:text="56"
-		            android:textColor="#ffffff"
-		            android:textStyle="bold"
-		            android:textSize="12dp"
-	            />
-		        
-		         <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/opponent_4"
-		            android:text="Matt Card"
-		            android:textColor="#ffedc8"
-		            android:textStyle="bold"
-		            android:layout_below="@id/contextPlayer"
-		            android:textSize="11dp"
-		            android:layout_marginLeft="6dp"
-		          	android:gravity="right"
-            		android:layout_weight="1.0"
-            		android:layout_gravity="center_vertical"
-            
-		            />
-		         <ImageView 
-				       	android:id="@+id/logo"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/yellow_dot3"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginLeft="2dp"
-				   />
-		       </TableRow>
-    		
-				</TableLayout>   
-	        
-	        <Button
-	            android:layout_below="@id/logo"
-	            android:id="@+id/bChat"
-	            android:background="@drawable/btn_chat"
-	            android:layout_width="30dp"
-	            android:layout_height="30dp"
-	            android:layout_toLeftOf="@id/scoreboard"
-	            android:layout_marginRight="8dp" 
-	            android:layout_marginTop="3dp" 
-	            android:gravity="right"
-	      /> 
-	        <Button 
-	            android:layout_below="@id/logo"
-	            android:background="@drawable/btn_chat"
-	            android:layout_width="30dp"
-	            android:layout_height="30dp"
-	            android:layout_toRightOf="@id/scoreboard"
-	            android:layout_marginTop="3dp" 
-	        	android:layout_marginLeft="8dp" 
-	        	android:gravity="right" />  
-	        <View 
-			    android:id="@+id/belowSBSeparator"
-			    android:layout_width="fill_parent"
-			    android:layout_height="2dp"
-			    android:background="#eec591"
-			    android:layout_below="@id/scoreboard"
-			    android:layout_alignParentBottom="true"
-			    />
-	        </RelativeLayout>  
-	    </RelativeLayout>
-		     
+		</RelativeLayout>     
 		<RelativeLayout
 		    android:layout_below="@id/topControlsPlaceholder"
 		    android:layout_width="fill_parent"

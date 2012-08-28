@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -31,6 +32,7 @@ public class GameSurface extends Activity {
 	GameSurfaceView gameSurfaceView;
 	ImageFetcher imageLoader;
 	RelativeLayout scoreboard;
+	 SurfaceView surfaceView;
 	//View bottom;
 	
 	public static final int MSG_SCOREBOARD_VISIBILITY = 1;
@@ -50,12 +52,14 @@ public class GameSurface extends Activity {
 		
 	//	imageLoader = new ImageFetcher(this, 100, 100);
 	//	imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
+	// 	this.surfaceView = (SurfaceView)findViewById(R.id.gameSurface);
 		
-	 	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
-	 	this.gameSurfaceView.setParent(this);
-	 	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);
+	 	//this.surfaceView = new GameSurfaceView(this);
+	 	
+	 //	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);
+	 //	this.scoreboard.setVisibility(android.view.View.GONE);
 	 	//this.bottom = (View)findViewById(R.id.bottomControlsPlaceholder);
-	 	//this.bottom.se
+	 	//this.bottom.//se
  
 	 	
 	 //	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
@@ -78,30 +82,36 @@ public class GameSurface extends Activity {
 	 	p1.setLastname("Meisterburger");
 	 	pg1.setPlayer(p1);
 	 	pg1.setScore(101);
+	 	pg1.setPlayerOrder(2);
 	 	
 	 	PlayerGame pg2 = new PlayerGame();
 	 	Player p2 = new Player();
 	 	p2.setFirstName("Jimmy");
 	 	p2.setLastname("Dean");
 	 	pg2.setPlayer(p2);
-	 	pg1.setScore(4);
+	 	pg2.setScore(4);
+	 	pg2.setPlayerOrder(3);
 	 	
 	 	PlayerGame pg3 = new PlayerGame();
 	 	Player p3 = new Player();
 	 	p3.setFirstName("Junior18");
 	 	p3.setLastname("");
 	 	pg3.setPlayer(p3);
-
+	 	pg3.setPlayerOrder(1);
+	 	
 	 	PlayerGame pg4 = new PlayerGame();
 	 	Player p4 = new Player();
 	 	p4.setFirstName("Star");
 	 	p4.setLastname("Lizardface");
 	 	pg4.setPlayer(p4);
+	 	pg4.setPlayerOrder(4);
 	 	
 	 	List<PlayerGame>players = new ArrayList<PlayerGame>();
 	 	
 	 	game.setPlayerGames(players);
 	 	
+	 	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
+	 	this.gameSurfaceView.setParent(this);
 	 	this.gameSurfaceView.setGame(game);
 	 	//retrieve game from server
  

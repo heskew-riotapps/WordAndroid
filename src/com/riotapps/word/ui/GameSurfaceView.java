@@ -86,6 +86,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private long previousTouchTime = 0;
   //  private long currentTouchTime = 0;
     private float currentSpeed = 0.0f;
+    private int scoreboardHeight = 32;
     
     private Game game;
     private GameTile currentTile = null;
@@ -332,6 +333,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 
 		 if (this.readyToDraw == true){ 
 			 
+		
+			 
 			  Log.w(getClass().getSimpleName() + "onDraw2 ",this.currentTouchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
 				 		 + " " + this.currentX + " " + this.currentY + " " + this.previousTouchMotion);
 			 
@@ -343,6 +346,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 this.readyToDraw = false;
 			 
 			 if (this.isZoomed == false || this.isZoomAllowed == false){
+				 this.drawScoreboard(canvas);
 				 this.drawFullView(canvas);
 				
 			 }
@@ -426,7 +430,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					
 					
 					
-				//	this.parent.updateHandler.sendMessage(this.parent.updateHandler.obtainMessage(GameSurface.MSG_SCOREBOARD_VISIBILITY, GONE, 0));
+				// 	this.parent.updateHandler.sendMessage(this.parent.updateHandler.obtainMessage(GameSurface.MSG_SCOREBOARD_VISIBILITY, GONE, 0));
 					 
 			//		MarginLayoutParams  params = (MarginLayoutParams )this.getLayoutParams();
 			//		params.setMargins(params.leftMargin, params.topMargin - 50, params.rightMargin, params.bottomMargin); //substitute parameters for left, top, right, bottom
@@ -514,6 +518,55 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 //	}
 	 
+	private void drawScoreboard(Canvas canvas){
+		//3366dd
+		
+		Paint pBorder = new Paint(); 
+		pBorder.setColor(Color.parseColor("#3366dd"));
+	    
+	    pBorder.setAntiAlias(true);
+	  //   p.setTypeface(this.letterTypeface);
+	     Rect boundsBorder = new Rect();
+	     boundsBorder.left = 0;
+	     boundsBorder.right = this.fullWidth;
+	     boundsBorder.top = 0;
+	     boundsBorder.bottom = 2;
+		
+		Paint p = new Paint(); 
+   	    p.setColor(Color.parseColor("#ffedc8"));
+	     p.setTextSize(Math.round(this.fullViewTileWidth * .6));
+	     p.setAntiAlias(true);
+	     p.setTypeface(this.letterTypeface);
+	     Rect bounds = new Rect();
+	     bounds.left = 0;
+	     bounds.right = this.fullWidth;
+	     bounds.top = 3;
+	     bounds.bottom = 30;
+	     //#eec591
+	     this.scoreboardHeight = 32;
+	     
+     	 Paint pPlayer1 = new Paint();
+     	pPlayer1.setColor(Color.BLACK);
+     	pPlayer1.setTextSize(12);
+     	pPlayer1.setAntiAlias(true);
+     	pPlayer1.setTypeface(this.letterTypeface);
+	   //  Rect boundsPlayer1 = new Rect();
+	   //  p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
+	   //  int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
+	    // int textTop =  tile.getyPositionZoomed() + this.zoomedTileMidpoint + (Math.round(bounds.height() / 2));
+	     
+	    
+	     
+	     //p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
+	     //int textLeft =  tile.getxPosition() + this.fullViewTileMidpoint - (Math.round(bounds.width() / 2));
+	     //int textTop =  tile.getyPosition() + this.fullViewTileMidpoint + (Math.round(bounds.height() / 2));
+	     
+	     //canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
+	     canvas.drawRect(boundsBorder, pBorder);
+	     canvas.drawRect(bounds, p);
+	    // canvas.drawText(this.game.getPlayerGames().get(1).getPlayer().getFullName(), 15, 15, pPlayer1);
+	}
+	
 	private void drawTray(Canvas canvas){
 		
 		for (TrayTile tile : this.trayTiles) {
@@ -585,7 +638,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 tile.setId(id);
 				 id += 1;
 				 tile.setxPosition((this.excessWidth / 2) + (x * this.fullViewTileWidth) + (x * this.tileGap));
-				 tile.setyPosition((y * this.fullViewTileWidth) + (y * this.tileGap));
+				 tile.setyPosition((y * this.fullViewTileWidth) + (y * this.tileGap) + this.scoreboardHeight);
 				 tile.setColumn(x + 1);
 				 tile.setRow(y + 1);
 

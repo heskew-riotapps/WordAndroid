@@ -53,6 +53,9 @@ public class PlayerGame implements Parcelable{
 	
 	@SerializedName("has_been_alerted_to_end_of_game")
 	private boolean hasBeenAlertedToEndOfGame;
+	
+	@SerializedName("player_order")
+	private int playerOrder;
 
 	public String getPlayerId() {
 		return playerId;
@@ -141,6 +144,16 @@ public class PlayerGame implements Parcelable{
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+	
+	
+
+	public int getPlayerOrder() {
+		return playerOrder;
+	}
+
+	public void setPlayerOrder(int playerOrder) {
+		this.playerOrder = playerOrder;
+	}
 
 	@Override
 	public int describeContents() {
@@ -160,7 +173,8 @@ public class PlayerGame implements Parcelable{
 		out.writeInt(this.winNum);
 		out.writeByte((byte) (this.isTurn ? 1 : 0));
 		out.writeByte((byte) (this.isWinner ? 1 : 0));
-		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0));  
+		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0)); 
+		out.writeInt(this.playerOrder);
 	//	out.writeParcelable(Player, parcelableFlags)
 	}
 	
