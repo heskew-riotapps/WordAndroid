@@ -5,7 +5,7 @@ public class Constants {
 	/**============================================
 	 * misc
 	 *=============================================*/
- 	public static final String MAIN_FONT = "fonts/FullDeceSans1.0.ttf";
+ 	public static final String MAIN_FONT =  "fonts/FullDeceSans1.0.ttf";
  	public static final String GAME_BOARD_FONT = "fonts/Asap_Bold.ttf";//"fonts/banksia.ttf"; //"fonts/Crushed.ttf";//"fonts/MILFCD_B.ttf";  //"fonts/Vegur_B_0.602.otf";
  	public static final String GAME_LETTER_FONT = "fonts/Asap_Bold.ttf"; //"fonts/Crushed.ttf";//"fonts/Vegur_B_0.602.otf"; Asap_Bold
 	public static final String SCOREBOARD_FONT = "fonts/Asap_Bold.ttf"; //"fonts/banksia.ttf"; "fonts/Crushed.ttf";//"fonts/Vegur_B_0.602.otf"; Asap_Bold

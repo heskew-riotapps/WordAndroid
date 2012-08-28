@@ -23,7 +23,7 @@
 	        android:layout_alignRight="@id/topControlsPlaceholder"
 	        android:layout_toRightOf="@id/logo"
 	        android:paddingLeft="8dp"
-	        android:paddingRight="8dp"
+	        android:paddingRight="8dp" 
 	    >    
 	     	
 	     	<com.riotapps.word.ui.ScoreboardFontTextView
@@ -181,7 +181,7 @@
 		       </TableRow>
     		
 				</TableLayout>   
-	        </RelativeLayout>  
+	        
 	        <Button
 	            android:layout_below="@id/logo"
 	            android:id="@+id/bChat"
@@ -210,10 +210,9 @@
 			    android:layout_below="@id/scoreboard"
 			    android:layout_alignParentBottom="true"
 			    />
+	        </RelativeLayout>  
 	    </RelativeLayout>
-		<FrameLayout
-	   		 android:layout_below="@id/topControlsPlaceholder"
-	    >    
+		     
 		<RelativeLayout
 		    android:layout_below="@id/topControlsPlaceholder"
 		    android:layout_width="fill_parent"
@@ -226,15 +225,14 @@
 	        />
 	    
 	    </RelativeLayout>
-	    <View 
+ 
+     <View 
 	    android:id="@+id/bottomControlsPlaceholder"
 	    android:layout_width="fill_parent"
 	    android:layout_height="50dp"
 	    android:scaleType="centerInside"
-	   
+	    android:layout_alignParentBottom="true"
 	    android:layout_marginBottom="0dp"
-	    android:background="#ffffff"
-	    />	
-    </FrameLayout>
-    	 
+	    android:background="#ffffff" 
+	    />
 </RelativeLayout>

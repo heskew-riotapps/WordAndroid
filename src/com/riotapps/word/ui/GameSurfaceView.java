@@ -3,10 +3,14 @@ package com.riotapps.word.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.riotapps.word.GameSurface;
 import com.riotapps.word.R;
+import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.TileLayout;
 import com.riotapps.word.hooks.TileLayoutService;
 import com.riotapps.word.utils.Constants;
+
+import android.os.Message;
 import android.util.Log;
 import android.content.Context;
  
@@ -25,10 +29,18 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Toast;
 
 public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callback {
 
+	GameSurface parent;
+	
+	public void setParent(GameSurface parent){
+		this.parent = parent;
+	}
+	
 	GameSurfaceView me = this;
 	Context context;
 	GameThread gameThread = null;
@@ -45,12 +57,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private boolean isZoomAllowed = true; //if width of board greater than x disable zooming.  it means we are on a tablet and zooming not needed.
     private int activeTileWidth; 
     private long tapCheck = 0;
-    private float zoomMultiplier = 2.0f;
-    private int tileGap = 1;
+    private final float zoomMultiplier = 2.0f;
+    private final int tileGap = 1;
+    private final int trayTileGap = 2;
     private int zoomedTileWidth;
     private int midpoint;
     private int fullViewTextSize;
     private int zoomedTextSize;
+    
+    private int trayTileSize;
+    private int draggingTileSize;
+    private int trayTileLeftMargin;
+    private int trayTop;
     //private int touchMotion = -1;
     private int outerZoomLeft;
     private int outerZoomTop; 
@@ -69,6 +87,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
   //  private long currentTouchTime = 0;
     private float currentSpeed = 0.0f;
     
+    private Game game;
     private GameTile currentTile = null;
  
 	public boolean isReadyToDraw() {
@@ -80,10 +99,19 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 
 	List<GameTile> tiles = new ArrayList<GameTile>();
+	List<TrayTile> trayTiles = new ArrayList<TrayTile>();
     TileLayout defaultLayout;
     TileLayoutService layoutService;
 
  
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
 	public GameSurfaceView(Context context) {
 		super(context);
 		this.construct(context);
@@ -123,7 +151,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 		   		me.SetDerivedValues();
 		   	    me.LoadTiles();
+		   	    me.LoadTray();
 		   	    me.readyToDraw = true;
+		   	    LayoutParams lp = me.getLayoutParams();
+
+				  // Set to params
+				  //lp.width = 320;
+				  lp.height = 600;
+		
+				  // Apply to new dimension
+				  me.setLayoutParams( lp );
 		        }
 		    });
 	}
@@ -138,6 +175,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15);  
 		this.fullViewTileMidpoint = Math.round(this.fullViewTileWidth / 2);
 		this.zoomedTileMidpoint = Math.round(this.zoomedTileWidth / 2);	
+		
+		this.trayTileSize = Math.round(this.fullWidth / 7.50f);	
+		this.draggingTileSize  = Math.round(this.trayTileSize * 1.2f);
+		if (this.draggingTileSize > 90){this.draggingTileSize = 90;}
+		this.trayTileLeftMargin = Math.round(this.fullWidth - ((this.trayTileSize * 7) + (this.trayTileGap * 6))) / 2;
+		 
+		this.trayTop = this.fullWidth + 15; 
+	 
 	}
 	
 	@Override
@@ -378,6 +423,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				if (this.currentTouchMotion == MotionEvent.ACTION_UP){ 
 					// canvas.drawColor(Color.CYAN);
 					 //only if in tapped mode
+					
+					
+					
+				//	this.parent.updateHandler.sendMessage(this.parent.updateHandler.obtainMessage(GameSurface.MSG_SCOREBOARD_VISIBILITY, GONE, 0));
+					 
+			//		MarginLayoutParams  params = (MarginLayoutParams )this.getLayoutParams();
+			//		params.setMargins(params.leftMargin, params.topMargin - 50, params.rightMargin, params.bottomMargin); //substitute parameters for left, top, right, bottom
+			//		this.setLayoutParams(params); 
+					
 					 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);    
 					 
 					 //check for specific tile action (as opposed to full board action) here
@@ -415,7 +469,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 }
 			// this.previousTouchMotion = this.currentTouchMotion;
 			// this.currentTouchMotion = ;
-		
+		    this.drawTray(canvas);
 		 } 
 	 }
 	 
@@ -425,6 +479,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     	 tile.setyPositionZoomed(tile.getyPositionZoomed() - topDiff);
 	 		 
 	 		 this.loadZoomedBoardGuts(canvas, tile);
+	 		 
+	 		 
+	 		 
 	     }
 	}
 	 
@@ -457,8 +514,32 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 //	}
 	 
-	
+	private void drawTray(Canvas canvas){
+		
+		for (TrayTile tile : this.trayTiles) {
+			 canvas.drawBitmap(tile.getCurrentBitmap(),tile.getxPosition(), tile.getyPosition(), null);
+		 }
+		
+	}
  
+	private void LoadTray() {		
+		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
+		 Bitmap bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.trayTileSize , this.trayTileSize, false);
+		 Bitmap bgBaseDragging = Bitmap.createScaledBitmap(bgBase, this.draggingTileSize, this.draggingTileSize, false);
+		
+		 //load game letters into here (soon)
+		 
+		 for(int y = 0; y < 7; y++){
+			 TrayTile tile = new TrayTile();
+			 tile.setId(y);
+			 tile.setxPosition(this.trayTileLeftMargin + ((this.trayTileSize + 2) * tile.getId()));
+			 tile.setyPosition(this.trayTop);
+			 tile.setOriginalBitmap(bgBaseScaled);
+			 tile.setOriginalBitmapDragging(bgBaseDragging);
+			 this.trayTiles.add(tile);
+		 }
+	}
+	
 	 private void LoadTiles() {		  
 		 
 		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);

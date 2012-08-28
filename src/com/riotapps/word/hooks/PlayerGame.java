@@ -21,8 +21,12 @@ public class PlayerGame implements Parcelable{
 //	  key :is_winner, Boolean, :default => false 
 //	  key :has_been_alerted_to_end_of_game, Boolean, :default => false 
 	
+	public PlayerGame(){}
+	
 	@SerializedName("player_id")
 	private String playerId; 
+	
+	private Player player; 
 	
 	private int score;
 	
@@ -130,6 +134,14 @@ public class PlayerGame implements Parcelable{
 		this.hasBeenAlertedToEndOfGame = hasBeenAlertedToEndOfGame;
 	}
 
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -148,7 +160,8 @@ public class PlayerGame implements Parcelable{
 		out.writeInt(this.winNum);
 		out.writeByte((byte) (this.isTurn ? 1 : 0));
 		out.writeByte((byte) (this.isWinner ? 1 : 0));
-		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0));  	
+		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0));  
+	//	out.writeParcelable(Player, parcelableFlags)
 	}
 	
 	public static final Parcelable.Creator<PlayerGame> CREATOR
