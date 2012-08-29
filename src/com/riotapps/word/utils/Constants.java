@@ -9,7 +9,8 @@ public class Constants {
  	public static final String GAME_BOARD_FONT = "fonts/Asap_Bold.ttf";//"fonts/banksia.ttf"; //"fonts/Crushed.ttf";//"fonts/MILFCD_B.ttf";  //"fonts/Vegur_B_0.602.otf";
  	public static final String GAME_LETTER_FONT = "fonts/Asap_Bold.ttf"; //"fonts/Crushed.ttf";//"fonts/Vegur_B_0.602.otf"; Asap_Bold
 	public static final String SCOREBOARD_FONT = "fonts/Asap_Bold.ttf"; //"fonts/banksia.ttf"; "fonts/Crushed.ttf";//"fonts/Vegur_B_0.602.otf"; Asap_Bold
- 	public static final String EMPTY_JSON = "{}";
+	public static final String SCOREBOARD_BUTTON_FONT = "fonts/Asap_Bold.ttf"; 
+	public static final String EMPTY_JSON = "{}";
  	public static final String WN_KEY = "48f31f368d20791114b01067e1d05b68ca177aabdbab4150b";
  	
  	public static final String LAYOUT_SCOPE_WORD = "W";

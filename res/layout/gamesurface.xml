@@ -2,33 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutStyle" >
 
+<RelativeLayout
+    android:id="@+id/scoreboard"
+    android:layout_width="fill_parent"
+	   	 	android:layout_height="28dp"
+	   	 	android:background="@drawable/sbd_bg"
+    >
 	      <TableLayout     
-	    android:id="@+id/topControlsPlaceholder"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:background="@null"  
-	    android:layout_marginBottom="3dp"		     >
-    		<TableRow>
-    	<RelativeLayout 
-            android:id="@+id/scoreboardTop"
-	    	android:layout_width="wrap_content"
-	   	 	android:layout_height="30dp"
-	   	 	android:background="@drawable/scoreboard_top"
-	    	android:layout_marginLeft="3dp" 
-	        android:layout_marginTop="-2dp" 
-
-	    android:layout_weight="1.0"
-	        android:paddingLeft="4dp"
-	        android:paddingRight="4dp" 
-
-        >	     	
-	      <TableLayout     
-		    android:layout_width="wrap_content"
-		    android:layout_height="fill_parent"
-			     >
-    		<TableRow android:layout_marginTop="2dp">
+		        android:id="@+id/scoreboardTop"
+		   	 	android:layout_height="30dp"
+		   	  
+		    	android:layout_marginLeft="3dp" 
+		       
+				android:layout_alignParentLeft="true"
+		        android:paddingLeft="4dp"
+		        android:paddingRight="4dp" 
+			    android:layout_width="wrap_content"
+		     >
+    		<TableRow android:paddingTop="2dp">
     		     <ImageView 
-				       	android:id="@+id/logo"
+				       	android:id="@+id/contextPlayerTurn"
 					   	android:layout_width="6dp"
 					   	android:src="@drawable/red_dot"
 	   	 				android:layout_height="6dp"
@@ -48,40 +41,39 @@
 		            android:id="@+id/contextPlayerScore"
 		            android:text="10"
 		            android:textColor="#000000"
-		          
+		          android:layout_marginLeft="2dp"
+		            android:textSize="10dp"
+		            android:layout_marginRight="7dp"
+		            android:gravity="right"
+            		android:layout_weight="1.0"
+	            />
+		         <ImageView 
+				       	android:id="@+id/playerTurn_2"
+					   	android:layout_width="6dp"
+					   	android:src="@drawable/red_dot"
+	   	 				android:layout_height="6dp"
+	   	 				android:layout_gravity="center_vertical"
+	   	 				android:layout_marginRight="2dp"
+				   />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/player_2"
+		            android:text="Android D."
+		            android:textColor="#000000"
+		            android:textStyle="bold"
+		            android:textSize="10dp"
+		            android:layout_gravity="center_vertical"
+		            
+		            />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/playerScore_2"
+		            android:text="102"
+		            android:textColor="#000000"
+		         android:layout_marginLeft="2dp"
 		            android:textSize="10dp"
 		            android:layout_marginRight="10dp"
 		            android:gravity="right"
             		android:layout_weight="1.0"
 	            />
-		         <com.riotapps.word.ui.ScoreboardFontTextView
-		         	android:id="@+id/contextPlayerScore"
-		            android:text="428"
-		            android:textColor="#000000"
-		            android:textSize="10dp"
-		            android:gravity="left"
-		             
-	            />
-		        <com.riotapps.word.ui.ScoreboardFontTextView
-		             android:id="@+id/opponent_3"
-		            android:text="Junior18"
-		            android:textColor="#000000"
-		  
-		            android:layout_below="@id/contextPlayer"
-		            android:textSize="10dp"
-		             android:layout_marginLeft="6dp"
-		             android:gravity="right"
-            		android:layout_weight="1.0"
-            		android:layout_gravity="center_vertical"
-		            />
-		         <ImageView 
-				       	android:id="@+id/logo"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/red_dot"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginLeft="2dp"
-				   />
 		       </TableRow>
 		       <TableRow>
 		         <ImageView 
@@ -102,105 +94,150 @@
 		            
 		            />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/contextPlayerScore"
+		            android:id="@+id/opponentScore_2"
 		            android:text="2"
 		            android:textColor="#000000"
-		         
+		              android:layout_marginLeft="2dp"
+		         android:layout_marginRight="7dp"
 		            android:textSize="10dp"
 		            android:gravity="right"
             		android:layout_weight="1.0"
-            		android:layout_marginRight="15dp"
+            		 
 	            />
-		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/contextPlayerScore"
-		            android:text="56"
-		            android:textColor="#000000"
-		          
-		            android:textSize="10dp"
-	            />
-		        
-		         <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/opponent_4"
-		            android:text="Matt C."
-		            android:textColor="#000000"
-		       
-		            android:layout_below="@id/contextPlayer"
-		            android:textSize="10dp"
-		            android:layout_marginLeft="6dp"
-		          	android:gravity="right"
-            		android:layout_weight="1.0"
-            		android:layout_gravity="center_vertical"
-            
-		            />
-		         <ImageView 
-				       	android:id="@+id/logo"
+		       <ImageView 
+				       	android:id="@+id/playerTurn_4"
 					   	android:layout_width="6dp"
 					   	android:src="@drawable/red_dot"
 	   	 				android:layout_height="6dp"
 	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginLeft="2dp"
+	   	 				android:layout_marginRight="2dp"
 				   />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/player_4"
+		            android:text="MakennaEthan D."
+		            android:textColor="#000000"
+		            android:textStyle="bold"
+		            android:textSize="10dp"
+		            android:layout_gravity="center_vertical" 
+		            
+		            />
+		        <com.riotapps.word.ui.ScoreboardFontTextView
+		            android:id="@+id/playerScore_4"
+		            android:text="678"
+		            android:textColor="#000000"
+		           android:layout_marginLeft="2dp"
+		            android:textSize="10dp"
+		            android:layout_marginRight="10dp"
+		            android:gravity="right"
+            		android:layout_weight="1.0"
+	            />
 		       </TableRow>
 			</TableLayout> 
-		</RelativeLayout>
+		 
 	    <RelativeLayout
 	       android:id="@+id/scoreboardNumbers"
-	    	android:layout_width="120dp"
-	   	 	android:layout_height="18dp"
-	   	 	android:background="@drawable/scoreboard_top"
-	    	android:layout_marginRight="3dp" 
-	        android:layout_marginTop="-2dp" 
-	        android:layout_weight="1.0"
-	        android:gravity="right"
-	         
-	        android:paddingLeft="6dp"
-	        android:paddingRight="6dp" 
+	    	android:layout_width="wrap_content"
+	   	 	android:layout_height="wrap_content"
+	    	android:paddingRight="4dp" 
+	        android:layout_alignParentRight="true"
+	        android:paddingTop="2dp"
 	    >    
-	     	
 	     	<com.riotapps.word.ui.ScoreboardFontTextView
 	            android:id="@+id/lettersLeft"
 	            android:text="98 letters left"
 	            android:textColor="#000000"
 	            android:textSize="10dp"
-	            android:layout_marginTop="3dp"
-	            android:gravity="left"
-	            android:layout_marginRight="4dp"
+	            
+	            android:gravity="right"
+	          
 	         />
 	     	<com.riotapps.word.ui.ScoreboardFontTextView
 	            android:id="@+id/pointsTerm"
-	            android:text="98 points"
+	            android:text="298 points"
 	            android:textColor="#000000"
 	            android:textSize="10dp"
-	            android:layout_marginLeft="4dp"
-	            android:layout_marginTop="3dp"
+	            android:layout_below="@id/lettersLeft"
+	             
 	       		android:gravity="right"
 	         />
 	    </RelativeLayout>
-       
-       </TableRow>
-    		
-				</TableLayout> 
+</RelativeLayout>
+   <View 
+	    android:id="@+id/bottomBorder"
+	    android:layout_width="fill_parent"
+	    android:layout_height="2dp"
+	    android:background="#eec591" 
+	       android:layout_below="@id/scoreboard"
+	    />
 	        
 		<RelativeLayout
-		    android:layout_below="@id/topControlsPlaceholder"
+		    android:layout_below="@id/bottomBorder"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"  
 		 >
 	    	<com.riotapps.word.ui.GameSurfaceView 
-	    	    android:layout_below="@id/topControlsPlaceholder"
+	    	    android:layout_below="@id/bottomBorder"
 	        	android:id="@+id/gameSurface"
 	        	android:layout_margin="0dp"
+	        	android:background="@null"
 	        />
 	    
 	    </RelativeLayout>
  
-     <View 
-	    android:id="@+id/bottomControlsPlaceholder"
-	    android:layout_width="fill_parent"
-	    android:layout_height="50dp"
-	    android:scaleType="centerInside"
-	    android:layout_alignParentBottom="true"
-	    android:layout_marginBottom="0dp"
-	    android:background="#ffffff" 
-	    />
+	<LinearLayout
+        android:orientation="horizontal"
+    	android:layout_alignParentBottom="true"
+     
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_width="fill_parent" 
+        android:layout_height="52dp"
+       
+        android:gravity="center"
+      
+        android:background="@drawable/gameboard_btn_area_bg" >
+	<com.riotapps.word.ui.ScoreboardButton 
+  	    style="@style/GameBoardButtonStyle"
+  	    android:id="@+id/bSave"
+        android:layout_width="0dp" 
+        android:layout_weight="1.0"
+        android:text="played\nwords"
+    />
+	<com.riotapps.word.ui.ScoreboardButton 
+  	    style="@style/GameBoardButtonStyle"
+  	    android:id="@+id/bSave"
+        android:layout_width="0dp" 
+        android:layout_weight="1.0"
+        android:text="chat"
+    />
+	 <com.riotapps.word.ui.ScoreboardButton 
+  	    style="@style/GameBoardButtonStyle"
+  	    android:id="@+id/bSave"
+        android:layout_width="0dp" 
+        android:layout_weight="1.0"
+        android:text="swap"
+    />
+	 <com.riotapps.word.ui.ScoreboardButton 
+  	    style="@style/GameBoardButtonStyle"
+  	    android:id="@+id/bSave"
+        android:layout_width="0dp" 
+        android:layout_weight="1.0"
+        android:text="shuffle"
+    />
+	<com.riotapps.word.ui.ScoreboardButton 
+  	    style="@style/GameBoardButtonStyle"
+  	    android:id="@+id/bSave"
+        android:layout_width="0dp" 
+        android:layout_weight="1.0"
+        android:text="play"
+    />
+    <com.riotapps.word.ui.ScoreboardButton 
+        style="@style/GameBoardButtonStyle"
+        android:id="@+id/bCancel"
+        android:layout_width="0dp"
+        android:layout_weight="1.0"
+        android:text="cancel"
+    />
+    </LinearLayout>
+   
 </RelativeLayout>

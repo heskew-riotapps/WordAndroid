@@ -9,20 +9,16 @@ import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.ui.GameSurfaceView;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.ImageFetcher;
-import com.riotapps.word.utils.ImageResizer;
-import com.riotapps.word.utils.ImageCache;
-import com.riotapps.word.utils.Utils;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
+import android.view.Display;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -31,14 +27,34 @@ public class GameSurface extends Activity {
 	GameSurface context = this;
 	GameSurfaceView gameSurfaceView;
 	ImageFetcher imageLoader;
-	RelativeLayout scoreboard;
+	private RelativeLayout scoreboard;
 	 SurfaceView surfaceView;
 	//View bottom;
 	
 	public static final int MSG_SCOREBOARD_VISIBILITY = 1;
 	public static final int MSG_POINTS_SCORED = 2;
+	public static final int SCOREBOARD_HEIGHT = 28;
+	public static final int BUTTON_CONTROL_HEIGHT = 52;
+	private int windowHeight;
+	private int scoreboardHeight;
+ 
 
-	
+	public int getScoreboardHeight() {
+		return scoreboardHeight;
+	}
+
+	public void setScoreboardHeight(int scoreboardHeight) {
+		this.scoreboardHeight = scoreboardHeight;
+	}
+
+	public int getWindowHeight() {
+		return windowHeight;
+	}
+
+	public void setWindowHeight(int windowHeight) {
+		this.windowHeight = windowHeight;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -60,11 +76,15 @@ public class GameSurface extends Activity {
 	 //	this.scoreboard.setVisibility(android.view.View.GONE);
 	 	//this.bottom = (View)findViewById(R.id.bottomControlsPlaceholder);
 	 	//this.bottom.//se
- 
-	 	
+		 Display display = getWindowManager().getDefaultDisplay(); 
+	     this.windowHeight = display.getHeight();  // deprecated
+	     
+	     
+	  	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);
+	  	this.scoreboardHeight = this.scoreboard.getHeight();
 	 //	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
 	// 	imageLoader.loadImage(gravatar, ivPlayer); //default image
-	 	
+	    
 	 	Bundle extras = getIntent().getExtras(); 
 	 	if(extras !=null)
 	 	{
@@ -114,7 +134,7 @@ public class GameSurface extends Activity {
 	 	this.gameSurfaceView.setParent(this);
 	 	this.gameSurfaceView.setGame(game);
 	 	//retrieve game from server
- 
+	 	 
 	 	
 //	 	 ImageView iv;
  //        if (convertView == null)
