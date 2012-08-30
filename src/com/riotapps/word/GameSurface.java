@@ -33,11 +33,20 @@ public class GameSurface extends Activity {
 	
 	public static final int MSG_SCOREBOARD_VISIBILITY = 1;
 	public static final int MSG_POINTS_SCORED = 2;
-	public static final int SCOREBOARD_HEIGHT = 28;
-	public static final int BUTTON_CONTROL_HEIGHT = 52;
+	public static final int SCOREBOARD_HEIGHT = 30;
+	public static final int BUTTON_CONTROL_HEIGHT = 48;
 	private int windowHeight;
 	private int scoreboardHeight;
+	private Game game;
  
+
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
 
 	public int getScoreboardHeight() {
 		return scoreboardHeight;
@@ -95,7 +104,7 @@ public class GameSurface extends Activity {
 	 	//Game game = (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
 	 	
 	 	//temp
-	 	Game game = new Game();
+	 	this.game = new Game();
 	 	PlayerGame pg1 = new PlayerGame();
 	 	Player p1 = new Player();
 	 	p1.setFirstName("Burgermeister");
@@ -128,11 +137,14 @@ public class GameSurface extends Activity {
 	 	
 	 	List<PlayerGame>players = new ArrayList<PlayerGame>();
 	 	
-	 	game.setPlayerGames(players);
+	 	this.game.setLastActionText("Junior18 played FORTY for 18 points" );
+	 	
+	 	
+	 	this.game.setPlayerGames(players);
 	 	
 	 	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
 	 	this.gameSurfaceView.setParent(this);
-	 	this.gameSurfaceView.setGame(game);
+	 //	this.gameSurfaceView.setGame(game);
 	 	//retrieve game from server
 	 	 
 	 	

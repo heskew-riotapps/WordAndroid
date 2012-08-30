@@ -18,6 +18,10 @@ public class Game implements Parcelable {
 	
 	@SerializedName("player_games")
 	private List<PlayerGame> playerGames;
+	
+	@SerializedName("last_action_alert_text")
+	private String lastActionText;
+	
 
 	public String getId() {
 		return id;
@@ -41,6 +45,16 @@ public class Game implements Parcelable {
 
 	public void setPlayerGames(List<PlayerGame> playerGames) {
 		this.playerGames = playerGames;
+	}
+
+	
+	
+	public String getLastActionText() {
+		return lastActionText;
+	}
+
+	public void setLastActionText(String lastActionText) {
+		this.lastActionText = lastActionText;
 	}
 
 	@Override

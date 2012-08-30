@@ -61,12 +61,19 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private long tapCheck = 0;
     private final float zoomMultiplier = 2.0f;
     private final int tileGap = 1;
-    private final int trayTileGap = 2;
+    private static final int TRAY_TILE_GAP = 3;
     private int zoomedTileWidth;
     private int midpoint;
     private int fullViewTextSize;
     private int zoomedTextSize;
-    private static final int TRAY_VERTICAL_MARGIN = 3;
+    private static final int TRAY_VERTICAL_MARGIN = 5;
+    private static final int TRAY_TOP_BORDER_HEIGHT = 4;
+    private static final int UPPER_GAP_BOTTOM_BORDER_HEIGHT = 4;
+    private static final int LOWER_GAP_TOP_BORDER_HEIGHT = 4;
+
+    private int bottomOfFullView;
+    private int topGapHeight;
+    private int bottomGapHeight;
     
     private int trayTileSize;
     private int draggingTileSize;
@@ -92,8 +99,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int scoreboardHeight = 32;
     private int height;
     
-    private Game game;
+  //  private Game game;
     private GameTile currentTile = null;
+    private Bitmap trayBackground;
+    private Bitmap logo;
+    
  
 	public boolean isReadyToDraw() {
 		return readyToDraw;
@@ -109,13 +119,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     TileLayoutService layoutService;
 
  
-	public Game getGame() {
-		return game;
-	}
+//	public Game getGame() {
+//		return game;
+//	}
 
-	public void setGame(Game game) {
-		this.game = game;
-	}
+//	public void setGame(Game game) {
+//		this.game = game;
+//	}
 
 	public GameSurfaceView(Context context) {
 		super(context);
@@ -136,7 +146,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.layoutService = new TileLayoutService();
 		this.defaultLayout = layoutService.GetDefaultLayout(context);
 		//
-		 //this.setZOrderOnTop(true);
+		  this.setZOrderOnTop(true);
 		 SurfaceHolder holder = getHolder();
 		 holder.addCallback(this);
 		 gameThread = new GameThread(holder, this);
@@ -161,88 +171,54 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		   		me.SetDerivedValues();
 		   	    me.LoadTiles();
 		   	    me.LoadTray();
+		   	    me.LoadExtras();
 		   	    me.readyToDraw = true;
 		   	    
 		  
-		   	    LayoutParams lp = me.getLayoutParams();
-				  lp.height = me.height;
-				  // Apply to new dimension
-				  me.setLayoutParams( lp );
+		   	     LayoutParams lp = me.getLayoutParams();
+			 	  lp.height = me.height;
+			//	  // Apply to new dimension
+			 	  me.setLayoutParams( lp );
 		        }
-		    });
+		     });
 	}
 
-	//@Override
-	protected void onMeasure____(int w, int h) {
-		// TODO Auto-generated method stub
- 
-		super.onMeasure(w, h);
-		
-		Toast t = Toast.makeText(context, "Hi " + getMeasuredHeight(), Toast.LENGTH_LONG); 
-		t.show();
-		
-		 this.fullWidth = getMeasuredWidth();
-		 this.height = getMeasuredHeight();
-         this.SetDerivedValues();
-	   	    this.LoadTiles();
-	   	    this.LoadTray();
-	   	    this.readyToDraw = true;
-	   	    
-	  
-	   	//    LayoutParams lp = me.getLayoutParams();
-		//	  lp.height = this.height;
-		//	  // Apply to new dimension
-		//	  this.setLayoutParams( lp );
-	       
-		//setMeasuredDimension(getMeasuredWidth() - 200, getMeasuredHeight() - 200);
-	}
 
-	 // @Override
-      protected void onSizeChanged_____(int xNew, int yNew, int xOld, int yOld){
-              super.onSizeChanged(xNew, yNew, xOld, yOld);
-            //  viewWidth = xNew;
-            //  viewHeight = yNew;
-              
-              this.fullWidth = xNew;
-              
-              this.SetDerivedValues();
-		   	    this.LoadTiles();
-		   	    this.LoadTray();
-		   	    this.readyToDraw = true;
-		   	    
-		  
-		   	    LayoutParams lp = me.getLayoutParams();
-				  lp.height = me.height;
-				  // Apply to new dimension
-				  this.setLayoutParams( lp );
-		       
-              /*
-              these viewWidth and viewHeight variables
-              are the global int variables
-              that were declared above
-              */
-      }
+
+
 	
 	private void SetDerivedValues(){
+		LayoutParams lp = me.getLayoutParams();
 	 	 this.fullWidth = this.getWidth();
-	 	this.height = this.parent.getWindowHeight() - GameSurface.SCOREBOARD_HEIGHT - GameSurface.BUTTON_CONTROL_HEIGHT-100;
+	 	 this.height = this.getHeight() - GameSurface.BUTTON_CONTROL_HEIGHT - GameSurface.SCOREBOARD_HEIGHT + 6;// lp.height; //getMeasuredHeight();
+	 //	this.height = this.parent.getWindowHeight() - GameSurface.SCOREBOARD_HEIGHT - GameSurface.BUTTON_CONTROL_HEIGHT-100;
+			this.trayTileSize = Math.round(this.fullWidth / 7.50f);	
+			this.draggingTileSize  = Math.round(this.trayTileSize * 1.2f);
+			if (this.draggingTileSize > 90){this.draggingTileSize = 90;}
+			this.trayTileLeftMargin = Math.round(this.fullWidth - ((this.trayTileSize * 7) + (TRAY_TILE_GAP * 6))) / 2;
+	 	this.trayTop = this.height - trayTileSize -  TRAY_VERTICAL_MARGIN; 
+		this.bottomOfFullView = this.trayTop - TRAY_VERTICAL_MARGIN - TRAY_TOP_BORDER_HEIGHT - 1;
+		this.topGapHeight = Math.round((this.bottomOfFullView - this.fullWidth) / 2);
+		this.bottomGapHeight = this.bottomOfFullView - this.fullWidth -  this.topGapHeight;
+	 	 
 		this.fullViewTileWidth = Math.round(this.fullWidth/15) - this.tileGap; //-1 for the space between each tile
 		this.excessWidth = this.fullWidth - ((this.fullViewTileWidth * 15) + (14 * this.tileGap));
 		this.zoomedTileWidth = Math.round(this.fullViewTileWidth * this.zoomMultiplier);
 		this.midpoint = Math.round(this.fullWidth / 2);
 		this.outerZoomLeft = this.fullWidth - Math.round((this.zoomedTileWidth + 1) * 15); 
-		this.outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15);  
+//		this.outerZoomTop = this.trayTop - TRAY_TOP_BORDER_HEIGHT - 1 - Math.round((this.zoomedTileWidth + 1) * 15); ///((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15);  
+		this.outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15) + this.topGapHeight + this.bottomGapHeight + 1;  
+
 		this.fullViewTileMidpoint = Math.round(this.fullViewTileWidth / 2);
 		this.zoomedTileMidpoint = Math.round(this.zoomedTileWidth / 2);	
 		
-		this.trayTileSize = Math.round(this.fullWidth / 7.50f);	
-		this.draggingTileSize  = Math.round(this.trayTileSize * 1.2f);
-		if (this.draggingTileSize > 90){this.draggingTileSize = 90;}
-		this.trayTileLeftMargin = Math.round(this.fullWidth - ((this.trayTileSize * 7) + (this.trayTileGap * 6))) / 2;
+
 		 
-		this.trayTop = this.height - trayTileSize - (TRAY_VERTICAL_MARGIN * 2); 
-		Toast t = Toast.makeText(context, "Hello " +  this.fullWidth , Toast.LENGTH_LONG);   
-	    t.show();
+		
+	
+		
+		//Toast t = Toast.makeText(context, "Hello " +  this.height + " " + this.fullWidth + " " + getMeasuredHeight() , Toast.LENGTH_LONG);   
+	    //t.show();
 	}
 	
 	@Override
@@ -405,8 +381,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 this.readyToDraw = false;
 			 
 			 if (this.isZoomed == false || this.isZoomAllowed == false){
-				 this.drawScoreboard(canvas);
+				 this.drawUpperGap(canvas);
 				 this.drawFullView(canvas);
+				 this.drawLowerGap(canvas);
 				
 			 }
 			 else {
@@ -457,8 +434,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 						 } 
 						 else {
 							 //make sure it will be within visible left bounds
-							 if (topLeftTile.getxPositionZoomed() - leftDiff > 1) {
-								 leftDiff = topLeftTile.getxPositionZoomed() - 1;//leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);   
+							 if (topLeftTile.getxPositionZoomed() - leftDiff > 0) {
+								 leftDiff = topLeftTile.getxPositionZoomed() - 0;//leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);   
 								 this.readyToDraw = false;
 								 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "333 " + leftDiff);
 							 }
@@ -577,56 +554,88 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 //	}
 	 
-	private void drawScoreboard(Canvas canvas){
+	private void drawUpperGap(Canvas canvas){
 		//3366dd
 		
+		Paint pGap = new Paint(); 
+		pGap.setColor(Color.parseColor("#eec591"));  //grab color from drawable
+	    
+		pGap.setAntiAlias(true);
+	  //   p.setTypeface(this.letterTypeface);
+	     Rect boundsGap = new Rect();
+	     boundsGap.left = 0;
+	     boundsGap.right = this.fullWidth;
+	     boundsGap.top = 0;
+	     boundsGap.bottom = this.topGapHeight;
+		
+	     canvas.drawRect(boundsGap, pGap);
+	     
+	     Paint p = new Paint();
+     	 p.setColor(Color.BLACK);
+     	 p.setTextSize(Math.round(this.topGapHeight * .4));
+	     p.setAntiAlias(true);
+	     p.setTypeface(this.letterTypeface);
+	     Rect bounds = new Rect();
+	     String lastActionText = this.parent.getGame().getLastActionText();
+	     p.getTextBounds(lastActionText, 0, lastActionText.length(), bounds);
+	     int textLeft =  this.midpoint - (Math.round(bounds.width() / 2));
+	     int textTop =  Math.round(this.topGapHeight / 2) - Math.round(bounds.height() / 2);
+	     
+	     canvas.drawText(lastActionText, textLeft, textTop, p);
+	    
+	}
+
+	private void drawLowerGap(Canvas canvas){
+		//3366dd
+		
+		Paint pGap = new Paint(); 
+		pGap.setColor(Color.parseColor("#eec591"));  //grab color from drawable
+	    
+		pGap.setAntiAlias(true);
+	  //   p.setTypeface(this.letterTypeface);
+	     Rect boundsGap = new Rect();
+	     boundsGap.left = 0;
+	     boundsGap.right = this.fullWidth;
+	     boundsGap.top = this.topGapHeight + this.fullWidth;//this.trayTop - this.bottomGapHeight - TRAY_TOP_BORDER_HEIGHT - 1;
+	     boundsGap.bottom = this.trayTop - 1;
+		
+	     canvas.drawRect(boundsGap, pGap);
+	     
+	     canvas.drawBitmap(this.logo, 10, this.topGapHeight + this.fullWidth + 10, null);
+	     
+	     
+	//     Paint pBorder = new Paint(); 
+	//		pBorder.setColor(Color.parseColor("#eec591"));  //grab color from drawable
+	//	    
+	//	    pBorder.setAntiAlias(true);
+	//	     Rect boundsBorder = new Rect();
+	//	     boundsBorder.left = 0;
+	//	     boundsBorder.right = this.fullWidth;
+	//	     boundsBorder.top = this.topGapHeight  - LOWER_GAP_TOP_BORDER_HEIGHT;
+	//	     boundsBorder.bottom = this.topGapHeight;
+		    
+	//	     canvas.drawRect(boundsBorder, pBorder);
+	     
+	///draw  thanks for playing if game is over '''to the right
+		    
+	}
+	
+	
+	
+	private void drawTray(Canvas canvas){
 		Paint pBorder = new Paint(); 
-		pBorder.setColor(Color.parseColor("#3366dd"));
+		pBorder.setColor(Color.parseColor("#eec591"));
 	    
 	    pBorder.setAntiAlias(true);
 	  //   p.setTypeface(this.letterTypeface);
 	     Rect boundsBorder = new Rect();
 	     boundsBorder.left = 0;
 	     boundsBorder.right = this.fullWidth;
-	     boundsBorder.top = 0;
-	     boundsBorder.bottom = 2;
-		
-		Paint p = new Paint(); 
-   	    p.setColor(Color.parseColor("#ffedc8"));
-	     p.setTextSize(Math.round(this.fullViewTileWidth * .6));
-	     p.setAntiAlias(true);
-	     p.setTypeface(this.letterTypeface);
-	     Rect bounds = new Rect();
-	     bounds.left = 0;
-	     bounds.right = this.fullWidth;
-	     bounds.top = 3;
-	     bounds.bottom = 30;
-	     //#eec591
-	     this.scoreboardHeight = 32;
-	     
-     	 Paint pPlayer1 = new Paint();
-     	pPlayer1.setColor(Color.BLACK);
-     	pPlayer1.setTextSize(12);
-     	pPlayer1.setAntiAlias(true);
-     	pPlayer1.setTypeface(this.letterTypeface);
-	   //  Rect boundsPlayer1 = new Rect();
-	   //  p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
-	   //  int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
-	    // int textTop =  tile.getyPositionZoomed() + this.zoomedTileMidpoint + (Math.round(bounds.height() / 2));
-	     
-	    
-	     
-	     //p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
-	     //int textLeft =  tile.getxPosition() + this.fullViewTileMidpoint - (Math.round(bounds.width() / 2));
-	     //int textTop =  tile.getyPosition() + this.fullViewTileMidpoint + (Math.round(bounds.height() / 2));
-	     
-	     //canvas.drawText(tile.getCurrentText(), textLeft, textTop, p);
+	     boundsBorder.top = this.trayTop - TRAY_VERTICAL_MARGIN - TRAY_TOP_BORDER_HEIGHT;
+	     boundsBorder.bottom = this.trayTop - TRAY_VERTICAL_MARGIN;
 	     canvas.drawRect(boundsBorder, pBorder);
-	     canvas.drawRect(bounds, p);
-	    // canvas.drawText(this.game.getPlayerGames().get(1).getPlayer().getFullName(), 15, 15, pPlayer1);
-	}
-	
-	private void drawTray(Canvas canvas){
+	     
+		canvas.drawBitmap(this.trayBackground, 0, this.trayTop - TRAY_VERTICAL_MARGIN, null);
 		
 		for (TrayTile tile : this.trayTiles) {
 			 canvas.drawBitmap(tile.getCurrentBitmap(),tile.getxPosition(), tile.getyPosition(), null);
@@ -634,7 +643,23 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 	}
  
+	private void LoadExtras(){
+		int height = Math.round(this.bottomGapHeight * .6F);
+		Bitmap bgLogo = BitmapFactory.decodeResource(getResources(), R.drawable.wordsmash_logo7);
+	 
+		float factor = height / (float) bgLogo.getHeight();
+		this.logo = Bitmap.createScaledBitmap(bgLogo, (int) (bgLogo.getWidth() * factor), height, false);  
+	  
+	} 
+	
 	private void LoadTray() {		
+	
+		
+		
+		Bitmap bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+		this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
+		 
+		
 		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
 		 Bitmap bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.trayTileSize , this.trayTileSize, false);
 		 Bitmap bgBaseDragging = Bitmap.createScaledBitmap(bgBase, this.draggingTileSize, this.draggingTileSize, false);
@@ -644,7 +669,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 for(int y = 0; y < 7; y++){
 			 TrayTile tile = new TrayTile();
 			 tile.setId(y);
-			 tile.setxPosition(this.trayTileLeftMargin + ((this.trayTileSize + 2) * tile.getId()));
+			 tile.setxPosition(this.trayTileLeftMargin + ((this.trayTileSize + TRAY_TILE_GAP) * tile.getId()));
 			 tile.setyPosition(this.trayTop);
 			 tile.setOriginalBitmap(bgBaseScaled);
 			 tile.setOriginalBitmapDragging(bgBaseDragging);
@@ -697,7 +722,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 tile.setId(id);
 				 id += 1;
 				 tile.setxPosition((this.excessWidth / 2) + (x * this.fullViewTileWidth) + (x * this.tileGap));
-				 tile.setyPosition((y * this.fullViewTileWidth) + (y * this.tileGap) + this.scoreboardHeight);
+				 tile.setyPosition((y * this.fullViewTileWidth) + (y * this.tileGap) + this.topGapHeight);
 				 tile.setColumn(x + 1);
 				 tile.setRow(y + 1);
 
