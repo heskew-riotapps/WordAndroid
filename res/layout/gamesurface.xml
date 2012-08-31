@@ -193,7 +193,7 @@
         android:layout_width="fill_parent" 
         android:layout_height="48dp"
        
-        android:gravity="center_vertical"
+        android:gravity="center"
       
         android:background="@drawable/gameboard_btn_area_bg" >
 	<com.riotapps.word.ui.ScoreboardButton 

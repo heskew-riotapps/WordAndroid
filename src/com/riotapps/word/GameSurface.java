@@ -137,7 +137,7 @@ public class GameSurface extends Activity {
 	 	
 	 	List<PlayerGame>players = new ArrayList<PlayerGame>();
 	 	
-	 	this.game.setLastActionText("Junior18 played FORTY for 18 points" );
+	 	this.game.setLastActionText("Junior18 played HAMMER for 21" );
 	 	
 	 	
 	 	this.game.setPlayerGames(players);
@@ -208,4 +208,20 @@ public class GameSurface extends Activity {
 		super.onDestroy();
 		this.gameSurfaceView.onDestroy();
 		}
+
+		@Override
+		protected void onPause() {
+			// TODO Auto-generated method stub
+			super.onPause();
+			this.gameSurfaceView.onPause();
+		}
+
+		@Override
+		protected void onResume() {
+			// TODO Auto-generated method stub
+			super.onResume();
+			this.gameSurfaceView.onResume();
+		}
+		
+		
 }

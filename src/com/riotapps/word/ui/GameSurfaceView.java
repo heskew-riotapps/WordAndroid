@@ -19,6 +19,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
@@ -228,13 +229,31 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		this.gameThread.setRunning(true);
-		this.gameThread.start();
+		this.startThread();
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-	    // simply copied from sample application LunarLander:
+	    this.stopThread();
+	}
+	
+	public void onPause() {
+		 this.stopThread();
+	}
+	
+	
+	public void onResume() {
+		this.startThread();
+	}
+	
+	
+	private void startThread(){
+		this.gameThread.setRunning(true);
+		this.gameThread.start();
+	}
+	
+	private void stopThread(){
+		// simply copied from sample application LunarLander:
 	    // we have to tell thread to shut down & wait for it to finish, or else
 	    // it might touch the Surface after we return and explode
 	    boolean retry = true;
@@ -246,9 +265,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	        } catch (InterruptedException e) {
 	            // we will try it again and again...
 	        }
-	    }
-		
+	    }	
+	
 	}
+	
 
 	 @Override
 	 public boolean onTouchEvent(MotionEvent event) {
@@ -258,12 +278,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     long currentTouchTime = System.nanoTime();
 	     
  
-          Log.w(getClass().getSimpleName() + "onTouchEvent", event.toString());
+         Log.w(getClass().getSimpleName() + "onTouchEvent", event.toString());
 
     	 
 	     synchronized (this.gameThread.getSurfaceHolder()) {
              switch (event.getAction()) {
-          
 
              case MotionEvent.ACTION_DOWN:
             
@@ -342,6 +361,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
              }
              this.previousTouchMotion = this.currentTouchMotion;
          	 this.previousTouchTime = currentTouchTime;
+         	 
+
+         			 
              return true;
          }
 
@@ -350,8 +372,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 @Override
 	 protected void onDraw(Canvas canvas) {
 		// super.onDraw(canvas);
-	  Log.w(getClass().getSimpleName() + "onDraw ",this.currentTouchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
-	 			 + " " + this.currentX + " " + this.currentY);
+	 // Log.w(getClass().getSimpleName() + "onDraw ",this.currentTouchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
+	 //			 + " " + this.currentX + " " + this.currentY);
 		 
 		long currentTouchTime = System.nanoTime();
 		
@@ -367,11 +389,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 		 
 		 if (this.readyToDraw == true){ 
-			 
-		
-			 
-			  Log.w(getClass().getSimpleName() + "onDraw2 ",this.currentTouchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
-				 		 + " " + this.currentX + " " + this.currentY + " " + this.previousTouchMotion);
+ 
+			 // Log.w(getClass().getSimpleName() + "onDraw2 ",this.currentTouchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
+			//	 		 + " " + this.currentX + " " + this.currentY + " " + this.previousTouchMotion);
 			 
 			// if (this.touchMotion != MotionEvent.ACTION_MOVE ) { 
 			 canvas.drawColor(0, Mode.CLEAR); ///clears out the previous drawing on the canvas
@@ -391,80 +411,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				//	 this.isZoomed = false; ///turn off zoom since we are handling now
 				// }
 				 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE) {
-					 
-					 this.readyToDraw = true;
-					   
-					 int leftDiff = this.previousX - this.currentX ;
-					 int topDiff =  this.previousY - this.currentY;
-					 
-					 //handle tile drag later, first drag the whole board around
-					// if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
-					//	 this.readyToDraw = false;
-					//	 newLeft = 
-					// }
-					 
-					 this.previousX = this.currentX;
-					 this.previousY = this.currentY;
-				 
-					 
-									
-					 if (this.currentTile.getPlacedText().length() > 0 ){
-						 //drag this letter, not the board
-					 }
-					 else {
-						//drag/scroll entire board 
-					 
-					 
-						 //if (tappedTile == null) { return; } ///do something here, this is causing the board to disappear when scrolled out of bounds
-						 
-						 //grab top left tile  
-						 GameTile topLeftTile = this.tiles.get(0);
-						 
-						 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ",leftDiff + " " + topDiff + " " +  this.previousX  + " " + this.previousY + " "
-						 + topLeftTile.getxPositionZoomed() + " " + topLeftTile.getyPositionZoomed() + " "
-						 + this.outerZoomLeft + " " + this.outerZoomTop);
-
-						 
-						 //make sure it will be within outer left bounds
-						 if (topLeftTile.getxPositionZoomed() - leftDiff < this.outerZoomLeft){
-							 //only scroll to the edge of the left outer boundary
-							 //leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed() - leftDiff);
-							 leftDiff = this.outerZoomLeft - topLeftTile.getxPositionZoomed(); //topLeftTile.getxPositionZoomed() + this.outerZoomLeft; //leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
-							 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "222 " + leftDiff);
-						 } 
-						 else {
-							 //make sure it will be within visible left bounds
-							 if (topLeftTile.getxPositionZoomed() - leftDiff > 0) {
-								 leftDiff = topLeftTile.getxPositionZoomed() - 0;//leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);   
-								 this.readyToDraw = false;
-								 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "333 " + leftDiff);
-							 }
-						 }
-						 
-						//grab top left tile and make sure it will be within outer top bounds
-						 if (topLeftTile.getyPositionZoomed() - topDiff < this.outerZoomTop){ 
-							 //only scroll to the edge of the top outer boundary
-							 topDiff = this.outerZoomTop - topLeftTile.getyPositionZoomed();//topLeftTile.getyPositionZoomed() + this.outerZoomTop; //topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - topDiff);
-							 //topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed());
-							 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "444 " + topDiff);
-						 }
-						 else { 
-							 //make sure it will be within visible top bounds
-							 if (topLeftTile.getyPositionZoomed() - topDiff > 0) {
-								 topDiff = topLeftTile.getyPositionZoomed();// - 1;//topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
-								 this.readyToDraw = false;
-								 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "555 " + topDiff);
-							 }
-						 }
-					     this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);		
-					}
+					 this.drawBoardOnMove(canvas);
+				
 				 }
 				 
-				if (this.currentTouchMotion == MotionEvent.ACTION_UP){ 
-					// canvas.drawColor(Color.CYAN);
-					 //only if in tapped mode
-					
-					
+				if (this.currentTouchMotion == MotionEvent.ACTION_UP){ 	
 					
 				// 	this.parent.updateHandler.sendMessage(this.parent.updateHandler.obtainMessage(GameSurface.MSG_SCOREBOARD_VISIBILITY, GONE, 0));
 					 
@@ -472,37 +423,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			//		params.setMargins(params.leftMargin, params.topMargin - 50, params.rightMargin, params.bottomMargin); //substitute parameters for left, top, right, bottom
 			//		this.setLayoutParams(params); 
 					
-					 GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);    
-					 
-					 //check for specific tile action (as opposed to full board action) here
-					 
-					 if (tappedTile == null) { return; } //do something here
-				 
-				     //find the equivalent tapped top location in zoomed layout
-				     int tappedTop = this.midpoint - (((tappedTile.getRow() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
-				     
-				     //make sure we don't pass the upper top boundary (this upper boundary is calculated to ensure that bottom of board does
-				     //not render too high)
-				     if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
-				     
-				     //make sure we don't pass the visible top boundary (this is the visible top boundary of the surface view minus padding)
-				     if (tappedTop > 0) {tappedTop = 0;}
-				     
-				     //find the equivalent tapped left location in zoomed layout
-				     int tappedLeft = this.midpoint - (((tappedTile.getColumn() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
-				     
-				    //make sure we don't pass the far left boundary (this far left boundary is calculated to ensure that right side of the board does
-				     //not render too far to the left)
-				     if (tappedLeft < this.outerZoomLeft) {tappedLeft = this.outerZoomLeft;}
-				     
-				     //make sure we don't pass the visible left boundary (this is the visible left boundary of the surface view minus padding)
-				     if (tappedLeft > 1) {tappedLeft = 1;}
-				     
-				     //draw the board to the canvas
-				     this.loadZoomedBoard(canvas, tappedLeft, tappedTop); 
-				      
-				     //release the current tile context 
-				     this.currentTile = null;  
+					this.drawBoardZoomOnUp(canvas);
 	 
 				  
 				 }
@@ -513,15 +434,121 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 } 
 	 }
 	 
+	private void drawBoardOnMove(Canvas canvas){
+		 this.readyToDraw = true;
+		   
+		 int leftDiff = this.previousX - this.currentX ;
+		 int topDiff =  this.previousY - this.currentY;
+		 
+		 //handle tile drag later, first drag the whole board around
+		// if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
+		//	 this.readyToDraw = false;
+		//	 newLeft = 
+		// }
+		 
+		 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ",leftDiff + " " + topDiff + " " +  this.previousX  + " " + this.previousY + " "
+				 +  this.currentX  + " " + this.currentY + " " 
+				 + this.outerZoomLeft + " " + this.outerZoomTop);
+		 
+		 this.previousX = this.currentX;
+		 this.previousY = this.currentY;
+	 
+		 
+						
+		 if (this.currentTile.getPlacedText().length() > 0 ){
+			 //drag this letter, not the board
+		 }
+		 else {
+			//drag/scroll entire board 
+		 
+		 
+			 //if (tappedTile == null) { return; } ///do something here, this is causing the board to disappear when scrolled out of bounds
+			 
+			 //grab top left tile  
+			 GameTile topLeftTile = this.tiles.get(0);
+			 
+			// Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ",leftDiff + " " + topDiff + " " +  this.previousX  + " " + this.previousY + " "
+			// + topLeftTile.getxPositionZoomed() + " " + topLeftTile.getyPositionZoomed() + " "
+			// + this.outerZoomLeft + " " + this.outerZoomTop);
+
+			 
+			 //make sure it will be within outer left bounds
+			 if (topLeftTile.getxPositionZoomed() - leftDiff < this.outerZoomLeft){
+				 //only scroll to the edge of the left outer boundary
+				 //leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed() - leftDiff);
+				 leftDiff = this.outerZoomLeft - topLeftTile.getxPositionZoomed(); //topLeftTile.getxPositionZoomed() + this.outerZoomLeft; //leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
+				 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "222 " + leftDiff);
+			 } 
+			 else {
+				 //make sure it will be within visible left bounds
+				 if (topLeftTile.getxPositionZoomed() - leftDiff > 0) {
+					 leftDiff = topLeftTile.getxPositionZoomed() - 0;//leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);   
+					 this.readyToDraw = false;
+					 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "333 " + leftDiff);
+				 }
+			 }
+			 
+			//grab top left tile and make sure it will be within outer top bounds
+			 if (topLeftTile.getyPositionZoomed() - topDiff < this.outerZoomTop){ 
+				 //only scroll to the edge of the top outer boundary
+				 topDiff = this.outerZoomTop - topLeftTile.getyPositionZoomed();//topLeftTile.getyPositionZoomed() + this.outerZoomTop; //topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - topDiff);
+				 //topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed());
+				 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "444 " + topDiff);
+			 }
+			 else { 
+				 //make sure it will be within visible top bounds
+				 if (topLeftTile.getyPositionZoomed() - topDiff > 0) {
+					 topDiff = topLeftTile.getyPositionZoomed();// - 1;//topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
+					 this.readyToDraw = false;
+					 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "555 " + topDiff);
+				 }
+			 }
+		     this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);		
+		}
+		
+	}
+	 
+   private void drawBoardZoomOnUp(Canvas canvas){
+	   GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);    
+		 
+		 //check for specific tile action (as opposed to full board action) here
+		 
+		 if (tappedTile == null) { return; } //do something here
+	 
+	     //find the equivalent tapped top location in zoomed layout
+	     int tappedTop = this.midpoint - (((tappedTile.getRow() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+	     
+	     //make sure we don't pass the upper top boundary (this upper boundary is calculated to ensure that bottom of board does
+	     //not render too high)
+	     if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
+	     
+	     //make sure we don't pass the visible top boundary (this is the visible top boundary of the surface view minus padding)
+	     if (tappedTop > 0) {tappedTop = 0;}
+	     
+	     //find the equivalent tapped left location in zoomed layout
+	     int tappedLeft = this.midpoint - (((tappedTile.getColumn() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+	     
+	    //make sure we don't pass the far left boundary (this far left boundary is calculated to ensure that right side of the board does
+	     //not render too far to the left)
+	     if (tappedLeft < this.outerZoomLeft) {tappedLeft = this.outerZoomLeft;}
+	     
+	     //make sure we don't pass the visible left boundary (this is the visible left boundary of the surface view minus padding)
+	     if (tappedLeft > 1) {tappedLeft = 1;}
+	     
+	     //draw the board to the canvas
+	     this.loadZoomedBoard(canvas, tappedLeft, tappedTop); 
+	      
+	     //release the current tile context 
+	     this.currentTile = null;  
+   }
+	
 	private void loadZoomedBoardByDiff(Canvas canvas, int leftDiff, int topDiff) {
 	     for (GameTile tile : this.tiles) {
 	     	 tile.setxPositionZoomed(tile.getxPositionZoomed() - leftDiff);
 	     	 tile.setyPositionZoomed(tile.getyPositionZoomed() - topDiff);
 	 		 
 	 		 this.loadZoomedBoardGuts(canvas, tile);
-	 		 
-	 		 
-	 		 
+ 
 	     }
 	}
 	 
@@ -571,7 +598,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     canvas.drawRect(boundsGap, pGap);
 	     
 	     Paint p = new Paint();
-     	 p.setColor(Color.BLACK);
+     	 p.setColor(Color.WHITE);
+     	 //p.setTextAlign(Paint.Align.LEFT);
      	 p.setTextSize(Math.round(this.topGapHeight * .4));
 	     p.setAntiAlias(true);
 	     p.setTypeface(this.letterTypeface);
@@ -579,9 +607,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     String lastActionText = this.parent.getGame().getLastActionText();
 	     p.getTextBounds(lastActionText, 0, lastActionText.length(), bounds);
 	     int textLeft =  this.midpoint - (Math.round(bounds.width() / 2));
-	     int textTop =  Math.round(this.topGapHeight / 2) - Math.round(bounds.height() / 2);
+	     
+	     //this is a hack because for some reason the vertical origin is going up in direction as opposed to down
+	     int textTop =  Math.round(this.topGapHeight / 2) + (bounds.height() / 3); 
+	     
+	     ///account for line breaks for long strings
 	     
 	     canvas.drawText(lastActionText, textLeft, textTop, p);
+	     //canvas.drawBitmap(this.logo, textLeft, 10, null); ///do not use 10,,,figure out math
+	     //Yes. If you want to use the colour definition in the res/colors.xml file with the ID R.color.black, then you can't just use the ID. 
+	     //If you want to get the actual colour value from the resources, use paint.setColor(getResources().getColor(R.color.black)); – Matt Gibson Dec 7 '11 at 20:49
 	    
 	}
 
@@ -600,8 +635,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     boundsGap.bottom = this.trayTop - 1;
 		
 	     canvas.drawRect(boundsGap, pGap);
-	     
-	     canvas.drawBitmap(this.logo, 10, this.topGapHeight + this.fullWidth + 10, null);
+	    // canvas.drawText("Junior", textLeft, 10, p);	     
+	     canvas.drawBitmap(this.logo, this.midpoint - (Math.round(this.logo.getWidth() / 2)), this.topGapHeight + this.fullWidth + Math.round(this.bottomGapHeight / 2) - Math.round(this.logo.getHeight() / 2) , null); ///do not use 10,,,figure out math
 	     
 	     
 	//     Paint pBorder = new Paint(); 
