@@ -38,6 +38,7 @@ import android.widget.Toast;
 public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callback {
 
 	GameSurface parent;
+	private static final String TAG = GameSurfaceView.class.getSimpleName();
 	
 	public void setParent(GameSurface parent){
 		this.parent = parent;
@@ -46,6 +47,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	GameSurfaceView me = this;
 	Context context;
 	GameThread gameThread = null;
+	boolean isThreadRunning = false;
 	SurfaceHolder surfaceHolder;
 	Typeface letterTypeface;
 	private int currentX = 0;
@@ -104,6 +106,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private GameTile currentTile = null;
     private Bitmap trayBackground;
     private Bitmap logo;
+    private boolean surfaceCreated = false;
     
  
 	public boolean isReadyToDraw() {
@@ -151,6 +154,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 SurfaceHolder holder = getHolder();
 		 holder.addCallback(this);
 		 gameThread = new GameThread(holder, this);
+		
 		 setFocusable(true);
 		 this.letterTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_BOARD_FONT);
 		  
@@ -173,14 +177,17 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		   	    me.LoadTiles();
 		   	    me.LoadTray();
 		   	    me.LoadExtras();
-		   	    me.readyToDraw = true;
+		   	 
 		   	    
 		  
 		   	     LayoutParams lp = me.getLayoutParams();
 			 	  lp.height = me.height;
 			//	  // Apply to new dimension
 			 	  me.setLayoutParams( lp );
+		 
+			 	   me.readyToDraw = true;
 		        }
+
 		     });
 	}
 
@@ -224,32 +231,46 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+		Log.w(TAG, "surfaceChanged called");
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
+		Log.w(TAG, "surfaceCreated called");
 		this.startThread();
+		this.surfaceCreated = true;
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		Log.w(TAG, "surfaceDestroyed called");
 	    this.stopThread();
 	}
 	
 	public void onPause() {
+		Log.w(TAG, "onPause called");
 		 this.stopThread();
 	}
 	
 	
 	public void onResume() {
-		this.startThread();
+		Log.w(TAG, "onResume called");
+		
+		//make sure surface has been created first because onresume is initially called before surfacecreated and starting the 
+		//thread then kills things (canvas is null in onDraw)
+		if (this.surfaceCreated) {this.startThread();}
 	}
 	
 	
 	private void startThread(){
-		this.gameThread.setRunning(true);
-		this.gameThread.start();
+		Log.w(TAG, "startThread called" + this.isThreadRunning);
+		if (!this.isThreadRunning){ //() !=Thread.State.RUNNABLE) { 
+
+			this.gameThread.start();
+			this.gameThread.setRunning(true);
+			this.isThreadRunning = true;
+		}
 	}
 	
 	private void stopThread(){
@@ -266,6 +287,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	            // we will try it again and again...
 	        }
 	    }	
+	    this.isThreadRunning = false;  
 	
 	}
 	
@@ -283,8 +305,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     	 
 	     synchronized (this.gameThread.getSurfaceHolder()) {
              switch (event.getAction()) {
-
-             case MotionEvent.ACTION_DOWN:
+             
+             case MotionEvent.ACTION_DOWN: 
             
                  //where is the click, which object within view???
             	 //get tile from coordinates.  if tile is null, do nothing
@@ -371,7 +393,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 
 	 @Override
 	 protected void onDraw(Canvas canvas) {
-		// super.onDraw(canvas);
+ 		// super.onDraw(canvas);
 	 // Log.w(getClass().getSimpleName() + "onDraw ",this.currentTouchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
 	 //			 + " " + this.currentX + " " + this.currentY);
 		 
@@ -394,13 +416,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			//	 		 + " " + this.currentX + " " + this.currentY + " " + this.previousTouchMotion);
 			 
 			// if (this.touchMotion != MotionEvent.ACTION_MOVE ) { 
-			 canvas.drawColor(0, Mode.CLEAR); ///clears out the previous drawing on the canvas
-			// canvas.drawColor(Color.YELLOW);
+			// canvas.drawColor(0, Mode.CLEAR); ///clears out the previous drawing on the canvas
+		 
 			 //}
 			 int tileFontSize;
 			 this.readyToDraw = false;
 			 
 			 if (this.isZoomed == false || this.isZoomAllowed == false){
+				 canvas.drawColor(0, Mode.CLEAR);
 				 this.drawUpperGap(canvas);
 				 this.drawFullView(canvas);
 				 this.drawLowerGap(canvas);
@@ -422,8 +445,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			//		MarginLayoutParams  params = (MarginLayoutParams )this.getLayoutParams();
 			//		params.setMargins(params.leftMargin, params.topMargin - 50, params.rightMargin, params.bottomMargin); //substitute parameters for left, top, right, bottom
 			//		this.setLayoutParams(params); 
-					
+					canvas.drawColor(0, Mode.CLEAR);
 					this.drawBoardZoomOnUp(canvas);
+					this.readyToDraw = false;
 	 
 				  
 				 }
@@ -435,23 +459,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 }
 	 
 	private void drawBoardOnMove(Canvas canvas){
-		 this.readyToDraw = true;
+		 this.readyToDraw = false;
 		   
+		 boolean setReadyToDraw = false;
 		 int leftDiff = this.previousX - this.currentX ;
 		 int topDiff =  this.previousY - this.currentY;
 		 
 		 //handle tile drag later, first drag the whole board around
 		// if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
-		//	 this.readyToDraw = false;
+		//	 this.readyToDraw = false; 
 		//	 newLeft = 
 		// }
 		 
-		 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ",leftDiff + " " + topDiff + " " +  this.previousX  + " " + this.previousY + " "
+		 Log.w(TAG,"drawBoardOnMove: " + leftDiff + " " + topDiff + " " +  this.previousX  + " " + this.previousY + " "
 				 +  this.currentX  + " " + this.currentY + " " 
 				 + this.outerZoomLeft + " " + this.outerZoomTop);
 		 
-		 this.previousX = this.currentX;
-		 this.previousY = this.currentY;
+		// this.previousX = this.currentX;
+		// this.previousY = this.currentY;
 	 
 		 
 						
@@ -477,14 +502,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 //only scroll to the edge of the left outer boundary
 				 //leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed() - leftDiff);
 				 leftDiff = this.outerZoomLeft - topLeftTile.getxPositionZoomed(); //topLeftTile.getxPositionZoomed() + this.outerZoomLeft; //leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
-				 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "222 " + leftDiff);
+			 
+				 Log.w(TAG, "drawBoardOnMove: leftdiff(1)=" + leftDiff);
 			 } 
 			 else {
 				 //make sure it will be within visible left bounds
 				 if (topLeftTile.getxPositionZoomed() - leftDiff > 0) {
 					 leftDiff = topLeftTile.getxPositionZoomed() - 0;//leftDiff - (1 - topLeftTile.getxPositionZoomed() - leftDiff);   
-					 this.readyToDraw = false;
-					 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "333 " + leftDiff);
+					 
+					 Log.w(TAG, "drawBoardOnMove: leftdiff(2)=" + leftDiff);
+				 }
+				 else {
+					 setReadyToDraw = true;
 				 }
 			 }
 			 
@@ -493,17 +522,30 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 //only scroll to the edge of the top outer boundary
 				 topDiff = this.outerZoomTop - topLeftTile.getyPositionZoomed();//topLeftTile.getyPositionZoomed() + this.outerZoomTop; //topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - topDiff);
 				 //topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed());
-				 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "444 " + topDiff);
+				 
+				 Log.w(TAG, "drawBoardOnMove: topdiff(1)=" + topDiff);
 			 }
 			 else { 
 				 //make sure it will be within visible top bounds
 				 if (topLeftTile.getyPositionZoomed() - topDiff > 0) {
 					 topDiff = topLeftTile.getyPositionZoomed();// - 1;//topDiff - (1 - topLeftTile.getyPositionZoomed() - topDiff);
-					 this.readyToDraw = false;
-					 Log.w(getClass().getSimpleName() + "onDraw ACTION_MOVE ", "555 " + topDiff);
+					 
+					 Log.w(TAG, "drawBoardOnMove: topdiff(2)=" + topDiff);
+				 }
+				 else {
+					 setReadyToDraw = true;
 				 }
 			 }
-		     this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);		
+
+			 if (setReadyToDraw){
+				 this.previousX = this.currentX;
+				 this.previousY = this.currentY;
+				 canvas.drawColor(0, Mode.CLEAR);
+				 this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);	
+				 this.readyToDraw = true;
+			 }
+		  //   this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);	
+		   //  if (setReadyToDraw){this.readyToDraw = true;}
 		}
 		
 	}
