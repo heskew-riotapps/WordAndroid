@@ -14,14 +14,7 @@
         android:id="@+id/header"
         android:layout_marginBottom="10dp"
         android:orientation="vertical">
-    <com.riotapps.word.utils.TypefaceButton 
-  	    android:id="@+id/bBack"
-  	    android:layout_width="wrap_content"
-  	    android:layout_height="wrap_content"
-  	    android:background="@drawable/backbutton"
-  	    android:layout_marginTop="3dp"
    
-    />
      <ImageView 
        android:id="@+id/logo"
        android:contentDescription="@string/logo"

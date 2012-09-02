@@ -14,11 +14,10 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.TabHost.TabContentFactory;
 
-public class RulesTab extends TabActivity implements View.OnClickListener{
+public class RulesTab extends TabActivity{
 	
 	private TabHost tabHost;
 	private final Context context = this;
-	private Button bBack;
 	
     private void setupTabHost() {
     	tabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -36,8 +35,7 @@ public class RulesTab extends TabActivity implements View.OnClickListener{
 	//	setupTab(new TextView(this), "Rule Overview");
 	//	setupTab(new TextView(this), "Full Rules");
 		//setupTab(new TextView(this), "Tab 3");
-		bBack = (Button) findViewById(R.id.bBack);
-	    bBack.setOnClickListener(this);
+
 		
  		//Resources resources = getResources(); 
 		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost); //getTabHost(); 
@@ -95,13 +93,6 @@ public class RulesTab extends TabActivity implements View.OnClickListener{
 		return view;
 	}
 	
-	@Override 
-    public void onClick(View v) {
-    	switch(v.getId()){  
-        case R.id.bBack:  
-        	((Activity)context).finish();
-			break;
-    	}
-  }  
+
 
 }

@@ -12,6 +12,8 @@ public class GameThread extends Thread {
 	 GameSurfaceView parent;
 	 long sleepTime;
 	 long tickCount = 0;
+	 private Object pauseLock = new Object();  
+	 private boolean paused;
 	  
 //	 public GameThread(GameSurfaceView sv, long st){
 //	  super();
@@ -32,10 +34,24 @@ public class GameThread extends Thread {
 //		  Log.w(getClass().getSimpleName() + "getStarted", "getStarted called");
 //		  this.start();
 //	  }
+	
 	  
 	 public void setRunning(boolean r){
 	  this.running = r;
 	 }
+	 
+	 public void onPause() {
+		    synchronized (pauseLock) {
+		        paused = true;
+		    }
+		}
+	 
+	 public void onResume() {
+		    synchronized (pauseLock) {
+		        paused = false;
+		        pauseLock.notifyAll();
+		    }
+		}
 	  
 	 @Override
 	 public void run() {
@@ -47,7 +63,8 @@ public class GameThread extends Thread {
 			            c = this.surfaceHolder.lockCanvas(null);
 			            synchronized (this.surfaceHolder) {
 			            	 parent.onDraw(c); 
-			            }
+			            	
+			            }  
 			        } 
 			        finally {
 			            // do this in a finally so that if an exception is thrown
@@ -57,10 +74,19 @@ public class GameThread extends Thread {
 			                this.surfaceHolder.unlockCanvasAndPost(c);
 			            }
 			        }
+			      
 			        tickCount += 1;
 			        Log.d(TAG, "Game loop executed " + tickCount + " times");
 
 		    	}
+		    //	synchronized (pauseLock) {
+          	//	    while (paused) {
+          	//	        try {
+          	//	            pauseLock.wait();
+          	//	        } catch (InterruptedException e) {
+          	//	        }
+          	//	    }
+          	//	} 
 		    }
 	 }
 	 

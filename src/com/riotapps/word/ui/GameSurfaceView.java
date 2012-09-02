@@ -146,6 +146,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 
 	private void construct(Context context) {
+		Log.w(TAG, "construct called");
+		
 		this.context = context;
 		this.layoutService = new TileLayoutService();
 		this.defaultLayout = layoutService.GetDefaultLayout(context);
@@ -177,7 +179,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		   	    me.LoadTiles();
 		   	    me.LoadTray();
 		   	    me.LoadExtras();
-		   	 
+		   	    Log.w(TAG, "run called");
 		   	    
 		  
 		   	     LayoutParams lp = me.getLayoutParams();
@@ -250,45 +252,92 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	public void onPause() {
 		Log.w(TAG, "onPause called");
+		this.gameThread.onPause();
+	//	 this.stopThread();
+	}
+	
+	public void onStop() {
+		Log.w(TAG, "onStop called");
 		 this.stopThread();
 	}
 	
+	public void onBackPressed() {
+		Log.w(TAG, "onBackPressed called");
+		 this.stopThread();
+	}
 	
+	public void onRestart() {
+		 Log.w(TAG, "onRestart called");
+		 if (this.surfaceCreated) {this.startThread();}
+	//	 this.startThread(); ///?????
+	//	 if (this.surfaceCreated) {this.startThread();}
+	}
+	
+	 public void onDestroy(){
+		 Log.w(TAG, "onDestroy called");
+		this.surfaceDestroyed(this.surfaceHolder); 
+	 }
+	
+	 public void onWindowFocusChanged(){
+		 Log.w(TAG, "onWindowFocusChanged called");
+		 this.stopThread();
+		 }
+	 
 	public void onResume() {
 		Log.w(TAG, "onResume called");
 		
 		//make sure surface has been created first because onresume is initially called before surfacecreated and starting the 
 		//thread then kills things (canvas is null in onDraw)
-		if (this.surfaceCreated) {this.startThread();}
+	 if (this.surfaceCreated) {this.startThread();}
 	}
 	
 	
 	private void startThread(){
-		Log.w(TAG, "startThread called" + this.isThreadRunning);
+		
+	//	if (!mGameIsRunning) {
+	 //       thread.start();
+	 //       mGameIsRunning = true;
+	 //   } else {
+	//        thread.onResume();
+	//    }
+		
+		 
+		Log.w(TAG, "startThread called is thread alive " + this.gameThread.isAlive() + " isThreadRunning: " + this.isThreadRunning); 
 		if (!this.isThreadRunning){ //() !=Thread.State.RUNNABLE) { 
-
-			this.gameThread.start();
-			this.gameThread.setRunning(true);
-			this.isThreadRunning = true;
+			//if (!this.gameThread.isAlive()){
+				this.gameThread.start();
+				this.gameThread.setRunning(true);
+				this.isThreadRunning = true;
+			//}
 		}
+	//	else {
+	//		this.gameThread.onResume();
+	//	}
 	}
 	
 	private void stopThread(){
 		// simply copied from sample application LunarLander:
 	    // we have to tell thread to shut down & wait for it to finish, or else
 	    // it might touch the Surface after we return and explode
-	    boolean retry = true;
-	    this.gameThread.setRunning(false);
-	    while (retry) {
-	        try {
-	        	this.gameThread.join();
-	            retry = false;
-	        } catch (InterruptedException e) {
-	            // we will try it again and again...
-	        }
-	    }	
+		Log.w(TAG, "stopThread called is thread alive " + this.gameThread.isAlive() + " isThreadRunning: " + this.isThreadRunning); 
+		if (this.isThreadRunning){
+	//		this.gameThread = null;
+	//		this.isThreadRunning = false;
+//		}
+		
+		    boolean retry = true;
+		    this.gameThread.setRunning(false);
+		    while (retry) {
+		        try {
+		        	this.gameThread.join();
+		            retry = false;
+		        } catch (InterruptedException e) {
+		            // we will try it again and again...
+		        }
+		    }	
 	    this.isThreadRunning = false;  
-	
+	    Log.w(TAG, "stopThread is thread alive " + this.gameThread.isAlive());
+		}
 	}
 	
 
@@ -365,12 +414,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 if (!this.isZoomed){
             		 this.readyToDraw = false;
             	 }
-            	 else if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.previousX == this.currentX && this.previousY == this.currentY){
+            	 //else if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.previousX == this.currentX && this.previousY == this.currentY){
+            	else if (this.previousX == this.currentX && this.previousY == this.currentY){
             		 this.readyToDraw = false;
-            	 }
-            	 else {
+            	}
+            	else {
             		 this.readyToDraw = true;
-            	 }
+            	}
             	// this.readyToDraw = false;
             	 if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
             		//calculate outerZoomRight and bottom
@@ -475,8 +525,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 +  this.currentX  + " " + this.currentY + " " 
 				 + this.outerZoomLeft + " " + this.outerZoomTop);
 		 
-		// this.previousX = this.currentX;
-		// this.previousY = this.currentY;
+		  this.previousX = this.currentX;
+		  this.previousY = this.currentY;
 	 
 		 
 						
@@ -537,13 +587,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 }
 			 }
 
-			 if (setReadyToDraw){
-				 this.previousX = this.currentX;
-				 this.previousY = this.currentY;
+			
+				// this.previousX = this.currentX;
+				// this.previousY = this.currentY;
 				 canvas.drawColor(0, Mode.CLEAR);
 				 this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);	
-				 this.readyToDraw = true;
-			 }
+				 if (setReadyToDraw){ this.readyToDraw = true; }
 		  //   this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);	
 		   //  if (setReadyToDraw){this.readyToDraw = true;}
 		}
@@ -856,9 +905,6 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 return null;
 	 }
 	 
-	 public void onDestroy(){
-		this.surfaceDestroyed(this.surfaceHolder); 
-	 }
 
 	 private void drawFullView(Canvas canvas){
         for (GameTile tile : this.tiles) { 

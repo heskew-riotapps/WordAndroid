@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceView;
 import android.view.ViewGroup.LayoutParams;
@@ -23,7 +24,7 @@ import android.widget.Toast;
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class GameSurface extends Activity {
-	
+	private static final String TAG = GameSurface.class.getSimpleName();
 	GameSurface context = this;
 	GameSurfaceView gameSurfaceView;
 	ImageFetcher imageLoader;
@@ -202,26 +203,68 @@ public class GameSurface extends Activity {
 		this.scoreboard = scoreboard;
 	}
 
-		@Override
+	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		super.onDestroy();
+		Log.w(TAG, "onDestroy called");
+		
 		this.gameSurfaceView.onDestroy();
-		}
+		super.onDestroy();
+	}
 
-		@Override
-		protected void onPause() {
-			// TODO Auto-generated method stub
-			super.onPause();
-			this.gameSurfaceView.onPause();
-		}
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		Log.w(TAG, "onStop called");
+		this.gameSurfaceView.onStop();
+		super.onStop();
+		
+		
+	}
 
-		@Override
-		protected void onResume() {
-			// TODO Auto-generated method stub
-			super.onResume();
-			this.gameSurfaceView.onResume();
-		}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		Log.w(TAG, "onPause called");
+		super.onPause();
+		this.gameSurfaceView.onPause();
+		
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		Log.w(TAG, "onResume called");
+		super.onResume();
+		this.gameSurfaceView.onResume();
+	
+
+	}
+
+//	@Override
+//	public void onWindowFocusChanged(boolean hasFocus) {
+//		// TODO Auto-generated method stub
+//		super.onWindowFocusChanged(hasFocus);
+//		this.gameSurfaceView.onWindowFocusChanged();
+//	}
+
+//	@Override
+//	public void onBackPressed() {
+//		// TODO Auto-generated method stub
+//		super.onBackPressed();
+//		this.gameSurfaceView.onBackPressed();
+//	}
+
+	
+	
+	@Override
+	protected void onRestart() {
+		Log.w(TAG, "onRestart called");
+		super.onRestart();
+		this.gameSurfaceView.onRestart();
+		
+
+	}
 		
 		
 }

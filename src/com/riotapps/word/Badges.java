@@ -9,27 +9,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Badges extends Activity implements View.OnClickListener{
+public class Badges extends Activity{
 	
 	private final Context context = this;
-	private Button bBack;
+
 	
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.badges);
 	        
-	        bBack = (Button) findViewById(R.id.bBack);
-	        bBack.setOnClickListener(this);
 	 }
-	 
-	  @Override 
-	    public void onClick(View v) {
-	    	switch(v.getId()){  
-	        case R.id.bBack:  
-	        	((Activity)context).finish();
-				break;
-	    	}
-      }  
-
+	
 }
