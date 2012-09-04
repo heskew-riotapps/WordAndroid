@@ -73,7 +73,19 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private static final int TRAY_TOP_BORDER_HEIGHT = 4;
     private static final int UPPER_GAP_BOTTOM_BORDER_HEIGHT = 4;
     private static final int LOWER_GAP_TOP_BORDER_HEIGHT = 4;
+    private static final long SINGLE_TAP_DURATION_IN_NANOSECONDS = 300000000;
+    private static final long DOUBLE_TAP_DURATION_IN_NANOSECONDS = 500000000;
+    private static final float MOVEMENT_TRIGGER_THRESHOLD = .05f;
+    private static final int DECELERATION = 100;
+    private float xVelocity = 0;
+    private float yVelocity = 0;
+    private int xPosition = 0;
+    private int yPosition = 0;
 
+    private static final float ANIMATION_TIMESTEP = .05f;
+    private static final int NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING = 3;
+    private static final int NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED = 3;
+    
     private int bottomOfFullView;
     private int topGapHeight;
     private int bottomGapHeight;
@@ -92,6 +104,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private boolean readyToDraw = false;
     private long dblTapCheck = 0;
     private boolean isMoving = false;
+    private boolean isMomentum = false;
     private int previousY = 0;
     private int previousX = 0;
     private int previousTouchMotion = -3;
@@ -101,6 +114,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private float currentSpeed = 0.0f;
     private int scoreboardHeight = 32;
     private int height;
+    private SurfaceHolder holder;
     
   //  private Game game;
     private GameTile currentTile = null;
@@ -117,6 +131,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.readyToDraw = readyToDraw;
 	}
 
+	List<Coordinate> coordinates = new ArrayList<Coordinate>();
 	List<GameTile> tiles = new ArrayList<GameTile>();
 	List<TrayTile> trayTiles = new ArrayList<TrayTile>();
     TileLayout defaultLayout;
@@ -153,14 +168,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.defaultLayout = layoutService.GetDefaultLayout(context);
 		//
 		  this.setZOrderOnTop(true);
-		 SurfaceHolder holder = getHolder();
-		 holder.addCallback(this);
-		 gameThread = new GameThread(holder, this);
+		 this.holder = getHolder();
+		 this.holder.addCallback(this);
+		 this.gameThread = new GameThread(holder, this);
 		
 		 setFocusable(true);
 		 this.letterTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_BOARD_FONT);
 		  
-		 holder.setFormat(PixelFormat.TRANSPARENT);// necessary
+		 this.holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
 		 
 		 
@@ -194,8 +209,6 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 
 
-
-
 	
 	private void SetDerivedValues(){
 		LayoutParams lp = me.getLayoutParams();
@@ -223,10 +236,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.zoomedTileMidpoint = Math.round(this.zoomedTileWidth / 2);	
 		
 
-		 
-		
-	
-		
+
 		//Toast t = Toast.makeText(context, "Hello " +  this.height + " " + this.fullWidth + " " + getMeasuredHeight() , Toast.LENGTH_LONG);   
 	    //t.show();
 	}
@@ -261,14 +271,20 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 this.stopThread();
 	}
 	
-	public void onBackPressed() {
-		Log.w(TAG, "onBackPressed called");
-		 this.stopThread();
-	}
+//	public void onBackPressed() {
+//		Log.w(TAG, "onBackPressed called");
+//		 this.stopThread();
+//	}
 	
 	public void onRestart() {
 		 Log.w(TAG, "onRestart called");
-		 if (this.surfaceCreated) {this.startThread();}
+		// if (this.surfaceCreated) {this.startThread();}
+	//	this.gameThread = null;
+		 this.gameThread = new GameThread(holder, this);
+		 this.holder.setFormat(PixelFormat.TRANSPARENT);
+		 this.startThread();
+		 
+		 me.readyToDraw = true;
 	//	 this.startThread(); ///?????
 	//	 if (this.surfaceCreated) {this.startThread();}
 	}
@@ -347,8 +363,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.currentY = (int) event.getY();
 	     this.currentTouchMotion = event.getAction();
 	     long currentTouchTime = System.nanoTime();
-	     
- 
+	    
          Log.w(getClass().getSimpleName() + "onTouchEvent", event.toString());
 
     	 
@@ -362,25 +377,29 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 //for now act like this is a click/tap...
             	 this.readyToDraw = false;
             	 this.tapCheck = currentTouchTime;
-            	 if (this.dblTapCheck == 0){ this.dblTapCheck = currentTouchTime; }
+            	// if (this.dblTapCheck == 0){ this.dblTapCheck = currentTouchTime; }
             	// this.invalidate();
             	 this.isMoving = false; 
             	 
           
             	 this.previousX = this.currentX;
             	 this.previousY = this.currentY;
+            	 this.coordinates.clear();
+            	 this.isMomentum = false;
             	 currentTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
             	// this.currentTouchMotion = MotionEvent.ACTION_DOWN;
             	// return false; //??
             	  break;
+
              case MotionEvent.ACTION_UP:
             	 //includes a check to ignore double taps
             	 //  Log.w(getClass().getSimpleName() + "onTouchEvent ActionUP ", this.tapCheck + " " + currentTouchTime + " " + this.readyToDraw);
             	   
             	   
             	   this.readyToDraw = false;
+            	   Log.w(TAG, "ACTION_UP tapcheck = " + this.tapCheck + " dbltapcheck = " + this.dblTapCheck + " diff = " + (this.tapCheck - this.dblTapCheck)); 
             	   
-            	 if (this.tapCheck > 0 && currentTouchTime - this.tapCheck <= 300000000) {
+            	 if (this.tapCheck > 0 && currentTouchTime - this.tapCheck <= SINGLE_TAP_DURATION_IN_NANOSECONDS) { 
             	 // && (currentTouchTime - this.dblTapCheck >= 800000000 || this.dblTapCheck == 0)) {
             	//	 if (this.isMoving){
             	//		 //if we are coming out of a drag, up event just means drag is finished, nothing to do here, just move along
@@ -388,16 +407,50 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
              	
             	//	 }
             		// else {// if (this.currentTouchMotion == MotionEvent.ACTION_DOWN){ //action up should immediately follow and action down to be a tap
-	            	if (!this.isMoving) {
-            		 this.isZoomed = !this.isZoomed;
-	            		 this.readyToDraw = true;
-	            		 this.dblTapCheck = 0;
+	            	
+            		 //first make sure action up event is not associated with move event
+            		 if (!this.isMoving) {  
+            			  
+            			 //then make sure to ignore double tap events
+            			 if((this.tapCheck - this.dblTapCheck) >= (DOUBLE_TAP_DURATION_IN_NANOSECONDS - SINGLE_TAP_DURATION_IN_NANOSECONDS) || this.dblTapCheck == 0){
+            				 this.isZoomed = !this.isZoomed;
+            				 this.readyToDraw = true;
+            				 this.dblTapCheck = currentTouchTime;
+            			 }
+            			 else {
+            				 //restart double click check
+            				 this.dblTapCheck = 0;
+            			 }
+            			 
             		 }
+            	
             		// else {
             		//	 //if previous action was not a down, don't draw
             		//	 this.readyToDraw = false;
             		// }
             	 }
+            	 else {
+        			 Log.w(TAG,"onTouchEvent: ACTION_UP number of coordinates" + this.coordinates.size());
+    				 //if we are coming out of a move and we have at least 30 coordinates captured by move, let's trigger momentum scrolling
+    				 if (this.coordinates.size() == NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING){
+    					 this.isMomentum = true;
+					 
+					    int xDisplacement = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() - this.coordinates.get(0).getxLocation();
+				        long speed = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getTimestamp() - this.coordinates.get(0).getTimestamp();
+				        int yDisplacement = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation() - this.coordinates.get(0).getyLocation();
+				        
+				        Log.w(TAG, "onTouchEvent: ACTION_UP speed " + speed);
+				        Log.w(TAG, "onTouchEvent: ACTION_UP xDisplacement " + xDisplacement + " yDisplacement " + yDisplacement);
+				        
+				        this.xVelocity = xDisplacement / speed;
+				        this.yVelocity = yDisplacement / speed;
+				        this.xPosition = tiles.get(0).getxPositionZoomed();
+				        this.yPosition = tiles.get(0).getyPositionZoomed();            					
+					 
+    					 this.readyToDraw = true;
+    				 }
+        		 
+        		 }
             	 // this.currentTouchMotion = MotionEvent.ACTION_UP;
             	 this.previousX = 0;
             	 this.previousY = 0;
@@ -407,6 +460,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
              case MotionEvent.ACTION_MOVE:
             	 
             	// this.currentTouchMotion = MotionEvent.ACTION_MOVE;
+            	 //Log.w(TAG, "ACTION_MOVE: x " + )
             	 
             	 this.tapCheck = 0;
             	 this.dblTapCheck = 0;
@@ -415,11 +469,25 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             		 this.readyToDraw = false;
             	 }
             	 //else if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.previousX == this.currentX && this.previousY == this.currentY){
-            	else if (this.previousX == this.currentX && this.previousY == this.currentY){
+            	 else if (this.currentX <= Math.round(this.previousX * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
+            			  this.currentX >= Math.round(this.previousX * (1 - MOVEMENT_TRIGGER_THRESHOLD)) && 
+            			  this.currentY <= Math.round(this.previousY * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
+            			  this.currentY >= Math.round(this.previousY * (1 - MOVEMENT_TRIGGER_THRESHOLD))){
+            		 Log.w(TAG,"onTouchEvent minimum threshold not met");
+            	 //else if (this.previousX == this.currentX && this.previousY == this.currentY){
             		 this.readyToDraw = false;
             	}
             	else {
             		 this.readyToDraw = true;
+            		 
+            		 //keep latest 30 coordinates in context, last 10 will be used to calculate momentum and direction for scrolling
+            		 //hainvg 30 determines if action_up triggers momentum scrolling logic
+            		 this.coordinates.add(new Coordinate(this.currentX, this.currentY, currentTouchTime));
+            		 //quick loop to remove first in coordinates over 30, normally should only ever remove one, but just in case, we'll loop it
+            		 while (this.coordinates.size() > NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING){
+            			 this.coordinates.remove(0);
+            		 }
+            		 Log.w(TAG,"onTouchEvent: coodinates size" + this.coordinates.size());
             	}
             	// this.readyToDraw = false;
             	 if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
@@ -456,8 +524,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { this.readyToDraw = false; }
 		 
 		 //if we are in middle of action move but we are not moving (the finger is pressed but not moving, don't redraw
- 		 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.previousTouchMotion == MotionEvent.ACTION_MOVE
- 				 && this.previousX == this.currentX && this.previousY == this.currentY){ this.readyToDraw = false; }
+ 		 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && 
+ 			this.previousTouchMotion == MotionEvent.ACTION_MOVE &&
+ 			this.currentX <= Math.round(this.previousX * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
+ 			this.currentX >= Math.round(this.previousX * (1 - MOVEMENT_TRIGGER_THRESHOLD)) && 
+ 			this.currentY <= Math.round(this.previousY * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
+ 			this.currentY >= Math.round(this.previousY * (1 - MOVEMENT_TRIGGER_THRESHOLD))){
+ 			 Log.w(TAG,"onDraw minimum threshold not met");
+ 			 	this.readyToDraw = false; 
+ 			 }
 	
 		 
 		 if (this.readyToDraw == true){ 
@@ -483,12 +558,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				// if (this.touchMotion == MotionEvent.ACTION_UP) {
 				//	 this.isZoomed = false; ///turn off zoom since we are handling now
 				// }
-				 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE) {
-					 this.drawBoardOnMove(canvas);
+				 if (this.isMomentum){
+					 Log.w(TAG,"onDraw drawMomentumScroll about to be called");
+					 this.drawMomentumScroll(canvas);
+				 }
+				 else if (this.currentTouchMotion == MotionEvent.ACTION_MOVE) {
+					 Log.w(TAG,"onDraw drawBoardOnMove about to be called");
+					 this.drawBoardOnMove(canvas, this.previousX - this.currentX, this.previousY - this.currentY);
 				
 				 }
-				 
-				if (this.currentTouchMotion == MotionEvent.ACTION_UP){ 	
+				 else if (this.currentTouchMotion == MotionEvent.ACTION_UP){ 	
 					
 				// 	this.parent.updateHandler.sendMessage(this.parent.updateHandler.obtainMessage(GameSurface.MSG_SCOREBOARD_VISIBILITY, GONE, 0));
 					 
@@ -508,12 +587,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 } 
 	 }
 	 
-	private void drawBoardOnMove(Canvas canvas){
+	private void drawBoardOnMove(Canvas canvas, int leftDiff, int topDiff){
+		
+		//for smooth scrolling you'd need to make some sort of method that takes a few points after scrolling
+		//(i.e the first scroll point and the 10th) , subtract those and scroll by that number in a for each loop that makes it gradually slower
+		//( ScrollAmount - turns - Friction ).
+		//You could simulate this with a "recent axis changes" queue.
+
+		//If you store say the last half a second of changes with the corresponding timestamps, you can then test if the queue is longer than a value N (ie if the user dragged it quicker than usual towards the end). You know the total distance traveled in the last half a second, the time, from those you can get a speed.
+
+		//Scale the speed to something reasonable (say.. for 15px/.5sec, map to ~25px/sec) and apply a negative acceleration (also appropiately scaled, for the example above, say -20px/sec) every couple of milliseconds (or as fast as your system can easily handle it, don't overstress it with this).
+
+		//Then run a timer, updating the speed at each tick (speed+=accel*time_scale), then the position (position+=speed*time_scale). When the speed reaches 0 (or goes below it) kill the timer.
+		
 		 this.readyToDraw = false;
 		   
 		 boolean setReadyToDraw = false;
-		 int leftDiff = this.previousX - this.currentX ;
-		 int topDiff =  this.previousY - this.currentY;
+	//	 int leftDiff = this.previousX - this.currentX ;
+	//	 int topDiff =  this.previousY - this.currentY;
 		 
 		 //handle tile drag later, first drag the whole board around
 		// if (this.currentX < this.outerZoomLeft || this.currentY < this.outerZoomTop) {
@@ -521,19 +612,19 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		//	 newLeft = 
 		// }
 		 
-		 Log.w(TAG,"drawBoardOnMove: " + leftDiff + " " + topDiff + " " +  this.previousX  + " " + this.previousY + " "
-				 +  this.currentX  + " " + this.currentY + " " 
-				 + this.outerZoomLeft + " " + this.outerZoomTop);
+		 Log.w(TAG,"drawBoardOnMove: leftDiff=" + leftDiff + " topDiff=" + topDiff + " prevX=" +  this.previousX  + " prevY=" + this.previousY + 
+				 " currX="  +  this.currentX  + " currY=" + this.currentY + " outerZoomLeft=" 
+				 + this.outerZoomLeft + " outerZoomTop=" + this.outerZoomTop);
 		 
 		  this.previousX = this.currentX;
 		  this.previousY = this.currentY;
 	 
 		 
 						
-		 if (this.currentTile.getPlacedText().length() > 0 ){
-			 //drag this letter, not the board
-		 }
-		 else {
+//		 if (this.currentTile.getPlacedText().length() > 0 ){
+//			 //drag this letter, not the board
+//		 }
+//		 else {
 			//drag/scroll entire board 
 		 
 		 
@@ -551,8 +642,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 if (topLeftTile.getxPositionZoomed() - leftDiff < this.outerZoomLeft){
 				 //only scroll to the edge of the left outer boundary
 				 //leftDiff = leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed() - leftDiff);
-				 leftDiff = this.outerZoomLeft - topLeftTile.getxPositionZoomed(); //topLeftTile.getxPositionZoomed() + this.outerZoomLeft; //leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
-			 
+				 //leftDiff = this.outerZoomLeft - topLeftTile.getxPositionZoomed(); //topLeftTile.getxPositionZoomed() + this.outerZoomLeft; //leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
+				 leftDiff = topLeftTile.getxPositionZoomed() - this.outerZoomLeft; //topLeftTile.getxPositionZoomed() + this.outerZoomLeft; //leftDiff - (this.outerZoomLeft - topLeftTile.getxPositionZoomed());  
+					
+				 
 				 Log.w(TAG, "drawBoardOnMove: leftdiff(1)=" + leftDiff);
 			 } 
 			 else {
@@ -570,9 +663,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			//grab top left tile and make sure it will be within outer top bounds
 			 if (topLeftTile.getyPositionZoomed() - topDiff < this.outerZoomTop){ 
 				 //only scroll to the edge of the top outer boundary
-				 topDiff = this.outerZoomTop - topLeftTile.getyPositionZoomed();//topLeftTile.getyPositionZoomed() + this.outerZoomTop; //topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - topDiff);
+				 topDiff = this.outerZoomTop;// - topLeftTile.getyPositionZoomed();//topLeftTile.getyPositionZoomed() + this.outerZoomTop; //topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed() - topDiff);
 				 //topDiff = topDiff - (this.outerZoomTop - topLeftTile.getyPositionZoomed());
-				 
+				 topDiff = topLeftTile.getyPositionZoomed() - this.outerZoomTop;
 				 Log.w(TAG, "drawBoardOnMove: topdiff(1)=" + topDiff);
 			 }
 			 else { 
@@ -595,8 +688,73 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 if (setReadyToDraw){ this.readyToDraw = true; }
 		  //   this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);	
 		   //  if (setReadyToDraw){this.readyToDraw = true;}
-		}
+//		}
 		
+	} 
+	
+	
+	private void drawMomentumScroll(Canvas canvas){
+	            // Free scrolling. Decelerate gradually.
+		//grab velocity from speed of movement before action_up
+
+		
+    	int prevXPosition = this.xPosition;
+    	int prevYPosition = this.yPosition;
+    	int leftDiff = 0;
+    	int topDiff = 0;
+    	
+		float changeVelocity = ANIMATION_TIMESTEP; //DECELERATION * ANIMATION_TIMESTEP;
+        
+		Log.w(TAG,"drawMomentumScroll: xPosition=" + this.xPosition + " xVelocity=" + this.xVelocity);
+		Log.w(TAG,"drawMomentumScroll: yPosition=" + this.yPosition + " yVelocity=" + this.yVelocity);
+		
+		if (this.xVelocity != 0){
+	        if ( changeVelocity > Math.abs(this.xVelocity) ) {
+	                this.xVelocity = 0;
+	            }
+	            else {
+	                this.xVelocity -= (this.xVelocity > 0 ? +1 : -1) * changeVelocity;
+	           }
+	        this.xPosition += this.xVelocity * ANIMATION_TIMESTEP;
+		}
+        
+		if (this.yVelocity != 0){
+	        if ( changeVelocity > Math.abs(this.yVelocity) ) {
+	            this.yVelocity = 0;
+	        }
+	        else {
+	            this.yVelocity -= (this.yVelocity > 0 ? +1 : -1) * changeVelocity;
+	       }
+          this.yPosition += this.yVelocity * ANIMATION_TIMESTEP;
+		}
+        
+        
+        
+        //we have slowed to a stop. stop drawing after this final draw
+        if (this.xVelocity == 0 && this.yVelocity == 0){
+        	this.readyToDraw = false;
+        }
+        
+        leftDiff = prevXPosition - this.xPosition;
+        topDiff = prevYPosition - this.yPosition;
+        
+       
+        ///determine if left or top is past boundaries
+ 
+        
+        this.drawBoardOnMove(canvas, leftDiff, topDiff);
+        
+        if (leftDiff == 0 && topDiff == 0){
+        	this.readyToDraw = false;
+        }
+        
+        if (!this.readyToDraw){this.isMomentum = false;}
+        
+        Log.w(TAG, "drawMomentumScroll readyToDraw=" + this.readyToDraw);
+        
+        //check for boundaries like normal scroll logic
+        
+
 	}
 	 
    private void drawBoardZoomOnUp(Canvas canvas){
@@ -634,7 +792,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
    }
 	
 	private void loadZoomedBoardByDiff(Canvas canvas, int leftDiff, int topDiff) {
-	     for (GameTile tile : this.tiles) {
+	    int x = 0; 
+		for (GameTile tile : this.tiles) {
+	    	if (x == 0){ 
+	    	Log.w(TAG,"loadZoomedBoardByDiff before x=" + tile.getxPositionZoomed() + " after=" + (tile.getxPositionZoomed() - leftDiff));
+	    	Log.w(TAG,"loadZoomedBoardByDiff before y=" + tile.getyPositionZoomed() + " after=" + (tile.getyPositionZoomed() - topDiff));
+	    	}
+			x += 1;
 	     	 tile.setxPositionZoomed(tile.getxPositionZoomed() - leftDiff);
 	     	 tile.setyPositionZoomed(tile.getyPositionZoomed() - topDiff);
 	 		 
@@ -926,5 +1090,6 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    }
         this.readyToDraw = false; 
 	 }
+	 
 	 
 }

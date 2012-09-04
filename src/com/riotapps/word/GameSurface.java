@@ -90,6 +90,11 @@ public class GameSurface extends Activity {
 	     this.windowHeight = display.getHeight();  // deprecated
 	     
 	     
+	     Log.w(TAG, "long press " + android.view.ViewConfiguration.getLongPressTimeout() + 
+	    		 " dbltap " + android.view.ViewConfiguration.getDoubleTapTimeout() + 
+	    		  " tap  " + android.view.ViewConfiguration.getTapTimeout());
+	     
+	     
 	  	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);
 	  	this.scoreboardHeight = this.scoreboard.getHeight();
 	 //	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
@@ -139,6 +144,8 @@ public class GameSurface extends Activity {
 	 	List<PlayerGame>players = new ArrayList<PlayerGame>();
 	 	
 	 	this.game.setLastActionText("Junior18 played HAMMER for 21" );
+	 	
+	 //	this.game.
 	 	
 	 	
 	 	this.game.setPlayerGames(players);
