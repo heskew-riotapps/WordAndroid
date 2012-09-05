@@ -87,7 +87,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private static final float ANIMATION_TIMESTEP = .05f;
     private static final int NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING = 3;
     private static final int NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED = 3;
-    private long momentumScrollInterval = 20;
+    private long momentumScrollInterval = 10;
     
     private int bottomOfFullView;
     private int topGapHeight;
@@ -437,25 +437,53 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         			 Log.w(TAG,"onTouchEvent: ACTION_UP number of coordinates" + this.coordinates.size());
     				 //if we are coming out of a move and we have at least 30 coordinates captured by move, let's trigger momentum scrolling
     				 if (this.coordinates.size() == NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING){
-    					 this.isMomentum = true;
-					 
-					    int xDisplacement = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() - this.coordinates.get(0).getxLocation();
-				        float speed = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getTimestamp() - this.coordinates.get(0).getTimestamp();
-				        speed = speed / 1000000; //convert to milliseconds
-				        int yDisplacement = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation() - this.coordinates.get(0).getyLocation();
-				        
-				        Log.w(TAG, "onTouchEvent: ACTION_UP speed " + speed);
-				        Log.w(TAG, "onTouchEvent: ACTION_UP xDisplacement " + xDisplacement + " yDisplacement " + yDisplacement);
-				        
-				        this.xVelocity = (xDisplacement / ANIMATION_TIMESTEP) * speed;
-				        this.yVelocity = (yDisplacement / ANIMATION_TIMESTEP) * speed;
-				        this.xPosition = tiles.get(0).getxPositionZoomed();
-				        this.yPosition = tiles.get(0).getyPositionZoomed();    
-				        
-				        this.xDistance = xDisplacement; ///multiply by speed to adjust
-				        this.yDistance = yDisplacement;
-					 
-    					 this.readyToDraw = true;
+    					 //if distance is too short that means the finger was in place and not moving and in this case
+    					 //do not trigger momentum scroll
+    					 
+    					 int previousX = Math.round(this.coordinates.get(0).getxLocation());
+    					 int currentX = Math.round(this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation());
+    					 int previousY = Math.round(this.coordinates.get(0).getyLocation());
+    					 int currentY = Math.round(this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation());
+    					 
+    					 Log.w(TAG, "onTouchEvent: ACTION_UP previousX=" + previousX + " currentX=" + currentX + " diff=" + (currentX - previousX)); 
+    					 Log.w(TAG, "onTouchEvent: ACTION_UP previousY=" + previousX + " currentY=" + currentY + " diff=" + (currentY - previousY)); 
+    					 
+    					if (Math.abs(currentX - previousX) >= (currentX * (1 + MOVEMENT_TRIGGER_THRESHOLD)) &&
+    					    Math.abs(currentY - previousY) >= (currentY * (1 + MOVEMENT_TRIGGER_THRESHOLD))) {	
+ //   					if (this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() <= Math.round(this.coordinates.get(0).getxLocation() * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
+  //  						this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() >= Math.round(this.coordinates.get(0).getxLocation() * (1 - MOVEMENT_TRIGGER_THRESHOLD)) && 
+   // 						this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation() <= Math.round(this.coordinates.get(0).getyLocation() * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
+   // 						this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation() >= Math.round(this.coordinates.get(0).getyLocation() * (1 - MOVEMENT_TRIGGER_THRESHOLD))){ 
+    				   // if (Math.abs(this.coordinates.get(0).getxLocation()) >= Math.abs(this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() * (1 + MOVEMENT_TRIGGER_THRESHOLD)) &&
+    				   // 		Math.abs(this.coordinates.get(0).getyLocation()) >= Math.abs(this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation() * (1 + MOVEMENT_TRIGGER_THRESHOLD))){
+
+	    					float speed = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getTimestamp() - this.coordinates.get(0).getTimestamp();
+	    					speed = speed / 1000000; //convert to milliseconds	  
+
+						 
+						    int xDisplacement = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() - this.coordinates.get(0).getxLocation();
+					          
+					        int yDisplacement = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation() - this.coordinates.get(0).getyLocation();
+					        
+					        Log.w(TAG, "onTouchEvent: ACTION_UP speed " + speed);
+					        Log.w(TAG, "onTouchEvent: ACTION_UP xDisplacement " + xDisplacement + " yDisplacement " + yDisplacement);
+					        
+					        this.xVelocity = (xDisplacement / ANIMATION_TIMESTEP) * speed;
+					        this.yVelocity = (yDisplacement / ANIMATION_TIMESTEP) * speed;
+					        this.xPosition = tiles.get(0).getxPositionZoomed();
+					        this.yPosition = tiles.get(0).getyPositionZoomed();    
+					        
+					        this.xDistance =  this.coordinates.get(0).getxLocation() - this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation(); ///multiply by speed to adjust
+					        this.yDistance =  this.coordinates.get(0).getyLocation() - this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation(); ///multiply by speed to adjust;
+						 
+					        Log.w(TAG, "onTouchEvent: ACTION_UP xDistance=" + this.xDistance + "  yDistance=" + this.yDistance + " speed=" + speed); 
+					        
+					        this.isMomentum = true;
+	    					this.readyToDraw = true;
+    				    }
+    					else {
+    						 Log.w(TAG, "onTouchEvent: ACTION_UP threshold of movement not met to trigger momentum scrolling"); 
+    					}
     				 }
         		 
         		 }
@@ -476,6 +504,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 if (!this.isZoomed){
             		 this.readyToDraw = false;
             	 }
+            	 //use absolute values here????
             	 //else if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.previousX == this.currentX && this.previousY == this.currentY){
             	 else if (this.currentX <= Math.round(this.previousX * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
             			  this.currentX >= Math.round(this.previousX * (1 - MOVEMENT_TRIGGER_THRESHOLD)) && 
@@ -718,7 +747,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			e.printStackTrace();
 		}
 		
-		//this.momentumScrollInterval = Math.round(this.momentumScrollInterval * 1.25f);
+		 //this.momentumScrollInterval = Math.round(this.momentumScrollInterval * 1.25f);
 		
 		this.xDistance -= (this.xDistance > 0 ? +1 : -1) * .02;
 		this.yDistance -= (this.yDistance > 0 ? +1 : -1) * .02;
@@ -729,6 +758,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	        if (this.xDistance == 0 && this.yDistance == 0){
 	        	this.readyToDraw = false;
 	        }
+	        
+	        Log.w(TAG, "drawMomentumScroll xDistance=" + this.xDistance + " yDistance=" + this.yDistance );
 	        
 	        if (!this.readyToDraw){this.isMomentum = false;}
 		
