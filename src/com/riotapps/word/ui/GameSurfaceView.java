@@ -81,10 +81,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private float yVelocity = 0;
     private int xPosition = 0;
     private int yPosition = 0;
+    private int xDistance = 0;
+    private int yDistance = 0;
 
     private static final float ANIMATION_TIMESTEP = .05f;
     private static final int NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING = 3;
     private static final int NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED = 3;
+    private long momentumScrollInterval = 20;
     
     private int bottomOfFullView;
     private int topGapHeight;
@@ -430,22 +433,27 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             		// }
             	 }
             	 else {
+            		 //we are coming out of a move action here...let's determine if the momentum scroll should be triggered
         			 Log.w(TAG,"onTouchEvent: ACTION_UP number of coordinates" + this.coordinates.size());
     				 //if we are coming out of a move and we have at least 30 coordinates captured by move, let's trigger momentum scrolling
     				 if (this.coordinates.size() == NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING){
     					 this.isMomentum = true;
 					 
 					    int xDisplacement = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() - this.coordinates.get(0).getxLocation();
-				        long speed = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getTimestamp() - this.coordinates.get(0).getTimestamp();
+				        float speed = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getTimestamp() - this.coordinates.get(0).getTimestamp();
+				        speed = speed / 1000000; //convert to milliseconds
 				        int yDisplacement = this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation() - this.coordinates.get(0).getyLocation();
 				        
 				        Log.w(TAG, "onTouchEvent: ACTION_UP speed " + speed);
 				        Log.w(TAG, "onTouchEvent: ACTION_UP xDisplacement " + xDisplacement + " yDisplacement " + yDisplacement);
 				        
-				        this.xVelocity = xDisplacement / speed;
-				        this.yVelocity = yDisplacement / speed;
+				        this.xVelocity = (xDisplacement / ANIMATION_TIMESTEP) * speed;
+				        this.yVelocity = (yDisplacement / ANIMATION_TIMESTEP) * speed;
 				        this.xPosition = tiles.get(0).getxPositionZoomed();
-				        this.yPosition = tiles.get(0).getyPositionZoomed();            					
+				        this.yPosition = tiles.get(0).getyPositionZoomed();    
+				        
+				        this.xDistance = xDisplacement; ///multiply by speed to adjust
+				        this.yDistance = yDisplacement;
 					 
     					 this.readyToDraw = true;
     				 }
@@ -588,18 +596,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 }
 	 
 	private void drawBoardOnMove(Canvas canvas, int leftDiff, int topDiff){
-		
-		//for smooth scrolling you'd need to make some sort of method that takes a few points after scrolling
-		//(i.e the first scroll point and the 10th) , subtract those and scroll by that number in a for each loop that makes it gradually slower
-		//( ScrollAmount - turns - Friction ).
-		//You could simulate this with a "recent axis changes" queue.
-
-		//If you store say the last half a second of changes with the corresponding timestamps, you can then test if the queue is longer than a value N (ie if the user dragged it quicker than usual towards the end). You know the total distance traveled in the last half a second, the time, from those you can get a speed.
-
-		//Scale the speed to something reasonable (say.. for 15px/.5sec, map to ~25px/sec) and apply a negative acceleration (also appropiately scaled, for the example above, say -20px/sec) every couple of milliseconds (or as fast as your system can easily handle it, don't overstress it with this).
-
-		//Then run a timer, updating the speed at each tick (speed+=accel*time_scale), then the position (position+=speed*time_scale). When the speed reaches 0 (or goes below it) kill the timer.
-		
+			
 		 this.readyToDraw = false;
 		   
 		 boolean setReadyToDraw = false;
@@ -697,6 +694,47 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	            // Free scrolling. Decelerate gradually.
 		//grab velocity from speed of movement before action_up
 
+		
+		
+		//for smooth scrolling you'd need to make some sort of method that takes a few points after scrolling
+		//(i.e the first scroll point and the 10th) , subtract those and scroll by that number in a for each loop that makes it gradually slower
+		//( ScrollAmount - turns - Friction ).
+		//You could simulate this with a "recent axis changes" queue.
+
+		//If you store say the last half a second of changes with the corresponding timestamps, you can then 
+		//test if the queue is longer than a value N (ie if the user dragged it quicker than usual towards the end). 
+		//You know the total distance traveled in the last half a second, the time, from those you can get a speed.
+
+		//Scale the speed to something reasonable (say.. for 15px/.5sec, map to ~25px/sec) and apply a negative acceleration
+		//(also appropiately scaled, for the example above, say -20px/sec) every couple of milliseconds 
+		//(or as fast as your system can easily handle it, don't overstress it with this).
+
+		//Then run a timer, updating the speed at each tick (speed+=accel*time_scale), then the position (position+=speed*time_scale). When the speed reaches 0 (or goes below it) kill the timer.
+
+		try {
+			Thread.sleep(this.momentumScrollInterval);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//this.momentumScrollInterval = Math.round(this.momentumScrollInterval * 1.25f);
+		
+		this.xDistance -= (this.xDistance > 0 ? +1 : -1) * .02;
+		this.yDistance -= (this.yDistance > 0 ? +1 : -1) * .02;
+		
+		
+		 this.drawBoardOnMove(canvas, this.xDistance, this.yDistance);
+	        
+	        if (this.xDistance == 0 && this.yDistance == 0){
+	        	this.readyToDraw = false;
+	        }
+	        
+	        if (!this.readyToDraw){this.isMomentum = false;}
+		
+	}
+	
+	private void x(Canvas canvas){
 		
     	int prevXPosition = this.xPosition;
     	int prevYPosition = this.yPosition;
