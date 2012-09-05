@@ -75,6 +75,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private static final int LOWER_GAP_TOP_BORDER_HEIGHT = 4;
     private static final long SINGLE_TAP_DURATION_IN_NANOSECONDS = 300000000;
     private static final long DOUBLE_TAP_DURATION_IN_NANOSECONDS = 500000000;
+    private static final long MOVE_STOPPED_DURATION_IN_MILLISECONDS = 200;
     private static final float MOVEMENT_TRIGGER_THRESHOLD = .05f;
     private static final int DECELERATION = 100;
     private float xVelocity = 0;
@@ -447,9 +448,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     					 
     					 Log.w(TAG, "onTouchEvent: ACTION_UP previousX=" + previousX + " currentX=" + currentX + " diff=" + (currentX - previousX)); 
     					 Log.w(TAG, "onTouchEvent: ACTION_UP previousY=" + previousX + " currentY=" + currentY + " diff=" + (currentY - previousY)); 
+    					
+    					 //time since last move action
+    					 long timeSinceLastMoveInMilliseconds = (System.nanoTime() - this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getTimestamp()) / 1000000;
     					 
-    					if (Math.abs(currentX - previousX) >= (currentX * (1 + MOVEMENT_TRIGGER_THRESHOLD)) &&
-    					    Math.abs(currentY - previousY) >= (currentY * (1 + MOVEMENT_TRIGGER_THRESHOLD))) {	
+    					if (timeSinceLastMoveInMilliseconds < MOVE_STOPPED_DURATION_IN_MILLISECONDS) {
+    				//	if (currentX + Math.abs(currentX - previousX) >= currentX * (1 + MOVEMENT_TRIGGER_THRESHOLD) &&
+    				//		currentY + Math.abs(currentY - previousY) >= currentY * (1 + MOVEMENT_TRIGGER_THRESHOLD)) {	
  //   					if (this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() <= Math.round(this.coordinates.get(0).getxLocation() * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
   //  						this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getxLocation() >= Math.round(this.coordinates.get(0).getxLocation() * (1 - MOVEMENT_TRIGGER_THRESHOLD)) && 
    // 						this.coordinates.get(NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED - 1).getyLocation() <= Math.round(this.coordinates.get(0).getyLocation() * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 

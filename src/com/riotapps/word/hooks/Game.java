@@ -22,6 +22,9 @@ public class Game implements Parcelable {
 	@SerializedName("last_action_alert_text")
 	private String lastActionText;
 	
+	@SerializedName("num_letters_left")
+	private int numLetterLeft;
+	
 
 	public String getId() {
 		return id;

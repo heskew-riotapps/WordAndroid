@@ -7,10 +7,12 @@ import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.ui.GameSurfaceView;
+import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.ImageFetcher;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +21,7 @@ import android.view.Display;
 import android.view.SurfaceView;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -39,6 +42,7 @@ public class GameSurface extends Activity {
 	private int windowHeight;
 	private int scoreboardHeight;
 	private Game game;
+	private String contextUserId;
  
 
 	public Game getGame() {
@@ -86,6 +90,12 @@ public class GameSurface extends Activity {
 	 //	this.scoreboard.setVisibility(android.view.View.GONE);
 	 	//this.bottom = (View)findViewById(R.id.bottomControlsPlaceholder);
 	 	//this.bottom.//se
+		
+		 SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
+	     this.contextUserId = settings.getString(Constants.USER_PREFS_USER_ID, "");  
+	     
+	     Log.w(TAG, "contextUserID=" + this.contextUserId);
+		
 		 Display display = getWindowManager().getDefaultDisplay(); 
 	     this.windowHeight = display.getHeight();  // deprecated
 	     
@@ -110,47 +120,9 @@ public class GameSurface extends Activity {
 	 	//Game game = (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
 	 	
 	 	//temp
-	 	this.game = new Game();
-	 	PlayerGame pg1 = new PlayerGame();
-	 	Player p1 = new Player();
-	 	p1.setFirstName("Burgermeister");
-	 	p1.setLastname("Meisterburger");
-	 	pg1.setPlayer(p1);
-	 	pg1.setScore(101);
-	 	pg1.setPlayerOrder(2);
+	 	this.game = getTempGame();
 	 	
-	 	PlayerGame pg2 = new PlayerGame();
-	 	Player p2 = new Player();
-	 	p2.setFirstName("Jimmy");
-	 	p2.setLastname("Dean");
-	 	pg2.setPlayer(p2);
-	 	pg2.setScore(4);
-	 	pg2.setPlayerOrder(3);
-	 	
-	 	PlayerGame pg3 = new PlayerGame();
-	 	Player p3 = new Player();
-	 	p3.setFirstName("Junior18");
-	 	p3.setLastname("");
-	 	pg3.setPlayer(p3);
-	 	pg3.setPlayerOrder(1);
-	 	
-	 	PlayerGame pg4 = new PlayerGame();
-	 	Player p4 = new Player();
-	 	p4.setFirstName("Star");
-	 	p4.setLastname("Lizardface");
-	 	pg4.setPlayer(p4);
-	 	pg4.setPlayerOrder(4);
-	 	
-	 	List<PlayerGame>players = new ArrayList<PlayerGame>();
-	 	
-	 	this.game.setLastActionText("Junior18 played HAMMER for 21" );
-	 	
-	 //	this.game.
-	 	
-	 	
-	 	this.game.setPlayerGames(players);
-	 	
-	 	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
+		this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
 	 	this.gameSurfaceView.setParent(this);
 	 //	this.gameSurfaceView.setGame(game);
 	 	//retrieve game from server
@@ -174,9 +146,6 @@ public class GameSurface extends Activity {
 	        // @Override
 	        public void handleMessage(Message msg) {
 	            switch (msg.what){
-	            case GameSurface.MSG_SCOREBOARD_VISIBILITY:
-	            	context.setScoreboardVisibility(msg.arg1);
-	            	break;
 	            case GameSurface.MSG_POINTS_SCORED:
 	            
 	            	break;
@@ -185,9 +154,81 @@ public class GameSurface extends Activity {
 	        }
 	    };
 
-	 public void setScoreboardVisibility(int visibility) {
-		 this.scoreboard.setVisibility(visibility);
+	 private void loadScoreboard(){
+		 //determine length of name and font size if too long (maybe)
+		 //always use abbreviated name when 3 or more players
 		 
+		 //find context user in list.  context user will alwaus be display in top left of scoreboard with
+		 //other players in the assigned game order following
+		 //for instance if contextUser is #3 in order, he will still be in top left corner and
+		 // #4 will be under him (or #1 if there are only 3 players in the game) and
+		 //#1 will be in top right and #2 will be in bottom right
+		 //if there are only 3 players, the bottom right will always be empty
+		 //if there are only 2 players the right column will be hidden 
+
+		 int contextPlayerIndex;
+		 for(int y = 0; y < 7; y++){
+		 for (PlayerGame pg : this.game.getPlayerGames()) {
+		    	if (pg.getPlayer().getId() == this.contextUserId) {
+		    		con
+		    	}
+		     }
+		 
+		 
+		 TextView contextPlayerName = (TextView)findViewById(R.id.contextPlayer);
+		 
+		 //if this c
+	 }
+	    
+	 private Game getTempGame(){
+		 Game game = new Game();
+		 
+		 PlayerGame pg1 = new PlayerGame();
+		 	Player p1 = new Player();
+		 	p1.setFirstName("Burgermeister");
+		 	p1.setLastname("Meisterburger");
+		 	pg1.setPlayer(p1);
+		 	pg1.setScore(101);
+		 	pg1.setPlayerOrder(2);
+		 	pg1.setTurn(true);
+		 	
+		 	PlayerGame pg2 = new PlayerGame();
+		 	Player p2 = new Player();
+		 	p2.setFirstName("Jimmy");
+		 	p2.setLastname("Dean");
+		 	pg2.setPlayer(p2);
+		 	pg2.setScore(4);
+		 	pg2.setPlayerOrder(3);
+		 	pg2.setTurn(false);
+		 	
+		 	PlayerGame pg3 = new PlayerGame();
+		 	Player p3 = new Player();
+		 	p3.setFirstName("Junior18");
+		 	p3.setLastname("");
+		 	pg3.setPlayer(p3);
+		 	pg3.setPlayerOrder(1);
+		 	pg3.setTurn(false);
+		 	pg3.getPlayer().setId("503042740f3c4606b8000001")
+		 	
+		 	PlayerGame pg4 = new PlayerGame();
+		 	Player p4 = new Player();
+		 	p4.setFirstName("Star");
+		 	p4.setLastname("Lizardface");
+		 	pg4.setPlayer(p4);
+		 	pg4.setPlayerOrder(4);
+		 	pg4.setTurn(false);
+		 	
+		 	List<PlayerGame>players = new ArrayList<PlayerGame>();
+		 	
+		 	game.setLastActionText("Junior18 played HAMMER for 21" );
+		 	
+		 //	this.game.
+		 
+		 	
+		 	
+		 	game.setPlayerGames(players);
+		 	
+		 return game;
 	 }
 	    
 	 public class UpdateThread implements Runnable {
@@ -202,13 +243,13 @@ public class GameSurface extends Activity {
 	    }
 
 	    
-	public RelativeLayout getScoreboard() {
-		return scoreboard;
-	}
+//	public RelativeLayout getScoreboard() {
+//		return scoreboard;
+//	}
 
-	public void setScoreboard(RelativeLayout scoreboard) {
-		this.scoreboard = scoreboard;
-	}
+//	public void setScoreboard(RelativeLayout scoreboard) {
+//		this.scoreboard = scoreboard;
+//	}
 
 	@Override
 	protected void onDestroy() {
