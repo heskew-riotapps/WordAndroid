@@ -160,7 +160,7 @@ public class GameTile {
 	public String getPlacedText() {
 		return placedText;
 	}
-	public void setPlacdeText(String placeText) {
+	public void setPlacedText(String placeText) {
 		this.placedText = placedText;
 	}
 	public void setPlacedLetter(int placedLetter) {

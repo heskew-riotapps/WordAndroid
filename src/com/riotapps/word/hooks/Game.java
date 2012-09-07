@@ -49,8 +49,6 @@ public class Game implements Parcelable {
 	public void setPlayerGames(List<PlayerGame> playerGames) {
 		this.playerGames = playerGames;
 	}
-
-	
 	
 	public String getLastActionText() {
 		return lastActionText;
@@ -58,6 +56,14 @@ public class Game implements Parcelable {
 
 	public void setLastActionText(String lastActionText) {
 		this.lastActionText = lastActionText;
+	}
+
+	public int getNumLetterLeft() {
+		return numLetterLeft;
+	}
+
+	public void setNumLetterLeft(int numLetterLeft) {
+		this.numLetterLeft = numLetterLeft;
 	}
 
 	@Override

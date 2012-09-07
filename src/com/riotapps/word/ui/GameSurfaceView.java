@@ -1,10 +1,12 @@
 package com.riotapps.word.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.riotapps.word.GameSurface;
 import com.riotapps.word.R;
+import com.riotapps.word.hooks.AlphabetService;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.TileLayout;
 import com.riotapps.word.hooks.TileLayoutService;
@@ -49,7 +51,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	GameThread gameThread = null;
 	boolean isThreadRunning = false;
 	SurfaceHolder surfaceHolder;
+	Typeface bonusTypeface;
 	Typeface letterTypeface;
+	Typeface letterValueTypeface;
 	private int currentX = 0;
     private int currentY = 20;
     private int fullWidth;
@@ -88,7 +92,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private static final float ANIMATION_TIMESTEP = .05f;
     private static final int NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING = 3;
     private static final int NUMBER_OF_COORDINATES_TO_DETERMINE_DIRECTION_AND_SPEED = 3;
-    private long momentumScrollInterval = 10;
+    private long momentumScrollInterval = 20;
     
     private int bottomOfFullView;
     private int topGapHeight;
@@ -103,6 +107,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int outerZoomTop; 
     private int fullViewTileMidpoint;
     private int zoomedTileMidpoint;
+    private int trayTileMidpoint;
  //   private boolean isDrawn;
     private int scaleInProcess = 0;
     private boolean readyToDraw = false;
@@ -126,6 +131,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private Bitmap logo;
     private boolean surfaceCreated = false;
     
+	private Bitmap bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+	private Bitmap bgTrayBaseScaled;
+	private Bitmap bgTrayBaseDragging; 
+	private boolean shuffleRedraw = false;
+    
  
 	public boolean isReadyToDraw() {
 		return readyToDraw;
@@ -140,6 +150,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	List<TrayTile> trayTiles = new ArrayList<TrayTile>();
     TileLayout defaultLayout;
     TileLayoutService layoutService;
+    AlphabetService alphabetService;
+   
 
  
 //	public Game getGame() {
@@ -170,6 +182,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.context = context;
 		this.layoutService = new TileLayoutService();
 		this.defaultLayout = layoutService.GetDefaultLayout(context);
+		
+		this.alphabetService = new AlphabetService(context);
 		//
 		  this.setZOrderOnTop(true);
 		 this.holder = getHolder();
@@ -177,11 +191,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 this.gameThread = new GameThread(holder, this);
 		
 		 setFocusable(true);
-		 this.letterTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_BOARD_FONT);
-		  
+		 this.bonusTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_BOARD_FONT);
+		 this.letterTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_FONT); 
+		 this.letterValueTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_VALUE_FONT); 
 		 this.holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
-		 
+
 		 
 		// this.isDrawn = false;
 		 
@@ -238,9 +253,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 		this.fullViewTileMidpoint = Math.round(this.fullViewTileWidth / 2);
 		this.zoomedTileMidpoint = Math.round(this.zoomedTileWidth / 2);	
+		this.trayTileMidpoint = Math.round(this.trayTileSize / 2);	
+
+		Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
+		this.bgTrayBaseScaled = Bitmap.createScaledBitmap(bgTrayBase, this.trayTileSize , this.trayTileSize, false);
+		this.bgTrayBaseDragging = Bitmap.createScaledBitmap(bgTrayBase, this.draggingTileSize, this.draggingTileSize, false);
+		this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
 		
-
-
+		
 		//Toast t = Toast.makeText(context, "Hello " +  this.height + " " + this.fullWidth + " " + getMeasuredHeight() , Toast.LENGTH_LONG);   
 	    //t.show();
 	}
@@ -559,23 +579,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 
 		long currentTouchTime = System.nanoTime();
 		
-		//  if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
-		 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN){ this.readyToDraw = false;}  
-		 
-		//this will have to change if dragging a tile 
-		 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { this.readyToDraw = false; }
-		 
-		 //if we are in middle of action move but we are not moving (the finger is pressed but not moving, don't redraw
- 		 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && 
- 			this.previousTouchMotion == MotionEvent.ACTION_MOVE &&
- 			this.currentX <= Math.round(this.previousX * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
- 			this.currentX >= Math.round(this.previousX * (1 - MOVEMENT_TRIGGER_THRESHOLD)) && 
- 			this.currentY <= Math.round(this.previousY * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
- 			this.currentY >= Math.round(this.previousY * (1 - MOVEMENT_TRIGGER_THRESHOLD))){
- 			 Log.w(TAG,"onDraw minimum threshold not met");
- 			 	this.readyToDraw = false; 
- 			 }
-	
+		if (!this.shuffleRedraw){
+			//  if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
+			 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN){ this.readyToDraw = false;}  
+			 
+			//this will have to change if dragging a tile 
+			 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { this.readyToDraw = false; }
+			 
+			 //if we are in middle of action move but we are not moving (the finger is pressed but not moving, don't redraw
+	 		 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && 
+	 			this.previousTouchMotion == MotionEvent.ACTION_MOVE &&
+	 			this.currentX <= Math.round(this.previousX * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
+	 			this.currentX >= Math.round(this.previousX * (1 - MOVEMENT_TRIGGER_THRESHOLD)) && 
+	 			this.currentY <= Math.round(this.previousY * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
+	 			this.currentY >= Math.round(this.previousY * (1 - MOVEMENT_TRIGGER_THRESHOLD))){
+	 			 Log.w(TAG,"onDraw minimum threshold not met");
+	 			 	this.readyToDraw = false; 
+	 			 }
+		}
 		 
 		 if (this.readyToDraw == true){ 
  
@@ -590,17 +611,20 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 this.readyToDraw = false;
 			 
 			 if (this.isZoomed == false || this.isZoomAllowed == false){
-				 canvas.drawColor(0, Mode.CLEAR);
-				 this.drawUpperGap(canvas);
-				 this.drawFullView(canvas);
-				 this.drawLowerGap(canvas);
+				 
+				 this.drawFullBoard(canvas);
+				
 				
 			 }
 			 else {
 				// if (this.touchMotion == MotionEvent.ACTION_UP) {
 				//	 this.isZoomed = false; ///turn off zoom since we are handling now
 				// }
-				 if (this.isMomentum){
+				 if (this.shuffleRedraw){
+					 this.drawBoardOnMove(canvas, 0, 0);
+					
+				 }
+				 else if (this.isMomentum){
 					 Log.w(TAG,"onDraw drawMomentumScroll about to be called");
 					 this.drawMomentumScroll(canvas);
 				 }
@@ -626,9 +650,21 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			// this.previousTouchMotion = this.currentTouchMotion;
 			// this.currentTouchMotion = ;
 		    this.drawTray(canvas);
+		    
+		    if (this.shuffleRedraw){
+		    	this.shuffleRedraw = false;
+		    	this.readyToDraw = false;
+		    }
 		 } 
 	 }
 	 
+	private void drawFullBoard(Canvas canvas){
+		 canvas.drawColor(0, Mode.CLEAR);
+		 this.drawUpperGap(canvas);
+		 this.drawFullView(canvas);
+		 this.drawLowerGap(canvas);	
+	}
+	
 	private void drawBoardOnMove(Canvas canvas, int leftDiff, int topDiff){
 			
 		 this.readyToDraw = false;
@@ -715,7 +751,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				// this.previousX = this.currentX;
 				// this.previousY = this.currentY;
 				 canvas.drawColor(0, Mode.CLEAR);
-				 this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);	
+				 this.drawZoomedBoardByDiff(canvas, leftDiff, topDiff);	
 				 if (setReadyToDraw){ this.readyToDraw = true; }
 		  //   this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);	
 		   //  if (setReadyToDraw){this.readyToDraw = true;}
@@ -770,66 +806,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 	}
 	
-	private void x(Canvas canvas){
-		
-    	int prevXPosition = this.xPosition;
-    	int prevYPosition = this.yPosition;
-    	int leftDiff = 0;
-    	int topDiff = 0;
-    	
-		float changeVelocity = ANIMATION_TIMESTEP; //DECELERATION * ANIMATION_TIMESTEP;
-        
-		Log.w(TAG,"drawMomentumScroll: xPosition=" + this.xPosition + " xVelocity=" + this.xVelocity);
-		Log.w(TAG,"drawMomentumScroll: yPosition=" + this.yPosition + " yVelocity=" + this.yVelocity);
-		
-		if (this.xVelocity != 0){
-	        if ( changeVelocity > Math.abs(this.xVelocity) ) {
-	                this.xVelocity = 0;
-	            }
-	            else {
-	                this.xVelocity -= (this.xVelocity > 0 ? +1 : -1) * changeVelocity;
-	           }
-	        this.xPosition += this.xVelocity * ANIMATION_TIMESTEP;
-		}
-        
-		if (this.yVelocity != 0){
-	        if ( changeVelocity > Math.abs(this.yVelocity) ) {
-	            this.yVelocity = 0;
-	        }
-	        else {
-	            this.yVelocity -= (this.yVelocity > 0 ? +1 : -1) * changeVelocity;
-	       }
-          this.yPosition += this.yVelocity * ANIMATION_TIMESTEP;
-		}
-        
-        
-        
-        //we have slowed to a stop. stop drawing after this final draw
-        if (this.xVelocity == 0 && this.yVelocity == 0){
-        	this.readyToDraw = false;
-        }
-        
-        leftDiff = prevXPosition - this.xPosition;
-        topDiff = prevYPosition - this.yPosition;
-        
-       
-        ///determine if left or top is past boundaries
- 
-        
-        this.drawBoardOnMove(canvas, leftDiff, topDiff);
-        
-        if (leftDiff == 0 && topDiff == 0){
-        	this.readyToDraw = false;
-        }
-        
-        if (!this.readyToDraw){this.isMomentum = false;}
-        
-        Log.w(TAG, "drawMomentumScroll readyToDraw=" + this.readyToDraw);
-        
-        //check for boundaries like normal scroll logic
-        
-
-	}
+	
 	 
    private void drawBoardZoomOnUp(Canvas canvas){
 	   GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);    
@@ -859,13 +836,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     if (tappedLeft > 1) {tappedLeft = 1;}
 	     
 	     //draw the board to the canvas
-	     this.loadZoomedBoard(canvas, tappedLeft, tappedTop); 
+	     this.drawZoomedBoard(canvas, tappedLeft, tappedTop); 
 	      
 	     //release the current tile context 
 	     this.currentTile = null;  
    }
 	
-	private void loadZoomedBoardByDiff(Canvas canvas, int leftDiff, int topDiff) {
+	private void drawZoomedBoardByDiff(Canvas canvas, int leftDiff, int topDiff) {
 	    int x = 0; 
 		for (GameTile tile : this.tiles) {
 	    	if (x == 0){ 
@@ -876,21 +853,21 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     	 tile.setxPositionZoomed(tile.getxPositionZoomed() - leftDiff);
 	     	 tile.setyPositionZoomed(tile.getyPositionZoomed() - topDiff);
 	 		 
-	 		 this.loadZoomedBoardGuts(canvas, tile);
+	 		 this.drawZoomedBoardGuts(canvas, tile);
  
 	     }
 	}
 	 
-	private void loadZoomedBoard(Canvas canvas, int leftBasisPoint, int topBasisPoint) {
+	private void drawZoomedBoard(Canvas canvas, int leftBasisPoint, int topBasisPoint) {
 	     for (GameTile tile : this.tiles) {
 	     	 tile.setxPositionZoomed(leftBasisPoint + ((tile.getColumn() - 1) * this.zoomedTileWidth) + ((tile.getColumn() - 1) * this.tileGap));
 	 		 tile.setyPositionZoomed(topBasisPoint + ((tile.getRow() - 1) * this.zoomedTileWidth) + ((tile.getRow() - 1) * this.tileGap));
 	 		 
-	 		 this.loadZoomedBoardGuts(canvas, tile);
+	 		 this.drawZoomedBoardGuts(canvas, tile);
 	     }
 	}
 	
-	private void loadZoomedBoardGuts(Canvas canvas, GameTile tile){
+	private void drawZoomedBoardGuts(Canvas canvas, GameTile tile){
 	 	 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
      	 
      	 if (tile.getCurrentText().length() > 0){
@@ -898,7 +875,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     	 p.setColor(Color.WHITE);
 	     	 p.setTextSize(Math.round(this.zoomedTileWidth * .6));
 		     p.setAntiAlias(true);
-		     p.setTypeface(this.letterTypeface);
+		     p.setTypeface(this.bonusTypeface);
 		     Rect bounds = new Rect();
 		     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
 		     int textLeft =  tile.getxPositionZoomed() + this.zoomedTileMidpoint - (Math.round(bounds.width() / 2));
@@ -917,7 +894,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		pGap.setColor(Color.parseColor("#eec591"));  //grab color from drawable
 	    
 		pGap.setAntiAlias(true);
-	  //   p.setTypeface(this.letterTypeface);
+	  //   p.setTypeface(this.bonusTypeface);
 	     Rect boundsGap = new Rect();
 	     boundsGap.left = 0;
 	     boundsGap.right = this.fullWidth;
@@ -931,7 +908,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
      	 //p.setTextAlign(Paint.Align.LEFT);
      	 p.setTextSize(Math.round(this.topGapHeight * .4));
 	     p.setAntiAlias(true);
-	     p.setTypeface(this.letterTypeface);
+	     p.setTypeface(this.bonusTypeface);
 	     Rect bounds = new Rect();
 	     String lastActionText = this.parent.getGame().getLastActionText();
 	     p.getTextBounds(lastActionText, 0, lastActionText.length(), bounds);
@@ -956,7 +933,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		pGap.setColor(Color.parseColor("#eec591"));  //grab color from drawable
 	    
 		pGap.setAntiAlias(true);
-	  //   p.setTypeface(this.letterTypeface);
+	  //   p.setTypeface(this.bonusTypeface);
 	     Rect boundsGap = new Rect();
 	     boundsGap.left = 0;
 	     boundsGap.right = this.fullWidth;
@@ -991,7 +968,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		pBorder.setColor(Color.parseColor("#eec591"));
 	    
 	    pBorder.setAntiAlias(true);
-	  //   p.setTypeface(this.letterTypeface);
+	  //   p.setTypeface(this.bonusTypeface);
 	     Rect boundsBorder = new Rect();
 	     boundsBorder.left = 0;
 	     boundsBorder.right = this.fullWidth;
@@ -1003,10 +980,53 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 		for (TrayTile tile : this.trayTiles) {
 			 canvas.drawBitmap(tile.getCurrentBitmap(),tile.getxPosition(), tile.getyPosition(), null);
+			 if (tile.getCurrentLetter().length() > 0){
+		     	 Paint pLetter = new Paint();
+		     	 pLetter.setColor(Color.DKGRAY);
+		     	 pLetter.setTextSize(Math.round(this.trayTileSize * .72));
+		     	 pLetter.setAntiAlias(true);
+		     	 pLetter.setTypeface(this.letterTypeface);
+			     Rect boundsLetter = new Rect();
+			     pLetter.getTextBounds(tile.getCurrentLetter(), 0, tile.getCurrentLetter().length(), boundsLetter);
+			     
+			     //find the midpoint and scoot over 5% to the left and 5% down
+			     int textLeft =  tile.getxPosition() + this.trayTileMidpoint - Math.round(this.trayTileMidpoint * .08f) - (Math.round(boundsLetter.width() / 2));
+			     int textTop =  tile.getyPosition() + this.trayTileMidpoint + Math.round(this.trayTileMidpoint * .08f) + (Math.round(boundsLetter.height() / 2));
+			     
+			     canvas.drawText(tile.getCurrentLetter(), textLeft, textTop, pLetter);
+			     
+			     Paint pValue = new Paint();
+			     pValue.setColor(Color.BLACK);
+			     pValue.setTextSize(Math.round(this.trayTileSize * .25f));
+			     pValue.setAntiAlias(true);
+			     
+			     pValue.setTypeface(Typeface.SANS_SERIF);
+			     Rect boundsValue = new Rect();
+			     String value = Integer.toString(this.alphabetService.getLetterValue(tile.getCurrentLetter()));
+			     pValue.getTextBounds(value, 0, value.length(), boundsValue);
+			     
+			     //find the midpoint and scoot over 5% to the left and 5% down
+			     int textLeftValue =  tile.getxPosition() + this.trayTileSize - boundsValue.width() - Math.round(this.trayTileSize * .12f);
+			     int textTopValue =  tile.getyPosition() + Math.round(this.trayTileSize * .15f) + (Math.round(boundsValue.height() / 2));
+			     
+			     canvas.drawText(value, textLeftValue, textTopValue, pValue);
+			     
+	     	 }
+			 
 		 }
 		
 	}
  
+	public void shuffleTray(){
+		
+		Collections.shuffle(this.parent.getGameState().getTrayTiles());
+		GameStateService.setGameState(this.context, this.parent.getGameState());
+
+		this.LoadTray();
+		this.shuffleRedraw = true;
+		this.readyToDraw = true;
+	}
+	
 	private void LoadExtras(){
 		int height = Math.round(this.bottomGapHeight * .6F);
 		Bitmap bgLogo = BitmapFactory.decodeResource(getResources(), R.drawable.wordsmash_logo7);
@@ -1017,26 +1037,31 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	} 
 	
 	private void LoadTray() {		
-	
-		
-		
-		Bitmap bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
-		this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
+
+		//move bitmap stuff to shared location
+	//	Bitmap bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+	//	this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
 		 
 		
-		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
-		 Bitmap bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.trayTileSize , this.trayTileSize, false);
-		 Bitmap bgBaseDragging = Bitmap.createScaledBitmap(bgBase, this.draggingTileSize, this.draggingTileSize, false);
+	//	 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
+	//	 Bitmap bgTrayBaseScaled = Bitmap.createScaledBitmap(bgBase, this.trayTileSize , this.trayTileSize, false);
+	//	 Bitmap bgTrayBaseDragging = Bitmap.createScaledBitmap(bgBase, this.draggingTileSize, this.draggingTileSize, false);
 		
 		 //load game letters into here (soon)
+		 
+		 this.trayTiles.clear();
 		 
 		 for(int y = 0; y < 7; y++){
 			 TrayTile tile = new TrayTile();
 			 tile.setId(y);
 			 tile.setxPosition(this.trayTileLeftMargin + ((this.trayTileSize + TRAY_TILE_GAP) * tile.getId()));
 			 tile.setyPosition(this.trayTop);
-			 tile.setOriginalBitmap(bgBaseScaled);
-			 tile.setOriginalBitmapDragging(bgBaseDragging);
+			 tile.setOriginalBitmap(this.bgTrayBaseScaled);
+			 tile.setOriginalBitmapDragging(this.bgTrayBaseDragging);
+
+			 //this will come from state object if it exists for this turn, this is temp
+			 tile.setOriginalLetter(this.parent.getGameState().getTrayTiles().get(y).getLetter());
+			 
 			 this.trayTiles.add(tile);
 		 }
 	}
@@ -1153,7 +1178,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    	 p.setColor(Color.WHITE);
 			     p.setTextSize(Math.round(this.fullViewTileWidth * .6));
 			     p.setAntiAlias(true);
-			     p.setTypeface(this.letterTypeface);
+			     p.setTypeface(this.bonusTypeface);
 			     Rect bounds = new Rect();
 			     p.getTextBounds(tile.getCurrentText(), 0, tile.getCurrentText().length(), bounds);
 			     int textLeft =  tile.getxPosition() + this.fullViewTileMidpoint - (Math.round(bounds.width() / 2));

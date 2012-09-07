@@ -16,120 +16,75 @@
 		       
 				android:layout_alignParentLeft="true"
 		        android:paddingLeft="4dp"
-		        android:paddingRight="4dp" 
+		        android:paddingRight="4dp"  
 			    android:layout_width="wrap_content"
 		     >
     		<TableRow android:paddingTop="2dp">
     		     <ImageView 
-				       	android:id="@+id/contextPlayerTurn"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/red_dot"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginRight="2dp"
+				       	android:id="@+id/ivPlayerTurn_1"
+					   	style="@style/ScoreboardTurnStyle"
+				   />
+    		     <ImageView  
+				       	android:id="@+id/ivPlayerBadge_1"
+					   	style="@style/ScoreboardBadgeStyle"
 				   />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/contextPlayer"
-		            android:text="Hunter E."
-		            android:textColor="#000000"
-		            android:textStyle="bold"
-		            android:textSize="10dp"
-		            android:layout_gravity="center_vertical"
-		            
+		            android:id="@+id/tvPlayer_1"
+		            style="@style/ScoreboardPlayerStyle"
 		            />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/contextPlayerScore"
-		            android:text="10"
-		            android:textColor="#000000"
-		          android:layout_marginLeft="2dp"
-		            android:textSize="10dp"
-		            android:layout_marginRight="7dp"
-		            android:gravity="right"
-            		android:layout_weight="1.0"
-	            />
+		            android:id="@+id/tvPlayerScore_1"
+		           style="@style/ScoreboardScoreStyle"
+ 	            />
 		         <ImageView 
-				       	android:id="@+id/playerTurn_2"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/red_dot"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginRight="2dp"
+				       	android:id="@+id/ivPlayerTurn_3"
+					   	style="@style/ScoreboardTurnStyle"
+				   />
+		         <ImageView 
+				       	android:id="@+id/ivPlayerBadge_3"
+					   	style="@style/ScoreboardBadgeStyle"
 				   />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/player_2"
-		            android:text="Android D."
-		            android:textColor="#000000"
-		            android:textStyle="bold"
-		            android:textSize="10dp"
-		            android:layout_gravity="center_vertical"
-		            
+		            android:id="@+id/tvPlayer_3"
+		            style="@style/ScoreboardPlayerStyle"
 		            />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/playerScore_2"
-		            android:text="102"
-		            android:textColor="#000000"
-		         android:layout_marginLeft="2dp"
-		            android:textSize="10dp"
-		            android:layout_marginRight="10dp"
-		            android:gravity="right"
-            		android:layout_weight="1.0"
+		            android:id="@+id/tvPlayerScore_3"
+		            style="@style/ScoreboardScoreStyle"
 	            />
 		       </TableRow>
 		       <TableRow>
+		        <ImageView 
+				       	android:id="@+id/ivPlayerTurn_2"
+					   	style="@style/ScoreboardTurnStyle"
+				   />
 		         <ImageView 
-				       	android:id="@+id/opponentTurn_2"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/red_dot"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginRight="2dp"
+				       	android:id="@+id/ivPlayerBadge_2"
+					   	style="@style/ScoreboardBadgeStyle" 
 				   />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/opponent_2"
-		            android:text="Stephanie S."
-		            android:textColor="#000000"
-		            android:textStyle="bold"
-		            android:textSize="10dp"
-		            android:layout_gravity="center_vertical"
-		            
+		            android:id="@+id/tvPlayer_2"
+		            style="@style/ScoreboardPlayerStyle"
 		            />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/opponentScore_2"
-		            android:text="2"
-		            android:textColor="#000000"
-		              android:layout_marginLeft="2dp"
-		         android:layout_marginRight="7dp"
-		            android:textSize="10dp"
-		            android:gravity="right"
-            		android:layout_weight="1.0"
-            		 
+		            android:id="@+id/tvPlayerScore_2"
+		            style="@style/ScoreboardScoreStyle"
 	            />
 		       <ImageView 
-				       	android:id="@+id/playerTurn_4"
-					   	android:layout_width="6dp"
-					   	android:src="@drawable/red_dot"
-	   	 				android:layout_height="6dp"
-	   	 				android:layout_gravity="center_vertical"
-	   	 				android:layout_marginRight="2dp"
+				    android:id="@+id/ivPlayerTurn_4"
+					style="@style/ScoreboardTurnStyle"
+				/>
+		       <ImageView 
+				       	android:id="@+id/ivPlayerBadge_4"
+					   	style="@style/ScoreboardBadgeStyle"
 				   />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/player_4"
-		            android:text="MakennaEthan D."
-		            android:textColor="#000000"
-		            android:textStyle="bold"
-		            android:textSize="10dp"
-		            android:layout_gravity="center_vertical" 
-		            
+		            android:id="@+id/tvPlayer_4"
+		            style="@style/ScoreboardPlayerStyle" 
 		            />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
-		            android:id="@+id/playerScore_4"
-		            android:text="678"
-		            android:textColor="#000000"
-		           android:layout_marginLeft="2dp"
-		            android:textSize="10dp"
-		            android:layout_marginRight="10dp"
-		            android:gravity="right"
-            		android:layout_weight="1.0"
+		            android:id="@+id/tvPlayerScore_4"
+		            style="@style/ScoreboardScoreStyle"
 	            />
 		       </TableRow>
 			</TableLayout> 
@@ -143,7 +98,7 @@
 	        android:paddingTop="2dp"
 	    >    
 	     	<com.riotapps.word.ui.ScoreboardFontTextView
-	            android:id="@+id/lettersLeft"
+	            android:id="@+id/tvLettersLeft"
 	            android:text="98 letters left"
 	            android:textColor="#000000"
 	            android:textSize="10dp"
@@ -152,11 +107,10 @@
 	          
 	         />
 	     	<com.riotapps.word.ui.ScoreboardFontTextView
-	            android:id="@+id/pointsTerm"
-	            android:text="298 points"
+	            android:id="@+id/tvNumPoints"
 	            android:textColor="#000000"
 	            android:textSize="10dp"
-	            android:layout_below="@id/lettersLeft"
+	            android:layout_below="@id/tvLettersLeft"
 	             
 	       		android:gravity="right"
 	         />
@@ -198,45 +152,45 @@
         android:background="@drawable/gameboard_btn_area_bg" >
 	<com.riotapps.word.ui.ScoreboardButton 
   	    style="@style/GameBoardButtonStyle"
-  	    android:id="@+id/bSave"
+  	    android:id="@+id/bPlayedWords"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
-        android:text="played\nwords"
+        android:text="@string/gameboard_played_words_button_text"
     />
 	<com.riotapps.word.ui.ScoreboardButton 
   	    style="@style/GameBoardButtonStyle"
-  	    android:id="@+id/bSave"
+  	    android:id="@+id/bChat"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
-        android:text="chat"
+        android:text="@string/gameboard_chat_button_text"
     />
 	 <com.riotapps.word.ui.ScoreboardButton 
   	    style="@style/GameBoardButtonStyle"
-  	    android:id="@+id/bSave"
+  	    android:id="@+id/bSwap"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
-        android:text="swap"
+        android:text="@string/gameboard_swap_button_text"
     />
 	 <com.riotapps.word.ui.ScoreboardButton 
   	    style="@style/GameBoardButtonStyle"
-  	    android:id="@+id/bSave"
+  	    android:id="@+id/bShuffle"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
-        android:text="shuffle"
+        android:text="@string/gameboard_shuffle_button_text"
     />
 	<com.riotapps.word.ui.ScoreboardButton 
   	    style="@style/GameBoardButtonStyle"
-  	    android:id="@+id/bSave"
+  	    android:id="@+id/bPlay"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
-        android:text="play"
+        android:text="@string/gameboard_play_button_text"
     />
     <com.riotapps.word.ui.ScoreboardButton 
         style="@style/GameBoardButtonStyle"
         android:id="@+id/bCancel"
         android:layout_width="0dp"
         android:layout_weight="1.0"
-        android:text="cancel"
+        android:text="@string/gameboard_cancel_button_text"
     />
     </LinearLayout>
    

@@ -1,6 +1,7 @@
 package com.riotapps.word.hooks;
 
 import java.util.Date;
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -57,6 +58,18 @@ public class PlayerGame implements Parcelable{
 	@SerializedName("player_order")
 	private int playerOrder;
 
+	
+	@SerializedName("tray_tiles")
+	private List<TrayTile> trayTiles;
+	
+	public List<TrayTile> getTrayTiles() {
+		return trayTiles;
+	}
+
+	public void setTrayTiles(List<TrayTile> trayTiles) {
+		this.trayTiles = trayTiles;
+	}
+	
 	public String getPlayerId() {
 		return playerId;
 	}

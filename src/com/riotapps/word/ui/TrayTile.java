@@ -70,7 +70,7 @@ public class TrayTile {
 		this.originalLetter = originalLetter;
 	}
 	public String getCurrentLetter() {
-		return currentLetter;
+		return currentLetter.length() > 0 ? currentLetter : originalLetter;
 	}
 	public void setCurrentLetter(String currentLetter) {
 		this.currentLetter = currentLetter;

@@ -19,9 +19,9 @@ public class AlphabetService {
 		 alphabet = gson.fromJson(FileUtils.ReadRawTextFile(context, R.raw.alphabet), type);
 	}
 
-	public int GetLetterValue(String character){
+	public int getLetterValue(String character){
 		  for (Letter letter : this.alphabet.Letters){
-			  if (letter.getCharacter() == character){
+			  if (letter.getCharacter().equals(character)){
 				  return letter.getValue();
 			  }
 		  }
