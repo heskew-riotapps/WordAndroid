@@ -25,6 +25,8 @@ public class Game implements Parcelable {
 	@SerializedName("num_letters_left")
 	private int numLetterLeft;
 	
+	@SerializedName("dup_check")
+	private String dupCheck;
 
 	public String getId() {
 		return id;
@@ -66,6 +68,14 @@ public class Game implements Parcelable {
 		this.numLetterLeft = numLetterLeft;
 	}
 
+	public String getDupCheck() {
+		return dupCheck;
+	}
+
+	public void setDupCheck(String dupCheck) {
+		this.dupCheck = dupCheck;
+	}
+	
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub

@@ -4,10 +4,9 @@
         <item name="android:src">@drawable/wordsmash_logo7</item>
 	    <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentTop">true</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_gravity">center_horizontal</item> 
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:contentDescription">@string/logo</item>
+    
     </style>
 </resources>

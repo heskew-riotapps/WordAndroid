@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/tabhost"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    style="@style/LayoutFormStyle"
+    style="@style/LayoutStyle"
     android:paddingBottom="15dp"
     >
     <RelativeLayout
         android:id="@+id/headerArea"
         android:orientation="vertical"
+ 
         >
     <RelativeLayout
         android:id="@+id/header"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical">
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical"
+          style="@style/TopLogoAreaStyle" >
    
      <ImageView 
        android:id="@+id/logo"
@@ -26,6 +26,7 @@
         android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+             style="@style/LayoutFormStyle"
 		>
         <TabWidget
             android:layout_below="@id/header"

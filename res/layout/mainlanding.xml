@@ -1,11 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LayoutFormStyle" >
+    style="@style/LayoutStyle"
+    android:orientation="vertical" >
+   <RelativeLayout 
+        android:id="@+id/logoArea"
+    	style="@style/TopLogoAreaStyle"
+    >
      <ImageView 
        android:id="@+id/logo"
-       android:contentDescription="@string/logo"
 	    style="@style/TopLogoStyle" 
 	  />
+     </RelativeLayout>
+    <LinearLayout 
+           style="@style/LayoutFormStyle"
+           android:layout_below="@id/logoArea"
+        > 
 	<RelativeLayout
 		android:orientation="vertical"
 		android:layout_width="wrap_content"
@@ -91,5 +99,7 @@
 		android:layout_marginBottom="15dp"
 		android:clickable="true"
         />	
+       
     </RelativeLayout>
+     </LinearLayout>
 </RelativeLayout>

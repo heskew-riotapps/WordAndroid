@@ -13,4 +13,5 @@
     <drawable name="form_border_color">#3366dd</drawable> <!-- previously 330066 -->  
     <drawable name="button_background_color">#D2B48C</drawable> 
     <drawable name="scoreboard_text_color">#000000</drawable>
+    <drawable name="logo_background_color">#eec591</drawable>
 </resources>

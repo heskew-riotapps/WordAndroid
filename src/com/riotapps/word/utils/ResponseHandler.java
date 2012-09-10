@@ -101,7 +101,7 @@ class ResponseHandler {
 //	             }//end case 422: 
 	             case 500:
 	            	 ///////do something here
-	  
+	    
 	            	 DialogManager.SetupAlert(ctx, ctx.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase());  
 	         }  
 	     }else if(exception != null){  

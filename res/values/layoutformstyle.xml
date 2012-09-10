@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="LayoutFormStyle" parent="LayoutStyle" >
+    <style name="LayoutFormStyle" >
         <item name="android:orientation">vertical</item>
     	<item name="android:paddingLeft">15dp</item>
     	<item name="android:paddingRight">15dp</item>

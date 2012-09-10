@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LayoutFormStyle"
+    style="@style/LayoutStyle"
     android:orientation="vertical" >
+    <RelativeLayout 
+    	style="@style/TopLogoAreaStyle"
+    >
      <ImageView 
        android:id="@+id/logo"
-       android:contentDescription="@string/logo"
 	    style="@style/TopLogoStyle" 
 	  />
+     </RelativeLayout>
+     <LinearLayout
+         style="@style/LayoutFormStyle"
+         >
 	<LinearLayout
 		style="@style/FormBackgroundStyle"
 		android:layout_marginTop="5dp"
@@ -115,5 +121,6 @@
 
     </LinearLayout>	
     </ScrollView>
+    </LinearLayout>
     </LinearLayout>
 </LinearLayout>
