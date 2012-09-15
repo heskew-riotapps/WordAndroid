@@ -13,19 +13,23 @@ public class Game implements Parcelable {
 	public Game(){}
 	
 	private String id;
+	
+	@SerializedName("a_t") //mainly just for transport via json
+	private String authToken;
+	
 	@SerializedName("played_words")
 	private List<PlayedWord> playedWords;
 	
 	@SerializedName("player_games")
 	private List<PlayerGame> playerGames;
 	
-	@SerializedName("last_action_alert_text")
-	private String lastActionText;
+//	@SerializedName("last_action_alert_text")
+ 	private String lastActionText;
 	
-	@SerializedName("num_letters_left")
+	@SerializedName("left")
 	private int numLetterLeft;
 	
-	@SerializedName("dup_check")
+	@SerializedName("d_c")
 	private String dupCheck;
 
 	public String getId() {
@@ -76,6 +80,14 @@ public class Game implements Parcelable {
 		this.dupCheck = dupCheck;
 	}
 	
+	public String getAuthToken() {
+		return authToken;
+	}
+
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub

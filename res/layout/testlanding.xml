@@ -2,15 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutStyle"
     android:orientation="vertical" >
-    <RelativeLayout 
-    	style="@style/TopLogoAreaStyle"
-    >
-     <ImageView 
-       android:id="@+id/logo"
-	    style="@style/TopLogoStyle" 
-	  />
-     </RelativeLayout>
-     <LinearLayout
+     <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+   <LinearLayout
          style="@style/LayoutFormStyle"
          >
 	<LinearLayout
@@ -25,15 +18,8 @@
 		android:id="@+id/header"
 	>
     <com.riotapps.word.ui.MainFontTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:textSize="18dp"
-        android:textStyle="bold"
+        style="@style/FormHeaderAreaTextStyle"
         android:text="@string/test_landing_title" 
-        android:layout_below="@id/logo"
-	 	android:gravity="center_horizontal"
-	  	android:paddingTop="8dp"
         />
     </RelativeLayout> 
     <ScrollView

@@ -31,31 +31,31 @@ public class PlayerGame implements Parcelable{
 	
 	private int score;
 	
-	@SerializedName("last_turn_date")
+	@SerializedName("l_t_d")
 	private Date lastTurnDate;
 	
-	@SerializedName("last_alert_date")
+	@SerializedName("l_a_d")
 	private Date lastAlertDate;
 	
-	@SerializedName("last_reminder_date")
+	@SerializedName("l_r_d")
 	private Date lastReminderDate;
 	
-	@SerializedName("last_chatter_received_date")
+	@SerializedName("l_c_r_d")
 	private Date lastChatterReceivedDate;
 	
-	@SerializedName("win_num")
+	@SerializedName("w_n")
 	private int winNum;
 	
-	@SerializedName("is_turn")
+	@SerializedName("i_t")
 	private boolean isTurn;
 	
-	@SerializedName("is_winner")
+	@SerializedName("i_w")
 	private boolean isWinner;
 	
-	@SerializedName("has_been_alerted_to_end_of_game")
+	@SerializedName("a_e_g")
 	private boolean hasBeenAlertedToEndOfGame;
 	
-	@SerializedName("player_order")
+	@SerializedName("o")
 	private int playerOrder;
 
 	

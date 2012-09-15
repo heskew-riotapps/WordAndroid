@@ -1,18 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutStyle"
     android:orientation="vertical" >
-   <RelativeLayout 
-        android:id="@+id/logoArea"
-    	style="@style/TopLogoAreaStyle"
-    >
-     <ImageView 
-       android:id="@+id/logo"
-	    style="@style/TopLogoStyle" 
-	  />
-     </RelativeLayout>
+   <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
     <LinearLayout 
            style="@style/LayoutFormStyle"
-           android:layout_below="@id/logoArea"
+           android:layout_below="@id/topAreaLayout"
         > 
      <RelativeLayout
 		style="@style/FormBackgroundStyle"
@@ -26,15 +18,10 @@
 		android:id="@+id/header"
 	>
     <com.riotapps.word.ui.MainFontTextView
-        style="@style/HeaderTextStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        style="@style/FormHeaderAreaTextStyle"
         android:text="@string/join_with_email_title" 
        	android:id="@+id/title_join_native"
-        android:layout_below="@id/logo"
-	 	android:gravity="center_horizontal"
-	  	android:paddingTop="8dp"
-        />
+    />
     <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

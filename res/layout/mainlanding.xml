@@ -1,18 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutStyle"
     android:orientation="vertical" >
-   <RelativeLayout 
-        android:id="@+id/logoArea"
-    	style="@style/TopLogoAreaStyle"
-    >
-     <ImageView 
-       android:id="@+id/logo"
-	    style="@style/TopLogoStyle" 
-	  />
-     </RelativeLayout>
+    <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
     <LinearLayout 
            style="@style/LayoutFormStyle"
-           android:layout_below="@id/logoArea"
+           android:layout_below="@id/topAreaLayout"
         > 
 	<RelativeLayout
 		android:orientation="vertical"
@@ -21,7 +13,6 @@
 		android:background="@drawable/form_background"
 		android:layout_below="@id/logo"
 		android:padding="2dp"
-		android:layout_marginTop="20dp"
 	>
 	<RelativeLayout
 		android:orientation="vertical"
@@ -34,7 +25,7 @@
     <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textColor="#fff"
+        android:textColor="#3366dd"
         android:textSize="18dp"
         android:textStyle="bold"
         android:text="@string/start_game" 
@@ -46,7 +37,7 @@
     <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textColor="#fff"
+        android:textColor="#3366dd"
         android:textSize="12dp"
         android:textStyle="bold"
         android:text="@string/start_game_sub" 
@@ -80,9 +71,8 @@
    <com.riotapps.word.ui.MainFontTextView
         style="@style/TextStyle"
         android:background="@drawable/text_selector"
-        android:text="@string/start_game_by_email_or_nickname" 
-        android:id="@+id/startByEmail"
-		android:clickable="true"
+        android:text="@string/start_game_by_nickname" 
+        android:id="@+id/tvStartByNickname"
 		android:gravity="center"
 		android:layout_below="@id/startByOpponent"
 		android:layout_marginTop=".5dp"
@@ -93,7 +83,7 @@
 	 	android:gravity="center"
         android:text="@string/start_game_by_random" 
         android:id="@+id/startByRandom"
-        android:layout_below="@id/startByEmail"
+        android:layout_below="@id/tvStartByNickname"
 		android:layout_gravity="center"
 		android:layout_marginTop=".5dp"
 		android:layout_marginBottom="15dp"

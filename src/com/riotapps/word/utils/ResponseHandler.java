@@ -79,6 +79,16 @@ class ResponseHandler {
 	                         }  
 	                         break;  
 	                     }  
+	                     case FIND_PLAYER_BY_NICKNAME: {  
+
+	                         if(iStream == null){  
+	                             Toast t = Toast.makeText(ctx, ctx.getString(R.string.response_in_error), Toast.LENGTH_LONG);  
+	                             t.show();  
+	                         }else{  
+	                          //   PlayerService.HandleGetGameResponse(ctx, iStream, goToClass);         
+	                         }  
+	                         break;  
+	                     }  
 	                 } 
 
 	                 break;  

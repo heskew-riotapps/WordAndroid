@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <style
-    name="FormBackgroundStyle" >
+    name="FormFieldBackgroundNoHeaderStyle" >
    	<item name="android:orientation">vertical</item>
 	<item name="android:layout_width">wrap_content</item>
 	<item name="android:layout_height">wrap_content</item>
-	<item name="android:background">@drawable/form_background</item>
-	<item name="android:layout_below">@id/logo</item>
-	<item name="android:padding">2dp</item>
+	<item name="android:background">@drawable/form_field_background_no_header</item>
 </style>
 </resources>

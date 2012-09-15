@@ -6,7 +6,8 @@ public class Enums {
 	    UPDATE_PLAYER,
 	    CREATE_GAME,
 	    GET_PLAYER,
-	    GET_GAME
+	    GET_GAME,
+	    FIND_PLAYER_BY_NICKNAME
 	}
 	
 	public static enum RequestType {

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.riotapps.word.utils.Constants;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Player implements Parcelable{
@@ -11,16 +12,32 @@ public class Player implements Parcelable{
 	public Player(){}
 	
 	private String id;
+	
+	@Expose
+	@SerializedName("n_n")
 	private String nickname;
 	
-	@SerializedName("f_name")
+	@Expose
+	@SerializedName("f_n")
 	private String firstName;
 	
-	@SerializedName("l_name")
+	@Expose
+	@SerializedName("l_n")
 	private String lastname;
+	
+	@Expose
+	@SerializedName("e_m")
 	private String email;
+	
+	private String gravatar;
+	
+	@Expose
 	private String password;
+	
+	@Expose
 	private String fb = "";
+	
+	@SerializedName("a_t")
 	private String auth_token;
 	
 	@SerializedName("n_w")
@@ -117,6 +134,29 @@ public class Player implements Parcelable{
 	public void setNumDraws(int numDraws) {
 		this.numDraws = numDraws;
 	}
+
+	
+	public String getGravatar() {
+		return gravatar;
+	}
+	public void setGravatar(String gravatar) {
+		this.gravatar = gravatar;
+	}
+	
+	public String getFb() {
+		return fb;
+	}
+	public void setFb(String fb) {
+		this.fb = fb;
+	}
+	public String getAuth_token() {
+		return auth_token;
+	}
+	public void setAuth_token(String auth_token) {
+		this.auth_token = auth_token;
+	}
+	
+	
 	public String getBadgeDrawable(){
 		if (this.numWins == 0) {
 			return Constants.BADGE_0;

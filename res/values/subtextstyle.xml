@@ -2,7 +2,7 @@
 <resources>
 <style
     name="SubTextStyle" >
-   	<item name="android:textColor">#1874CD</item>
+   	<item name="android:textColor">@drawable/sub_text_color</item>
    	<item name="android:textSize">12dp</item>
    	<item name="android:textStyle">bold</item>
 </style>

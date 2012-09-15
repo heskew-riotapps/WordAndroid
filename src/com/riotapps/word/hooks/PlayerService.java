@@ -19,6 +19,7 @@ import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.DialogManager;
+import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
 import com.riotapps.word.utils.Validations;
@@ -80,6 +81,24 @@ public class PlayerService {
 		
 		//return player;
 	}
+	
+	public String setupFindPlayerByNickname(Context ctx, String nickname) throws DesignByContractException{
+		nickname = nickname.trim();
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+		Check.Require(nickname.length() > 0, ctx.getString(R.string.validation_nickname_required_for_search));
+		//validate there are not  funky characters in the string
+		
+		String url = String.format(Constants.REST_FIND_PLAYER_BY_NICKNAME, nickname);
+		
+		return url;
+		//ok lets call the server now
+	 	//new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.FIND_PLAYER_BY_NICKNAME, ctx.getString(R.string.progress_searching), null).execute(url);
+		
+		//return player;
+	}
+	
 	
 	public static Player GetPlayerFromLocal(){
 		 Gson gson = new Gson(); 
@@ -166,4 +185,28 @@ public class PlayerService {
          }
 	 
 	}
+	
+	public Player HandleFindPlayerByNicknameResponse(final Context ctx, InputStream iStream){
+        try {
+            
+        	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
+ 	        
+ 	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+ 	        
+ 	        Type type = new TypeToken<Player>() {}.getType();
+ 	        Player player = gson.fromJson(reader, type);
+ 	        return player;  
+         } 
+         catch (Exception e) {
+            //getRequest.abort();
+            Log.w("PlayerService", "Error for HandleCreatePlayerResponse= ", e);
+            
+            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage());
+           // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
+           // t.show(); 
+         }
+		return null;
+	 
+	}
+	
 }

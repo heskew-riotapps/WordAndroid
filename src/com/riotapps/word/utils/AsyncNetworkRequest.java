@@ -20,6 +20,16 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	Class<?> goToClass = null;
 
 	/**====================================================================================   
+	  * main Constructor   
+	  * ====================================================================================*/   
+	 public AsyncNetworkRequest(Context ctx, RequestType requestType, String shownOnProgressDialog){
+		this.ctx = ctx;
+		this.requestType = requestType;
+		//this.responseHandleBy = responseHandleBy;
+		this.shownOnProgressDialog = shownOnProgressDialog;
+	}
+	
+	/**====================================================================================   
 	  * 1st Constructor   
 	  * ====================================================================================*/   
 	 public AsyncNetworkRequest(Context ctx, RequestType requestType, ResponseHandlerType responseHandleBy, String shownOnProgressDialog){
@@ -120,7 +130,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	 protected void onPostExecute(ServerResponse serverResponseObject){
 		 progress.dismiss();
 
-		 new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject, goToClass);			
+		 //new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject, goToClass);			
 	 }//end method onPostExecute
 
 }//end class RequestSentToServerAsyncTask
