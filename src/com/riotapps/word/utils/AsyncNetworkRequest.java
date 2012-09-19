@@ -16,7 +16,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 
 	CustomProgressDialog progress = null;
 	ArrayList<NameValuePair> nameValuePairs = null;
-	String jsonPost = null;
+	String jsonPost = "";
 	Class<?> goToClass = null;
 
 	/**====================================================================================   
@@ -128,7 +128,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * ====================================================================================*/  
 	 @Override
 	 protected void onPostExecute(ServerResponse serverResponseObject){
-		 progress.dismiss();
+	//	 progress.dismiss();
 
 		 //new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject, goToClass);			
 	 }//end method onPostExecute

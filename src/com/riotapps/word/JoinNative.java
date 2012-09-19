@@ -74,10 +74,10 @@ public class JoinNative extends Activity implements View.OnClickListener{
 								tPassword.getText().toString());
 					} 
 					catch (DesignByContractException dbEx) {
-					 	DialogManager.SetupAlert(context, getString(R.string.oops), dbEx.getMessage());					}
+					 	DialogManager.SetupAlert(context, getString(R.string.oops), dbEx.getMessage(), 0);					}
 					catch (Exception ex) {
 						//log this, figure out logging
-					 	DialogManager.SetupAlert(context, getString(R.string.error_title), getString(R.string.error_message));						
+					 	DialogManager.SetupAlert(context, getString(R.string.error_title), getString(R.string.error_message), 0);						
 					}
 				 
 				}

@@ -116,6 +116,15 @@ public class Player implements Parcelable{
 		return this.firstName + (this.lastname.length() > 0 ? " " + this.lastname.substring(0,1) + "." : "");
 	}
 	
+	public String getImageUrl(){
+		
+		//gravatar size = max size...default images
+		//https://graph.facebook.com/hunter.eskew/picture?return_ssl_resources=1
+	//	String gravatar = "http://graph.facebook.com/donna.guyton/picture?r=1&type=square"; //"http://www.gravatar.com/avatar/" + Utils.md5("hunter.eskew@gmail.com");
+	
+		return this.fb.length() > 0 ? String.format(Constants.FACEBOOK_IMAGE_URL, this.fb) : String.format(Constants.GRAVATAR_URL, this.gravatar);
+	}
+	
 	public int getNumWins() {
 		return numWins;
 	}
@@ -303,6 +312,7 @@ public class Player implements Parcelable{
 		out.writeInt(this.numLosses);
 		out.writeInt(this.numDraws);
 		out.writeString(this.badge_drawable);
+		out.writeString(this.gravatar);
 	}
 	
 	public static final Parcelable.Creator<Player> CREATOR
@@ -330,6 +340,7 @@ public class Player implements Parcelable{
 		this.numLosses = in.readInt();
 		this.numDraws = in.readInt();
 		this.badge_drawable = in.readString();
+		this.gravatar = in.readString();
 	}
 
 }

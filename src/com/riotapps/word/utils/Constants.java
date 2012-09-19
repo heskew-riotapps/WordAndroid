@@ -18,12 +18,18 @@ public class Constants {
  	public static final String LAYOUT_SCOPE_WORD = "W";
  	public static final String LAYOUT_SCOPE_LETTER = "L";
  	public static final String IMAGE_CACHE_DIR = "images";
+ 	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 3000;
+ 	
+ 	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?d=mm&r=pg&s=50";
+ 	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";			
+ 			
 
 	/**============================================
 	 * intent extras
 	 *=============================================*/
  	public static final String EXTRA_GAME = "game";
 	public static final String EXTRA_GAME_ID = "gameId";
+	public static final String EXTRA_PLAYER = "player";
 	 	
  	/**============================================
 	 * storage
@@ -52,11 +58,12 @@ public class Constants {
 	/**=============================================
 	 * the web
 	 *==============================================*/
+	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";
 	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";
 	public static final String FACEBOOK_API_ID = "314938401925933";
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
-	public static final String REST_FIND_PLAYER_BY_NICKNAME = "players/find.json?n_n=%s";
+	public static final String REST_FIND_PLAYER_BY_NICKNAME = REST_URL_SITE + "players/find.json?n_n=%s";
 	
 	/**=============================================
 	 * rails

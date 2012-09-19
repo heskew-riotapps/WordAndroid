@@ -171,7 +171,7 @@ public class GameService {
             //getRequest.abort();
             //Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
             
-            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleGetGameResponse", e.getMessage());
+            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleGetGameResponse", e.getMessage(), 0);
            // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
            // t.show(); 
          }

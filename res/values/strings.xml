@@ -25,6 +25,7 @@
 	
 	<string name="ok">OK</string>
 	<string name="oops">Oops</string>
+	<string name="sorry">Sorry</string>
 	<string name="error_title">Holy Gandalf!!</string>
 	<string name="error_message">Unfortunately, something messy happened back in the bowels of the code. Not to worry, we will get it fixed.  In the meantime, you might want to restart WordSmash.</string>
 	<string name="welcome_message">welcome to WordSmash</string>
@@ -33,7 +34,7 @@
 	<string name="join_with_email_title">join with your email</string>
  	<string name="join_with_email_subtitle">and add a nickname</string>
  	<string name="start_game">start a game</string>
- 	<string name="start_game_sub">just tell us how to find your opponent</string>
+ 	<string name="start_game_sub">just tell us how to find your opponent(s)</string>
  	<string name="start_game_fb_friends">choose a facebook friend</string>
  	<string name="start_game_prev_opponents">choose a previous opponent</string>
  	<string name="start_game_by_nickname">find by nickname</string>
@@ -162,7 +163,7 @@
 	<string name="full_rules_letter26_num">Z - 1</string>
 	
 	<string name="test_landing_title">Test Landing</string>
-	<string name="test_landing_main_landing">Main Landing</string>
+	<string name="test_landing_main_landing">Start Game</string>
 	<string name="test_landing_join_native">Join Native</string>
 	<string name="test_landing_welcome">Welcome</string>
 	<string name="test_landing_rules">Rules</string>
@@ -233,5 +234,6 @@
  	<string name="gameboard_swap_button_text">swap</string>
  	<string name="find_player">enter your opponent\'s nickname:</string>
  	<string name="find_player_button_text">find opponent</string>
+ 	<string name="find_player_results_button_text">add this opponent to game</string>
  	<string name="find_player_opponent_not_found">Sorry, we couldn\'t find a player with that nickname.</string>
 </resources>

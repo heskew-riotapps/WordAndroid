@@ -112,10 +112,10 @@ class ResponseHandler {
 	             case 500:
 	            	 ///////do something here
 	    
-	            	 DialogManager.SetupAlert(ctx, ctx.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase());  
+	            	 DialogManager.SetupAlert(ctx, ctx.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
 	         }  
 	     }else if(exception != null){  
-	    	 DialogManager.SetupAlert(ctx, ctx.getString(R.string.oops), ctx.getString(R.string.msg_not_connected));  
+	    	 DialogManager.SetupAlert(ctx, ctx.getString(R.string.oops), ctx.getString(R.string.msg_not_connected), 0);  
 
 	     }  
 	     else{  

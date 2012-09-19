@@ -48,7 +48,7 @@ public class TestLanding extends Activity implements View.OnClickListener{
 				startActivity(goToActivity);
 				break;
 	       	case R.id.testLandingMainLanding:  
-        		goToActivity = new Intent(getApplicationContext(), MainLanding.class);
+        		goToActivity = new Intent(getApplicationContext(), StartGame.class);
         		startActivity(goToActivity);
         		break;
 	       	

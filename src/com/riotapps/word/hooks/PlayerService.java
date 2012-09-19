@@ -57,7 +57,7 @@ public class PlayerService {
 	
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 		//are we connected to the web?
-		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
 		Check.Require(Validations.ValidateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
 	 
@@ -83,7 +83,7 @@ public class PlayerService {
 	}
 	
 	public String setupFindPlayerByNickname(Context ctx, String nickname) throws DesignByContractException{
-		nickname = nickname.trim();
+		nickname = nickname.trim(); 
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 		//are we connected to the web?
 		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
@@ -179,7 +179,7 @@ public class PlayerService {
             //getRequest.abort();
             Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
             
-            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage());
+            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage(), 0);
            // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
            // t.show(); 
          }
@@ -201,7 +201,7 @@ public class PlayerService {
             //getRequest.abort();
             Log.w("PlayerService", "Error for HandleCreatePlayerResponse= ", e);
             
-            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage());
+            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage(), 0);
            // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
            // t.show(); 
          }

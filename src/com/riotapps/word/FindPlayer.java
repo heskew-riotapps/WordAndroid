@@ -9,6 +9,7 @@ import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.AsyncNetworkRequest;
+import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.DialogManager;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 public class FindPlayer extends Activity implements View.OnClickListener{
 
+	private static final String TAG = FindPlayer.class.getSimpleName();
 	private PlayerService playerSvc = new PlayerService();
 	private Context context = this;
 	private EditText etFindPlayer;
@@ -51,10 +53,7 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 	        case R.id.bSearch:  
 	        	this.findPlayer();
 				break;
-	       	
-
 	    	}
-	    	
 	    }  
 	
 	
@@ -63,11 +62,11 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 			String url = playerSvc.setupFindPlayerByNickname(context, etFindPlayer.getText().toString());
 			
 			//kick off thread
-			new NetworkTask(this.context, RequestType.POST, getString(R.string.progress_searching)).execute(url);
+			new NetworkTask(this.context, RequestType.GET, getString(R.string.progress_searching)).execute(url);
 			
 		} catch (DesignByContractException e) {
 			//e.printStackTrace();
-			DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage());  
+			DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage(), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
 		}
 		
 	}
@@ -110,6 +109,8 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 		         }  
 
 		         int statusCode = response.getStatusLine().getStatusCode();  
+		         
+		         Log.i(FindPlayer.TAG, "StatusCode: " + statusCode);
 
 		         switch(statusCode){  
 		             case 200:  
@@ -117,22 +118,27 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 		                //update text
 		            	 Player player = playerSvc.HandleFindPlayerByNicknameResponse(this.context, iStream);
 
-		                 Toast t = Toast.makeText(this.context, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
-		         	    t.show();
+		                // Toast t = Toast.makeText(this.context, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
+		         	   // t.show();
+		         	   Intent intent = new Intent(this.context, com.riotapps.word.FindPlayerResults.class);
+		      	      //  intent.putExtra("gameId", game.getId());
+		      	      //	intent.putExtra("game", s);
+		      	      	intent.putExtra(Constants.EXTRA_PLAYER, player);
+		      	      	this.context.startActivity(intent);
 		                 break;  
 
 		             }//end of case 200 & 201  
 		             case 404:
 		             //case Status code == 422
-		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.find_player_opponent_not_found));  
-		            	 
+		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.find_player_opponent_not_found), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+		            	 break;
 		             case 422: 
 		             case 500:
 
-		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase());  
+		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
 		         }  
 		     }else if(exception != null){  
-		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_not_connected));  
+		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_not_connected), 0);  
 
 		     }  
 		     else{  

@@ -42,6 +42,8 @@ public class ImageFetcher extends ImageResizer {
     private static final String TAG = "ImageFetcher";
     private static final int HTTP_CACHE_SIZE = 10 * 1024 * 1024; // 10MB
     public static final String HTTP_CACHE_DIR = "http";
+    protected int mImageWidth;
+    protected int cornerRadius = 0;
 
     /**
      * Initialize providing a target image width and height for the processing images.
@@ -50,9 +52,10 @@ public class ImageFetcher extends ImageResizer {
      * @param imageWidth
      * @param imageHeight
      */
-    public ImageFetcher(Context context, int imageWidth, int imageHeight) {
+    public ImageFetcher(Context context, int imageWidth, int imageHeight, int cornerRadius) {
         super(context, imageWidth, imageHeight);
         init(context);
+        this.cornerRadius = cornerRadius;
     }
 
     /**
@@ -103,7 +106,8 @@ public class ImageFetcher extends ImageResizer {
         if (f != null) {
             // Return a sampled down version
         	Bitmap resized = decodeSampledBitmapFromFile(f.toString(), mImageWidth, mImageHeight);
-        	return ImageHelper.getRoundedCornerBitmap(resized, 10, 3);
+        //	return resized;
+         	return ImageHelper.getRoundedCornerBitmap(resized, this.cornerRadius, 0);
             //return decodeSampledBitmapFromFile(f.toString(), mImageWidth, mImageHeight);
         }
 

@@ -1,5 +1,8 @@
 package com.riotapps.word.utils;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -10,18 +13,19 @@ import android.widget.TextView;
 import com.riotapps.word.R;
 
 public class DialogManager {
-	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage){
-		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""), false);
+	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, int closeAfterMilliseconds){
+		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""), false, closeAfterMilliseconds);
 	}
 
-	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, boolean onOkClickFinishActivity){
-		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""), onOkClickFinishActivity);
+	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, boolean onOkClickFinishActivity, int closeAfterMilliseconds){
+		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""), onOkClickFinishActivity, closeAfterMilliseconds);
 	}
 	
-	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, String okText, boolean onOkClickFinishActivity){
+	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, String okText, boolean onOkClickFinishActivity, int closeAfterMilliseconds){
     	final Dialog dialog = new Dialog(context, R.style.DialogStyle);
     	final boolean onClickFinishActivity = onOkClickFinishActivity;
     	final Context ctx = context;
+    	final Timer t = new Timer();
 		dialog.setContentView(R.layout.alert);
  
 		// set the custom dialog components - text, image and button
@@ -35,14 +39,15 @@ public class DialogManager {
 		ok.setText(okText);
 
 		ok.setOnClickListener(new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			dialog.dismiss();
-			if(onClickFinishActivity){
-            	((Activity)ctx).finish();
-            }
-		}
-	});
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+				t.cancel();
+				if(onClickFinishActivity){
+	            	((Activity)ctx).finish();
+	            }
+			}
+		});
 
 		ImageView close = (ImageView) dialog.findViewById(R.id.img_close);
 		//if button is clicked, close the custom dialog
@@ -50,22 +55,26 @@ public class DialogManager {
 	 		@Override
 			public void onClick(View v) {
 				dialog.dismiss();
+				t.cancel();
 				if(onClickFinishActivity){
 	            	((Activity)ctx).finish();
 	            }
 			}
 		});
-//		Button dialogButton = (Button) dialog.findViewById(R.id.bAlertOk);
-//		//if button is clicked, close the custom dialog
-//		dialogButton.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				dialog.dismiss();
-//			}
-//		});
+		
 
 		dialog.show();	
 
+		if (closeAfterMilliseconds > 0){
+	            t.schedule(new TimerTask() {
+	                public void run() {
+	                	dialog.dismiss(); // when the task active then close the dialog
+	                    t.cancel(); // also just stop the timer thread, otherwise, you may receive a crash report
+	                }
+	            }, closeAfterMilliseconds);
+			}
+
+		
     }
 }
 

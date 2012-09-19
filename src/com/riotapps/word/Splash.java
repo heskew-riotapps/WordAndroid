@@ -26,7 +26,9 @@ public class Splash  extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
         
-
+///do this check in separate thread
+        
+        
         NetworkConnectivity connection = new NetworkConnectivity(this);
         //are we connected to the web?
         boolean isConnected = connection.checkNetworkConnectivity();
@@ -40,7 +42,7 @@ public class Splash  extends Activity {
 				if (isConnected == false) { 
 				 	
 					//change this to more specific dialog with button that goes to a page that allows offline usage
-					DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.msg_not_connected), true);					
+					DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.msg_not_connected), true, 0);					
 				}
         	} 
         	catch (InterruptedException e1) {
