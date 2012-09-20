@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
+import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
@@ -35,8 +36,10 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 	private Context context = this;
 	private EditText etFindPlayer;
 	private Button bSearch;
+	private Game game;
 	
-	 @Override
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -50,6 +53,12 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 		etFindPlayer.setFocusable(true);
 		etFindPlayer.requestFocus();
 		this.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+		Intent i = getIntent();
+		this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
+		
+		//to do
+		//if there are already more than one players in the game, display the other players in list view
 		
 	}
 	 
@@ -68,7 +77,7 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 			String url = playerSvc.setupFindPlayerByNickname(context, etFindPlayer.getText().toString());
 			
 			//kick off thread
-			new NetworkTask(this.context, RequestType.GET, getString(R.string.progress_searching)).execute(url);
+			new NetworkTask(this, RequestType.GET, getString(R.string.progress_searching)).execute(url);
 			
 		} 
 		catch (DesignByContractException e) {
@@ -80,9 +89,9 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 	
 	private class NetworkTask extends AsyncNetworkRequest{
 		
-		Context context;
+		FindPlayer context;
 		
-		public NetworkTask(Context ctx, RequestType requestType,
+		public NetworkTask(FindPlayer ctx, RequestType requestType,
 				String shownOnProgressDialog) {
 			super(ctx, requestType, shownOnProgressDialog);
 			this.context = ctx;
@@ -130,6 +139,7 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 		         	   Intent intent = new Intent(this.context, com.riotapps.word.FindPlayerResults.class);
 		      	      //  intent.putExtra("gameId", game.getId());
 		      	      //	intent.putExtra("game", s);
+		         	    intent.putExtra(Constants.EXTRA_GAME, this.context.game);
 		      	      	intent.putExtra(Constants.EXTRA_PLAYER, player);
 		      	      	this.context.startActivity(intent);
 		                 break;  

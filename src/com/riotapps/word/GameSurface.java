@@ -193,7 +193,13 @@ public class GameSurface extends Activity implements View.OnClickListener{
 		 ////come back and add this logic back
 		 
 		 if (this.gameState.getTrayTiles().size() == 0){
-			 this.gameState.setTrayTiles(this.contextPlayerGame.getTrayLetters());
+			 for(int x = 0; x < 7; x++){
+				 TrayTile trayTile = new TrayTile();
+				 trayTile.setIndex(x);
+				 trayTile.setLetter(this.contextPlayerGame.getTrayLetters().size() >= x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
+				 
+			 }
+			 //this.gameState.setTrayTiles(this.contextPlayerGame.getTrayLetters());
 		 }
 	 }
 	 

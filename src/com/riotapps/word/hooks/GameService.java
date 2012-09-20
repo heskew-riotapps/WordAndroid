@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -176,5 +178,34 @@ public class GameService {
            // t.show(); 
          }
 	 
+	}
+	
+	public static Game createGame(Context ctx, Player contextPlayer) throws DesignByContractException{
+		
+		Check.Require(PlayerService.GetPlayerFromLocal().getId().equals(contextPlayer.getId()), ctx.getString(R.string.validation_incorrect_context_player));
+    	
+		Game game = new Game();
+    	
+    	PlayerGame pg = new PlayerGame();
+    	pg.setPlayerId(contextPlayer.getId());
+    	pg.setPlayerOrder(1);
+    	
+    	List<PlayerGame> pgs = new ArrayList<PlayerGame>();
+    	pgs.add(pg);
+    	game.setPlayerGames(pgs);
+    	
+    	return game;
+	}
+	
+	public static Game addPlayerToGame(Context ctx, Game game, Player player) throws DesignByContractException{
+
+		Check.Require(game.getPlayerGames().size() < 4, ctx.getString(R.string.validation_too_many_players));
+		
+    	PlayerGame pg = new PlayerGame();
+    	pg.setPlayerId(player.getId());
+    	pg.setPlayerOrder(game.getPlayerGames().size() + 1);
+    	game.getPlayerGames().add(pg);
+    	
+    	return game;
 	}
 }

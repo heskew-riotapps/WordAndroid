@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.riotapps.word.hooks.Game;
+import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
+import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.Constants;
+import com.riotapps.word.utils.DesignByContractException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -59,28 +62,19 @@ public class StartGame extends Activity implements View.OnClickListener{
     	switch(v.getId()){  
         case R.id.tvStartByNickname:  
           	 Intent intent = new Intent(this.context, FindPlayer.class);
-     	    // intent.putExtra(Constants.EXTRA_GAME, this.createGame());
-     	     this.context.startActivity(intent);
-		 
+     	     try {
+				intent.putExtra(Constants.EXTRA_GAME, GameService.createGame(context, contextPlayer));
+				 this.context.startActivity(intent);
+     	     } 
+     	     catch (DesignByContractException e) {
+				DialogManager.SetupAlert(this, this.getString(R.string.oops), e.getMessage(), false);
+     	     }
+ 
 			break;
     	}
     	
     }  
     
-    private Game createGame(){
-    	Game game = new Game();
-    	
-    	PlayerGame pg = new PlayerGame();
-    	pg.setPlayerId(contextPlayer.getId());
-    	pg.setPlayerOrder(1);
-    	
-    	List<PlayerGame> pgs = new ArrayList<PlayerGame>();
-    	pgs.add(pg);
-    	game.setPlayerGames(pgs);
-    	
-    	return game;
-    	
-    }
     
 }
         

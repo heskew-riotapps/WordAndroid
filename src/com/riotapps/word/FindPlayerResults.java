@@ -1,7 +1,11 @@
 package com.riotapps.word;
 
+import com.riotapps.word.hooks.Game;
+import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
+import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.Constants;
+import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 
@@ -17,6 +21,8 @@ import android.widget.TextView;
 public class FindPlayerResults extends Activity  implements View.OnClickListener{
 	private static final String TAG = FindPlayerResults.class.getSimpleName();
 	
+	private Game game;
+	private Player player;
 	
 	 @Override
 		protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +31,9 @@ public class FindPlayerResults extends Activity  implements View.OnClickListener
 			setContentView(R.layout.findplayerresults);
 			
 			Intent i = getIntent();
-		 	Player player = (Player) i.getParcelableExtra(Constants.EXTRA_PLAYER);
-			
+		 	this.player = (Player) i.getParcelableExtra(Constants.EXTRA_PLAYER);
+		 	this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
+		 	
 		 	TextView tvPlayerName = (TextView)findViewById(R.id.tvPlayerName);
 		 	tvPlayerName.setText(player.getNickname());
 		 	
@@ -58,5 +65,20 @@ public class FindPlayerResults extends Activity  implements View.OnClickListener
 	 
 	private void addPlayer(){
 		
+		try 
+		{
+			this.game = GameService.addPlayerToGame(this, this.game, this.player);
+			
+			//go to 
+			Intent intent = new Intent(this, com.riotapps.word.FindPlayerResults.class);
+    	      //  intent.putExtra("gameId", game.getId());
+    	      //	intent.putExtra("game", s);
+       	    intent.putExtra(Constants.EXTRA_GAME, this.game);
+    	    intent.putExtra(Constants.EXTRA_PLAYER, player);
+    	    this.startActivity(intent);
+		} 
+		catch (DesignByContractException e) {
+			DialogManager.SetupAlert(this, this.getString(R.string.oops), e.getMessage(), true);
+		}
 	}
 }
