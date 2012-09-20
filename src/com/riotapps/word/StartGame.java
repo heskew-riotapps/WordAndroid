@@ -57,8 +57,7 @@ public class StartGame extends Activity implements View.OnClickListener{
     
     @Override 
     public void onClick(View v) {
-    	Intent goToActivity;
-    	
+
     	switch(v.getId()){  
         case R.id.tvStartByNickname:  
           	 Intent intent = new Intent(this.context, FindPlayer.class);

@@ -25,8 +25,8 @@ public class WebClient{
 	static HttpClient httpClient;
 	private HttpResponse httpResponseToCallingMethod;
 	private Context ctx;
-	private int connectionTimeout = 5000;
-	private int socketTimeout = 10000;
+	private int connectionTimeout = Constants.DEFAULT_CONNECTION_TIMEOUT;
+	private int socketTimeout =  Constants.DEFAULT_SOCKET_CONNECTION_TIMEOUT;
 	
 	public WebClient(){}
 	

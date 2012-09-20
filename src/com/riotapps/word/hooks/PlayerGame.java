@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.method.DateTimeKeyListener;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -29,7 +30,7 @@ public class PlayerGame implements Parcelable{
 	
 	private Player player; 
 	
-	private int score;
+	private int score = 0;
 	
 	@SerializedName("l_t_d")
 	private Date lastTurnDate;
@@ -44,23 +45,23 @@ public class PlayerGame implements Parcelable{
 	private Date lastChatterReceivedDate;
 	
 	@SerializedName("w_n")
-	private int winNum;
+	private int winNum = 0;
 	
 	@SerializedName("i_t")
-	private boolean isTurn;
+	private boolean isTurn = false;
 	
 	@SerializedName("i_w")
-	private boolean isWinner;
+	private boolean isWinner = false;
 	
 	@SerializedName("a_e_g")
-	private boolean hasBeenAlertedToEndOfGame;
+	private boolean hasBeenAlertedToEndOfGame = false;
 	
 	@SerializedName("o")
-	private int playerOrder;
+	private int playerOrder = 0;
 
 	
 	@SerializedName("t_l")
-	private List<String> trayLetters;
+	private List<String> trayLetters = new ArrayList<String>();
 	
 	public List<String> getTrayLetters() {
 		return trayLetters;
@@ -180,10 +181,10 @@ public class PlayerGame implements Parcelable{
 		out.writeString(this.playerId); 
 		out.writeParcelable(player, flags);
 		out.writeInt(this.score);
-		out.writeLong(this.lastTurnDate.getTime());
-		out.writeLong(this.lastAlertDate.getTime());
-		out.writeLong(this.lastReminderDate.getTime());
-		out.writeLong(this.lastChatterReceivedDate.getTime());
+		out.writeLong(this.lastTurnDate == null ? 0 : this.lastTurnDate.getTime());
+		out.writeLong(this.lastAlertDate == null ? 0 : this.lastAlertDate.getTime());
+		out.writeLong(this.lastReminderDate == null ? 0 : this.lastReminderDate.getTime());
+		out.writeLong(this.lastChatterReceivedDate == null ? 0 : this.lastChatterReceivedDate.getTime());
 		out.writeInt(this.winNum);
 		out.writeByte((byte) (this.isTurn ? 1 : 0));
 		out.writeByte((byte) (this.isWinner ? 1 : 0));

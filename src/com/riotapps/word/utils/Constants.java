@@ -21,8 +21,10 @@ public class Constants {
  	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 3000;
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?d=mm&r=pg&s=50";
- 	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";			
- 			
+ 	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
+ 	public static final int DEFAULT_CONNECTION_TIMEOUT = 15000;
+	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 25000;
+	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 4000;
 
 	/**============================================
 	 * intent extras

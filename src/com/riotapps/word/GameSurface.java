@@ -447,11 +447,11 @@ public class GameSurface extends Activity implements View.OnClickListener{
 		 }
 		 
 		 TextView tvLettersLeft = (TextView)findViewById(R.id.tvLettersLeft);
-		 if (this.game.getNumLetterLeft() == 1){
+		 if (this.game.getNumLettersLeft() == 1){
 			 tvLettersLeft.setText(R.string.scoreboard_1_letter_left);
 		 }
 		 else{
-			 tvLettersLeft.setText(String.format(context.getString(R.string.scoreboard_letters_left), this.game.getNumLetterLeft()));
+			 tvLettersLeft.setText(String.format(context.getString(R.string.scoreboard_letters_left), this.game.getNumLettersLeft()));
 		 }
 		 this.tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_num_points), "0"));
 		 
@@ -545,7 +545,7 @@ public class GameSurface extends Activity implements View.OnClickListener{
 		 //	players.add(pg4);
 		 	
 		 	game.setLastActionText("Junior18 played HAMMER for 21" );
-		 	game.setNumLetterLeft(87);
+		 	game.setNumLettersLeft(87);
 		 	
 		
 		 	game.setPlayerGames(players);

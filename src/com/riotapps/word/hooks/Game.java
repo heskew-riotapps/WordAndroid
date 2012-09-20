@@ -1,5 +1,7 @@
 package com.riotapps.word.hooks;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.os.Parcel;
@@ -12,26 +14,36 @@ public class Game implements Parcelable {
  
 	public Game(){}
 	
-	private String id;
+	private String id = "";
 	
 	@SerializedName("a_t") //mainly just for transport via json
-	private String authToken;
+	private String authToken = "";
 	
 	@SerializedName("played_words")
 	private List<PlayedWord> playedWords;
 	
 	@SerializedName("player_games")
-	private List<PlayerGame> playerGames;
+	private List<PlayerGame> playerGames = new ArrayList<PlayerGame>();
 	
 //	@SerializedName("last_action_alert_text")
- 	private String lastActionText;
+	//do not serialize
+ 	private String lastActionText = "";
 	
 	@SerializedName("left")
-	private int numLetterLeft;
+	private int numLettersLeft = 0;
 	
 	@SerializedName("d_c")
-	private String dupCheck;
+	private String dupCheck = "";
 
+	@SerializedName("cr_d")
+	private Date createDate;  
+	
+	@SerializedName("co_d")
+	private Date completionDate;  
+
+	@SerializedName("st")
+	private int status = 0;  
+	
 	public String getId() {
 		return id;
 	}
@@ -64,12 +76,12 @@ public class Game implements Parcelable {
 		this.lastActionText = lastActionText;
 	}
 
-	public int getNumLetterLeft() {
-		return numLetterLeft;
+	public int getNumLettersLeft() {
+		return numLettersLeft;
 	}
 
-	public void setNumLetterLeft(int numLetterLeft) {
-		this.numLetterLeft = numLetterLeft;
+	public void setNumLettersLeft(int numLettersLeft) {
+		this.numLettersLeft = numLettersLeft;
 	}
 
 	public String getDupCheck() {
@@ -88,6 +100,30 @@ public class Game implements Parcelable {
 		this.authToken = authToken;
 	}
 
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getCompletionDate() {
+		return completionDate;
+	}
+
+	public void setCompletionDate(Date completionDate) {
+		this.completionDate = completionDate;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -97,8 +133,14 @@ public class Game implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeString(this.id);
+		out.writeString(this.authToken);
 		out.writeList(this.playedWords);
 		out.writeList(this.playerGames);
+		out.writeInt(this.numLettersLeft);
+		out.writeString(this.dupCheck);
+		out.writeLong(this.createDate == null ? 0 : this.createDate.getTime());
+		out.writeLong(this.completionDate == null ? 0 : this.completionDate.getTime());
+		out.writeInt(this.status);
 	}
 
 	public static final Parcelable.Creator<Game> CREATOR
@@ -113,30 +155,17 @@ public class Game implements Parcelable {
 	};
 	
 	 private Game(Parcel in) {
-        // same order as writeToParcel
+     
          this.id = in.readString();
-     //    this.playedWords = in.readList(outVal, loader);
-     //    this.playerGames = in.readList(outVal, loader);
-     	 
+         this.authToken = in.readString();
+         in.readList(this.playedWords,PlayedWord.class.getClassLoader());
+         in.readList(this.playerGames,PlayerGame.class.getClassLoader());
+         this.numLettersLeft = in.readInt();
+         this.dupCheck = in.readString();
+         this.createDate.setTime(in.readLong());
+         this.completionDate.setTime(in.readLong());
+         this.status = in.readInt();
+       	 
      }
-//	 many :player_games #, :length => { :maximum => 2 }  
-//	  many :played_words
-//	#many :letters remaining vs played?#, :length => { :maximum => 2 }  
-//	  many :played_tiles
-//	  many :chatters
-//	  key :remaining_letters, String
-//	  key :played_letters, String
-//	  key :random_vowels, String #, format => /[AEIOU]/
-//	  key :random_consonants, String #, format => /[BCDFGHJKLMNPQRSTVWXYZ]/
-//	  key :num_consecutive_skips, Integer, :default => 0
-//	  key :num_words_played, Integer, :default => 0
-//	  key :completion_date, Time
-//	  key :last_action_popup_title, String
-//	  key :last_action_popup_text, String
-//	  key :last_action_alert_text, String
-//	  key :status, Integer
-	
-//	private 
-	
 	
 }
