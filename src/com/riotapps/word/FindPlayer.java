@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.conn.ConnectTimeoutException;
 
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -22,6 +23,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -41,21 +43,25 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 		setContentView(R.layout.findplayer);
 		
 		etFindPlayer = (EditText)findViewById(R.id.etFindPlayer);
+		etFindPlayer.setPressed(true);
 		bSearch = (Button)findViewById(R.id.bSearch);
 		bSearch.setOnClickListener(this);
 		
+		etFindPlayer.setFocusable(true);
+		etFindPlayer.requestFocus();
+		this.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 		
 	}
+	 
 	@Override 
-	    public void onClick(View v) {
+    public void onClick(View v) {
 
-	    	switch(v.getId()){  
-	        case R.id.bSearch:  
-	        	this.findPlayer();
-				break;
-	    	}
-	    }  
-	
+    	switch(v.getId()){  
+        case R.id.bSearch:  
+        	this.findPlayer();
+			break;
+    	}
+    }  
 	
 	private void findPlayer(){
 		try {
@@ -64,7 +70,8 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 			//kick off thread
 			new NetworkTask(this.context, RequestType.GET, getString(R.string.progress_searching)).execute(url);
 			
-		} catch (DesignByContractException e) {
+		} 
+		catch (DesignByContractException e) {
 			//e.printStackTrace();
 			DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage(), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
 		}
@@ -137,6 +144,8 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 
 		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
 		         }  
+		     }else if (exception instanceof ConnectTimeoutException) {
+		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);
 		     }else if(exception != null){  
 		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_not_connected), 0);  
 

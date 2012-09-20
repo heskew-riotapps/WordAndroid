@@ -41,7 +41,7 @@ public class CustomProgressDialog extends AlertDialog{
 	        View layout = inflater.inflate(R.layout.progress, 
 	                                        (ViewGroup) findViewById(R.id.progress_root));
 	     
-	        
+	        this.setCancelable(false);
 	     	TextView text = (TextView) layout.findViewById(R.id.dialog_text);
 	     	if (this.dialogText.length() > 0) {
 	     		text.setText(this.dialogText);

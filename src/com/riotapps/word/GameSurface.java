@@ -190,8 +190,10 @@ public class GameSurface extends Activity implements View.OnClickListener{
 		 
 		 //if this.turn != gameState.turn, clearGameState
 		 
+		 ////come back and add this logic back
+		 
 		 if (this.gameState.getTrayTiles().size() == 0){
-			 this.gameState.setTrayTiles(this.contextPlayerGame.getTrayTiles());
+			 this.gameState.setTrayTiles(this.contextPlayerGame.getTrayLetters());
 		 }
 	 }
 	 
@@ -517,8 +519,8 @@ public class GameSurface extends Activity implements View.OnClickListener{
 		 	trayTiles.add(trayTile5);
 		 	trayTiles.add(trayTile6);
 		 	trayTiles.add(trayTile7);
-		 	pg3.setTrayTiles(trayTiles);
-		 	pg2.setTrayTiles(trayTiles);
+	//	 	pg3.setTrayTiles(trayTiles);
+	//	 	pg2.setTrayTiles(trayTiles);
 		 	
 		 	PlayerGame pg4 = new PlayerGame();
 		 	Player p4 = new Player();

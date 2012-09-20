@@ -59,15 +59,15 @@ public class PlayerGame implements Parcelable{
 	private int playerOrder;
 
 	
-	@SerializedName("tray_tiles")
-	private List<TrayTile> trayTiles;
+	@SerializedName("t_l")
+	private List<String> trayLetters;
 	
-	public List<TrayTile> getTrayTiles() {
-		return trayTiles;
+	public List<String> getTrayLetters() {
+		return trayLetters;
 	}
 
-	public void setTrayTiles(List<TrayTile> trayTiles) {
-		this.trayTiles = trayTiles;
+	public void setTrayTiles(List<String> trayLetters) {
+		this.trayLetters = trayLetters;
 	}
 	
 	public String getPlayerId() {
@@ -178,6 +178,7 @@ public class PlayerGame implements Parcelable{
 	public void writeToParcel(Parcel out, int flags) {
 		 
 		out.writeString(this.playerId); 
+		out.writeParcelable(player, flags);
 		out.writeInt(this.score);
 		out.writeLong(this.lastTurnDate.getTime());
 		out.writeLong(this.lastAlertDate.getTime());
@@ -188,7 +189,7 @@ public class PlayerGame implements Parcelable{
 		out.writeByte((byte) (this.isWinner ? 1 : 0));
 		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0)); 
 		out.writeInt(this.playerOrder);
-	//	out.writeParcelable(Player, parcelableFlags)
+ 		out.writeList(this.trayLetters);		
 	}
 	
 	public static final Parcelable.Creator<PlayerGame> CREATOR
@@ -204,17 +205,24 @@ public class PlayerGame implements Parcelable{
 	
 	private PlayerGame(Parcel in) {
 		// same order as writeToParcel
-	//	this.playerId = in.readString();
-	//	this.score = in.readInt();
-	//	this.lastTurnDate = in.readValue()
-	//	this.lastAlertDate);
-	//	this.lastReminderDate);
-	//	this.lastChatterReceivedDate);
-	//	this.winNum = in.readString();
-	//	this.isTurn);
-	//	this.isWinner);
-	//	this.hasBeenAlertedToEndOfGame);
-	//	myBoolean = in.readByte() == 1; 
-		
+	 	this.playerId = in.readString();
+	 	this.player = in.readParcelable(Player.class.getClassLoader());
+	 	this.score = in.readInt();
+	 	this.lastTurnDate = new Date();
+	 	this.lastTurnDate.setTime(in.readLong());
+		this.lastAlertDate = new Date();
+	 	this.lastAlertDate.setTime(in.readLong()); 	
+	 	this.lastReminderDate = new Date();
+	 	this.lastReminderDate.setTime(in.readLong());
+	 	this.lastChatterReceivedDate = new Date();
+	 	this.lastChatterReceivedDate.setTime(in.readLong()); 
+	  	this.winNum = in.readInt();
+	  	this.isTurn = in.readByte() == 1;
+	 	this.isWinner  = in.readByte() == 1;
+	    this.hasBeenAlertedToEndOfGame  = in.readByte() == 1;
+	    this.playerOrder = in.readInt();
+	    this.trayLetters = null;
+	    in.readStringList(this.trayLetters);
+	
 	}
 }

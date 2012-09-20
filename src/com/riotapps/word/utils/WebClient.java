@@ -10,17 +10,37 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
 import android.content.Context;
 import android.util.Log;
 
 public class WebClient{
 
-	static HttpClient httpClient = new DefaultHttpClient();
-
-	HttpResponse httpResponseToCallingMethod;
-	Context ctx;
+	static HttpClient httpClient;
+	private HttpResponse httpResponseToCallingMethod;
+	private Context ctx;
+	private int connectionTimeout = 5000;
+	private int socketTimeout = 10000;
+	
+	public WebClient(){}
+	
+	public WebClient(int connectionTimeout, int socketTimeout){
+		this.connectionTimeout = connectionTimeout;
+		this.socketTimeout = socketTimeout;
+	}
+	
+	private void setHttpClient(){
+		 HttpParams httpParameters = new BasicHttpParams();
+		  HttpConnectionParams.setConnectionTimeout(httpParameters, this.connectionTimeout);
+		  HttpConnectionParams.setSoTimeout(httpParameters, this.socketTimeout);
+		  httpClient = new DefaultHttpClient(httpParameters);
+	}
 
 
 	/*===================================================================   
@@ -44,7 +64,7 @@ public class WebClient{
    public ServerResponse createGetRequest(String urlString){   
      
        if(httpClient == null){   
-           httpClient = new DefaultHttpClient();   
+    	   setHttpClient(); //httpClient = new DefaultHttpClient();   
        }   
     
        ServerResponse serverResponseObject = new ServerResponse();  
@@ -207,9 +227,8 @@ public class WebClient{
    }
   
     private ServerResponse createPostRequest(HttpPost httpPost){
-
 		if(httpClient == null){
-			httpClient = new DefaultHttpClient();
+			setHttpClient(); //httpClient = new DefaultHttpClient();
 		}
 
 	 
@@ -222,6 +241,9 @@ public class WebClient{
        //org.apache.http.client.entity.UrlEncodedFormEntity entity = new org.apache.http.client.entity.UrlEncodedFormEntity()
        try {
          //  httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+    	   
+    	 
+    	   
            response = httpClient.execute(httpPost);
        } catch (ClientProtocolException e) {
        	Log.v("in HttpClient -> in createPostRequest(String urlString) -> in catch", "ClientProtocolException" + e);

@@ -85,8 +85,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 
 	     String urlString = urlArray[0];   
 	     ServerResponse serverResponseObject = null;   
-
-	   
+  
 	     switch(this.requestType){  
 
 	         case GET:  
@@ -118,6 +117,9 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	             break;  
 	     }//end of switch  
  
+ 
+
+
 	     return serverResponseObject;  
 
 	 }//end method doInBackground()
@@ -128,7 +130,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * ====================================================================================*/  
 	 @Override
 	 protected void onPostExecute(ServerResponse serverResponseObject){
-	//	 progress.dismiss();
+	    progress.dismiss();
 
 		 //new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject, goToClass);			
 	 }//end method onPostExecute
