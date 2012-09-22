@@ -55,18 +55,18 @@ containing a value of this type.
         public static final int btn_red_matte=0x7f020021;
         public static final int btn_white_matte=0x7f020022;
         public static final int button_area_background=0x7f020023;
-        public static final int button_area_background_color=0x7f02007d;
+        public static final int button_area_background_color=0x7f020078;
         public static final int button_background=0x7f020024;
         /**  previously 330066 
          */
-        public static final int button_background_color=0x7f020077;
+        public static final int button_background_color=0x7f020072;
         public static final int button_main=0x7f020025;
         public static final int close=0x7f020026;
         public static final int close_button=0x7f020027;
-        public static final int content_area_background_color=0x7f020074;
+        public static final int content_area_background_color=0x7f02006f;
         public static final int content_area_bottom=0x7f020028;
-        public static final int content_area_font_color=0x7f020073;
-        public static final int content_font_color=0x7f020075;
+        public static final int content_area_font_color=0x7f02006e;
+        public static final int content_font_color=0x7f020070;
         public static final int custom_progress=0x7f020029;
         public static final int dialog_background=0x7f02002a;
         public static final int drop_shadow=0x7f02002b;
@@ -75,11 +75,11 @@ containing a value of this type.
         public static final int form_background=0x7f02002e;
         /** transperent color for normal state 
          */
-        public static final int form_background_color=0x7f02006f;
-        public static final int form_border_color=0x7f020076;
+        public static final int form_background_color=0x7f02006a;
+        public static final int form_border_color=0x7f020071;
         public static final int form_field_background_no_header=0x7f02002f;
-        public static final int form_header_background_color=0x7f02007c;
-        public static final int form_header_text_color=0x7f02007b;
+        public static final int form_header_background_color=0x7f020077;
+        public static final int form_header_text_color=0x7f020076;
         public static final int form_item_bottom=0x7f020030;
         public static final int form_item_bottom_pressed=0x7f020031;
         public static final int form_top_background=0x7f020032;
@@ -96,15 +96,15 @@ containing a value of this type.
         public static final int left_tab_off_background=0x7f02003d;
         public static final int left_tab_pressed_background=0x7f02003e;
         public static final int left_tab_selector=0x7f02003f;
-        public static final int logo_area_bottom_background_color=0x7f02007a;
-        public static final int logo_background_color=0x7f020079;
+        public static final int logo_area_bottom_background_color=0x7f020075;
+        public static final int logo_background_color=0x7f020074;
         public static final int logo_bg=0x7f020040;
         public static final int logo_bottom_border=0x7f020041;
         /** custom color for pressed state 
          */
-        public static final int normal_color=0x7f02006e;
-        public static final int pressed_color=0x7f02006d;
-        public static final int progress_background_color=0x7f02007f;
+        public static final int normal_color=0x7f020069;
+        public static final int pressed_color=0x7f020068;
+        public static final int progress_background_color=0x7f02007a;
         public static final int progress_inner_background=0x7f020042;
         public static final int red_dot=0x7f020043;
         public static final int right_tab_background=0x7f020044;
@@ -115,18 +115,18 @@ containing a value of this type.
         public static final int sbd_bg=0x7f020049;
         public static final int scoreboard_background=0x7f02004a;
         public static final int scoreboard_bg=0x7f02004b;
-        public static final int scoreboard_text_color=0x7f020078;
+        public static final int scoreboard_text_color=0x7f020073;
         public static final int scoreboard_top=0x7f02004c;
         public static final int spinner_small=0x7f02004d;
         public static final int spinner_white_48=0x7f02004e;
         public static final int splash_riot_background=0x7f02004f;
-        public static final int sub_text_color=0x7f02007e;
-        public static final int tab_background_color=0x7f020071;
+        public static final int sub_text_color=0x7f020079;
+        public static final int tab_background_color=0x7f02006c;
         public static final int tab_content_background=0x7f020050;
         public static final int tab_divider=0x7f020051;
         public static final int tab_form_background=0x7f020052;
-        public static final int tab_off_color=0x7f020072;
-        public static final int tab_pressed_color=0x7f020070;
+        public static final int tab_off_color=0x7f02006d;
+        public static final int tab_pressed_color=0x7f02006b;
         public static final int tab_selector=0x7f020053;
         public static final int text_clickable_main=0x7f020054;
         public static final int text_selector=0x7f020055;
@@ -144,15 +144,10 @@ containing a value of this type.
         public static final int tray_tile_bg=0x7f020061;
         public static final int tray_tile_empty_bg=0x7f020062;
         public static final int turn_arrow=0x7f020063;
-        public static final int wordsmash_logo1=0x7f020064;
-        public static final int wordsmash_logo2=0x7f020065;
-        public static final int wordsmash_logo3=0x7f020066;
-        public static final int wordsmash_logo4=0x7f020067;
-        public static final int wordsmash_logo5=0x7f020068;
-        public static final int wordsmash_logo6=0x7f020069;
-        public static final int wordsmash_logo7=0x7f02006a;
-        public static final int wordsmash_logo_small1=0x7f02006b;
-        public static final int yellow_dot3=0x7f02006c;
+        public static final int wordsmash_logo6=0x7f020064;
+        public static final int wordsmash_logo7=0x7f020065;
+        public static final int wordsmash_logo_small1=0x7f020066;
+        public static final int yellow_dot3=0x7f020067;
     }
     public static final class id {
         public static final int alert_ok=0x7f070006;
@@ -168,7 +163,6 @@ containing a value of this type.
         public static final int bSearch=0x7f070011;
         public static final int bShuffle=0x7f070045;
         public static final int bSwap=0x7f070044;
-        public static final int bTryAgain=0x7f07005a;
         public static final int bonus2l=0x7f070018;
         public static final int bonus2l_img=0x7f070019;
         public static final int bonus2l_text=0x7f07001a;
@@ -185,23 +179,23 @@ containing a value of this type.
         public static final int bonus4l_img=0x7f07001f;
         public static final int bottomBorder=0x7f070040;
         public static final int bottomControlsPlaceholder=0x7f070028;
-        public static final int byEmail=0x7f07006f;
-        public static final int byFacebook=0x7f07006e;
+        public static final int byEmail=0x7f07006d;
+        public static final int byFacebook=0x7f07006c;
         public static final int dialogButtonOK=0x7f07000c;
         public static final int dialog_text=0x7f07000b;
         public static final int dialog_title=0x7f07000a;
         public static final int email_guarantee=0x7f070049;
         public static final int email_label=0x7f07000f;
         public static final int etFindPlayer=0x7f070010;
-        public static final int filler=0x7f070064;
-        public static final int fullLogoArea=0x7f07006c;
+        public static final int filler=0x7f070062;
+        public static final int fullLogoArea=0x7f07006a;
         public static final int fullRules2=0x7f070016;
         public static final int fullRulesDictionary2=0x7f070026;
         public static final int full_rules_scoring_4=0x7f070017;
         public static final int gameBoardWrapper=0x7f070029;
         public static final int gameSurface=0x7f070041;
         public static final int header=0x7f070002;
-        public static final int headerArea=0x7f070063;
+        public static final int headerArea=0x7f070061;
         public static final int img_close=0x7f070004;
         public static final int inner_form=0x7f07000e;
         public static final int ivBadge=0x7f070013;
@@ -216,17 +210,16 @@ containing a value of this type.
         public static final int ivPlayerTurn_4=0x7f070039;
         public static final int logo=0x7f070008;
         public static final int logoArea=0x7f070007;
-        public static final int logoAreaBottom=0x7f07006d;
-        public static final int msg=0x7f070059;
+        public static final int logoAreaBottom=0x7f07006b;
         public static final int nickname_label=0x7f07004b;
         public static final int password_label=0x7f07004d;
         public static final int progress_root=0x7f070000;
-        public static final int progress_spinner=0x7f07005b;
-        public static final int quick_rule1=0x7f07005e;
-        public static final int quick_rule2=0x7f07005f;
-        public static final int quick_rule3=0x7f070060;
-        public static final int quick_rule4=0x7f070061;
-        public static final int quick_rule5=0x7f070062;
+        public static final int progress_spinner=0x7f070059;
+        public static final int quick_rule1=0x7f07005c;
+        public static final int quick_rule2=0x7f07005d;
+        public static final int quick_rule3=0x7f07005e;
+        public static final int quick_rule4=0x7f07005f;
+        public static final int quick_rule5=0x7f070060;
         public static final int scoreboard=0x7f07002b;
         public static final int scoreboardNumbers=0x7f07003d;
         public static final int scoreboardTop=0x7f07002c;
@@ -239,16 +232,16 @@ containing a value of this type.
         public static final int tEmail=0x7f07004a;
         public static final int tNickname=0x7f07004c;
         public static final int tPassword=0x7f07004e;
-        public static final int tabsLayout=0x7f070065;
+        public static final int tabsLayout=0x7f070063;
         public static final int tabsLayoutw=0x7f070050;
         public static final int tabsSubText=0x7f070052;
         public static final int tabsText=0x7f070051;
-        public static final int testLandingBadges=0x7f070069;
-        public static final int testLandingGameSurface=0x7f07006a;
-        public static final int testLandingJoinNative=0x7f070066;
-        public static final int testLandingMainLanding=0x7f070067;
-        public static final int testLandingRules=0x7f070068;
-        public static final int testLandingWelcome=0x7f07006b;
+        public static final int testLandingBadges=0x7f070067;
+        public static final int testLandingGameSurface=0x7f070068;
+        public static final int testLandingJoinNative=0x7f070064;
+        public static final int testLandingMainLanding=0x7f070065;
+        public static final int testLandingRules=0x7f070066;
+        public static final int testLandingWelcome=0x7f070069;
         public static final int title=0x7f070009;
         public static final int title_join_native=0x7f07002a;
         public static final int topAreaLayout=0x7f07000d;
@@ -265,8 +258,8 @@ containing a value of this type.
         public static final int tvPlayer_3=0x7f070033;
         public static final int tvPlayer_4=0x7f07003b;
         public static final int tvStartByNickname=0x7f070057;
-        public static final int welcome_msg=0x7f07005c;
-        public static final int welcome_sub_msg=0x7f07005d;
+        public static final int welcome_msg=0x7f07005a;
+        public static final int welcome_sub_msg=0x7f07005b;
     }
     public static final class layout {
         public static final int alert=0x7f030000;
@@ -282,19 +275,18 @@ containing a value of this type.
         public static final int lefttablayout=0x7f03000a;
         public static final int main=0x7f03000b;
         public static final int mainlanding=0x7f03000c;
-        public static final int notconnected=0x7f03000d;
-        public static final int progress=0x7f03000e;
-        public static final int quickrules=0x7f03000f;
-        public static final int righttablayout=0x7f030010;
-        public static final int rules=0x7f030011;
-        public static final int rulestab=0x7f030012;
-        public static final int splash=0x7f030013;
-        public static final int startgame=0x7f030014;
-        public static final int suggestions=0x7f030015;
-        public static final int tablayout=0x7f030016;
-        public static final int testlanding=0x7f030017;
-        public static final int toparealayout=0x7f030018;
-        public static final int welcome=0x7f030019;
+        public static final int progress=0x7f03000d;
+        public static final int quickrules=0x7f03000e;
+        public static final int righttablayout=0x7f03000f;
+        public static final int rules=0x7f030010;
+        public static final int rulestab=0x7f030011;
+        public static final int splash=0x7f030012;
+        public static final int startgame=0x7f030013;
+        public static final int suggestions=0x7f030014;
+        public static final int tablayout=0x7f030015;
+        public static final int testlanding=0x7f030016;
+        public static final int toparealayout=0x7f030017;
+        public static final int welcome=0x7f030018;
     }
     public static final class raw {
         public static final int alphabet=0x7f040000;

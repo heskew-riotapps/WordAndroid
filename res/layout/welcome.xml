@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LayoutFormStyle" >
+    style="@style/LayoutStyle" >
      <ImageView 
        android:id="@+id/logo"
        android:contentDescription="@string/logo"
@@ -19,17 +19,9 @@
 		android:id="@+id/header"
 	>
     <com.riotapps.word.ui.MainFontTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:text="@string/welcome_message" 
-       	android:id="@+id/welcome_msg"
-        android:layout_below="@id/logo"
-	 	android:gravity="center_horizontal"
-	  	android:paddingTop="8dp"
-        />
+        style="@style/FormHeaderAreaTextStyle"
+       android:text="@string/welcome_message" 
+              />
     <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

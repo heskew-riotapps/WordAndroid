@@ -25,6 +25,7 @@ public class Constants {
  	public static final int DEFAULT_CONNECTION_TIMEOUT = 15000;
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 25000;
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 4000;
+ 
 
 	/**============================================
 	 * intent extras

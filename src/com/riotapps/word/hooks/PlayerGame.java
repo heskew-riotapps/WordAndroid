@@ -1,5 +1,6 @@
 package com.riotapps.word.hooks;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -222,7 +223,7 @@ public class PlayerGame implements Parcelable{
 	 	this.isWinner  = in.readByte() == 1;
 	    this.hasBeenAlertedToEndOfGame  = in.readByte() == 1;
 	    this.playerOrder = in.readInt();
-	    this.trayLetters = null;
+	    this.trayLetters = new ArrayList<String>();
 	    in.readStringList(this.trayLetters);
 	
 	}

@@ -50,7 +50,7 @@ public class FindPlayer extends Activity implements View.OnClickListener{
 		bSearch = (Button)findViewById(R.id.bSearch);
 		bSearch.setOnClickListener(this);
 		
-		etFindPlayer.setFocusable(true);
+		//etFindPlayer.setFocusable(true);
 		etFindPlayer.requestFocus();
 		this.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 

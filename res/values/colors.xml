@@ -19,6 +19,6 @@
     <drawable name="form_header_background_color">#e8cca8</drawable>
     <drawable name="button_area_background_color">#e8cca8</drawable>
     <drawable name="sub_text_color">#1874CD</drawable>
-    <drawable name="progress_background_color">#330066</drawable>
+    <drawable name="progress_background_color">#3366dd</drawable>
 
 </resources>

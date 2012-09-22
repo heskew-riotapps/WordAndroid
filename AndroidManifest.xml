@@ -27,7 +27,6 @@
         <activity android:name=".Welcome" android:label="@string/app_name" android:screenOrientation="portrait"/>
   		<activity android:name=".JoinNative" android:label="@string/app_name" android:screenOrientation="portrait"/>
  		
-		<activity android:name=".NotConnected" android:label="@string/app_name"  android:screenOrientation="portrait"/>
 		<activity android:name=".MainLanding" android:label="@string/app_name" android:screenOrientation="portrait" />
 		<activity android:name=".QuickRules" android:label="@string/app_name" android:screenOrientation="portrait"/>
 		<activity android:name=".FullRules" android:label="@string/app_name" android:screenOrientation="portrait">

@@ -186,7 +186,7 @@ public class GameSurface extends Activity implements View.OnClickListener{
 	    };
 
 	 private void fillGameState(){
-		 this.gameState = GameStateService.getGameState(context, "123");
+		 this.gameState = GameStateService.getGameState(context, "123"); ///fix this temp code
 		 
 		 //if this.turn != gameState.turn, clearGameState
 		 
@@ -196,7 +196,8 @@ public class GameSurface extends Activity implements View.OnClickListener{
 			 for(int x = 0; x < 7; x++){
 				 TrayTile trayTile = new TrayTile();
 				 trayTile.setIndex(x);
-				 trayTile.setLetter(this.contextPlayerGame.getTrayLetters().size() >= x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
+				 trayTile.setLetter(this.contextPlayerGame.getTrayLetters().size() > x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
+				 this.gameState.getTrayTiles().add(trayTile);
 				 
 			 }
 			 //this.gameState.setTrayTiles(this.contextPlayerGame.getTrayLetters());

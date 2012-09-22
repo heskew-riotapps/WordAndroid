@@ -138,6 +138,8 @@ public class Game implements Parcelable {
 		out.writeList(this.playerGames);
 		out.writeInt(this.numLettersLeft);
 		out.writeString(this.dupCheck);
+		//out.writeSerializable(this.createDate);
+		//out.writeSerializable(this.completionDate);
 		out.writeLong(this.createDate == null ? 0 : this.createDate.getTime());
 		out.writeLong(this.completionDate == null ? 0 : this.completionDate.getTime());
 		out.writeInt(this.status);
@@ -162,8 +164,10 @@ public class Game implements Parcelable {
          in.readList(this.playerGames,PlayerGame.class.getClassLoader());
          this.numLettersLeft = in.readInt();
          this.dupCheck = in.readString();
-         this.createDate.setTime(in.readLong());
-         this.completionDate.setTime(in.readLong());
+       //  this.createDate = in.readSerializable(); 
+
+         this.createDate = new Date(in.readLong());
+         this.completionDate = new Date(in.readLong());
          this.status = in.readInt();
        	 
      }
