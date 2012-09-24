@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.riotapps.word.FindPlayer;
 import com.riotapps.word.R;
 import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.AsyncNetworkRequest;
@@ -28,7 +29,8 @@ import com.google.gson.reflect.TypeToken;
  
 ////make this class statisc
 public class PlayerService {
-	
+	private static final String TAG = PlayerService.class.getSimpleName();
+
 	Gson gson = new Gson();
 	NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 	
@@ -80,6 +82,10 @@ public class PlayerService {
 	 	new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json, null).execute(Constants.REST_CREATE_PLAYER_URL);
 		
 		//return player;
+	}
+	
+	public static void clearLocalStorage(Context ctx){
+		ctx.getSharedPreferences(Constants.USER_PREFS, 0).edit().clear().commit();
 	}
 	
 	public String setupFindPlayerByNickname(Context ctx, String nickname) throws DesignByContractException{
@@ -147,6 +153,37 @@ public class PlayerService {
 	 
 	}
 	
+	
+	public static void setContextPlayer(final Context ctx, InputStream iStream){
+        try {
+            
+        	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
+ 	        
+ 	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+ 	        
+ 	        Type type = new TypeToken<Player>() {}.getType();
+ 	        Player player = gson.fromJson(reader, type);
+ 	        
+ 	        ///save player info to shared preferences
+ 	        //userId and auth_token ...email and password should have been stored before this call
+ 	       SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+ 	       SharedPreferences.Editor editor = settings.edit();
+ 	       editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
+ 	       editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
+ 	       editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+ 	       editor.commit();    
+         } 
+         catch (Exception e) {
+            //getRequest.abort();
+            Log.w(TAG, "Error for HandleCreatePlayerResponse= ", e);
+            
+            Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
+            t.show(); 
+         }
+	 
+	}
+	
+	
 	public void HandleGetPlayerResponse(final Context ctx, InputStream iStream){
         try {
             
@@ -208,5 +245,7 @@ public class PlayerService {
 		return null;
 	 
 	}
+
+	
 	
 }

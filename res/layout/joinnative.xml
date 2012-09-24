@@ -20,21 +20,13 @@
     <com.riotapps.word.ui.MainFontTextView
         style="@style/FormHeaderAreaTextStyle"
         android:text="@string/join_with_email_title" 
-       	android:id="@+id/title_join_native"
+       	android:id="@+id/title"
     />
     <com.riotapps.word.ui.MainFontTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:textSize="12dp"
-        android:textStyle="bold"
+        style="@style/FormHeaderAreaSubTextStyle"
         android:text="@string/join_with_email_subtitle" 
        	android:id="@+id/sub_title_join_native"
-        android:layout_below="@id/title_join_native"
-	 	android:gravity="center_horizontal"
-	 	android:paddingBottom="8dp"
- 	 
-		 
+        android:layout_below="@id/title"
         />
     </RelativeLayout> 
      <RelativeLayout

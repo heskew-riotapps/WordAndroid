@@ -25,7 +25,7 @@ public class Constants {
  	public static final int DEFAULT_CONNECTION_TIMEOUT = 15000;
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 25000;
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 4000;
- 
+	public static final int SPLASH_ACTIVITY_TIMEOUT = 3000;
 
 	/**============================================
 	 * intent extras
@@ -67,6 +67,7 @@ public class Constants {
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
 	public static final String REST_FIND_PLAYER_BY_NICKNAME = REST_URL_SITE + "players/find.json?n_n=%s";
+	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN = REST_URL_SITE + "players/auth_via_token.json";
 	
 	/**=============================================
 	 * rails

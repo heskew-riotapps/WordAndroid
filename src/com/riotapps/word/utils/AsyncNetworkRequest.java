@@ -28,6 +28,17 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 		//this.responseHandleBy = responseHandleBy;
 		this.shownOnProgressDialog = shownOnProgressDialog;
 	}
+	 
+	 /**====================================================================================   
+	  * main Constructor   
+	  * ====================================================================================*/   
+	 public AsyncNetworkRequest(Context ctx, RequestType requestType, String shownOnProgressDialog, String jsonPost){
+		this.ctx = ctx;
+		this.requestType = requestType;
+		//this.responseHandleBy = responseHandleBy;
+		this.shownOnProgressDialog = shownOnProgressDialog;
+		this.jsonPost = jsonPost;
+	}
 	
 	/**====================================================================================   
 	  * 1st Constructor   
@@ -72,9 +83,11 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * ====================================================================================*/  
 	 @Override
 	 protected void onPreExecute() {
-		 progress = new CustomProgressDialog(ctx);
-		 progress.setMessage(shownOnProgressDialog);
-		 progress.show();
+		 if (this.shownOnProgressDialog != null){
+			 progress = new CustomProgressDialog(ctx);
+			 progress.setMessage(shownOnProgressDialog);
+			 progress.show();
+		 }
 	 }
 
 	 /**====================================================================================   
@@ -130,7 +143,9 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * ====================================================================================*/  
 	 @Override
 	 protected void onPostExecute(ServerResponse serverResponseObject){
-	    progress.dismiss();
+		 if (this.shownOnProgressDialog != null){
+			 progress.dismiss();
+		 }
 
 		 //new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject, goToClass);			
 	 }//end method onPostExecute

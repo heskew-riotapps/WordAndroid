@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LayoutStyle" >
-     <ImageView 
-       android:id="@+id/logo"
-       android:contentDescription="@string/logo"
-	    style="@style/TopLogoStyle" 
-	  />
+     style="@style/LayoutStyle"
+    android:orientation="vertical" >
+   <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+    <LinearLayout 
+        style="@style/LayoutFormStyle"
+        android:layout_below="@id/topAreaLayout"
+     > 
 	<RelativeLayout
 		style="@style/FormBackgroundStyle"
-		android:layout_marginTop="20dp"
 	>
 	<RelativeLayout
 		android:orientation="vertical"
@@ -21,53 +21,47 @@
     <com.riotapps.word.ui.MainFontTextView
         style="@style/FormHeaderAreaTextStyle"
        android:text="@string/welcome_message" 
-              />
+       android:id="@+id/title"
+     />
     <com.riotapps.word.ui.MainFontTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:textSize="12dp"
-        android:textStyle="bold"
+        style="@style/FormHeaderAreaSubTextStyle"
         android:text="@string/welcome_sub_message" 
        	android:id="@+id/welcome_sub_msg"
-        android:layout_below="@id/welcome_msg"
-	 	android:gravity="center_horizontal"
-	 	android:paddingBottom="8dp"
- 	 
-		 
+        android:layout_below="@id/title" 
         />
     </RelativeLayout> 
     <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:textColor="#1874CD"
+         style="@style/TextStyle"
         android:background="@drawable/text_selector"
-        android:textSize="16dp"
-        android:textStyle="bold"
+  
         android:text="@string/join_via_facebook" 
         android:id="@+id/byFacebook"
-    	android:paddingLeft="20dp"
 		android:clickable="true"
-		android:gravity="center_vertical"
+		android:paddingLeft="10dp"
 		android:drawableLeft="@drawable/f_logo"
-		android:drawablePadding="5dp"
+ 		android:drawablePadding="8dp"
 		android:layout_below="@id/header"
+		android:gravity="center_vertical"
+		
         />
    <com.riotapps.word.ui.MainFontTextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:textColor="#1874CD"
+        style="@style/TextStyle"
         android:background="@drawable/text_selector_bottom"
-        android:textSize="16dp"
-        android:textStyle="bold"
-	 	android:gravity="center"
+ 
+	 	android:gravity="center_vertical"
         android:text="@string/join_via_native" 
         android:id="@+id/byEmail"
         android:layout_below="@id/byFacebook"
 		android:layout_gravity="center"
+		android:paddingLeft="10dp"
 		android:layout_marginTop=".5dp"
 		android:layout_marginBottom="15dp"
 		android:clickable="true"
         />	
     </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

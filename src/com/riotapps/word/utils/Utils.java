@@ -171,4 +171,8 @@ public class Utils {
 
         return hex.toString();
     }
+    
+    public static long convertNanosecondsToMilliseconds(long nanoseconds){
+    	return Math.round(nanoseconds / 1000000);
+    }
 }

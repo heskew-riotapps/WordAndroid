@@ -55,7 +55,7 @@ containing a value of this type.
         public static final int btn_red_matte=0x7f020021;
         public static final int btn_white_matte=0x7f020022;
         public static final int button_area_background=0x7f020023;
-        public static final int button_area_background_color=0x7f020078;
+        public static final int button_area_background_color=0x7f020079;
         public static final int button_background=0x7f020024;
         /**  previously 330066 
          */
@@ -78,7 +78,8 @@ containing a value of this type.
         public static final int form_background_color=0x7f02006a;
         public static final int form_border_color=0x7f020071;
         public static final int form_field_background_no_header=0x7f02002f;
-        public static final int form_header_background_color=0x7f020077;
+        public static final int form_header_background_color=0x7f020078;
+        public static final int form_header_sub_text_color=0x7f020077;
         public static final int form_header_text_color=0x7f020076;
         public static final int form_item_bottom=0x7f020030;
         public static final int form_item_bottom_pressed=0x7f020031;
@@ -104,7 +105,7 @@ containing a value of this type.
          */
         public static final int normal_color=0x7f020069;
         public static final int pressed_color=0x7f020068;
-        public static final int progress_background_color=0x7f02007a;
+        public static final int progress_background_color=0x7f02007b;
         public static final int progress_inner_background=0x7f020042;
         public static final int red_dot=0x7f020043;
         public static final int right_tab_background=0x7f020044;
@@ -120,7 +121,7 @@ containing a value of this type.
         public static final int spinner_small=0x7f02004d;
         public static final int spinner_white_48=0x7f02004e;
         public static final int splash_riot_background=0x7f02004f;
-        public static final int sub_text_color=0x7f020079;
+        public static final int sub_text_color=0x7f02007a;
         public static final int tab_background_color=0x7f02006c;
         public static final int tab_content_background=0x7f020050;
         public static final int tab_divider=0x7f020051;
@@ -470,6 +471,7 @@ containing a value of this type.
         public static final int scoreboard_1_letter_left=0x7f0600be;
         public static final int scoreboard_letters_left=0x7f0600bd;
         public static final int scoreboard_num_points=0x7f0600bf;
+        public static final int server_404_error=0x7f0600cc;
         public static final int sorry=0x7f060019;
         public static final int start_game=0x7f060021;
         public static final int start_game_by_nickname=0x7f060025;
@@ -511,29 +513,31 @@ containing a value of this type.
         public static final int DialogTitleStyle=0x7f050008;
         public static final int FormBackgroundStyle=0x7f050009;
         public static final int FormFieldBackgroundNoHeaderStyle=0x7f05000a;
-        public static final int FormHeaderAreaTextStyle=0x7f05000b;
-        public static final int GameBoardButtonStyle=0x7f05000c;
-        public static final int HeaderTextStyle=0x7f05000d;
-        public static final int HeaderTopLayoutStyle=0x7f05000e;
-        public static final int LayoutFormStyle=0x7f05000f;
-        public static final int LayoutStyle=0x7f050010;
-        public static final int LetterValueStyle=0x7f050011;
-        public static final int MainStyle=0x7f050012;
-        public static final int MiniTextStyle=0x7f050013;
-        public static final int RulesTableRowStyle=0x7f050014;
-        public static final int ScoreboardBadgeStyle=0x7f050015;
-        public static final int ScoreboardPlayerStyle=0x7f050016;
-        public static final int ScoreboardScoreStyle=0x7f050017;
-        public static final int ScoreboardTurnStyle=0x7f050018;
-        public static final int SubTextStyle=0x7f050019;
-        public static final int TabContentBackgroundStyle=0x7f05001a;
-        public static final int TabFormBackgroundStyle=0x7f05001b;
-        public static final int TextClickableStyle=0x7f05001c;
-        public static final int TextStyle=0x7f05001d;
-        public static final int TopLogoAreaBottomStyle=0x7f05001e;
-        public static final int TopLogoAreaStyle=0x7f05001f;
-        public static final int TopLogoBoardStyle=0x7f050020;
-        public static final int TopLogoStyle=0x7f050021;
+        public static final int FormHeaderAreaSubTextStyle=0x7f05000b;
+        public static final int FormHeaderAreaTextStyle=0x7f05000c;
+        public static final int GameBoardButtonStyle=0x7f05000d;
+        public static final int HeaderSubTextStyle=0x7f05000e;
+        public static final int HeaderTextStyle=0x7f05000f;
+        public static final int HeaderTopLayoutStyle=0x7f050010;
+        public static final int LayoutFormStyle=0x7f050011;
+        public static final int LayoutStyle=0x7f050012;
+        public static final int LetterValueStyle=0x7f050013;
+        public static final int MainStyle=0x7f050014;
+        public static final int MiniTextStyle=0x7f050015;
+        public static final int RulesTableRowStyle=0x7f050016;
+        public static final int ScoreboardBadgeStyle=0x7f050017;
+        public static final int ScoreboardPlayerStyle=0x7f050018;
+        public static final int ScoreboardScoreStyle=0x7f050019;
+        public static final int ScoreboardTurnStyle=0x7f05001a;
+        public static final int SubTextStyle=0x7f05001b;
+        public static final int TabContentBackgroundStyle=0x7f05001c;
+        public static final int TabFormBackgroundStyle=0x7f05001d;
+        public static final int TextClickableStyle=0x7f05001e;
+        public static final int TextStyle=0x7f05001f;
+        public static final int TopLogoAreaBottomStyle=0x7f050020;
+        public static final int TopLogoAreaStyle=0x7f050021;
+        public static final int TopLogoBoardStyle=0x7f050022;
+        public static final int TopLogoStyle=0x7f050023;
     }
     public static final class styleable {
         /** Attributes that can be used with a TypefacedTextView.

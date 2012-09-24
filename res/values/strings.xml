@@ -2,12 +2,12 @@
 <resources>
     <string name="app_name">Word Smash</string>
     <string name="join_via_facebook">connect with facebook</string>
-	<string name="join_via_native">join with your email address</string>
+	<string name="join_via_native">connect with your email address</string>
 	<string name="join_title">Join WordSmash to get started</string>
 	<string name="logo">logo</string>
 	<string name="enter_email">enter email</string>
 	<string name="enter_password">enter password</string>
-	<string name="enter_nickname">enter nickname (optional)</string>
+	<string name="enter_nickname">enter nickname</string>
 	<string name="email">email address</string>
 	<string name="nickname">nickname</string>
 	<string name="password">password</string>
@@ -32,8 +32,8 @@
 	<string name="welcome_message">welcome to WordSmash</string>
 	<string name="welcome_sub_message">come on in&#8230;competition is waiting!!</string>
 	<string name="response_in_error">Something funky happened when communicating with the mother ship.</string>
-	<string name="join_with_email_title">join with your email</string>
- 	<string name="join_with_email_subtitle">and add a nickname</string>
+	<string name="join_with_email_title">connect with your email</string>
+ 	<string name="join_with_email_subtitle">and choose a nickname</string>
  	<string name="start_game">start a game</string>
  	<string name="start_game_sub">just tell us how to find your opponent(s)</string>
  	<string name="start_game_fb_friends">choose a facebook friend</string>
@@ -237,4 +237,5 @@
  	<string name="find_player_button_text">find opponent</string>
  	<string name="find_player_results_button_text">add this opponent to game</string>
  	<string name="find_player_opponent_not_found">Sorry, we couldn\'t find a player with that nickname.</string>
+ 	<string name="server_404_error">We couldn\'t find the server.  Please try again later.</string>
 </resources>

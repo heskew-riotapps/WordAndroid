@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="HeaderSubTextStyle" >
+   	<item name="android:textColor">@drawable/form_header_sub_text_color</item>
+   	<item name="android:textSize">12dp</item>
+   	<item name="android:textStyle">bold</item>
+</style>
+</resources>

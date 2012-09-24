@@ -16,6 +16,7 @@
     <drawable name="logo_background_color">#eec591</drawable>
     <drawable name="logo_area_bottom_background_color">#3366dd</drawable> 
     <drawable name="form_header_text_color">#1874CD</drawable> 
+    <drawable name="form_header_sub_text_color">#1874CD</drawable> 
     <drawable name="form_header_background_color">#e8cca8</drawable>
     <drawable name="button_area_background_color">#e8cca8</drawable>
     <drawable name="sub_text_color">#1874CD</drawable>

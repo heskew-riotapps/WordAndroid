@@ -231,8 +231,6 @@ public class WebClient{
 			setHttpClient(); //httpClient = new DefaultHttpClient();
 		}
 
-	 
-		
 		ServerResponse serverResponseObject = new ServerResponse();
 		HttpResponse response = null;
 		Exception exception = null;

@@ -41,8 +41,8 @@ public class Welcome  extends Activity implements View.OnClickListener{
         
 
         
-        txtFB = (TextView) findViewById(R.id.byFacebook);
-        txtFB.setOnClickListener(this);
+     //   txtFB = (TextView) findViewById(R.id.byFacebook);
+     //   txtFB.setOnClickListener(this);
         txtNative = (TextView) findViewById(R.id.byEmail);
         txtNative.setOnClickListener(this);    
       
