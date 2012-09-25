@@ -70,7 +70,7 @@ public class Splash  extends Activity {
 	    else{
 	    	 Log.w(TAG, "about to execute CheckConnectivityTask");
 	    	new CheckConnectivityTask().execute("");
-	    	 Log.w(TAG, " CheckConnectivityTask completed");
+	     
 
 	    }
     }
@@ -87,7 +87,7 @@ public class Splash  extends Activity {
 		    protected void onPostExecute(Boolean result) {
 	    	 Log.w(TAG, " CheckConnectivityTask onPostExecute");
 
-			 	processTaskResults(result);
+	    	 processConnectivityResults(result);
 		    }
 
 			@Override
@@ -133,7 +133,7 @@ public class Splash  extends Activity {
 	       return isConnected;
 	}
 	
-	private void processTaskResults(Boolean connected){
+	private void processConnectivityResults(Boolean connected){
 	   	 Log.w(TAG, " processTaskResults" );  
 		 if (connected == true) 
 	        {

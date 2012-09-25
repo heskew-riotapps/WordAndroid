@@ -50,6 +50,7 @@ public class CustomProgressDialog extends AlertDialog{
 	     		text.setVisibility(View.GONE);
 	     	}
 
+	     	
 	 		this.setContentView(layout);
 	}
 

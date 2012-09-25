@@ -54,7 +54,7 @@ public class PlayerService {
 	}
 	
 	
-	public static void CreatePlayer(Context ctx, String email, String nickname, String password) throws DesignByContractException{
+	public static String setupConnectViaEmail(Context ctx, String email, String nickname, String password) throws DesignByContractException{
 		Gson gson = new Gson();
 	
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
@@ -63,23 +63,23 @@ public class PlayerService {
 		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
 		Check.Require(Validations.ValidateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
 	 
-		Player player = new Player();
+		TransportCreatePlayer player = new TransportCreatePlayer();
 		player.setEmail(email);
 		player.setNickname(nickname);
 		player.setPassword(password);
 		
-		String json = gson.toJson(player);
+		return gson.toJson(player);
 		
 	//	  String shownOnProgressDialog = "progress test";//ctx.getString(R.string.progressDialogMessageSplashScreenRetrievingUserListing);
 		  
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putString(Constants.USER_PREFS_PWD, player.getPassword());
-		editor.putString(Constants.USER_PREFS_EMAIL, player.getEmail());
-		editor.commit();
+	//	SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	//	SharedPreferences.Editor editor = settings.edit();
+	//	editor.putString(Constants.USER_PREFS_PWD, player.getPassword());
+	//	editor.putString(Constants.USER_PREFS_EMAIL, player.getEmail());
+	//	editor.commit();
 		
 		//ok lets call the server now
-	 	new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json, null).execute(Constants.REST_CREATE_PLAYER_URL);
+	// 	new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json, null).execute(Constants.REST_CREATE_PLAYER_URL);
 		
 		//return player;
 	}
@@ -87,6 +87,7 @@ public class PlayerService {
 	public static void clearLocalStorage(Context ctx){
 		ctx.getSharedPreferences(Constants.USER_PREFS, 0).edit().clear().commit();
 	}
+ 
 	
 	public String setupFindPlayerByNickname(Context ctx, String nickname) throws DesignByContractException{
 		nickname = nickname.trim(); 
@@ -114,10 +115,10 @@ public class PlayerService {
 	     return player;
 	}
 	
-	public void HandleCreatePlayerResponse(final Context ctx, InputStream iStream){
-        try {
+	public static Player handleCreatePlayerResponse(final Context ctx, InputStream iStream){
+       // try {
             
-        	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
+        	Gson gson = new Gson(); //wrap json return into a single call that takes a type
  	        
  	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
  	        
@@ -126,30 +127,23 @@ public class PlayerService {
  	        
  	        ///save player info to shared preferences
  	        //userId and auth_token ...email and password should have been stored before this call
- 	       SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
- 	       SharedPreferences.Editor editor = settings.edit();
- 	       editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
- 	       editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
- 	      editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
- 	       editor.commit();  
+ 	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+ 	        SharedPreferences.Editor editor = settings.edit();
+ 	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
+ 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
+ 	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+ 	        editor.commit();  
  	        
- 	       Intent goToMainLanding = new Intent(ctx, com.riotapps.word.MainLanding.class);
-	       ctx.startActivity(goToMainLanding);
- 	       //Intent goToGamesLanding = new Intent(ctx, com.riotapps.word.GamesLanding.class);
-		   //ctx.startActivity(goToGamesLanding);
- 	       //redirect to game landing page
- 	       
- 	       //Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  
- 	       // t.show(); 
-            
-         } 
-         catch (Exception e) {
+ 	        return player;
+ 	 
+        // } 
+        // catch (Exception e) {
             //getRequest.abort();
-            Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
+        //    Log.w(PlayerService.TAG, "Error for HandleCreatePlayerResponse= ", e);
             
-            Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
-            t.show(); 
-         }
+            //Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
+            //t.show(); 
+        // }
 	 
 	}
 	

@@ -41,16 +41,16 @@ class ResponseHandler {
 	                 switch(responseHandleBy){  
 
 	                     //case 1 Constants.USER_LISTING:  
-	                     case CREATE_PLAYER: {  
-
-	                         if(iStream == null){  
-	                             Toast t = Toast.makeText(ctx, ctx.getString(R.string.response_in_error), Toast.LENGTH_LONG);  
-	                             t.show();  
-	                         }else{  
-	                             new PlayerService().HandleCreatePlayerResponse(ctx, iStream);         
-	                         }  
-	                         break;  
-	                     }
+	                 //    case CREATE_PLAYER: {  
+//
+//	                         if(iStream == null){  
+//	                             Toast t = Toast.makeText(ctx, ctx.getString(R.string.response_in_error), Toast.LENGTH_LONG);  
+//	                             t.show();  
+//	                         }else{  
+//	                             new PlayerService().HandleCreatePlayerResponse(ctx, iStream);         
+//	                         }  
+//	                         break;  
+//	                     }
 	                     case UPDATE_PLAYER:{
 	                
 	                    	 break;

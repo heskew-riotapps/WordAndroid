@@ -20,6 +20,7 @@
 		android:background="@drawable/custom_progress"
          android:id="@+id/progress_spinner"
          style="@android:style/Widget.ProgressBar.Small"
+         android:indeterminate="true"
          />
     <com.riotapps.word.ui.MainFontTextView
          android:id="@+id/dialog_text"

@@ -23,6 +23,12 @@
 	<string name="validation_nickname_required_for_search">Please enter the nickname of the opponent you are trying to find.</string>
 	<string name="validation_too_many_players">Sorry, a maximum of four players can be added to a game.</string>
 	<string name="validation_incorrect_context_player">Sorry, only the logged in user can start a game.</string>
+	<string name="validation_nickname_already_taken">This nickname is already in use by another player.</string>
+	<string name="validation_email_already_taken">This email is already in use by another player.</string>
+	<string name="validation_incorrect_password">The password is incorrect.</string>
+	<string name="validation_unspecified_error">The error could not be determined.  Please try again later.</string>
+	<string name="validation_404_error">The server could not be found.  Please try again later.</string>
+	
 	
 	<string name="ok">OK</string>
 	<string name="oops">Oops</string>
@@ -43,6 +49,7 @@
  	<string name="progress_loading">loading&#8230;</string>
  	<string name="progress_saving">saving&#8230;</string>
  	<string name="progress_searching">searching&#8230;</string>
+ 	<string name="progress_connecting">connecting&#8230;</string>
  	<string name="progress_syncing">syncing&#8230;</string>
  	<string name="quick_rules_title">condensed rules</string>
  	<string name="quick_rules_subtitle">enough to get you off and running</string>

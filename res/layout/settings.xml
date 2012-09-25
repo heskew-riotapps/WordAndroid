@@ -115,7 +115,13 @@
         android:layout_weight="1.0"
         android:text="@string/save"
     />
-    
+    <com.riotapps.word.utils.TypefaceButton 
+        style="@style/ButtonStyle"
+        android:id="@+id/bCancel"
+        android:layout_width="0dp"
+        android:layout_weight="1.0"
+        android:text="@string/cancel"
+    />
     </LinearLayout>
     </RelativeLayout>
     </LinearLayout>

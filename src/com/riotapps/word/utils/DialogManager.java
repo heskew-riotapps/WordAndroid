@@ -13,6 +13,10 @@ import android.widget.TextView;
 import com.riotapps.word.R;
 
 public class DialogManager {
+	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage){
+		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""), false, 0);
+	}
+	
 	public static void SetupAlert(Context context, String dialogTitle, String dialogMessage, int closeAfterMilliseconds){
 		SetupAlert(context, dialogTitle, dialogMessage, context.getString(R.string.ok, ""), false, closeAfterMilliseconds);
 	}
