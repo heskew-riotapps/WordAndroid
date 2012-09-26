@@ -15,19 +15,19 @@ public class Player implements Parcelable{
 	
 	@Expose
 	@SerializedName("n_n")
-	private String nickname;
+	private String nickname = "";
 	
 	@Expose
 	@SerializedName("f_n")
-	private String firstName;
+	private String firstName = "";
 	
 	@Expose
 	@SerializedName("l_n")
-	private String lastname;
+	private String lastname = "";
 	
 	@Expose
 	@SerializedName("e_m")
-	private String email;
+	private String email = "";
 	
 	private String gravatar;
 	
@@ -113,6 +113,7 @@ public class Player implements Parcelable{
 	}
 	
 	public String getAbbreviatedName(){
+		if (this.nickname.length() > 0){return this.nickname;}
 		return this.firstName + (this.lastname.length() > 0 ? " " + this.lastname.substring(0,1) + "." : "");
 	}
 	

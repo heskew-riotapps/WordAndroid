@@ -30,12 +30,12 @@ public class StartGame extends Activity implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mainlanding);
+        setContentView(R.layout.startgame);
         
        // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
 
         PlayerService playerSvc = new PlayerService();
-        contextPlayer = playerSvc.GetPlayerFromLocal();
+        contextPlayer = playerSvc.getPlayerFromLocal();
         
       //  Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 	  //  t.show();

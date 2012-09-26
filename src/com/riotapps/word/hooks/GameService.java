@@ -182,7 +182,7 @@ public class GameService {
 	
 	public static Game createGame(Context ctx, Player contextPlayer) throws DesignByContractException{
 		
-		Check.Require(PlayerService.GetPlayerFromLocal().getId().equals(contextPlayer.getId()), ctx.getString(R.string.validation_incorrect_context_player));
+		Check.Require(PlayerService.getPlayerFromLocal().getId().equals(contextPlayer.getId()), ctx.getString(R.string.validation_incorrect_context_player));
     	
 		Game game = new Game();
     	

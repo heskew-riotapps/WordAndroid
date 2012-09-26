@@ -8,7 +8,7 @@ public class Error {
 	public enum ErrorType{
 		NO_TRANSLATION(0),
 		INCORRECT_PASSWORD(1),
-		EMAIL_IN_USE(2),
+		EMAIL_NOT_SUPPLIED(2),
 		NICKNAME_IN_USE(3);
 				
 		private final int value;

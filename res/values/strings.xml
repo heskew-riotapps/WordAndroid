@@ -13,18 +13,26 @@
 	<string name="password">password</string>
 	<string name="save">save</string>
 	<string name="back">back</string>
+	<string name="badges">badges</string>
+	<string name="settings">settings</string>
+	<string name="options">options</string>
+	<string name="rules">game rules</string>
+	<string name="create_game">start a game</string>
 	<string name="try_again">Try Again</string>
 	<string name="cancel">cancel</string>
 	<string name="never_share_email">(will never be shared)</string>
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="msg_connection_timeout">The network connection took too long to return. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="validation_email_required">Please enter your email to connect to play.  Never fear, it will not be shared.</string>
+	<string name="validation_nickname_required">Please enter your nickname.  This will be the name to other players see.</string>
+	<string name="validation_password_required">Please enter a password.</string>
 	<string name="validation_email_invalid">Please enter a valid email to connect to play.  We\'ll never share it, we just may send game-related emails out every now and then.  Did we mention we\'ll never share it?</string>
 	<string name="validation_nickname_required_for_search">Please enter the nickname of the opponent you are trying to find.</string>
 	<string name="validation_too_many_players">Sorry, a maximum of four players can be added to a game.</string>
 	<string name="validation_incorrect_context_player">Sorry, only the logged in user can start a game.</string>
 	<string name="validation_nickname_already_taken">This nickname is already in use by another player.</string>
 	<string name="validation_email_already_taken">This email is already in use by another player.</string>
+	<string name="validation_email_not_supplied">Please supply an email address.</string>
 	<string name="validation_incorrect_password">The password is incorrect.</string>
 	<string name="validation_unspecified_error">The error could not be determined.  Please try again later.</string>
 	<string name="validation_404_error">The server could not be found.  Please try again later.</string>
@@ -34,7 +42,7 @@
 	<string name="oops">Oops</string>
 	<string name="sorry">Sorry</string>
 	<string name="error_title">Holy Gandalf!!</string>
-	<string name="error_message">Unfortunately, something messy happened back in the bowels of the code. Not to worry, we will get it fixed.  In the meantime, you might want to restart WordSmash.</string>
+	<string name="error_message">Unfortunately, something messy happened down in the bowels of the code. Not to worry, we will get it fixed.  In the meantime, you might want to restart WordSmash.</string>
 	<string name="welcome_message">welcome to WordSmash</string>
 	<string name="welcome_sub_message">come on in&#8230;competition is waiting!!</string>
 	<string name="response_in_error">Something funky happened when communicating with the mother ship.</string>
@@ -51,14 +59,14 @@
  	<string name="progress_searching">searching&#8230;</string>
  	<string name="progress_connecting">connecting&#8230;</string>
  	<string name="progress_syncing">syncing&#8230;</string>
- 	<string name="quick_rules_title">condensed rules</string>
+ 	<string name="quick_rules_title">condensed game rules</string>
  	<string name="quick_rules_subtitle">enough to get you off and running</string>
   	<string name="quick_rules_1">To start the game, a letter of the first word must be placed on at least one of the smiley faces.</string>
   	<string name="quick_rules_2">Then take turns forming valid words by dragging letters from your tray to the board. At least one of your placed letters must connect to (or be placed on top of) letters already placed on the board in previous turns.</string>	
  	<string name="quick_rules_3">During a turn, be sure to place all of your letters in a single line, either vertically or horizontally.</string>	
  	<string name="quick_rules_4">If it\'s your turn, you can also skip the turn or swap letters.</string>
  	<string name="quick_rules_5">Keep it up until all the letters are used.  The player with the highest score wins.</string>	
- 	<string name="full_rules_title">full rules</string>
+ 	<string name="full_rules_title">full game rules</string>
  	<string name="full_rules_subtitle">all the details</string>
  	<string name="full_rules_1">The idea is to score more points than your opponent by forming valid words out of the letters in your tray. 
                    Letters must be placed on the board in a single axis, either horizontally or vertically.  As you win more games, 
@@ -170,6 +178,8 @@
 	<string name="full_rules_letter25_num">Y - 2</string>
 	<string name="full_rules_letter26_num">Z - 1</string>
 	
+	<string name="options_title">options</string>
+	
 	<string name="test_landing_title">Test Landing</string>
 	<string name="test_landing_main_landing">Start Game</string>
 	<string name="test_landing_join_native">Join Native</string>
@@ -180,7 +190,7 @@
 	<string name="test_landing_game_surface">Game Surface</string>			
 	
 	<string name="badges_title">badges</string>
-	<string name="badges_subtitle">a better badge means better skills</string>
+	<string name="badges_subtitle">a better badge means more wins</string>
 	<string name="badges_0">no wins yet</string>	
 	<string name="badges_1_4">under 5 wins</string>
 	<string name="badges_5_9">between 5 and 9 wins</string>

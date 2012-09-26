@@ -26,7 +26,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 		this.ctx = ctx;
 		this.requestType = requestType;
 		//this.responseHandleBy = responseHandleBy;
-		this.shownOnProgressDialog = shownOnProgressDialog;
+		if (shownOnProgressDialog != null) {this.shownOnProgressDialog = shownOnProgressDialog;}
 	}
 	 
 	 /**====================================================================================   
@@ -36,7 +36,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 		this.ctx = ctx;
 		this.requestType = requestType;
 		//this.responseHandleBy = responseHandleBy;
-		this.shownOnProgressDialog = shownOnProgressDialog;
+		if (shownOnProgressDialog != null) {this.shownOnProgressDialog = shownOnProgressDialog;}
 		this.jsonPost = jsonPost;
 	}
 	
@@ -47,7 +47,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 		this.ctx = ctx;
 		this.requestType = requestType;
 		this.responseHandleBy = responseHandleBy;
-		this.shownOnProgressDialog = shownOnProgressDialog;
+		if (shownOnProgressDialog != null) {this.shownOnProgressDialog = shownOnProgressDialog;}
 	}
 
 		/**====================================================================================   
@@ -57,7 +57,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 		this.ctx = ctx;
 		this.requestType = requestType;
 		this.responseHandleBy = responseHandleBy;
-		this.shownOnProgressDialog = shownOnProgressDialog;
+		if (shownOnProgressDialog != null) {this.shownOnProgressDialog = shownOnProgressDialog;}
 		this.goToClass =  goToClass;
 	}
 	 /**====================================================================================   

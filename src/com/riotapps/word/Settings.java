@@ -154,7 +154,7 @@ public class Settings extends Activity implements View.OnClickListener{
 			            	 	case INCORRECT_PASSWORD:
 					            	errorMessage = this.context.getString(R.string.validation_incorrect_password);
 			            	 		break; 
-			            	 	case EMAIL_IN_USE:
+			            	 	case EMAIL_NOT_SUPPLIED:
 			            	 		errorMessage = this.context.getString(R.string.validation_email_already_taken);
 			            	 		break;
 			            	 	case NICKNAME_IN_USE:

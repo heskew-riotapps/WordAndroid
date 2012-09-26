@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutStyle"
+    android:orientation="vertical" >
+     <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+   <LinearLayout
+         style="@style/LayoutFormStyle"
+         >
+	<LinearLayout
+		style="@style/FormBackgroundStyle"
+		android:layout_marginTop="5dp"
+	>
+	<RelativeLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="45dp"
+		android:background="@drawable/form_top_background"
+		android:id="@+id/header"
+	>
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/FormHeaderAreaTextStyle"
+        android:text="@string/options_title" 
+        />
+    </RelativeLayout> 
+    <ScrollView
+        android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:fillViewport="true" 
+        >
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+         android:orientation="vertical"
+        >
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/TextLineItemStyle"
+        android:text="@string/settings" 
+        android:id="@+id/tvSettings"
+        />
+     <com.riotapps.word.ui.MainFontTextView
+        style="@style/TextLineItemStyle"
+        android:text="@string/quick_rules_title" 
+        android:id="@+id/tvQuickRules"
+        />
+      <com.riotapps.word.ui.MainFontTextView
+        style="@style/TextLineItemStyle"
+        android:text="@string/full_rules_title" 
+        android:id="@+id/tvFullRules"
+            android:background="@drawable/text_selector_bottom"
+        />
+    
+    </LinearLayout>	
+    </ScrollView>
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

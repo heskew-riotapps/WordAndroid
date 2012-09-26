@@ -56,7 +56,7 @@ public class Splash  extends Activity {
     
     private void handlePreProcessing(){
 		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, 0);
-	    String storedToken = settings.getString(Constants.USER_PREFS_USER_ID, "");
+	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
 	       
 	    if (storedToken.length() > 0){
 	    	TransportAuthToken authToken = new TransportAuthToken();
@@ -64,11 +64,12 @@ public class Splash  extends Activity {
 			Gson gson = new Gson();
 			String json = gson.toJson(authToken);
 			
+			Log.w(TAG, "auth token=" + storedToken);
 			//ok lets call the server now
 			new NetworkTask(this, RequestType.POST, json).execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
 	    }
 	    else{
-	    	 Log.w(TAG, "about to execute CheckConnectivityTask");
+	    	 Log.w(TAG, "about to execute CheckConnectivityTask, no auth token");
 	    	new CheckConnectivityTask().execute("");
 	     
 
@@ -201,7 +202,7 @@ public class Splash  extends Activity {
 		            		 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime));
 		            	 }
 	            		 
-	            		 Intent intent = new Intent( this, com.riotapps.word.TestLanding.class);
+	            		 Intent intent = new Intent( this, com.riotapps.word.MainLanding.class);
 			     	     this.startActivity(intent);
 	            	 }
 	            	 catch(Exception e){
@@ -217,9 +218,9 @@ public class Splash  extends Activity {
 	            	 long currentTime = System.nanoTime();
 	            	 
 	            	 //default time in which to leave splash up
-	            	 if (currentTime -  this.startTime > Constants.SPLASH_ACTIVITY_TIMEOUT){
+	            	 if (Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime) > Constants.SPLASH_ACTIVITY_TIMEOUT){
 	            		 try {
-							Thread.sleep(currentTime -  this.startTime);
+	            			 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime));
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -231,10 +232,12 @@ public class Splash  extends Activity {
 
 	             case 404:
 	            	 DialogManager.SetupAlert(this, this.getString(R.string.sorry), this.getString(R.string.server_404_error), true, 0);
+	            	 break;
 	             case 422: 
 	             case 500:
 
 	            	 DialogManager.SetupAlert(this, this.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), true, 0);  
+	            	 break;
 	         }  
 	     }else if (exception instanceof ConnectTimeoutException) {
 	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_connection_timeout), 0);

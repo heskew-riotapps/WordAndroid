@@ -135,11 +135,8 @@ public class JoinNative extends Activity implements View.OnClickListener{
 			         switch(statusCode){  
 			             case 200:  
 			             case 201: {  
-			                //update text
+			          
 			            	 Player player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
-
-			                 // Toast t = Toast.makeText(this.context, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
-			         	    // t.show();
 			         	     Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
 			      	      
 			      	      	 this.context.startActivity(intent);
@@ -155,8 +152,8 @@ public class JoinNative extends Activity implements View.OnClickListener{
 			            	 	case INCORRECT_PASSWORD:
 					            	errorMessage = this.context.getString(R.string.validation_incorrect_password);
 			            	 		break; 
-			            	 	case EMAIL_IN_USE:
-			            	 		errorMessage = this.context.getString(R.string.validation_email_already_taken);
+			            	 	case EMAIL_NOT_SUPPLIED:
+			            	 		errorMessage = this.context.getString(R.string.validation_email_not_supplied);
 			            	 		break;
 			            	 	case NICKNAME_IN_USE:
 			            	 		errorMessage = this.context.getString(R.string.validation_nickname_already_taken);
@@ -168,6 +165,7 @@ public class JoinNative extends Activity implements View.OnClickListener{
 			            	 }
 			            	 
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), errorMessage);
+			            	 break;
 			             case 404:
 			             //case Status code == 422
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_404_error), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
@@ -176,6 +174,7 @@ public class JoinNative extends Activity implements View.OnClickListener{
 			             case 500:
 
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+			            	 break;
 			         }  
 			     }else if (exception instanceof ConnectTimeoutException) {
 			    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);

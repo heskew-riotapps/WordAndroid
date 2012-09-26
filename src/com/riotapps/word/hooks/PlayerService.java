@@ -60,7 +60,10 @@ public class PlayerService {
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	//check funky characters in nickname
 		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
+		Check.Require(nickname.length() > 0, ctx.getString(R.string.validation_nickname_required));
+		Check.Require(password.length() > 0, ctx.getString(R.string.validation_password_required));
 		Check.Require(Validations.ValidateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
 	 
 		TransportCreatePlayer player = new TransportCreatePlayer();
@@ -107,7 +110,7 @@ public class PlayerService {
 	}
 	
 	
-	public static Player GetPlayerFromLocal(){
+	public static Player getPlayerFromLocal(){
 		 Gson gson = new Gson(); 
 		 Type type = new TypeToken<Player>() {}.getType();
 	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);

@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutStyle"
     android:orientation="vertical" >
    <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
@@ -6,6 +6,10 @@
            style="@style/LayoutFormStyle"
            android:layout_below="@id/topAreaLayout"
         > 
+    <ScrollView 
+   		android:layout_width="fill_parent"
+   		android:layout_height="fill_parent" 
+   		android:fadingEdge="none">
      <RelativeLayout
 		style="@style/FormBackgroundStyle"
 	>
@@ -118,5 +122,6 @@
     
     </LinearLayout>
     </RelativeLayout>
+    </ScrollView>
     </LinearLayout>
 </RelativeLayout>

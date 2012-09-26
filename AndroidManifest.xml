@@ -59,6 +59,7 @@
 		<activity android:name=".FindPlayer" android:label="@string/app_name" android:screenOrientation="portrait"/>
 		<activity android:name=".FindPlayerResults" android:label="@string/app_name" android:screenOrientation="portrait"/>
 		<activity android:name=".StartGame" android:label="@string/app_name" android:screenOrientation="portrait"/>
+		<activity android:name=".Options" android:label="@string/app_name" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

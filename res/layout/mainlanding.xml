@@ -5,7 +5,37 @@
     <LinearLayout 
            style="@style/LayoutFormStyle"
            android:layout_below="@id/topAreaLayout"
+           android:layout_marginTop="-2dp"
         > 
+        <LinearLayout
+         
+        android:paddingTop="8dp"
+        android:layout_marginBottom="5dp"
+         >
+	 
+            <com.riotapps.word.utils.TypefaceButton 
+		  	    style="@style/MainLandingButtonStyle"
+		  	    android:id="@+id/bOptions" 
+		        android:layout_width="0dp" 
+		        android:layout_weight="1.0"
+		        android:text="@string/options"
+		    />
+			<com.riotapps.word.utils.TypefaceButton 
+		  	    style="@style/MainLandingButtonStyle"
+		  	    android:id="@+id/bBadges" 
+		        android:layout_width="0dp" 
+		        android:layout_weight="1.0"
+		        android:text="@string/badges"
+		    />
+			<com.riotapps.word.utils.TypefaceButton 
+		  	    style="@style/MainLandingButtonStyle"
+		  	    android:id="@+id/bStart"
+		        android:layout_width="0dp" 
+		        android:layout_weight="1.0"
+		        android:text="@string/create_game"
+		    />
+    
+    </LinearLayout>
 	<RelativeLayout
 		android:orientation="vertical"
 		android:layout_width="wrap_content"
