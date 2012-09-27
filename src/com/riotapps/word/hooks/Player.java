@@ -92,13 +92,13 @@ public class Player implements Parcelable{
 		return firstName;
 	}
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		this.firstName = firstName.trim();
 	}
 	public String getLastname() {
 		return lastname;
 	}
 	public void setLastname(String lastname) {
-		this.lastname = lastname;
+		this.lastname = lastname.trim();
 	}
 	public boolean isFacebookUser(){
 		return this.fb.length() > 0;

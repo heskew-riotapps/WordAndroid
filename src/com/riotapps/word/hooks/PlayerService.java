@@ -6,10 +6,13 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.riotapps.word.FindPlayer;
@@ -20,6 +23,8 @@ import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.DialogManager;
+import com.riotapps.word.utils.ImageCache;
+import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
@@ -64,7 +69,7 @@ public class PlayerService {
 		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
 		Check.Require(nickname.length() > 0, ctx.getString(R.string.validation_nickname_required));
 		Check.Require(password.length() > 0, ctx.getString(R.string.validation_password_required));
-		Check.Require(Validations.ValidateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
+		Check.Require(Validations.ValidateEmail(email.trim()) == true, ctx.getString(R.string.validation_email_invalid));
 	 
 		TransportCreatePlayer player = new TransportCreatePlayer();
 		player.setEmail(email);
@@ -107,6 +112,26 @@ public class PlayerService {
 	 	//new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.FIND_PLAYER_BY_NICKNAME, ctx.getString(R.string.progress_searching), null).execute(url);
 		
 		//return player;
+	}
+	
+	public static void loadPlayerInHeader(Activity context){
+		 Player player = PlayerService.getPlayerFromLocal();
+		ImageFetcher imageLoader = new ImageFetcher(context, 32, 32, 0);
+		imageLoader.setImageCache(ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR));
+		ImageView ivContextPlayer = (ImageView) context.findViewById(R.id.ivHeaderContextPlayer);
+		//android.util.Log.i(TAG, "FindPlayerResults: playerImage=" + player.getImageUrl());
+		
+		imageLoader.loadImage(player.getImageUrl(), ivContextPlayer); //default image
+		
+		ImageView ivContextPlayerBadge = (ImageView) context.findViewById(R.id.ivHeaderContextPlayerBadge);
+		int contextPlayerBadgeId = context.getResources().getIdentifier("com.riotapps.word:drawable/" + player.getBadgeDrawable(), null, null);
+		ivContextPlayerBadge.setImageResource(contextPlayerBadgeId);
+
+		TextView tvHeaderContextPlayerName = (TextView) context.findViewById(R.id.tvHeaderContextPlayerName);
+		tvHeaderContextPlayerName.setText(player.getAbbreviatedName());
+		
+		TextView tvHeaderContextPlayerWins = (TextView) context.findViewById(R.id.tvHeaderContextPlayerWins); 
+		tvHeaderContextPlayerWins.setText(String.format(context.getString(R.string.header_num_wins), player.getNumWins()));
 	}
 	
 	

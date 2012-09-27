@@ -20,10 +20,10 @@ public class ImageHelper {
         
         if (borderPixels < 0){borderPixels = 0;}
         
-        if (borderPixels > 1000){
-	        final int colorBorder = Color.WHITE;
+        if (borderPixels > 11110){
+	        final int colorBorder = Color.BLACK;
 	        final Paint paintBorder = new Paint();
-	        final Rect rectBorder = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+	        final Rect rectBorder = new Rect(0, 0, bitmap.getWidth() + borderPixels, bitmap.getHeight() + borderPixels);
 	        final RectF rectFBorder = new RectF(rectBorder);
 	        final float roundPxBorder = pixels;
 	

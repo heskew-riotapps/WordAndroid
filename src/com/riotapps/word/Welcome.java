@@ -17,8 +17,7 @@ import com.riotapps.word.facebook.friendsRequestListener;
 import com.riotapps.word.facebook.meRequestListener;
 
 public class Welcome  extends Activity implements View.OnClickListener{
-    /** Called when the activity is first created. */
-	
+ 
 	Facebook facebook = new Facebook(Constants.FACEBOOK_API_ID);
 	AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
 	
@@ -32,19 +31,11 @@ public class Welcome  extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
         
-
-    //    TextView tvWelcome =(TextView)findViewById(R.id.welcome_msg);
-    //    TextView tvSubWelcome =(TextView)findViewById(R.id.welcome_sub_msg);
-    //    TextView tvFB =(TextView)findViewById(R.id.byFacebook);
-     //   TextView tvNative =(TextView)findViewById(R.id.byEmail);
-   
-        
-
-        
+ 
      //   txtFB = (TextView) findViewById(R.id.byFacebook);
      //   txtFB.setOnClickListener(this);
         txtNative = (TextView) findViewById(R.id.byEmail);
-        txtNative.setOnClickListener(this);    
+     //   txtNative.setOnClickListener(this);    
       
         
     }
@@ -53,14 +44,12 @@ public class Welcome  extends Activity implements View.OnClickListener{
     public void onClick(View v) {
     	switch(v.getId()){  
         case R.id.byFacebook:  
-            // action to preform on button 1  
         	this.routeToFacebook();
-            //Toast.makeText(context, "Button 1 pressed ", Toast.LENGTH_SHORT).show();  
-            //break;  
+        	break;
         case R.id.byEmail:  
-            // action to preform on button 1  
-			Intent goToFirstActivity = new Intent(getApplicationContext(), JoinNative.class);
-			startActivity(goToFirstActivity);
+			Intent intent = new Intent(this, JoinNative.class);
+			startActivity(intent);
+			break;
 //            Toast.makeText(context, "Button 2 pressed ", Toast.LENGTH_SHORT).show();  
   //          break;  
         }  

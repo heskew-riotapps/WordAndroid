@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
      style="@style/LayoutStyle"
     android:orientation="vertical" >
-   <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+   <include android:id="@+id/topAreaLayout" layout="@layout/topareanocontextlayout" />
     <LinearLayout 
         style="@style/LayoutFormStyle"
         android:layout_below="@id/topAreaLayout"

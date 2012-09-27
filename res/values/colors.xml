@@ -22,5 +22,6 @@
     <drawable name="sub_text_color">#1874CD</drawable>
     <drawable name="progress_background_color">#3366dd</drawable>
     <drawable name="button_text_color">#fff5ee</drawable>
-
+	<drawable name="player_image_border_color">#000000</drawable>
+	<drawable name="player_image_background_color">#d2bfa6</drawable>
 </resources>

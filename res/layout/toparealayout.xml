@@ -11,38 +11,49 @@
     	>
     <ImageView 
         android:id="@+id/ivHeaderContextPlayer"
-        android:layout_height="30dp"
-        android:layout_width="30dp"
+        android:layout_height="32dp"
+        android:layout_width="32dp"
         android:layout_alignParentRight="true"
         android:layout_marginTop="4dp"
         android:layout_marginRight="4dp"
-        android:background="@drawable/img_black_bg"
-        android:paddingLeft="7px"
-        android:paddingTop="5px"
-        android:paddingRight="9px" 
-        android:paddingBottom="10px" 
+        android:layout_marginLeft="3dp"
+    
+        android:background="@drawable/image_border"
+        android:scaleType="fitXY"
+   
+        
         />
-      <com.riotapps.word.ui.MainFontTextView 
+      <com.riotapps.word.ui.ScoreboardFontTextView 
         android:id="@+id/tvHeaderContextPlayerName"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"      
+        android:layout_width="wrap_content" 
+         android:layout_marginTop="7dp"
+        android:textColor="@drawable/scoreboard_text_color"
+	    android:textSize="11dp"
+        android:layout_toLeftOf="@id/ivHeaderContextPlayer"   
         />	
-      <com.riotapps.word.ui.MainFontTextView 
+      <com.riotapps.word.ui.ScoreboardFontTextView 
         android:id="@+id/tvHeaderContextPlayerWins"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"     
+        android:layout_width="wrap_content" 
+        android:textColor="@drawable/scoreboard_text_color"
+	    android:textSize="11dp"  
+	     android:layout_marginLeft="2dp"  
         android:layout_toLeftOf="@id/ivHeaderContextPlayer"
-        android:layout_below="@id/tvHeaderContextPlayerName"        />	
+        android:layout_below="@id/tvHeaderContextPlayerName"
+        
+          />	
       
       <ImageView 
         android:id="@+id/ivHeaderContextPlayerBadge"
-        android:layout_height="12dp"
-        android:layout_width="12dp"
+        android:layout_height="10dp"
+        android:layout_width="10dp"
         android:layout_toLeftOf="@id/tvHeaderContextPlayerWins"
         android:layout_below="@id/tvHeaderContextPlayerName"
-        android:layout_alignParentRight="true"
+        
         android:layout_marginTop="2dp"
         android:layout_marginLeft="2dp"
+ 
         />
      <ImageView 
        android:id="@+id/logo"

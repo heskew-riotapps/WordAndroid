@@ -18,7 +18,7 @@ public class TransportCreatePlayer {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = email.trim();
 	}
 
 	public String getPassword() {
@@ -26,7 +26,7 @@ public class TransportCreatePlayer {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = password.trim();
 	}
 
 	public String getNickname() {
@@ -34,7 +34,7 @@ public class TransportCreatePlayer {
 	}
 
 	public void setNickname(String nickname) {
-		this.nickname = nickname;
+		this.nickname = nickname.trim();
 	}
 	
 	

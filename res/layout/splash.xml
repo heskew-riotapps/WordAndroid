@@ -6,7 +6,7 @@
        android:contentDescription="@string/logo"
        android:src="@drawable/wordsmash_logo6"
        android:layout_width="250dp"
-	    style="@style/TopLogoStyle" 
+	    style="@style/TopLogoNoContextStyle" 
 	  />
 	<ImageView 
 	    android:src="@drawable/riotapps_logo1"

@@ -20,6 +20,7 @@
 	<string name="create_game">start a game</string>
 	<string name="try_again">Try Again</string>
 	<string name="cancel">cancel</string>
+	<string name="header_num_wins">%s wins</string>
 	<string name="never_share_email">(will never be shared)</string>
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="msg_connection_timeout">The network connection took too long to return. To work properly, WordSmash has to talk to the mother ship.</string>

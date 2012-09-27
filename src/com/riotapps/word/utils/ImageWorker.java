@@ -72,7 +72,8 @@ public abstract class ImageWorker {
 
         if (bitmap != null) {
             // Bitmap found in memory cache
-            imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 10, 3));
+        	imageView.setImageBitmap(bitmap);
+            //imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 10, 3));
         } else if (cancelPotentialWork(data, imageView)) {
             final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
             final AsyncDrawable asyncDrawable =
@@ -317,7 +318,7 @@ public abstract class ImageWorker {
      * @param bitmap
      */
     private void setImageBitmap(ImageView imageView, Bitmap bitmap) {
-    	bitmap = ImageHelper.getRoundedCornerBitmap(bitmap, 10, 3);
+    	//bitmap = ImageHelper.getRoundedCornerBitmap(bitmap, 10, 3);
         if (mFadeInBitmap) {
             // Transition drawable with a transparent drawable and the final bitmap
             final TransitionDrawable td =
@@ -326,8 +327,8 @@ public abstract class ImageWorker {
                             new BitmapDrawable(mContext.getResources(), bitmap)
                     });
             // Set background to loading bitmap
-            imageView.setBackgroundDrawable(
-                    new BitmapDrawable(mContext.getResources(), mLoadingBitmap));
+           // imageView.setBackgroundDrawable(
+           //         new BitmapDrawable(mContext.getResources(), mLoadingBitmap));
 
             imageView.setImageDrawable(td);
             td.startTransition(FADE_IN_TIME);
