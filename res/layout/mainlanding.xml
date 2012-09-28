@@ -37,19 +37,11 @@
     
     </LinearLayout>
 	<RelativeLayout
-		android:orientation="vertical"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/form_background"
-		android:layout_below="@id/logo"
-		android:padding="2dp"
+		style="@style/FormBackgroundStyle"
+		android:layout_marginTop="5dp"
 	>
 	<RelativeLayout
-		android:orientation="vertical"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/form_top_background"
-		android:layout_below="@id/logo"
+		style="@style/FormHeaderWrapperWithSubtitleStyle"
 		android:id="@+id/header"
 	>
     <com.riotapps.word.ui.MainFontTextView

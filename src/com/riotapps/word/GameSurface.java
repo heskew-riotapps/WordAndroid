@@ -370,7 +370,7 @@ public class GameSurface extends Activity implements View.OnClickListener{
 		 ImageView ivPlayerTurn4 = (ImageView)findViewById(R.id.ivPlayerTurn_4);
 		 
 		 //position 1
-		 String contextPlayer = this.game.getPlayerGames().get(contextPlayerIndex).getPlayer().getFullName();
+		 String contextPlayer = this.game.getPlayerGames().get(contextPlayerIndex).getPlayer().getName();
 		 if (contextPlayer.length() > 25 || playerGameCount > 2){contextPlayer = this.game.getPlayerGames().get(contextPlayerIndex).getPlayer().getAbbreviatedName();}
 		 tvContextPlayer.setText(contextPlayer);
 		 tvContextPlayerScore.setText(Integer.toString(this.game.getPlayerGames().get(contextPlayerIndex).getScore()));
@@ -379,7 +379,7 @@ public class GameSurface extends Activity implements View.OnClickListener{
 		 if (this.game.getPlayerGames().get(contextPlayerIndex).isTurn() == false){ivContextPlayerTurn.setVisibility(View.INVISIBLE);}
 
 		 //position 2
-		 String player2 = this.game.getPlayerGames().get(playerIndex2).getPlayer().getFullName();
+		 String player2 = this.game.getPlayerGames().get(playerIndex2).getPlayer().getName();
 		 if (player2.length() > 25 || playerGameCount > 2){player2 = this.game.getPlayerGames().get(playerIndex2).getPlayer().getAbbreviatedName();}
 		 tvPlayer2.setText(player2);
 		 tvPlayerScore2.setText(Integer.toString(this.game.getPlayerGames().get(playerIndex2).getScore()));
@@ -404,7 +404,7 @@ public class GameSurface extends Activity implements View.OnClickListener{
 			 ivPlayerTurn4.setVisibility(View.INVISIBLE);	
 			 
 			 //position 3
-			 String player3 = this.game.getPlayerGames().get(playerIndex3).getPlayer().getFullName();
+			 String player3 = this.game.getPlayerGames().get(playerIndex3).getPlayer().getName();
 			 if (player3.length() > 25 || playerGameCount > 2){player3 = this.game.getPlayerGames().get(playerIndex3).getPlayer().getAbbreviatedName();}
 			 tvPlayer3.setText(player3);
 			 tvPlayerScore3.setText(Integer.toString(this.game.getPlayerGames().get(playerIndex3).getScore()));
@@ -429,7 +429,7 @@ public class GameSurface extends Activity implements View.OnClickListener{
 		 else if (playerGameCount == 4){
 			 
 			 //position 3
-			 String player3 = this.game.getPlayerGames().get(playerIndex3).getPlayer().getFullName();
+			 String player3 = this.game.getPlayerGames().get(playerIndex3).getPlayer().getName();
 			 if (player3.length() > 25 || playerGameCount > 2){player3 = this.game.getPlayerGames().get(playerIndex3).getPlayer().getAbbreviatedName();}
 			 tvPlayer3.setText(player3);
 			 tvPlayerScore3.setText(Integer.toString(this.game.getPlayerGames().get(playerIndex3).getScore()));
@@ -438,7 +438,7 @@ public class GameSurface extends Activity implements View.OnClickListener{
 			 if (this.game.getPlayerGames().get(playerIndex3).isTurn() == false){ivPlayerTurn3.setVisibility(View.INVISIBLE);}
 
 			 //position 4
-			 String player4 = this.game.getPlayerGames().get(playerIndex4).getPlayer().getFullName();
+			 String player4 = this.game.getPlayerGames().get(playerIndex4).getPlayer().getName();
 			 if (player4.length() > 25 || playerGameCount > 2){player4 = this.game.getPlayerGames().get(playerIndex4).getPlayer().getAbbreviatedName();}
 			 tvPlayer4.setText(player4);
 			 tvPlayerScore4.setText(Integer.toString(this.game.getPlayerGames().get(playerIndex4).getScore()));

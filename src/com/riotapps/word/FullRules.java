@@ -1,5 +1,7 @@
 package com.riotapps.word;
 
+import com.riotapps.word.hooks.PlayerService;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
@@ -18,7 +20,7 @@ public class FullRules extends Activity{
 	        TextView fullRulesDictionary2 = (TextView) findViewById(R.id.fullRulesDictionary2);
 	        fullRulesDictionary2.setMovementMethod(LinkMovementMethod.getInstance());
 
-	        
+			PlayerService.loadPlayerInHeader(this);  
 	 }
 	    
 }

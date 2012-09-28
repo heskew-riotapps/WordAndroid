@@ -18,7 +18,7 @@ public class Player implements Parcelable{
 	private String nickname = "";
 	
 	@Expose
-	@SerializedName("f_n")
+	@SerializedName("f_n") 
 	private String firstName = "";
 	
 	@Expose
@@ -108,7 +108,12 @@ public class Player implements Parcelable{
 		return this.numWins + this.numLosses + this.numDraws;
 	}
 	
-	public String getFullName(){
+	public String getNameWithMaxLength(int maxLength){
+		return this.getName().length() > maxLength ? this.getAbbreviatedName() : this.getName();
+	}
+	
+	public String getName(){
+		if (this.nickname.length() > 0){return this.nickname;}
 		return this.firstName + " " + this.lastname;
 	}
 	
@@ -158,12 +163,6 @@ public class Player implements Parcelable{
 	}
 	public void setFb(String fb) {
 		this.fb = fb;
-	}
-	public String getAuth_token() {
-		return auth_token;
-	}
-	public void setAuth_token(String auth_token) {
-		this.auth_token = auth_token;
 	}
 	
 	

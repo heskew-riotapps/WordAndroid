@@ -16,6 +16,7 @@
 	<string name="badges">badges</string>
 	<string name="settings">settings</string>
 	<string name="options">options</string>
+	<string name="logout">logout</string>
 	<string name="rules">game rules</string>
 	<string name="create_game">start a game</string>
 	<string name="try_again">Try Again</string>
@@ -37,9 +38,9 @@
 	<string name="validation_incorrect_password">The password is incorrect.</string>
 	<string name="validation_unspecified_error">The error could not be determined.  Please try again later.</string>
 	<string name="validation_404_error">The server could not be found.  Please try again later.</string>
+	<string name="validation_token_not_found">The auth token could not be found.</string>	
 	
-	
-	<string name="ok">OK</string>
+	<string name="ok">ok</string>
 	<string name="oops">Oops</string>
 	<string name="sorry">Sorry</string>
 	<string name="error_title">Holy Gandalf!!</string>
@@ -59,6 +60,7 @@
  	<string name="progress_saving">saving&#8230;</string>
  	<string name="progress_searching">searching&#8230;</string>
  	<string name="progress_connecting">connecting&#8230;</string>
+ 	<string name="progress_logging_out">logging out&#8230;</string>
  	<string name="progress_syncing">syncing&#8230;</string>
  	<string name="quick_rules_title">condensed game rules</string>
  	<string name="quick_rules_subtitle">enough to get you off and running</string>
@@ -67,7 +69,8 @@
  	<string name="quick_rules_3">During a turn, be sure to place all of your letters in a single line, either vertically or horizontally.</string>	
  	<string name="quick_rules_4">If it\'s your turn, you can also skip the turn or swap letters.</string>
  	<string name="quick_rules_5">Keep it up until all the letters are used.  The player with the highest score wins.</string>	
- 	<string name="full_rules_title">full game rules</string>
+ 	<string name="full_rules_option">full game rules</string>
+ 	<string name="full_rules_title">full set of rules</string>
  	<string name="full_rules_subtitle">all the details</string>
  	<string name="full_rules_1">The idea is to score more points than your opponent by forming valid words out of the letters in your tray. 
                    Letters must be placed on the board in a single axis, either horizontally or vertically.  As you win more games, 
@@ -256,4 +259,11 @@
  	<string name="find_player_results_button_text">add this opponent to game</string>
  	<string name="find_player_opponent_not_found">Sorry, we couldn\'t find a player with that nickname.</string>
  	<string name="server_404_error">We couldn\'t find the server.  Please try again later.</string>
+ 	<string name="dialog_title_are_you_sure">are you sure?</string>
+ 	<string name="dialog_text_logout">Logging out will remove the player and game data from this device.  No worries though.  You can always log back in.  Hurry back!</string>
+	<string name="gravatar_title">your gravatar</string>
+	<string name="gravatar_text">WordSmash uses an awesome service called Gravatar to let you have your own personal profile image.  A gravatar 
+	    is a globally recognized avatar that many sites use for profile images.  Gravatar is owned by the folks that own WordPress, so it's a 
+	    reliable and safe service.  All you have to do is sign up at Gravatar.com with the same email address you used to connect with WordSmash, upload your
+	    image to Gravatar, and your gravatar will become available on WordSmash!  Short, sweet, and simple!</string>
 </resources>

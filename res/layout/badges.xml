@@ -19,34 +19,18 @@
 		style="@style/FormBackgroundStyle"
 	>
 	<RelativeLayout
-		android:orientation="vertical"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/form_top_background"
+		style="@style/FormHeaderWrapperWithSubtitleStyle"
 		android:id="@+id/header"
 	>
     <com.riotapps.word.ui.MainFontTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:textSize="18dp"
-        android:textStyle="bold"
+        style="@style/FormHeaderAreaTextStyle"
         android:text="@string/badges_title" 
-        android:layout_below="@id/logo"
-	 	android:gravity="center_horizontal"
-	  	android:paddingTop="8dp"
-	  	android:id="@+id/title"
+  	  	android:id="@+id/title"
         />
      <com.riotapps.word.ui.MainFontTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:textSize="12dp"
-        android:textStyle="bold"
+        style="@style/FormHeaderAreaSubTextStyle"
         android:text="@string/badges_subtitle" 
         android:layout_below="@id/title"
-	 	android:gravity="center_horizontal"
-	 	android:paddingBottom="8dp"
         />
     </RelativeLayout> 
     <ScrollView

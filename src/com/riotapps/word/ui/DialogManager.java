@@ -23,6 +23,7 @@ public class DialogManager {
     	final boolean onClickFinishActivity = onOkClickFinishActivity;
     	final Context ctx = context;
 		dialog.setContentView(R.layout.alert);
+	
  
 		// set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.alert_text);

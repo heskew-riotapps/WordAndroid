@@ -20,7 +20,7 @@ public class Constants {
  	public static final String IMAGE_CACHE_DIR = "images";
  	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 3000;
  	
- 	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=750&d=mm";
+ 	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm";
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
  	public static final int DEFAULT_CONNECTION_TIMEOUT = 15000;
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 25000;
@@ -68,6 +68,7 @@ public class Constants {
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
 	public static final String REST_FIND_PLAYER_BY_NICKNAME = REST_URL_SITE + "players/find.json?n_n=%s";
 	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN = REST_URL_SITE + "players/auth_via_token.json";
+	public static final String REST_PLAYER_LOGOUT = REST_URL_SITE + "players/log_out.json";
 	
 	/**=============================================
 	 * rails

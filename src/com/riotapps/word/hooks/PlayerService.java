@@ -92,10 +92,40 @@ public class PlayerService {
 		//return player;
 	}
 	
-	public static void clearLocalStorage(Context ctx){
-		ctx.getSharedPreferences(Constants.USER_PREFS, 0).edit().clear().commit();
+	public static String setupAuthTokenTransport(Context ctx) throws DesignByContractException{
+		Gson gson = new Gson();
+	
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	
+		Player player = PlayerService.getPlayerFromLocal();
+	 	
+	 	Check.Require(player.getAuthToken().length() > 0, ctx.getString(R.string.msg_not_connected));
+	 	
+		TransportAuthToken token = new TransportAuthToken();
+		token.setToken(player.getAuthToken());
+		
+		return gson.toJson(token);
 	}
- 
+	
+	
+	public static void clearLocalStorageAndCache(Activity context){
+		context.getSharedPreferences(Constants.USER_PREFS, 0).edit().clear().commit();
+		
+		ImageCache cache = ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR);
+		cache.clearCaches();
+		
+	}
+
+	public static void logout(Activity context){
+		clearLocalStorageAndCache(context);
+		
+        Intent intent = new Intent(context, com.riotapps.word.Welcome.class);
+      	context.startActivity(intent);
+		
+	}
+	
 	
 	public String setupFindPlayerByNickname(Context ctx, String nickname) throws DesignByContractException{
 		nickname = nickname.trim(); 
@@ -116,7 +146,7 @@ public class PlayerService {
 	
 	public static void loadPlayerInHeader(Activity context){
 		 Player player = PlayerService.getPlayerFromLocal();
-		ImageFetcher imageLoader = new ImageFetcher(context, 32, 32, 0);
+		ImageFetcher imageLoader = new ImageFetcher(context, 34, 34, 0);
 		imageLoader.setImageCache(ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR));
 		ImageView ivContextPlayer = (ImageView) context.findViewById(R.id.ivHeaderContextPlayer);
 		//android.util.Log.i(TAG, "FindPlayerResults: playerImage=" + player.getImageUrl());
@@ -128,7 +158,7 @@ public class PlayerService {
 		ivContextPlayerBadge.setImageResource(contextPlayerBadgeId);
 
 		TextView tvHeaderContextPlayerName = (TextView) context.findViewById(R.id.tvHeaderContextPlayerName);
-		tvHeaderContextPlayerName.setText(player.getAbbreviatedName());
+		tvHeaderContextPlayerName.setText(player.getNameWithMaxLength(25));
 		
 		TextView tvHeaderContextPlayerWins = (TextView) context.findViewById(R.id.tvHeaderContextPlayerWins); 
 		tvHeaderContextPlayerWins.setText(String.format(context.getString(R.string.header_num_wins), player.getNumWins()));
@@ -157,6 +187,9 @@ public class PlayerService {
  	        //userId and auth_token ...email and password should have been stored before this call
  	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
  	        SharedPreferences.Editor editor = settings.edit();
+ 	        
+ 	        Log.w(TAG, "handleCreatePlayerResponse auth=" + player.getAuthToken());
+ 	        
  	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
  	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
  	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));

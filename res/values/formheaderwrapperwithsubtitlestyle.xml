@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="FormHeaderWrapperWithSubtitleStyle" parent="@style/FormHeaderWrapperStyle">
+	<item name="android:layout_height">58dp</item>
+</style>
+</resources>

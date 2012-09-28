@@ -47,7 +47,6 @@ public class ImageCache {
     private static final boolean DEFAULT_MEM_CACHE_ENABLED = true;
     private static final boolean DEFAULT_DISK_CACHE_ENABLED = true;
     private static final boolean DEFAULT_CLEAR_DISK_CACHE_ON_START = false;
-
     private DiskLruCache mDiskCache;
     private LruCache<String, Bitmap> mMemoryCache;
 
@@ -138,7 +137,7 @@ public class ImageCache {
        // }
 
         return imageCache;
-    }
+    } 
 
     /**
      * Initialize the cache, providing all parameters.

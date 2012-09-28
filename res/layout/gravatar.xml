@@ -23,29 +23,14 @@
 	>
     <com.riotapps.word.ui.MainFontTextView
         style="@style/FormHeaderAreaTextStyle"
-        android:text="@string/quick_rules_title" 
+        android:text="@string/gravatar_title" 
         />
     </RelativeLayout>
     <com.riotapps.word.ui.MainFontTextView
         style="@style/ContentAreaTextStyle"
-        android:text="@string/quick_rules_1" 
+        android:text="@string/gravatar_text" 
         />
-   <com.riotapps.word.ui.MainFontTextView
-       style="@style/ContentAreaTextAreaStyle"
-        android:text="@string/quick_rules_2" 
-        />	
-   <com.riotapps.word.ui.MainFontTextView
-       style="@style/ContentAreaTextAreaStyle"
-        android:text="@string/quick_rules_3" 
-        />
-   <com.riotapps.word.ui.MainFontTextView
-       style="@style/ContentAreaTextAreaStyle"
-        android:text="@string/quick_rules_4" 
-        />
-   <com.riotapps.word.ui.MainFontTextView
-       style="@style/ContentAreaTextAreaBottomStyle"
-        android:text="@string/quick_rules_5" 
-        />
+   
   
    </LinearLayout>
    </LinearLayout>

@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutStyle"
+    android:orientation="vertical" >
+   
+     <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+   <ScrollView   
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent" 
-    	android:fadingEdge="none">
-<LinearLayout 
-    style="@style/TabContentBackgroundStyle"
-    >
+    	android:fadingEdge="none"
+    	 >
+   <LinearLayout
+         style="@style/LayoutFormStyle"
+        
+         >
+	<LinearLayout
+		style="@style/FormBackgroundStyle"
+		android:layout_marginTop="5dp"
+	>
+	<RelativeLayout
+		style="@style/FormHeaderWrapperStyle"
+		android:id="@+id/header"
+	>
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/FormHeaderAreaTextStyle"
+        android:text="@string/full_rules_title" 
+        />
+    </RelativeLayout>
+
+ 
     <com.riotapps.word.ui.MainFontTextView
         style="@style/ContentAreaTextStyle"
         android:text="@string/full_rules_1" 
@@ -539,7 +561,12 @@
         	android:text="@string/full_rules_dictionary_2" 
         	android:paddingLeft="10dp"
         	android:paddingBottom="15dp"
+        	
         />
-</LinearLayout>
- </ScrollView> 
  
+</LinearLayout>
+</LinearLayout>
+ 
+   
+ </ScrollView> 
+</LinearLayout> 

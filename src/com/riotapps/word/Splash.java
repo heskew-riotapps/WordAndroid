@@ -213,7 +213,7 @@ public class Splash  extends Activity {
 	             case 401:    
 	                //unauthorized
 	            	 //clear local storage and send to login
-	            	 PlayerService.clearLocalStorage(this.context);
+	            	 PlayerService.clearLocalStorageAndCache(this);
 	            	 
 	            	 long currentTime = System.nanoTime();
 	            	 
