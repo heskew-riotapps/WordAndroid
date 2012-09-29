@@ -10,11 +10,6 @@
     	android:fadingEdge="none"
     	 >
    <LinearLayout
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:orientation="vertical"
-       >
-   <LinearLayout
          style="@style/LayoutFormStyle"
         
          >
@@ -33,55 +28,23 @@
     </RelativeLayout>
     <com.riotapps.word.ui.MainFontTextView
         style="@style/ContentAreaTextStyle"
-        android:text="@string/gravatar_text" 
+        android:text="@string/gravatar_refreshed_text" 
+  	    android:id="@+id/tvRefreshed"
         />
-   
-	 <LinearLayout
-        style="@style/FormButtonAreaStyle"
-        android:layout_below="@+id/inner_form" >
-	 
-	<com.riotapps.word.utils.TypefaceButton 
-  	    style="@style/ButtonStyle"
-  	    android:id="@+id/bGravatar"
-        android:layout_width="0dp" 
-        android:layout_weight="1.0"
-        android:text="@string/gravatar_setup_button"
-    />
-    
-    </LinearLayout>
-  
-   </LinearLayout>
-   </LinearLayout>
-   
-   
-      <LinearLayout
-         style="@style/LayoutFormStyle"
-        android:layout_marginBottom="30dp"
-         >
-	<LinearLayout
-		style="@style/FormBackgroundStyle"
-		android:layout_marginTop="5dp"
-	>
-    <com.riotapps.word.ui.MainFontTextView
-        style="@style/ContentAreaTextTopStyle"
-        android:text="@string/gravatar_refresh_text" 
-        />
-   
-	 <LinearLayout
+   <LinearLayout
         style="@style/FormButtonAreaStyle"
           >
 	 
 	<com.riotapps.word.utils.TypefaceButton 
   	    style="@style/ButtonStyle"
-  	    android:id="@+id/bGravatarRefresh"
+  	    android:id="@+id/bOK"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
-        android:text="@string/gravatar_refresh_button"
+        android:text="@string/ok"
     />
     
     </LinearLayout>
-    </LinearLayout>
- 
+  
    </LinearLayout>
    </LinearLayout>
    </ScrollView>

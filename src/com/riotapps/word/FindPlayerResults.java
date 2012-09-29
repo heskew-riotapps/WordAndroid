@@ -12,13 +12,14 @@ import com.riotapps.word.utils.ImageFetcher;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FindPlayerResults extends Activity  implements View.OnClickListener{
+public class FindPlayerResults extends FragmentActivity  implements View.OnClickListener{
 	private static final String TAG = FindPlayerResults.class.getSimpleName();
 	
 	private Game game;

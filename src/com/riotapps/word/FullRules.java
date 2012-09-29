@@ -4,10 +4,11 @@ import com.riotapps.word.hooks.PlayerService;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-public class FullRules extends Activity{
+public class FullRules extends FragmentActivity{
 	
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {

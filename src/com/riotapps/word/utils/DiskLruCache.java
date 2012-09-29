@@ -140,9 +140,9 @@ public class DiskLruCache {
                         flushCache();
                     }
                 } catch (final FileNotFoundException e) {
-                    Log.e(TAG, "Error in put: " + e.getMessage());
+                    Logger.e(TAG, "Error in put: " + e.getMessage());
                 } catch (final IOException e) {
-                    Log.e(TAG, "Error in put: " + e.getMessage());
+                    Logger.e(TAG, "Error in put: " + e.getMessage());
                 }
             }
         }
@@ -176,10 +176,9 @@ public class DiskLruCache {
             cacheSize = mLinkedHashMap.size();
             cacheByteSize -= eldestFileSize;
             count++;
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "flushCache - Removed cache file, " + eldestFile + ", "
+
+            Logger.d(TAG, "flushCache - Removed cache file, " + eldestFile + ", "
                         + eldestFileSize);
-            }
         }
     }
 
@@ -193,17 +192,15 @@ public class DiskLruCache {
         synchronized (mLinkedHashMap) {
             final String file = mLinkedHashMap.get(key);
             if (file != null) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Disk cache hit");
-                }
+
+                Logger.d(TAG, "Disk cache hit");
                 return BitmapFactory.decodeFile(file);
             } else {
                 final String existingFile = createFilePath(mCacheDir, key);
                 if (new File(existingFile).exists()) {
                     put(key, existingFile);
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Disk cache hit (existing file)");
-                    }
+                    Logger.d(TAG, "Disk cache hit (existing file)");
+
                     return BitmapFactory.decodeFile(existingFile);
                 }
             }
@@ -237,6 +234,7 @@ public class DiskLruCache {
      * Removes all disk cache entries from this instance cache dir
      */
     public void clearCache() {
+    	Logger.d(TAG, "clearCache cacheDir=" + mCacheDir.getName());
         DiskLruCache.clearCache(mCacheDir);
     }
 
@@ -249,6 +247,7 @@ public class DiskLruCache {
      */
     public static void clearCache(Context context, String uniqueName) {
         File cacheDir = getDiskCacheDir(context, uniqueName);
+        Logger.d(TAG, "clearCache2 cacheDir=" + cacheDir.getName());
         clearCache(cacheDir);
     }
 
@@ -261,8 +260,11 @@ public class DiskLruCache {
      */
     private static void clearCache(File cacheDir) {
         final File[] files = cacheDir.listFiles(cacheFileFilter);
+        Boolean deleted;
         for (int i=0; i<files.length; i++) {
-            files[i].delete();
+            deleted = files[i].delete();
+            
+            Logger.d(TAG, "clearCache - deleted=" + files[i].getName() + " " + deleted);
         }
     }
 
@@ -300,7 +302,7 @@ public class DiskLruCache {
             return cacheDir.getAbsolutePath() + File.separator +
                     CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
         } catch (final UnsupportedEncodingException e) {
-            Log.e(TAG, "createFilePath - " + e);
+            Logger.e(TAG, "createFilePath - " + e);
         }
 
         return null;

@@ -23,12 +23,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Options extends Activity implements View.OnClickListener{
+public class Options extends FragmentActivity implements View.OnClickListener{
 		private static final String TAG = Options.class.getSimpleName();
 	 
 	
@@ -37,7 +38,7 @@ public class Options extends Activity implements View.OnClickListener{
 		TextView tvFullRules;
 		Button bLogout;
 		
-		final Activity context = this;
+		final FragmentActivity context = this;
 
 			
 	    @Override
@@ -114,10 +115,10 @@ public class Options extends Activity implements View.OnClickListener{
 	    
   private class NetworkTask extends AsyncNetworkRequest{
 			
-	    	Activity context;
+	  		FragmentActivity context;
 	    	//CustomDialog dialog;
 			
-			public NetworkTask(Activity ctx, RequestType requestType,
+			public NetworkTask(FragmentActivity ctx, RequestType requestType,
 					String shownOnProgressDialog, String jsonPost) {
 				super(ctx, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;

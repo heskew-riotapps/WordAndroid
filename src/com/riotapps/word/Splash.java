@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -34,7 +35,7 @@ import com.riotapps.word.utils.*;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Enums.ResponseHandlerType;
 
-public class Splash  extends Activity {
+public class Splash  extends FragmentActivity {
    
 	private static final String TAG = Splash.class.getSimpleName();
 
@@ -64,12 +65,12 @@ public class Splash  extends Activity {
 			Gson gson = new Gson();
 			String json = gson.toJson(authToken);
 			
-			Log.w(TAG, "auth token=" + storedToken);
+			Logger.w(TAG, "auth token=" + storedToken);
 			//ok lets call the server now
 			new NetworkTask(this, RequestType.POST, json).execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
 	    }
 	    else{
-	    	 Log.w(TAG, "about to execute CheckConnectivityTask, no auth token");
+	    	 Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token");
 	    	new CheckConnectivityTask().execute("");
 	     
 
@@ -86,14 +87,14 @@ public class Splash  extends Activity {
 
 		 @Override
 		    protected void onPostExecute(Boolean result) {
-	    	 Log.w(TAG, " CheckConnectivityTask onPostExecute");
+	    	 Logger.w(TAG, " CheckConnectivityTask onPostExecute");
 
 	    	 processConnectivityResults(result);
 		    }
 
 			@Override
 			protected Boolean doInBackground(String... arg0) {
-				 Log.w(TAG, " CheckConnectivityTask doInBackground");
+				 Logger.w(TAG, " CheckConnectivityTask doInBackground");
 				return checkInitialConnectivity();
 			}
 	  }
@@ -122,7 +123,7 @@ public class Splash  extends Activity {
             	 //default time in which to leave splash up
             	 if (Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime) < Constants.SPLASH_ACTIVITY_TIMEOUT){
             		 try {
-            			 Log.w(TAG, " checkInitialConnectivity OK , about to sleep" + Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime)  + " milliseconds" ); 
+            			 Logger.w(TAG, " checkInitialConnectivity OK , about to sleep" + Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime)  + " milliseconds" ); 
 						Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime));
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -135,7 +136,7 @@ public class Splash  extends Activity {
 	}
 	
 	private void processConnectivityResults(Boolean connected){
-	   	 Log.w(TAG, " processTaskResults" );  
+	   	 Logger.w(TAG, " processTaskResults" );  
 		 if (connected == true) 
 	        {
 	        	Intent intent = new Intent(this, com.riotapps.word.Welcome.class);
@@ -181,14 +182,14 @@ public class Splash  extends Activity {
 	         try {  
 	             iStream = response.getEntity().getContent();  
 	         } catch (IllegalStateException e) {  
-	             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
+	             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
 	         } catch (IOException e) {  
-	             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
+	             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
 	         }  
 
 	         int statusCode = response.getStatusLine().getStatusCode();  
 	         
-	         Log.i(Splash.TAG, "StatusCode: " + statusCode);
+	         Logger.i(Splash.TAG, "StatusCode: " + statusCode);
 
 	         switch(statusCode){  
 	             case 200:  
@@ -206,7 +207,7 @@ public class Splash  extends Activity {
 			     	     this.startActivity(intent);
 	            	 }
 	            	 catch(Exception e){
-	            		 Log.w(TAG, e.getLocalizedMessage());
+	            		 Logger.w(TAG, e.getLocalizedMessage());
 	            		 DialogManager.SetupAlert(this, this.getString(R.string.sorry), e.getLocalizedMessage(), true, 0); 
 	            	 }
 	               break;
@@ -246,7 +247,7 @@ public class Splash  extends Activity {
 
 	     }  
 	     else{  
-	         Log.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
+	         Logger.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
 
 	     }//end of else  
 	}

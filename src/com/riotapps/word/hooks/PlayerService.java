@@ -10,13 +10,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.riotapps.word.FindPlayer;
 import com.riotapps.word.R;
+ 
 import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
@@ -109,16 +112,21 @@ public class PlayerService {
 		return gson.toJson(token);
 	}
 	
-	
-	public static void clearLocalStorageAndCache(Activity context){
-		context.getSharedPreferences(Constants.USER_PREFS, 0).edit().clear().commit();
-		
+	public static void clearImageCache(FragmentActivity context){
+
 		ImageCache cache = ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR);
 		cache.clearCaches();
 		
 	}
+	
+	public static void clearLocalStorageAndCache(FragmentActivity context){
+		context.getSharedPreferences(Constants.USER_PREFS, 0).edit().clear().commit();
+		
+		clearImageCache(context);
+		
+	}
 
-	public static void logout(Activity context){
+	public static void logout(FragmentActivity context){
 		clearLocalStorageAndCache(context);
 		
         Intent intent = new Intent(context, com.riotapps.word.Welcome.class);
@@ -144,7 +152,7 @@ public class PlayerService {
 		//return player;
 	}
 	
-	public static void loadPlayerInHeader(Activity context){
+	public static void loadPlayerInHeader(final FragmentActivity context){
 		 Player player = PlayerService.getPlayerFromLocal();
 		ImageFetcher imageLoader = new ImageFetcher(context, 34, 34, 0);
 		imageLoader.setImageCache(ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR));
@@ -152,6 +160,16 @@ public class PlayerService {
 		//android.util.Log.i(TAG, "FindPlayerResults: playerImage=" + player.getImageUrl());
 		
 		imageLoader.loadImage(player.getImageUrl(), ivContextPlayer); //default image
+	 
+		if (player.isFacebookUser() == false){
+	    	ivContextPlayer.setOnClickListener(new View.OnClickListener() {
+		 		@Override
+				public void onClick(View v) {
+		 			Intent intent = new Intent(context, com.riotapps.word.Gravatar.class);
+		      	    context.startActivity(intent);
+		 		}
+			});
+		}
 		
 		ImageView ivContextPlayerBadge = (ImageView) context.findViewById(R.id.ivHeaderContextPlayerBadge);
 		int contextPlayerBadgeId = context.getResources().getIdentifier("com.riotapps.word:drawable/" + player.getBadgeDrawable(), null, null);

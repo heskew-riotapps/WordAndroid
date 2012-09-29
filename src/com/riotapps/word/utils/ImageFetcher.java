@@ -84,7 +84,7 @@ public class ImageFetcher extends ImageResizer {
         final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         if (networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
             Toast.makeText(context, "No network connection found.", Toast.LENGTH_LONG).show();
-            Log.e(TAG, "checkConnection - no connection found");
+            Logger.e(TAG, "checkConnection - no connection found");
         }
     }
 
@@ -96,10 +96,8 @@ public class ImageFetcher extends ImageResizer {
      * @return The downloaded and resized bitmap
      */
     private Bitmap processBitmap(String data) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "processBitmap - " + data);
-        }
-
+        Logger.d(TAG, "processBitmap - " + data);
+ 
         // Download a bitmap, write it to a file
         final File f = downloadBitmap(mContext, data);
 
@@ -133,18 +131,15 @@ public class ImageFetcher extends ImageResizer {
         final DiskLruCache cache =
                 DiskLruCache.openCache(context, cacheDir, HTTP_CACHE_SIZE);
 
+        Logger.d(TAG, "downloadBitmap - cacheDir=" + cacheDir.getName());
         final File cacheFile = new File(cache.createFilePath(urlString));
 
         if (cache.containsKey(urlString)) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "downloadBitmap - found in http cache - " + urlString);
-            }
+            Logger.d(TAG, "downloadBitmap - found in http cache - " + urlString + " " + cacheFile.getName());
             return cacheFile;
         }
 
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "downloadBitmap - downloading - " + urlString);
-        }
+        Logger.d(TAG, "downloadBitmap - downloading - " + urlString);
 
         Utils.disableConnectionReuseIfNecessary();
         HttpURLConnection urlConnection = null;
@@ -165,7 +160,7 @@ public class ImageFetcher extends ImageResizer {
             return cacheFile;
 
         } catch (final IOException e) {
-            Log.e(TAG, "Error in downloadBitmap - " + e);
+            Logger.e(TAG, "Error in downloadBitmap - " + e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -174,7 +169,7 @@ public class ImageFetcher extends ImageResizer {
                 try {
                     out.close();
                 } catch (final IOException e) {
-                    Log.e(TAG, "Error in downloadBitmap - " + e);
+                    Logger.e(TAG, "Error in downloadBitmap - " + e);
                 }
             }
         }

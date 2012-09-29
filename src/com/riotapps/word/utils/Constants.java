@@ -17,7 +17,7 @@ public class Constants {
  	
  	public static final String LAYOUT_SCOPE_WORD = "W";
  	public static final String LAYOUT_SCOPE_LETTER = "L";
- 	public static final String IMAGE_CACHE_DIR = "images";
+ 	public static final String IMAGE_CACHE_DIR = "http";
  	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 3000;
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm";

@@ -6,12 +6,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class GamesLanding  extends Activity{
+public class GamesLanding  extends FragmentActivity{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

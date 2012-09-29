@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 import com.facebook.android.*;
@@ -16,7 +17,7 @@ import com.riotapps.word.utils.Constants;
 import com.riotapps.word.facebook.friendsRequestListener;
 import com.riotapps.word.facebook.meRequestListener;
 
-public class Welcome  extends Activity implements View.OnClickListener{
+public class Welcome  extends FragmentActivity implements View.OnClickListener{
  
 	Facebook facebook = new Facebook(Constants.FACEBOOK_API_ID);
 	AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);

@@ -1,5 +1,16 @@
 package com.riotapps.word.utils;
 
+import java.io.File;
+
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+
+import com.riotapps.word.BuildConfig;
+
 /*
  * Copyright (C) 2012 The Android Open Source Project
  *
@@ -17,15 +28,7 @@ package com.riotapps.word.utils;
  */
 
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.LruCache;
-import android.util.Log;
-import com.riotapps.word.BuildConfig;
-import java.io.File;
+
 
 /**
  * This class holds our bitmap caches (memory and disk).
@@ -111,33 +114,33 @@ public class ImageCache {
     }
     
     
-    public static ImageCache findOrCreateCache(
-            final Activity activity, final String uniqueName) {
-        return findOrCreateCache(activity, new ImageCacheParams(uniqueName));
-    }
+  //  public static ImageCache findOrCreateCache(
+  //          final Activity activity, final String uniqueName) {
+   //     return findOrCreateCache(activity, new ImageCacheParams(uniqueName));
+  //  }
 
     /*
      * not sure about this...determine what retainfragment is
      * 
      */    
-    public static ImageCache findOrCreateCache(
-            final Activity activity, ImageCacheParams cacheParams) {
+   // public static ImageCache findOrCreateCache(
+   //         final  Activity activity, ImageCacheParams cacheParams) {
 
         // Search for, or create an instance of the non-UI RetainFragment
-       // final RetainFragment mRetainFragment = RetainFragment.findOrCreateRetainFragment(
-       //         activity.getSupportFragmentManager());
+ //       final RetainFragment mRetainFragment = RetainFragment.findOrCreateRetainFragment(
+  //              activity.getSupportFragmentManager());
 
         // See if we already have an ImageCache stored in RetainFragment
-        //ImageCache imageCache = (ImageCache) mRetainFragment.getObject();
+  //      ImageCache imageCache = (ImageCache) mRetainFragment.getObject();
 
         // No existing ImageCache, create one and store it in RetainFragment
-       // if (imageCache == null) {
-            ImageCache imageCache = new ImageCache(activity, cacheParams);
-       //     mRetainFragment.setObject(imageCache);
-       // }
+    //    if (imageCache == null) {
+    //        imageCache = new ImageCache(activity, cacheParams);
+    //        mRetainFragment.setObject(imageCache);
+    //    }
 
-        return imageCache;
-    } 
+//        return imageCache;
+ //   } 
 
     /**
      * Initialize the cache, providing all parameters.

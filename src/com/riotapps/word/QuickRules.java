@@ -2,8 +2,9 @@ package com.riotapps.word;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-public class QuickRules extends Activity{
+public class QuickRules extends FragmentActivity{
 	
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {

@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceView;
@@ -33,7 +34,7 @@ import android.widget.Toast;
 
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class GameSurface extends Activity implements View.OnClickListener{
+public class GameSurface extends FragmentActivity implements View.OnClickListener{
 	private static final String TAG = GameSurface.class.getSimpleName();
 	GameSurface context = this;
 	GameSurfaceView gameSurfaceView;

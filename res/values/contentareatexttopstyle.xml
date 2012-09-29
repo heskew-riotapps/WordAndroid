@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="ContentAreaTextTopStyle" parent="ContentAreaTextStyle" >
+    <item name="android:background">@drawable/content_area_top</item>
+	<item name="android:drawablePadding">5dp</item>
+</style>
+</resources>
