@@ -9,7 +9,10 @@ public class Error {
 		NO_TRANSLATION(0),
 		INCORRECT_PASSWORD(1),
 		EMAIL_NOT_SUPPLIED(2),
-		NICKNAME_IN_USE(3);
+		NICKNAME_IN_USE(3),
+		NICKNAME_NOT_SUPPLIED(4),
+		EMAIL_IN_USE(5),
+		UNAUTHORIZED(6);
 				
 		private final int value;
 		private ErrorType(int value) {

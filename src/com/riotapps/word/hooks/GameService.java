@@ -60,7 +60,7 @@ public class GameService {
 		//are we connected to the web?
 		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
-		Check.Require(Validations.ValidateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
+		Check.Require(Validations.validateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
 	 
 		Player player = new Player();
 		player.setEmail(email);

@@ -41,8 +41,8 @@
         >
     <com.riotapps.word.ui.MainFontTextView
         style="@style/TextLineItemStyle"
-        android:text="@string/settings" 
-        android:id="@+id/tvSettings"
+        android:text="@string/account_settings" 
+        android:id="@+id/tvAccountSettings"
         />
      <com.riotapps.word.ui.MainFontTextView
         style="@style/TextLineItemStyle"

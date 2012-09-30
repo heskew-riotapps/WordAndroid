@@ -18,7 +18,7 @@ public class Constants {
  	public static final String LAYOUT_SCOPE_WORD = "W";
  	public static final String LAYOUT_SCOPE_LETTER = "L";
  	public static final String IMAGE_CACHE_DIR = "http";
- 	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 3000;
+ 	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 4000;
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm";
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
@@ -69,6 +69,8 @@ public class Constants {
 	public static final String REST_FIND_PLAYER_BY_NICKNAME = REST_URL_SITE + "players/find.json?n_n=%s";
 	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN = REST_URL_SITE + "players/auth_via_token.json";
 	public static final String REST_PLAYER_LOGOUT = REST_URL_SITE + "players/log_out.json";
+	public static final String REST_PLAYER_CHANGE_PASSWORD = REST_URL_SITE + "players/change_password.json";
+	public static final String REST_PLAYER_UPDATE_ACCOUNT = REST_URL_SITE + "players/update_account.json";
 	
 	/**=============================================
 	 * rails

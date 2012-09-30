@@ -33,7 +33,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 		private static final String TAG = Options.class.getSimpleName();
 	 
 	
-		TextView tvSettings;
+		TextView tvAccountSettings;
 		TextView tvQuickRules;
 		TextView tvFullRules;
 		Button bLogout;
@@ -46,8 +46,15 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.options);
 
-	        tvSettings = (TextView) findViewById(R.id.tvSettings);
-	        tvSettings.setOnClickListener(this);
+	        Player player = PlayerService.getPlayerFromLocal();		
+	        
+	        tvAccountSettings = (TextView) findViewById(R.id.tvAccountSettings);
+	        if (player.isFacebookUser()){
+	        	tvAccountSettings.setVisibility(View.GONE);
+	        }
+	        else {
+	        	tvAccountSettings.setOnClickListener(this);
+	        }
 	        tvQuickRules = (TextView) findViewById(R.id.tvQuickRules);
 	        tvQuickRules.setOnClickListener(this); 
 	        tvFullRules = (TextView) findViewById(R.id.tvFullRules);
@@ -65,8 +72,8 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	    	Intent intent;
 	    	
 	    	switch(v.getId()){  
-	        case R.id.tvSettings:  
-	        	intent = new Intent(this, Settings.class);
+	        case R.id.tvAccountSettings:  
+	        	intent = new Intent(this, AccountSettings.class);
 				startActivity(intent);
 				break;
 	       	case R.id.tvQuickRules:  
@@ -167,7 +174,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 
 			             }//end of case 200 & 201 
 			             case 401:
-	                       	 String errorMessage = this.context.getString(R.string.validation_unspecified_error);
+	                       	 String errorMessage = this.context.getString(R.string.validation_unauthorized);
 			            	 
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), errorMessage);
 			            	 break;

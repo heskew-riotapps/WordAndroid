@@ -161,7 +161,7 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			            	 		break;
 			            	 		
 			            	 	default:
-			            	 		errorMessage = this.context.getString(R.string.validation_unspecified_error);
+			            	 		errorMessage = this.context.getString(R.string.validation_unauthorized);
 			            	 		break;		            	 		
 			            	 }
 			            	 

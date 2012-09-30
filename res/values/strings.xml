@@ -7,18 +7,24 @@
 	<string name="logo">logo</string>
 	<string name="enter_email">enter email</string>
 	<string name="enter_password">enter password</string>
+	<string name="enter_new_password">enter new password</string>
+	<string name="enter_confirm_password">confirm your password</string>
+	<string name="account_settings_change_password">change password</string>
 	<string name="enter_nickname">enter nickname</string>
 	<string name="email">email address</string>
 	<string name="nickname">nickname</string>
 	<string name="password">password</string>
+	<string name="change_password">change your password</string>
 	<string name="save">save</string>
 	<string name="back">back</string>
 	<string name="badges">badges</string>
 	<string name="settings">settings</string>
+	<string name="account_settings">account settings</string>
 	<string name="options">options</string>
 	<string name="logout">logout</string>
 	<string name="rules">game rules</string>
 	<string name="create_game">start a game</string>
+	<string name="success">success!</string>
 	<string name="try_again">Try Again</string>
 	<string name="cancel">cancel</string>
 	<string name="header_num_wins">%s wins</string>
@@ -27,6 +33,7 @@
 	<string name="msg_connection_timeout">The network connection took too long to return. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="validation_email_required">Please enter your email to connect to play.  Never fear, it will not be shared.</string>
 	<string name="validation_nickname_required">Please enter your nickname.  This will be the name to other players see.</string>
+	<string name="validation_nickname_invalid">Your nickname can only contain letters, numbers, spaces, dots, and hyphens.</string>
 	<string name="validation_password_required">Please enter a password.</string>
 	<string name="validation_email_invalid">Please enter a valid email to connect to play.  We\'ll never share it, we just may send game-related emails out every now and then.  Did we mention we\'ll never share it?</string>
 	<string name="validation_nickname_required_for_search">Please enter the nickname of the opponent you are trying to find.</string>
@@ -34,12 +41,17 @@
 	<string name="validation_incorrect_context_player">Sorry, only the logged in user can start a game.</string>
 	<string name="validation_nickname_already_taken">This nickname is already in use by another player.</string>
 	<string name="validation_email_already_taken">This email is already in use by another player.</string>
-	<string name="validation_email_not_supplied">Please supply an email address.</string>
+	<string name="validation_email_not_supplied">Please enter an email address.</string>
 	<string name="validation_incorrect_password">The password is incorrect.</string>
 	<string name="validation_unspecified_error">The error could not be determined.  Please try again later.</string>
 	<string name="validation_404_error">The server could not be found.  Please try again later.</string>
 	<string name="validation_token_not_found">The auth token could not be found.</string>	
-	
+	<string name="validation_new_password_not_provided">Please enter the new password.</string>	
+	<string name="validation_password_too_short">Please enter a password that is at least 6 characters long.</string>
+	<string name="validation_password_confirmation_failed">Please reconfirm your new password.</string>		
+	<string name="validation_unauthorized">This action is unauthorized.</string>	
+	<string name="validation_nickname_not_supplied">Please enter a nickname.</string>
+		
 	<string name="ok">ok</string>
 	<string name="oops">Oops</string>
 	<string name="sorry">Sorry</string>
@@ -62,6 +74,7 @@
  	<string name="progress_connecting">connecting&#8230;</string>
  	<string name="progress_logging_out">logging out&#8230;</string>
  	<string name="progress_syncing">syncing&#8230;</string>
+ 	<string name="progress_updating">updating&#8230;</string>
  	<string name="quick_rules_title">condensed game rules</string>
  	<string name="quick_rules_subtitle">enough to get you off and running</string>
   	<string name="quick_rules_1">To start the game, a letter of the first word must be placed on at least one of the smiley faces.</string>
@@ -183,7 +196,8 @@
 	<string name="full_rules_letter26_num">Z - 1</string>
 	
 	<string name="options_title">options</string>
-	
+	<string name="settings_title">settings</string>	
+	<string name="account_settings_title">account settings</string>
 	<string name="test_landing_title">Test Landing</string>
 	<string name="test_landing_main_landing">Start Game</string>
 	<string name="test_landing_join_native">Join Native</string>
@@ -268,8 +282,10 @@
 	 <string name="gravatar_setup_button">visit gravatar.com</string>
 	 <string name="gravatar_refresh_text">If you have already set up your Gravatar and aren\'t seeing it above (to the right of the WordSmash logo), let WordSmash fetch it again.</string>
 	 <string name="gravatar_refresh_button">refresh your gravatar</string>
-	  <string name="gravatar_refreshed_text">You should now be seeing your latest Gravatar above.\n\n  
-	      If not, perhaps it was not updated properly at Gravatar.com, or perhaps your Gravatar is associated with an email other than the one you used to connect with WordSmash.\n\n
-	  		Also, if you just updated your Gravatar and you\'re not seeing it above, try to refresh it again in WordSmash in a few minutes, since it could take 5 to 10 minutes for avatar changes to take effect at Gravatar.    
+	  <string name="gravatar_refreshed_text">You should now be seeing your latest Gravatar above.\n\n
+	      If you just updated your Gravatar and you\'re not seeing it above, try to refresh it again in WordSmash in a few minutes, since it could take 5 to 10 minutes for avatar changes to take effect at Gravatar.\n\n   
+	      If you still don\'t see your Gravatar after the recommendation above, perhaps it was not updated properly at Gravatar.com, or perhaps your Gravatar is associated with an email other then %s. 
 	  </string>
+	   <string name="password_changed_successfully">Your password has been changed successfully.</string>
+	   <string name="account_changed_successfully">Your account has been changed successfully.</string>
 </resources>

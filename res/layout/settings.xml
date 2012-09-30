@@ -2,6 +2,14 @@
     style="@style/LayoutStyle"
     android:orientation="vertical" >
    <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+   
+   
+   <ScrollView
+        android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:fillViewport="true" 
+        >
+   
     <LinearLayout 
            style="@style/LayoutFormStyle"
            android:layout_below="@id/topAreaLayout"
@@ -10,25 +18,14 @@
 		style="@style/FormBackgroundStyle"
 	>
     <RelativeLayout
-		android:orientation="vertical"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/form_top_background"
-		android:layout_below="@id/logo"
+		style="@style/FormHeaderWrapperStyle"
 		android:id="@+id/header"
 	>
     <com.riotapps.word.ui.MainFontTextView
         style="@style/FormHeaderAreaTextStyle"
-        android:text="@string/join_with_email_title" 
-       	android:id="@+id/title"
-    />
-    <com.riotapps.word.ui.MainFontTextView
-        style="@style/FormHeaderAreaSubTextStyle"
-        android:text="@string/join_with_email_subtitle" 
-       	android:id="@+id/sub_title_join_native"
-        android:layout_below="@id/title"
+        android:text="@string/settings_title" 
         />
-    </RelativeLayout> 
+    </RelativeLayout>
      <RelativeLayout
 		android:orientation="vertical"
 		android:layout_width="wrap_content"
@@ -115,14 +112,9 @@
         android:layout_weight="1.0"
         android:text="@string/save"
     />
-    <com.riotapps.word.utils.TypefaceButton 
-        style="@style/ButtonStyle"
-        android:id="@+id/bCancel"
-        android:layout_width="0dp"
-        android:layout_weight="1.0"
-        android:text="@string/cancel"
-    />
+   
     </LinearLayout>
     </RelativeLayout>
     </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

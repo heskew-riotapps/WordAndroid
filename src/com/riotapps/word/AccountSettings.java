@@ -28,11 +28,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class Settings extends FragmentActivity implements View.OnClickListener{
-		private static final String TAG = Settings.class.getSimpleName();
+public class AccountSettings extends FragmentActivity implements View.OnClickListener{
+		private static final String TAG = AccountSettings.class.getSimpleName();
 		
 	    final Context context = this;		
-		Button bSave;
+		 
 		EditText tEmail;
 		EditText tNickname;
 		EditText tPassword;
@@ -42,7 +42,7 @@ public class Settings extends FragmentActivity implements View.OnClickListener{
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
-	        setContentView(R.layout.settings);
+	        setContentView(R.layout.accountsettings);
 	        
 	        Player player = PlayerService.getPlayerFromLocal();		 
 	        PlayerService.loadPlayerInHeader(this);
@@ -54,31 +54,52 @@ public class Settings extends FragmentActivity implements View.OnClickListener{
 	        tEmail.setText(player.getEmail());
 	        tNickname.setText(player.getNickname());
 	        
-	        bSave = (Button) findViewById(R.id.bSave);
+	        Button bSave = (Button) findViewById(R.id.bSave);
 	        bSave.setOnClickListener(this);
-	  
+	        Button bSavePwd = (Button) findViewById(R.id.bSavePwd);
+	        bSavePwd.setOnClickListener(this);
 	    }
 
 	    @Override 
 	    public void onClick(View v) {
 	    	switch(v.getId()){  
 	        case R.id.bSave:  
-	            this.processPlayer();
-	            break;  
-	        }  
+	            this.processAccountUpdate();
+	            break; 
+	    	case R.id.bSavePwd:  
+	    		this.processPassword();
+	    		break;  
+	    	}  
 	      }
 	    
-	    private void processPlayer(){
+	    private void processAccountUpdate(){
 	    	
 	    	try {
-	    		EditText tEmail = (EditText) findViewById(R.id.tEmail);
+				EditText tEmail = (EditText) findViewById(R.id.tEmail);
 				EditText tNickname = (EditText) findViewById(R.id.tNickname);
-				EditText tPassword = (EditText) findViewById(R.id.tPassword);
 				
-				String json = PlayerService.setupConnectViaEmail(this, tEmail.getText().toString(), tNickname.getText().toString(), tPassword.getText().toString());
+				String json = PlayerService.setupAccountUpdate(this, tEmail.getText().toString(), tNickname.getText().toString());
 				
 				//kick off thread
-				new NetworkTask(this, RequestType.POST, getString(R.string.progress_connecting), json).execute(Constants.REST_CREATE_PLAYER_URL);
+				new NetworkTask(this, RequestType.POST, getString(R.string.progress_updating), json, false).execute(Constants.REST_PLAYER_UPDATE_ACCOUNT);
+				
+			} 
+			catch (DesignByContractException e) {
+				//e.printStackTrace();
+				DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage(), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+			}
+	    }
+    
+	    private void processPassword(){
+	    	
+	    	try {
+				EditText tConfirmPassword = (EditText) findViewById(R.id.tConfirmPassword);
+				EditText tPassword = (EditText) findViewById(R.id.tPassword);
+				
+				String json = PlayerService.setupPasswordChange(this, tPassword.getText().toString(), tConfirmPassword.getText().toString());
+				
+				//kick off thread
+				new NetworkTask(this, RequestType.POST, getString(R.string.progress_updating), json, true).execute(Constants.REST_PLAYER_CHANGE_PASSWORD);
 				
 			} 
 			catch (DesignByContractException e) {
@@ -89,12 +110,14 @@ public class Settings extends FragmentActivity implements View.OnClickListener{
 	    
 	    private class NetworkTask extends AsyncNetworkRequest{
 			
-	    	Settings context;
+	    	AccountSettings context;
+	    	Boolean isPasswordChange = false;
 			
-			public NetworkTask(Settings ctx, RequestType requestType,
-					String shownOnProgressDialog, String jsonPost) {
+			public NetworkTask(AccountSettings ctx, RequestType requestType,
+					String shownOnProgressDialog, String jsonPost, Boolean isPasswordChange) {
 				super(ctx, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
+				this.isPasswordChange = isPasswordChange;
 			 
 			}
 
@@ -126,19 +149,31 @@ public class Settings extends FragmentActivity implements View.OnClickListener{
 
 			         int statusCode = response.getStatusLine().getStatusCode();  
 			         
-			         Log.i(Settings.TAG, "StatusCode: " + statusCode);
+			         Log.i(AccountSettings.TAG, "StatusCode: " + statusCode);
  
 			         switch(statusCode){  
 			             case 200:  
 			             case 201: {   
 			                //update text
-			            	 Player player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
-
-			                 // Toast t = Toast.makeText(this.context, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
-			         	    // t.show();
-			         	     Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
-			      	      
-			      	      	 this.context.startActivity(intent);
+			            	 if (this.isPasswordChange){
+			            		Player player = PlayerService.handleChangePasswordResponse(this.context, iStream);
+			            		 
+			            		EditText tConfirmPassword = (EditText) findViewById(R.id.tConfirmPassword);
+			     				EditText tPassword = (EditText) findViewById(R.id.tPassword);
+			     				tConfirmPassword.setText("");
+			     				tPassword.setText("");
+			     				
+			     			    DialogManager.SetupAlert(this.context, this.context.getString(R.string.success), this.context.getString(R.string.password_changed_successfully),Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+						           
+			            	 }
+			            	 else{
+			            		 Player player = PlayerService.handleUpdateAccountResponse(this.context, iStream);
+			            		 
+			            		 //clear image cache just in can email was changed.
+			            		 PlayerService.clearImageCache(this.context);
+				     			 DialogManager.SetupAlert(this.context, this.context.getString(R.string.success), this.context.getString(R.string.account_changed_successfully),Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+			            	 }
+			            		 
 			                 break;  
 
 			             }//end of case 200 & 201 
@@ -152,18 +187,23 @@ public class Settings extends FragmentActivity implements View.OnClickListener{
 					            	errorMessage = this.context.getString(R.string.validation_incorrect_password);
 			            	 		break; 
 			            	 	case EMAIL_NOT_SUPPLIED:
-			            	 		errorMessage = this.context.getString(R.string.validation_email_already_taken);
+			            	 		errorMessage = this.context.getString(R.string.validation_email_not_supplied);
 			            	 		break;
 			            	 	case NICKNAME_IN_USE:
 			            	 		errorMessage = this.context.getString(R.string.validation_nickname_already_taken);
 			            	 		break;
-			            	 		
+			            	 	case EMAIL_IN_USE:
+			            	 		errorMessage = this.context.getString(R.string.validation_email_already_taken);
+			            	 	case NICKNAME_NOT_SUPPLIED:
+			            	 		errorMessage = this.context.getString(R.string.validation_nickname_not_supplied);
 			            	 	default:
-			            	 		errorMessage = this.context.getString(R.string.validation_unspecified_error);
+			            	 		errorMessage = this.context.getString(R.string.validation_unauthorized);
 			            	 		break;		            	 		
 			            	 }
 			            	 
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), errorMessage);
+			            	 break;
+			            	 
 			             case 404:
 			             //case Status code == 422
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_404_error), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  

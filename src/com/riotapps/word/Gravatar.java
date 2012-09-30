@@ -17,9 +17,9 @@ public class Gravatar extends FragmentActivity implements View.OnClickListener{
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
-	       setContentView(R.layout.gravatar);
+	        setContentView(R.layout.gravatar);
 	       
-	   		PlayerService.loadPlayerInHeader(this);
+	   		PlayerService.loadPlayerInHeader(this, false);
 	   		
 	   		Button bGravatar = (Button) findViewById(R.id.bGravatar);
 	   		bGravatar.setOnClickListener(this);

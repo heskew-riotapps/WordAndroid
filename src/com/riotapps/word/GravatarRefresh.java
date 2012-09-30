@@ -22,11 +22,14 @@ public class GravatarRefresh extends FragmentActivity implements View.OnClickLis
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.gravatarrefresh);
 
+	        Player player = PlayerService.getPlayerFromLocal();
 	   		PlayerService.loadPlayerInHeader(this);
 	   		
 	   		Button bOK = (Button) findViewById(R.id.bOK);
 	   		bOK.setOnClickListener(this);
-	 
+	   		
+	   		TextView tvRefreshed = (TextView) findViewById(R.id.tvRefreshed);
+	   		tvRefreshed.setText(String.format(this.getString(R.string.gravatar_refreshed_text, player.getEmail())));
 	 }
 	 
 	 @Override
