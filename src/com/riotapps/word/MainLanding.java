@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainLanding extends FragmentActivity implements View.OnClickListener{
-
+	private static final String TAG = MainLanding.class.getSimpleName();
 	TextView tvStartByNickname;
 	Button bStart;
 	Button bOptions;

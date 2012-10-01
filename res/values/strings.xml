@@ -278,8 +278,8 @@
 	<string name="gravatar_title">your gravatar</string>
 	<string name="gravatar_text">WordSmash uses an awesome service called Gravatar to let you have your own personal profile image. \n\nGravatar is owned by the folks that own WordPress, so it\'s a 
 	    reliable and safe service.  All you have to do is sign up at Gravatar.com with the same email address you used to connect with WordSmash, upload your
-	    image to Gravatar, and your G or PG-rated Gravatar will become available on WordSmash!\n\n(And not to worry, you\'re email address is never exposed.</string>
-	 <string name="gravatar_setup_button">visit gravatar.com</string>
+	    image to Gravatar, and your G or PG-rated Gravatar will become available on WordSmash!\n\n(And not to worry, your email address is never exposed.)</string>
+	 <string name="gravatar_setup_button">manage or create your gravatar</string>
 	 <string name="gravatar_refresh_text">If you have already set up your Gravatar and aren\'t seeing it above (to the right of the WordSmash logo), let WordSmash fetch it again.</string>
 	 <string name="gravatar_refresh_button">refresh your gravatar</string>
 	  <string name="gravatar_refreshed_text">You should now be seeing your latest Gravatar above.\n\n

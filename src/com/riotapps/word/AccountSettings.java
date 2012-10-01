@@ -169,8 +169,9 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 			            	 else{
 			            		 Player player = PlayerService.handleUpdateAccountResponse(this.context, iStream);
 			            		 
-			            		 //clear image cache just in can email was changed.
+			            		 //clear image cache just in case email was changed.
 			            		 PlayerService.clearImageCache(this.context);
+			            		 PlayerService.loadPlayerInHeader(this.context);
 				     			 DialogManager.SetupAlert(this.context, this.context.getString(R.string.success), this.context.getString(R.string.account_changed_successfully),Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
 			            	 }
 			            		 
@@ -194,10 +195,15 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 			            	 		break;
 			            	 	case EMAIL_IN_USE:
 			            	 		errorMessage = this.context.getString(R.string.validation_email_already_taken);
+			            	 		break;
 			            	 	case NICKNAME_NOT_SUPPLIED:
 			            	 		errorMessage = this.context.getString(R.string.validation_nickname_not_supplied);
-			            	 	default:
+			            	 		break;
+			            	 	case UNAUTHORIZED:
 			            	 		errorMessage = this.context.getString(R.string.validation_unauthorized);
+			            	 		break;
+			            	 	default:
+			            	 		errorMessage = this.context.getString(R.string.validation_unspecified_error);
 			            	 		break;		            	 		
 			            	 }
 			            	 

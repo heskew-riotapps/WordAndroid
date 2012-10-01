@@ -9,6 +9,9 @@ public class TransportUpdateAccount {
 	
 	@SerializedName("n_n")
 	private String nickname;
+	
+	@SerializedName("a_t")
+	private String token;
 
 	public String getEmail() {
 		return email;
@@ -23,6 +26,14 @@ public class TransportUpdateAccount {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname.trim();
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	

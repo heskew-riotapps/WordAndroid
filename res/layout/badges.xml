@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutStyle"
     android:orientation="vertical" >
-   <RelativeLayout 
-        android:id="@+id/logoArea"
-    	style="@style/TopLogoAreaStyle"
-    >
-     <ImageView 
-       android:id="@+id/logo"
-	    style="@style/TopLogoStyle" 
-	  />
-     </RelativeLayout>
+   
+   <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+   <ScrollView   
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" 
+    	android:fadingEdge="none"
+    	android:layout_marginTop="16dp"
+    	 >
     <LinearLayout 
            style="@style/LayoutFormStyle"
-           android:layout_below="@id/logoArea"
+          
         > 
 	<LinearLayout
 		style="@style/FormBackgroundStyle"
@@ -33,13 +32,7 @@
         android:layout_below="@id/title"
         />
     </RelativeLayout> 
-    <ScrollView
-        android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:fillViewport="true" 
-    	android:fadingEdge="none"
-    	android:fadeScrollbars="true"
-        >
+ 
     <LinearLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -262,8 +255,8 @@
 		android:layout_height="15dp"
         android:layout_width="fill_parent" 
          />
-    </LinearLayout>	
-    </ScrollView>
+     </LinearLayout>
+     </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+   </ScrollView>
+</LinearLayout>

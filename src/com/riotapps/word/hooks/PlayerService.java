@@ -86,9 +86,30 @@ public class PlayerService {
  
 	}
 	
+	public static String setupConnectViaFB(Context ctx, String fb, String email, String firstName, String lastName) throws DesignByContractException{
+		Gson gson = new Gson();
+	
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	//check funky characters in nickname [a-zA-Z0-9\-#\.\(\)\/%&\s]
+		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
+		Check.Require(Validations.validateEmail(email.trim()) == true, ctx.getString(R.string.validation_email_invalid));
+		
+		TransportCreateFBPlayer player = new TransportCreateFBPlayer();
+		player.setEmail(email);
+		player.setFb(fb);
+		player.setFirstName(firstName);
+		player.setLastName(lastName);
+		
+		return gson.toJson(player);
+	}
+	
+	
 	public static String setupAccountUpdate(Context ctx, String email, String nickname) throws DesignByContractException{
 		Gson gson = new Gson(); 
 	
+		Player player = PlayerService.getPlayerFromLocal();
 		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
@@ -98,11 +119,12 @@ public class PlayerService {
 		Check.Require(Validations.validateEmail(email.trim()) == true, ctx.getString(R.string.validation_email_invalid));
 		Check.Require(Validations.validateNickname(nickname.trim()) == true, ctx.getString(R.string.validation_nickname_invalid));
 		
-		TransportUpdateAccount player = new TransportUpdateAccount();
-		player.setEmail(email);
-		player.setNickname(nickname);
+		TransportUpdateAccount updateAccount = new TransportUpdateAccount();
+		updateAccount.setEmail(email);
+		updateAccount.setNickname(nickname);
+		updateAccount.setToken(player.getAuthToken());
 		
-		return gson.toJson(player);
+		return gson.toJson(updateAccount);
 	}
 	
 	

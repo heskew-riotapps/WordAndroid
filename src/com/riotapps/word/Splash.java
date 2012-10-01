@@ -50,8 +50,7 @@ public class Splash  extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
- 
-
+  
         this.handlePreProcessing();
      }
     
@@ -87,9 +86,9 @@ public class Splash  extends FragmentActivity {
 
 		 @Override
 		    protected void onPostExecute(Boolean result) {
-	    	 Logger.w(TAG, " CheckConnectivityTask onPostExecute");
+	    	 	Logger.w(TAG, " CheckConnectivityTask onPostExecute");
 
-	    	 processConnectivityResults(result);
+	    	 	processConnectivityResults(result);
 		    }
 
 			@Override
@@ -241,9 +240,9 @@ public class Splash  extends FragmentActivity {
 	            	 break;
 	         }  
 	     }else if (exception instanceof ConnectTimeoutException) {
-	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_connection_timeout), 0);
+	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_connection_timeout), true, 0);
 	     }else if(exception != null){  
-	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_not_connected), 0);  
+	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_not_connected), true, 0);  
 
 	     }  
 	     else{  

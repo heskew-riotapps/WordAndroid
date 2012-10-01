@@ -26,6 +26,8 @@ public class Constants {
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 25000;
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 4000;
 	public static final int SPLASH_ACTIVITY_TIMEOUT = 3000;
+	
+	public static final String FACEBOOK_PERMISSIONS = "email";
 
 	/**============================================
 	 * intent extras
@@ -44,6 +46,8 @@ public class Constants {
  	public static final String USER_PREFS_PWD = "user_pw";
  	public static final String USER_PREFS_PLAYER_JSON = "player_json";
  	public static final String GAME_STATE = "game_state";
+ 	public static final String FB_TOKEN = "fb_token";
+	public static final String FB_TOKEN_EXPIRES = "fb_token_expires";
  	
 	/**=============================================
 	 * creatingXMLParser for class
