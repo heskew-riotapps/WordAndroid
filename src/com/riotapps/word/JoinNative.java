@@ -14,11 +14,10 @@ import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
-import com.riotapps.word.utils.DialogManager;
+import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;

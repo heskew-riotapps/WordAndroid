@@ -5,6 +5,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,7 +31,7 @@ import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
-import com.riotapps.word.utils.DialogManager;
+import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
@@ -33,6 +39,8 @@ import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
 import com.riotapps.word.utils.Validations;
+import com.facebook.android.FacebookError;
+import com.facebook.android.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
  
@@ -125,6 +133,36 @@ public class PlayerService {
 		updateAccount.setToken(player.getAuthToken());
 		
 		return gson.toJson(updateAccount);
+	}
+	
+	public static void saveFacebookFriendsFromJSONResponse(Context ctx, String response) throws FacebookError, JSONException{
+		JSONObject json;
+		 
+		json = Util.parseJson(response);
+		final JSONArray friends = json.getJSONArray("data");
+		
+		List<FBFriend> fbFriends = new ArrayList<FBFriend>();
+		
+		for(int i = 0 ; i < friends.length(); i++){
+			FBFriend fbFriend = new FBFriend();
+			
+			JSONObject row = friends.getJSONObject(i);
+			fbFriend.setId(row.getString("id"));
+			fbFriend.setId(row.getString("name"));
+			
+			fbFriends.add(fbFriend);
+		}
+		Gson gson = new Gson(); 
+		
+		String friendJSON =gson.toJson(fbFriends);
+		
+		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	        SharedPreferences.Editor editor = settings.edit();
+	        
+	        Logger.w(TAG, "saveFacebookFriendsFromJSONResponse fbFriends=" + friendJSON);
+ 
+	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(friendJSON));
+	        editor.commit();  
 	}
 	
 	
@@ -220,7 +258,7 @@ public class PlayerService {
 		ImageFetcher imageLoader = new ImageFetcher(context, 34, 34, 0);
 		imageLoader.setImageCache(ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR));
 		ImageView ivContextPlayer = (ImageView) context.findViewById(R.id.ivHeaderContextPlayer);
-		//android.util.Log.i(TAG, "FindPlayerResults: playerImage=" + player.getImageUrl());
+		//android.util.Logger.i(TAG, "FindPlayerResults: playerImage=" + player.getImageUrl());
 		
 		imageLoader.loadImage(player.getImageUrl(), ivContextPlayer); //default image
 	 
@@ -281,7 +319,7 @@ public class PlayerService {
 	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 	        SharedPreferences.Editor editor = settings.edit();
 	        
-	        Log.w(TAG, "handleChangePasswordResponse auth=" + player.getAuthToken());
+	        Logger.w(TAG, "handleChangePasswordResponse auth=" + player.getAuthToken());
 	        
 	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
@@ -313,7 +351,7 @@ public class PlayerService {
          } 
          catch (Exception e) {
             //getRequest.abort();
-            Log.w(TAG, "Error for HandleCreatePlayerResponse= ", e);
+            Logger.w(TAG, "Error for HandleCreatePlayerResponse= ", e);
             
             Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
             t.show(); 
@@ -352,7 +390,7 @@ public class PlayerService {
          } 
          catch (Exception e) {
             //getRequest.abort();
-            Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
+            Logger.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
             
             DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage(), 0);
            // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
@@ -374,7 +412,7 @@ public class PlayerService {
          } 
          catch (Exception e) {
             //getRequest.abort();
-            Log.w("PlayerService", "Error for HandleCreatePlayerResponse= ", e);
+            Logger.w("PlayerService", "Error for HandleCreatePlayerResponse= ", e);
             
             DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage(), 0);
            // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling

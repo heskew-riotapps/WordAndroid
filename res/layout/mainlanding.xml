@@ -2,16 +2,19 @@
     style="@style/LayoutStyle"
     android:orientation="vertical" >
     <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
-    <LinearLayout 
-           style="@style/LayoutFormStyle"
-           android:layout_below="@id/topAreaLayout"
-           android:layout_marginTop="-2dp"
-        > 
-        <LinearLayout
-         
-        android:paddingTop="8dp"
-        android:layout_marginBottom="5dp"
+  
+    	 <LinearLayout
+	        style="@style/LayoutFormStyle"
+	        android:layout_marginTop="0dp"
+	        android:layout_marginBottom="30dp"
+	        android:id="@+id/llOpponentsTurn"
+	         android:layout_below="@id/topAreaLayout"
          >
+	        <LinearLayout
+	       		android:paddingTop="8dp"
+	        	android:layout_marginBottom="5dp"
+	        	android:id="@+id/llButtons"
+	         >
 	 
             <com.riotapps.word.utils.TypefaceButton 
 		  	    style="@style/MainLandingButtonStyle"
@@ -36,82 +39,42 @@
 		    />
     
     </LinearLayout>
-	<RelativeLayout
-		style="@style/FormBackgroundStyle"
-		android:layout_marginTop="5dp"
-	>
-	<RelativeLayout
-		style="@style/FormHeaderWrapperWithSubtitleStyle"
-		android:id="@+id/header"
-	>
-    <com.riotapps.word.ui.MainFontTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#3366dd"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:text="@string/start_game" 
-       	android:id="@+id/start_game_text"
-        android:layout_below="@id/logo"
-	 	android:gravity="center"
-	  	android:paddingTop="8dp"
-        />
-    <com.riotapps.word.ui.MainFontTextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#3366dd"
-        android:textSize="12dp"
-        android:textStyle="bold"
-        android:text="@string/start_game_sub" 
-       	android:id="@+id/start_game_sub_text"
-        android:layout_below="@id/start_game_text"
-	 	android:gravity="center"
-	 	android:paddingBottom="8dp"
-        />
-    </RelativeLayout> 
-    <com.riotapps.word.ui.MainFontTextView
-        style="@style/TextStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/text_selector"
-        android:text="@string/start_game_fb_friends" 
-        android:id="@+id/startByFacebook"
-		android:clickable="true"
-		android:gravity="center"
-		android:layout_below="@id/header"
-        />
-   <com.riotapps.word.ui.MainFontTextView
-        style="@style/TextStyle"
-        android:background="@drawable/text_selector"
-        android:text="@string/start_game_prev_opponents" 
-        android:id="@+id/startByOpponent"
-		android:clickable="true"
-		android:gravity="center"
-		android:layout_below="@id/startByFacebook"
-		android:layout_marginTop=".5dp"
-        />
-   <com.riotapps.word.ui.MainFontTextView
-        style="@style/TextStyle"
-        android:background="@drawable/text_selector"
-        android:text="@string/start_game_by_nickname" 
-        android:id="@+id/tvStartByNickname"
-		android:gravity="center"
-		android:layout_below="@id/startByOpponent"
-		android:layout_marginTop=".5dp"
-        />
-   <com.riotapps.word.ui.MainFontTextView
-       style="@style/TextStyle"
-        android:background="@drawable/text_selector_bottom"
-	 	android:gravity="center"
-        android:text="@string/start_game_by_random" 
-        android:id="@+id/startByRandom"
-        android:layout_below="@id/tvStartByNickname"
-		android:layout_gravity="center"
-		android:layout_marginTop=".5dp"
-		android:layout_marginBottom="15dp"
-		android:clickable="true"
-        />	
+    
+
+		<LinearLayout
+			style="@style/FormBackgroundStyle"
+			android:layout_marginTop="5dp"
+			android:layout_width="fill_parent"
+			android:layout_below="@id/llButtons">
+		    
+		    <com.riotapps.word.ui.MainFontTextView
+		        style="@style/ContentAreaTextTopStyle"
+		        android:text="@string/main_landing_your_turn" />
+		    <View
+		        style="@style/ContentAreaTextBottomStyle"
+		        android:layout_width="fill_parent"
+		        android:layout_height="12dp" />
+
+	     </LinearLayout>
+	     
+		<LinearLayout
+			style="@style/FormBackgroundStyle"
+			android:layout_marginTop="5dp">
+		    
+		    <com.riotapps.word.ui.MainFontTextView
+		        style="@style/ContentAreaTextTopStyle"
+		        android:layout_width="fill_parent"
+		        android:text="@string/main_landing_opponents_turn" />
+   			 <View
+		        style="@style/ContentAreaTextBottomStyle"
+		        android:layout_width="fill_parent"
+		        android:layout_height="12dp" />
+		    
+   		
+	     </LinearLayout>
+		
+    </LinearLayout>
+
        
-    </RelativeLayout>
-     </LinearLayout>
+    
 </RelativeLayout>

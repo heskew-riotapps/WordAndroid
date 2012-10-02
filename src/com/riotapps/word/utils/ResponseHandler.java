@@ -8,8 +8,9 @@ import android.util.Log;
 import android.widget.Toast;
 import com.riotapps.word.R;
 import com.riotapps.word.hooks.*;
+import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.Enums.ResponseHandlerType;
- 
+
 class ResponseHandler {
 
 	 /**=======================================================================================   
@@ -109,8 +110,8 @@ class ResponseHandler {
 //	                 new ShowAlertDialog(ctx, headingOfAlertDialog, message).showDialog();  
 //	                 break;  
 //	             }//end case 422: 
-	             case 500:
-	            	 ///////do something here
+	             case 500: 
+	            	 ///////do something here 
 	    
 	            	 DialogManager.SetupAlert(ctx, ctx.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
 	         }  

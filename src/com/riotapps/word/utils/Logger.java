@@ -7,6 +7,10 @@ import android.util.Log;
 public class Logger {
 
 	public static void w(String tag, String msg){
+		Logger.w(tag, msg, null);
+	}
+	
+	public static void w(String tag, String msg, Exception e){
 		//is logging on?
 		if (BuildConfig.DEBUG) {
 			Log.w(tag, msg);
@@ -14,6 +18,11 @@ public class Logger {
 	}
 	
 	public static void d(String tag, String msg){
+		Logger.d(tag, msg, null);
+	}
+	
+	
+	public static void d(String tag, String msg, Exception e){
 		//is logging on?
 		if (BuildConfig.DEBUG) {
 			Log.d(tag, msg);
@@ -21,6 +30,11 @@ public class Logger {
 	}
 
 	public static void e(String tag, String msg){
+		Logger.e(tag, msg, null);
+		
+	}
+	
+	public static void e(String tag, String msg, Exception e){
 		//is logging on?
 		if (BuildConfig.DEBUG) {
 			Log.e(tag, msg);

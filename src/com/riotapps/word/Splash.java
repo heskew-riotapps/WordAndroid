@@ -30,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.TransportAuthToken;
+import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameSurfaceView;
 import com.riotapps.word.utils.*;
 import com.riotapps.word.utils.Enums.RequestType;

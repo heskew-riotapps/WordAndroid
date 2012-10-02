@@ -4,9 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -24,15 +29,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.facebook.android.*;
+import com.google.gson.Gson;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
+import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.facebook.friendsRequestListener;
 import com.riotapps.word.facebook.meRequestListener;
 import com.riotapps.word.hooks.ErrorService;
+import com.riotapps.word.hooks.FBFriend;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.Error.ErrorType;
@@ -43,7 +51,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
 	
     final Welcome context = this;	
-    final Context myContext = this;
+  
 	TextView txtFB;
 	TextView txtNative;
 	private SharedPreferences settings;
@@ -82,6 +90,12 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         super.onActivityResult(requestCode, resultCode, data);
 
         facebook.authorizeCallback(requestCode, resultCode, data);
+    }
+    
+    @Override
+    public void onResume() {    
+        super.onResume();
+        facebook.extendAccessTokenIfNeeded(this, null);
     }
     
     private void routeToFacebook() {
@@ -145,11 +159,37 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
             
     		// get the logged-in user's friends
     		//save user to server...
+    		Logger.d(TAG, "fbMeRequestListener.onComplete response=" + response);
     		
-    		String json = PlayerService.setupConnectViaFB(this, tEmail.getText().toString(), tNickname.getText().toString());
+    		String fbId; 
+    		String fbFirstName; 
+    		String fbLastName; 
+    		String fbEmail; 
+    		try {
+				JSONObject json_fb = Util.parseJson(response);
+				fbId = json_fb.getString("id");
+				fbFirstName = json_fb.getString("first_name");
+				fbLastName = json_fb.getString("last_name");
+				fbEmail = json_fb.getString("email");
+				
+				
+				try {
+					String json = PlayerService.setupConnectViaFB(context, fbEmail, fbId, fbFirstName, fbLastName);
+					
+					//kick off thread
+					new NetworkTask(context, RequestType.POST, getString(R.string.progress_updating), json).execute(Constants.REST_CREATE_PLAYER_URL);
+				} catch (DesignByContractException e) {
+					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+				}
+			} catch (FacebookError e) {
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+			}
+    		
 			
-			//kick off thread
-			new NetworkTask(context, RequestType.POST, getString(R.string.progress_updating), json).execute(Constants.REST_CREATE_PLAYER_URL);
+		
 		
      	}
 
@@ -185,9 +225,33 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     	public void onComplete(String response, Object state) {
     		//route user to main landing
     		//save fb friends locally, determine the structure
-     	    Intent intent = new Intent(context, com.riotapps.word.MainLanding.class);
-  	      
-     	    context.startActivity(intent);
+    /*		{
+    			   "data": [
+    			      {
+    			         "name": "Will Richardson",
+    			         "id": "4914132"
+    			      },
+    			      {
+    			         "name": "Kevin Fielding",
+    			         "id": "4945016"
+    			      }
+    		}
+    */		
+    		JSONObject json;
+			try {
+				PlayerService.saveFacebookFriendsFromJSONResponse(context, response);
+	 
+	     	    Intent intent = new Intent(context, com.riotapps.word.MainLanding.class);
+	     	    context.startActivity(intent);
+				
+			} catch (FacebookError e) {
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+			}
+    		
+            
     	}
 
     	@Override
@@ -301,17 +365,17 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		            	 
 		             case 404:
 		             //case Status code == 422
-		            	 DialogManager.SetupAlert(myContext, context.getString(R.string.sorry), context.getString(R.string.validation_404_error), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+		            	 DialogManager.SetupAlert(context, context.getString(R.string.sorry), context.getString(R.string.validation_404_error), false, Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
 		            	 break;
 		             case 422: 
 		             case 500:
 
-		            	 DialogManager.SetupAlert(myContext, context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+		            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
 		         }  
 		     }else if (exception instanceof ConnectTimeoutException) {
-		    	 DialogManager.SetupAlert(myContext, context.getString(R.string.oops), context.getString(R.string.msg_connection_timeout), 0);
+		    	 DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.msg_connection_timeout), 0);
 		     }else if(exception != null){  
-		    	 DialogManager.SetupAlert(myContext, context.getString(R.string.oops), context.getString(R.string.msg_not_connected), 0);  
+		    	 DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.msg_not_connected), 0);  
 
 		     }  
 		     else{  

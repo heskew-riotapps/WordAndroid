@@ -7,18 +7,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import com.riotapps.word.hooks.Game;
-import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
-import com.riotapps.word.utils.DialogManager;
+import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.Enums.RequestType;
-import com.riotapps.word.utils.Enums.ResponseHandlerType;
 import com.riotapps.word.utils.ServerResponse;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +25,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class FindPlayer extends FragmentActivity implements View.OnClickListener{
 
