@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +53,8 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
 	
     final Welcome context = this;	
+    
+    protected Handler handler;
   
 	TextView txtFB;
 	TextView txtNative;
@@ -66,9 +70,18 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         txtFB.setOnClickListener(this);
         txtNative = (TextView) findViewById(R.id.byEmail);
         txtNative.setOnClickListener(this);    
-      
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                // process incoming messages here
+            	
+            	//handleMessageFromHandler(msg);
+            }
+        };
         
     }
+    
+    
+   
     
     @Override 
     public void onClick(View v) {
@@ -98,6 +111,25 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         facebook.extendAccessTokenIfNeeded(this, null);
     }
     
+	 //private void handleMessageFromHandler(Message msg){
+	    
+		 
+		 
+	 //}
+    
+	 private class handleFriendsRunnable implements Runnable {
+		    public void run() {
+		    	Logger.w(TAG, "handleFriendsRunnable");
+		    	 SharedPreferences.Editor editor = settings.edit();
+		         editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
+		         editor.putLong(Constants.FB_TOKEN_EXPIRES, facebook.getAccessExpires());
+		         editor.commit();
+		      
+		         // get information about the currently logged in user
+		         mAsyncRunner.request("me", new fbMeRequestListener());
+		         }
+		  }
+    
     private void routeToFacebook() {
     	settings = getPreferences(MODE_PRIVATE);
         String access_token = settings.getString(Constants.FB_TOKEN, null);
@@ -117,19 +149,15 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	    	  new DialogListener() {
 	             @Override
 	             public void onComplete(Bundle values) {
-	            	 SharedPreferences.Editor editor = settings.edit();
-	                 editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
-	                 editor.putLong(Constants.FB_TOKEN_EXPIRES, facebook.getAccessExpires());
-	                 editor.commit();
-	               //redirect to authorization if these errors occur
+	            	 Logger.w(TAG, "facebook.authorize..onComplete:");
+	            	// getFriends();
+	            	 handler.post(new handleFriendsRunnable());
+	            	 //redirect to authorization if these errors occur
 	                 //  User revoked access to your app:
 	               //  {"error":{"type":"OAuthException","message":"Error validating access token: User 1053947411 has not authorized application 157111564357680."}}
 
 	               //  OR when password changed:
 	               //  {"error":{"type":"OAuthException","message":"Error validating access token: The session is invalid because the user logged out."}}
-	                 
-	                 // get information about the currently logged in user
-	                 mAsyncRunner.request("me", new fbMeRequestListener());
 	                 
 	             }
 
@@ -149,8 +177,57 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	             public void onCancel() {}
 	         });
         }
+        else{
+        	 handler.post(new handleFriendsRunnable());
+        	//getFriends();
+        }
  
     }
+    
+    
+    private void getFriends(){
+    	Logger.w(TAG, "getFriends");
+    	 SharedPreferences.Editor editor = settings.edit();
+         editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
+         editor.putLong(Constants.FB_TOKEN_EXPIRES, facebook.getAccessExpires());
+         editor.commit();
+      
+         // get information about the currently logged in user
+         mAsyncRunner.request("me", new fbMeRequestListener());
+    }
+    
+    private void handleFacebookMeResponse(String response){
+    	String fbId; 
+		String fbFirstName; 
+		String fbLastName; 
+		String fbEmail; 
+		try {
+			JSONObject json_fb = Util.parseJson(response);
+			fbId = json_fb.getString("id");
+			fbFirstName = json_fb.getString("first_name");
+			fbLastName = json_fb.getString("last_name");
+			fbEmail = json_fb.getString("email");
+			
+			
+			try { 
+				String json = PlayerService.setupConnectViaFB(context, fbId, fbEmail, fbFirstName, fbLastName);
+				
+				//kick off thread
+				new NetworkTask(context, RequestType.POST, getString(R.string.progress_updating), json).execute(Constants.REST_CREATE_PLAYER_URL);
+			} catch (DesignByContractException e) {
+				Logger.w(TAG,"handleFacebookMeResponse email=" + fbEmail+ " " + e.getLocalizedMessage());
+				//DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+			}
+		} catch (FacebookError e) {
+			Logger.w(TAG,"handleFacebookMeResponse.FacebookError=" + e.getLocalizedMessage());
+			//DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+		} catch (JSONException e) {
+			Logger.w(TAG,"handleFacebookMeResponse.JSONException=" + e.getLocalizedMessage());
+			// TODO Auto-generated catch block
+			//DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+		}
+    }
+    
     
     private class fbMeRequestListener implements RequestListener {
 
@@ -161,32 +238,37 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     		//save user to server...
     		Logger.d(TAG, "fbMeRequestListener.onComplete response=" + response);
     		
-    		String fbId; 
-    		String fbFirstName; 
-    		String fbLastName; 
-    		String fbEmail; 
-    		try {
-				JSONObject json_fb = Util.parseJson(response);
-				fbId = json_fb.getString("id");
-				fbFirstName = json_fb.getString("first_name");
-				fbLastName = json_fb.getString("last_name");
-				fbEmail = json_fb.getString("email");
-				
-				
-				try {
-					String json = PlayerService.setupConnectViaFB(context, fbEmail, fbId, fbFirstName, fbLastName);
-					
-					//kick off thread
-					new NetworkTask(context, RequestType.POST, getString(R.string.progress_updating), json).execute(Constants.REST_CREATE_PLAYER_URL);
-				} catch (DesignByContractException e) {
-					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
-				}
-			} catch (FacebookError e) {
-				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
-			}
+    		handleFacebookMeResponse(response);
+    		
+  //  		String fbId; 
+  //  		String fbFirstName; 
+  //  		String fbLastName; 
+  //  		String fbEmail; 
+  //  		try {
+//				JSONObject json_fb = Util.parseJson(response);
+//				fbId = json_fb.getString("id");
+//				fbFirstName = json_fb.getString("first_name");
+//				fbLastName = json_fb.getString("last_name");
+//				fbEmail = json_fb.getString("email");
+//				
+//				
+//				try { 
+//					String json = PlayerService.setupConnectViaFB(context, fbId, fbEmail, fbFirstName, fbLastName);
+//					
+//					//kick off thread
+//					new NetworkTask(context, RequestType.POST, getString(R.string.progress_updating), json).execute(Constants.REST_CREATE_PLAYER_URL);
+//				} catch (DesignByContractException e) {
+//					Logger.w(TAG,"onComplete.DesignByContractException email=" + fbEmail+ " " + e.getLocalizedMessage());
+//					//DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+//				}
+//			} catch (FacebookError e) {
+//				Logger.w(TAG,"onComplete.FacebookError=" + e.getLocalizedMessage());
+//				//DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+//			} catch (JSONException e) {
+//				Logger.w(TAG,"onComplete.JSONException=" + e.getLocalizedMessage());
+//				// TODO Auto-generated catch block
+//				//DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+//			}
     		
 			
 		
@@ -237,6 +319,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     			      }
     		}
     */		
+    		Logger.w(TAG,"fbFriendsRequestListener.onComplete.JSONException=" + response);
     		JSONObject json;
 			try {
 				PlayerService.saveFacebookFriendsFromJSONResponse(context, response);
