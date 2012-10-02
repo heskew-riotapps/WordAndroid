@@ -52,6 +52,14 @@ public class GameService {
 		return new Game();
 	}
 	
+	public static List<Game> getGamesFromLocal(){
+		 Gson gson = new Gson(); 
+		 Type type = new TypeToken<List<Game>>() {}.getType();
+	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);
+	     List<Game> games = gson.fromJson(settings.getString(Constants.USER_PREFS_ACTIVE_GAMES, Constants.EMPTY_JSON_ARRAY), type);
+	     return games;
+	}
+	
 	
 	public static void CreateGame(Context ctx, String email, String nickname, String password, Class<?> goToClass) throws DesignByContractException{
 

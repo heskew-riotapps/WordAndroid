@@ -12,7 +12,8 @@ public class Error {
 		NICKNAME_IN_USE(3),
 		NICKNAME_NOT_SUPPLIED(4),
 		EMAIL_IN_USE(5),
-		UNAUTHORIZED(6);
+		UNAUTHORIZED(6),
+		FB_USER_EMAIL_ALREADY_IN_USE(7);
 				
 		private final int value;
 		private ErrorType(int value) {

@@ -50,10 +50,15 @@
 		    <com.riotapps.word.ui.MainFontTextView
 		        style="@style/ContentAreaTextTopStyle"
 		        android:text="@string/main_landing_your_turn" />
+		    <ListView
+		        android:id="@+id/listYourTurn"
+		        android:isScrollContainer="false"  
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" />
 		    <View
 		        style="@style/ContentAreaTextBottomStyle"
 		        android:layout_width="fill_parent"
-		        android:layout_height="12dp" />
+		        android:layout_height="15dp" />
 
 	     </LinearLayout>
 	     
@@ -68,7 +73,23 @@
    			 <View
 		        style="@style/ContentAreaTextBottomStyle"
 		        android:layout_width="fill_parent"
-		        android:layout_height="12dp" />
+		        android:layout_height="15dp" />
+		    
+   		
+	     </LinearLayout>
+		
+		<LinearLayout
+			style="@style/FormBackgroundStyle"
+			android:layout_marginTop="5dp">
+		    
+		    <com.riotapps.word.ui.MainFontTextView
+		        style="@style/ContentAreaTextTopStyle"
+		        android:layout_width="fill_parent"
+		        android:text="@string/main_landing_completed_games" />
+   			 <View
+		        style="@style/ContentAreaTextBottomStyle"
+		        android:layout_width="fill_parent"
+		        android:layout_height="15dp" />
 		    
    		
 	     </LinearLayout>

@@ -154,7 +154,7 @@ public class PlayerService {
 		}
 		Gson gson = new Gson(); 
 		
-		String friendJSON =gson.toJson(fbFriends);
+		String friendJSON = gson.toJson(fbFriends);
 		
 		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 	        SharedPreferences.Editor editor = settings.edit();
@@ -319,7 +319,7 @@ public class PlayerService {
 	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 	        SharedPreferences.Editor editor = settings.edit();
 	        
-	        Logger.w(TAG, "handleChangePasswordResponse auth=" + player.getAuthToken());
+	        Logger.w(TAG, "handlePlayerResponse auth=" + player.getAuthToken());
 	        
 	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LayoutStyle"
-    android:orientation="vertical" >
-   </LinearLayout>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+        android:id="@+id/ivOpponent1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"    
+    />
+</RelativeLayout>

@@ -13,6 +13,7 @@ public class Constants {
  	public static final String SCOREBOARD_FONT = "fonts/Asap_Bold.ttf"; //"fonts/banksia.ttf"; "fonts/Crushed.ttf";//"fonts/Vegur_B_0.602.otf"; Asap_Bold
 	public static final String SCOREBOARD_BUTTON_FONT = "fonts/Asap_Bold.ttf"; 
 	public static final String EMPTY_JSON = "{}";
+	public static final String EMPTY_JSON_ARRAY = "[]";
  	public static final String WN_KEY = "48f31f368d20791114b01067e1d05b68ca177aabdbab4150b";
  	
  	public static final String LAYOUT_SCOPE_WORD = "W";
@@ -44,6 +45,7 @@ public class Constants {
  	public static final String USER_PREFS_AUTH_TOKEN = "user_at";
  	public static final String USER_PREFS_EMAIL = "user_em";
  	public static final String USER_PREFS_PWD = "user_pw";
+ 	public static final String USER_PREFS_ACTIVE_GAMES = "a_games";
  	public static final String USER_PREFS_PLAYER_JSON = "player_json";
  	public static final String GAME_STATE = "game_state";
  	public static final String FB_TOKEN = "fb_token";
