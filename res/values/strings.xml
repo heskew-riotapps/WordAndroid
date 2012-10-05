@@ -67,7 +67,7 @@
 	<string name="join_with_email_title">connect with your email</string>
  	<string name="join_with_email_subtitle">and choose a nickname</string>
  	<string name="start_game">start a game</string>
- 	<string name="start_game_sub">choose up to 4 opponents</string>
+ 	<string name="start_game_sub">choose up to 3 opponents</string>
  	<string name="start_game_fb_friends">choose from facebook friends</string>
  	<string name="start_game_prev_opponents">choose from previous opponents</string>
  	<string name="start_game_by_nickname">find opponent by nickname</string>

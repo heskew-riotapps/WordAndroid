@@ -76,6 +76,7 @@
 					<LinearLayout
 						style="@style/FormBackgroundStyle"
 						android:layout_marginTop="10dp"
+
 					>
 				    	 <com.riotapps.word.ui.MainFontTextView
         					style="@style/ContentAreaTextTopStyle"
@@ -83,9 +84,9 @@
         					/>
 					   <ListView  
 					          android:id="@+id/listPlayers"
-					        android:isScrollContainer="false"  
+					        
 					        android:layout_width="fill_parent"
-					        android:layout_height="wrap_content" />
+					        android:layout_height="fill_parent" />
 						<LinearLayout
 					        style="@style/FormButtonAreaStyle"
 					          >

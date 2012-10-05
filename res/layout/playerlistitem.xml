@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ContentAreaTextAreaStyle"
+    style="@style/ContentAreaTextStyle"
     >
    <ImageView 
 	   	android:layout_width="34dp"

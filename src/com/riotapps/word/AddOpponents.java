@@ -8,6 +8,7 @@ import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
+import com.riotapps.word.utils.Logger;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +52,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	  TextView tvOpponentsAlreadyAddedTitle =(TextView)findViewById(R.id.tvOpponentsAlreadyAddedTitle);
     	  if (this.game.getPlayerGames().size() < 3){
     		  tvTitle.setText(this.getString(R.string.add_opponents_add_x_more_title));
-    		  tvSubtitle.setText(String.format(this.getString(R.string.add_opponents_add_x_more_subtitle), 3 - this.game.getPlayerGameArray().length));
+    		  tvSubtitle.setText(String.format(this.getString(R.string.add_opponents_add_x_more_subtitle), 3 - this.game.getPlayerGameOpponentsArray().length));
        	  }
     	  else {
     		  tvTitle.setText(this.getString(R.string.add_opponents_add_one_more_title));
@@ -130,13 +131,16 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 
   	  @Override
   	  public View getView(int position, View convertView, ViewGroup parent) {
-  	    LayoutInflater inflater = (LayoutInflater) context
-  	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+  	    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
   	    View rowView = inflater.inflate(R.layout.playerlistitem, parent, false);
+  	    
+  	   
   	    
   	    Player opponent =  this.values[position].getPlayer();
   	    TextView tvPlayerName = (TextView)rowView.findViewById(R.id.tvPlayerName);
 	 	tvPlayerName.setText(opponent.getName());
+	 	
+	 	 Logger.w(TAG, "position=" + position + " opponent=" + opponent.getName());
 	 	
 		TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
 		tvPlayerWins.setText(String.format(this.context.getString(R.string.line_item_num_wins),opponent.getNumWins()));
@@ -144,14 +148,12 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 	 	ImageFetcher imageLoader = new ImageFetcher(this.context, 34, 34, 0);
 		imageLoader.setImageCache(ImageCache.findOrCreateCache(this.context, Constants.IMAGE_CACHE_DIR));
 		ImageView ivPlayer = (ImageView) rowView.findViewById(R.id.ivPlayer);
-		android.util.Log.i(TAG, "FindPlayerResults: playerImage=" + opponent.getImageUrl());
 		
 		imageLoader.loadImage(opponent.getImageUrl(), ivPlayer); //default image
 		
 		int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + opponent.getBadgeDrawable(), null, null);
 		ImageView ivBadge = (ImageView)rowView.findViewById(R.id.ivBadge);	 
 		ivBadge.setImageResource(badgeId);
-  	
 	 
   	    return rowView;
   	  }
