@@ -28,6 +28,7 @@
 	<string name="try_again">Try Again</string>
 	<string name="cancel">cancel</string>
 	<string name="header_num_wins">%s wins</string>
+	<string name="line_item_num_wins">%s wins</string>
 	<string name="never_share_email">(will never be shared)</string>
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="msg_connection_timeout">The network connection took too long to return. To work properly, WordSmash has to talk to the mother ship.</string>
@@ -35,6 +36,7 @@
 	<string name="validation_nickname_required">Please enter your nickname.  This will be the name to other players see.</string>
 	<string name="validation_nickname_invalid">Your nickname can only contain letters, numbers, spaces, dots, and hyphens.</string>
 	<string name="validation_password_required">Please enter a password.</string>
+	<string name="validation_auth_token_required">Auth token is required.</string>
 	<string name="validation_email_invalid">Please enter a valid email to connect to play.  We\'ll never share it, we just may send game-related emails out every now and then.  Did we mention we\'ll never share it?</string>
 	<string name="validation_nickname_required_for_search">Please enter the nickname of the opponent you are trying to find.</string>
 	<string name="validation_too_many_players">Sorry, a maximum of four players can be added to a game.</string>
@@ -52,9 +54,9 @@
 	<string name="validation_unauthorized">This action is unauthorized.</string>	
 	<string name="validation_nickname_not_supplied">Please enter a nickname.</string>
 	<string name="validation_email_is_already_in_use">The email associated with your Facebook account has already been registered in WordSmash.</string>
-	
+	<string name="validation_cannot_add_yourself">Sorry, you cannot add yourself as an opponent.</string>
 		
-	<string name="ok">OK</string>
+	<string name="ok">ok</string>
 	<string name="oops">Oops</string>
 	<string name="sorry">Sorry</string>
 	<string name="error_title">Holy Gandalf!!</string>
@@ -65,11 +67,11 @@
 	<string name="join_with_email_title">connect with your email</string>
  	<string name="join_with_email_subtitle">and choose a nickname</string>
  	<string name="start_game">start a game</string>
- 	<string name="start_game_sub">just tell us how to find your opponent(s)</string>
- 	<string name="start_game_fb_friends">choose a facebook friend</string>
- 	<string name="start_game_prev_opponents">choose a previous opponent</string>
- 	<string name="start_game_by_nickname">find by nickname</string>
- 	<string name="start_game_by_random">random opponent</string>
+ 	<string name="start_game_sub">choose up to 4 opponents</string>
+ 	<string name="start_game_fb_friends">choose from facebook friends</string>
+ 	<string name="start_game_prev_opponents">choose from previous opponents</string>
+ 	<string name="start_game_by_nickname">find opponent by nickname</string>
+ 	<string name="start_game_by_random">add a random opponent</string>
  	<string name="progress_loading">loading&#8230;</string>
  	<string name="progress_saving">saving&#8230;</string>
  	<string name="progress_searching">searching&#8230;</string>
@@ -293,5 +295,13 @@
 	   <string name="main_landing_your_turn">your turn</string>
 	   <string name="main_landing_opponents_turn">opponents\' turn</string>
 	   <string name="main_landing_completed_games">completed games</string>
+	   <string name="add_opponents_add_x_more_title">add more opponents?</string>
+	   <string name="add_opponents_add_one_more_title">add another opponent?</string>
+	   <string name="add_opponents_start_game">start this game</string>
+	     <string name="add_opponents_cancel_game">cancel this game</string>
+	   <string name="add_opponents_add_x_more_subtitle">add up to %s more or get started now</string>
+	   <string name="add_opponents_add_one_more_subtitle">add one more or get started now</string>
+	   <string name="add_opponents_already_added_x_title">you\'ve already added these opponents:</string>
+	   <string name="add_opponents_already_added_one_title">you\'ve already added this opponent:</string>
 	   
 </resources>

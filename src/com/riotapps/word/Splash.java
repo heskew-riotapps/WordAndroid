@@ -60,13 +60,14 @@ public class Splash  extends FragmentActivity {
 	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
 	       
 	    if (storedToken.length() > 0){
-	    	TransportAuthToken authToken = new TransportAuthToken();
-			authToken.setToken(storedToken);
-			Gson gson = new Gson();
-			String json = gson.toJson(authToken);
-			
-			Logger.w(TAG, "auth token=" + storedToken);
-			//ok lets call the server now
+	    	String json = "";
+			try {
+				json = PlayerService.setupAuthTokenCheck(this, storedToken);
+			} catch (DesignByContractException e) {
+				//this should never happen unless there is some tampering
+				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
+			}
+ 
 			new NetworkTask(this, RequestType.POST, json).execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
 	    }
 	    else{
@@ -194,7 +195,7 @@ public class Splash  extends FragmentActivity {
 	         switch(statusCode){  
 	             case 200:  
 	            	 try{
-	            		 PlayerService.setContextPlayer(this.context, iStream);
+	            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, iStream);
 	            		 
 	            		 long currentTime = System.nanoTime();
 		            	 
@@ -203,7 +204,16 @@ public class Splash  extends FragmentActivity {
 		            		 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime));
 		            	 }
 	            		 
-	            		 Intent intent = new Intent( this, com.riotapps.word.MainLanding.class);
+		            	 Intent intent;
+		            	 if (player.getTotalNumLocalGames() == 0){
+		            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
+		            	 }
+		            	 else {
+		            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+		            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+		            	 }
+	            		// Intent intent = new Intent( this, com.riotapps.word.MainLanding.class);
+	            		// intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 			     	     this.startActivity(intent);
 	            	 }
 	            	 catch(Exception e){

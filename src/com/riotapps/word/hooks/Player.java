@@ -1,5 +1,8 @@
 package com.riotapps.word.hooks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,32 +16,29 @@ public class Player implements Parcelable{
 	
 	private String id;
 	
-	@Expose
 	@SerializedName("n_n")
 	private String nickname = "";
 	
-	@Expose
 	@SerializedName("f_n") 
 	private String firstName = "";
 	
-	@Expose
 	@SerializedName("l_n")
 	private String lastname = "";
 	
-	@Expose
 	@SerializedName("e_m")
 	private String email = "";
 	
+	@SerializedName("n_c_g")
+	private int numCompletedGames = 0;
+	
 	private String gravatar;
 	
-	@Expose
 	private String password;
 	
-	@Expose
 	private String fb = "";
 	
 	@SerializedName("a_t")
-	private String auth_token;
+	private String authToken;
 	
 	@SerializedName("n_w")
 	private int numWins = 0; //num wins
@@ -48,6 +48,19 @@ public class Player implements Parcelable{
 	
 	@SerializedName("n_d")
 	private int numDraws = 0; //num draws
+	
+ 
+	private List<Opponent> opponents = new ArrayList<Opponent>();
+	
+	@SerializedName("a_games")
+	private List<Game> activeGames= new ArrayList<Game>();
+
+	private List<Game> activeGamesYourTurn= new ArrayList<Game>();
+	private List<Game> activeGamesOpponentTurn= new ArrayList<Game>();
+
+	
+	@SerializedName("c_games")
+	private List<Game> completedGames = new ArrayList<Game>();
 	
 	private String badge_drawable = "";
 
@@ -81,11 +94,11 @@ public class Player implements Parcelable{
 	public String getFB() {
 		return this.fb;
 	}
-	public void setAuthToken(String auth_token) {
-		this.auth_token = auth_token.trim();
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken.trim();
 	}
 	public String getAuthToken() {
-		return this.auth_token;
+		return this.authToken;
 	}
 	
 	public String getFirstName() {
@@ -166,6 +179,55 @@ public class Player implements Parcelable{
 	}
 	
 	
+	public int getNumCompletedGames() {
+		return numCompletedGames;
+	}
+	public void setNumCompletedGames(int numCompletedGames) {
+		this.numCompletedGames = numCompletedGames;
+	}
+	
+	
+	public List<Game> getActiveGames() {
+		return activeGames;
+	}
+	public void setActiveGames(List<Game> activeGames) {
+		this.activeGames = activeGames;
+		
+	}
+	public List<Game> getCompletedGames() {
+		return completedGames;
+	}
+	public void setCompletedGames(List<Game> completedGames) {
+		this.completedGames = completedGames;
+	}
+	
+	public int getTotalNumLocalGames(){
+		return this.activeGamesYourTurn.size() + this.activeGamesOpponentTurn.size() + this.completedGames.size();
+	}
+	
+	
+	public List<Game> getActiveGamesYourTurn() {
+		return activeGamesYourTurn;
+	}
+	public void setActiveGamesYourTurn(List<Game> activeGamesYourTurn) {
+		this.activeGamesYourTurn = activeGamesYourTurn;
+	}
+	public List<Game> getActiveGamesOpponentTurn() {
+		return activeGamesOpponentTurn;
+	}
+	public void setActiveGamesOpponentTurn(List<Game> activeGamesOpponentTurn) {
+		this.activeGamesOpponentTurn = activeGamesOpponentTurn;
+	}
+	
+	
+	
+	
+	public List<Opponent> getOpponents() {
+		return opponents;
+	}
+	public void setOpponents(List<Opponent> opponents) {
+		this.opponents = opponents;
+	}
 	public String getBadgeDrawable(){
 		if (this.numWins == 0) {
 			return Constants.BADGE_0;
@@ -307,7 +369,7 @@ public class Player implements Parcelable{
 		out.writeString(this.email);
 		out.writeString(this.password);
 		out.writeString(this.fb);
-		out.writeString(this.auth_token);
+		out.writeString(this.authToken);
 		out.writeInt(this.numWins);
 		out.writeInt(this.numLosses);
 		out.writeInt(this.numDraws);
@@ -335,7 +397,7 @@ public class Player implements Parcelable{
 		this.email = in.readString();
 		this.password = in.readString();
 		this.fb = in.readString();
-		this.auth_token = in.readString();
+		this.authToken = in.readString();
 		this.numWins = in.readInt();
 		this.numLosses = in.readInt();
 		this.numDraws = in.readInt();

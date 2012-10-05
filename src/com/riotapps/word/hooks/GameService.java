@@ -52,13 +52,13 @@ public class GameService {
 		return new Game();
 	}
 	
-	public static List<Game> getGamesFromLocal(){
-		 Gson gson = new Gson(); 
-		 Type type = new TypeToken<List<Game>>() {}.getType();
-	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);
-	     List<Game> games = gson.fromJson(settings.getString(Constants.USER_PREFS_ACTIVE_GAMES, Constants.EMPTY_JSON_ARRAY), type);
-	     return games;
-	}
+//	public static List<Game> getGamesFromLocal(){
+//		 Gson gson = new Gson(); 
+//		 Type type = new TypeToken<List<Game>>() {}.getType();
+//	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);
+//	     List<Game> games = gson.fromJson(settings.getString(Constants.USER_PREFS_ACTIVE_GAMES, Constants.EMPTY_JSON_ARRAY), type);
+//	     return games;
+//	}
 	
 	
 	public static void CreateGame(Context ctx, String email, String nickname, String password, Class<?> goToClass) throws DesignByContractException{
@@ -196,6 +196,7 @@ public class GameService {
     	
     	PlayerGame pg = new PlayerGame();
     	pg.setPlayerId(contextPlayer.getId());
+    	pg.setPlayer(contextPlayer);
     	pg.setPlayerOrder(1);
     	
     	List<PlayerGame> pgs = new ArrayList<PlayerGame>();
@@ -207,10 +208,15 @@ public class GameService {
 	
 	public static Game addPlayerToGame(Context ctx, Game game, Player player) throws DesignByContractException{
 
-		Check.Require(game.getPlayerGames().size() < 4, ctx.getString(R.string.validation_too_many_players));
+		Check.Require(game.getPlayerGames().size() < 5, ctx.getString(R.string.validation_too_many_players));
+		
+		Player contextPlayer = PlayerService.getPlayerFromLocal();
+		
+	//	Check.Require(!contextPlayer.getId().equals(player.getId()), ctx.getString(R.string.validation_cannot_add_yourself));
 		
     	PlayerGame pg = new PlayerGame();
     	pg.setPlayerId(player.getId());
+    	pg.setPlayer(player);
     	pg.setPlayerOrder(game.getPlayerGames().size() + 1);
     	game.getPlayerGames().add(pg);
     	

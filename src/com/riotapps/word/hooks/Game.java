@@ -10,7 +10,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
  
-public class Game implements Parcelable {
+public class Game implements Parcelable, Comparable<Game> {
  
 	public Game(){}
 	
@@ -64,6 +64,24 @@ public class Game implements Parcelable {
 		return playerGames;
 	}
 
+	public PlayerGame[] getPlayerGameArray(){
+		PlayerGame[] ret = new PlayerGame[this.getPlayerGames().size()];
+		  for(int i = 0;i < ret.length;i++){
+		    ret[i] = this.getPlayerGames().get(i);}
+		  return ret;
+		}
+	
+	public PlayerGame[] getPlayerGameOpponentsArray (){ 
+		//assume the context player is the first playergame
+		PlayerGame[] ret = new PlayerGame[this.getPlayerGames().size() - 1];
+		
+		  for(int i = 1;i < this.getPlayerGames().size();i++){
+			  if (this.getPlayerGames().get(i).getPlayerOrder() > 1) {
+				  ret[i - 1] = this.getPlayerGames().get(i);
+			  }
+		  }
+		  return ret;
+		}
 	public void setPlayerGames(List<PlayerGame> playerGames) {
 		this.playerGames = playerGames;
 	}
@@ -171,5 +189,14 @@ public class Game implements Parcelable {
          this.status = in.readInt();
        	 
      }
-	
+
+	@Override
+	public int compareTo(Game game) {
+        if (this.getCompletionDate().after(game.getCompletionDate()))
+            return -1;
+        else if (this.getCompletionDate().equals(game.getCompletionDate()))
+            return 0;
+        else
+            return 1;
+    }
 }

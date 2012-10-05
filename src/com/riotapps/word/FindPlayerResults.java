@@ -3,6 +3,7 @@ package com.riotapps.word;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
+import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
@@ -23,7 +24,7 @@ public class FindPlayerResults extends FragmentActivity  implements View.OnClick
 	private static final String TAG = FindPlayerResults.class.getSimpleName();
 	
 	private Game game;
-	private Player player;
+	private Player opponent;
 	
 	 @Override
 		protected void onCreate(Bundle savedInstanceState) {
@@ -31,26 +32,32 @@ public class FindPlayerResults extends FragmentActivity  implements View.OnClick
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.findplayerresults);
 			
+			PlayerService.loadPlayerInHeader(this);
+			
 			Intent i = getIntent();
-		 	this.player = (Player) i.getParcelableExtra(Constants.EXTRA_PLAYER);
+		 	this.opponent = (Player) i.getParcelableExtra(Constants.EXTRA_PLAYER);
 		 	this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
 		 	
 		 	TextView tvPlayerName = (TextView)findViewById(R.id.tvPlayerName);
-		 	tvPlayerName.setText(player.getNickname());
+		 	tvPlayerName.setText(opponent.getNickname());
 		 	
-		 	ImageFetcher imageLoader = new ImageFetcher(this, 30, 30, 4);
+			TextView tvPlayerWins = (TextView)findViewById(R.id.tvPlayerWins);
+			tvPlayerWins.setText(String.format(this.getString(R.string.line_item_num_wins),opponent.getNumWins()));
+		 	
+		 	ImageFetcher imageLoader = new ImageFetcher(this, 34, 34, 0);
 			imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
 			ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayer);
-			android.util.Log.i(TAG, "FindPlayerResults: playerImage=" + player.getImageUrl());
+			android.util.Log.i(TAG, "FindPlayerResults: playerImage=" + opponent.getImageUrl());
 			
-			imageLoader.loadImage(player.getImageUrl(), ivPlayer); //default image
+			imageLoader.loadImage(opponent.getImageUrl(), ivPlayer); //default image
 			
-			int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + player.getBadgeDrawable(), null, null);
+			int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + opponent.getBadgeDrawable(), null, null);
 			ImageView ivBadge = (ImageView)findViewById(R.id.ivBadge);	 
 			ivBadge.setImageResource(badgeId);
 			
 			Button bAddToGame = (Button)findViewById(R.id.bAddToGame);
 			bAddToGame.setOnClickListener(this);
+			
 		}
 
 
@@ -68,14 +75,18 @@ public class FindPlayerResults extends FragmentActivity  implements View.OnClick
 		
 		try 
 		{
-			this.game = GameService.addPlayerToGame(this, this.game, this.player);
-			
-			//go to 
-			Intent intent = new Intent(this, com.riotapps.word.FindPlayerResults.class);
-    	      //  intent.putExtra("gameId", game.getId());
-    	      //	intent.putExtra("game", s);
+			this.game = GameService.addPlayerToGame(this, this.game, this.opponent);
+
+			Intent intent;
+			if (this.game.getPlayerGames().size() == 4){
+				
+				//save game to server and send user to gamesurface
+				intent = new Intent(this, com.riotapps.word.FindPlayerResults.class);
+			}
+			else {
+				intent = new Intent(this, com.riotapps.word.AddOpponents.class);
+			}
        	    intent.putExtra(Constants.EXTRA_GAME, this.game);
-    	    intent.putExtra(Constants.EXTRA_PLAYER, player);
     	    this.startActivity(intent);
 		} 
 		catch (DesignByContractException e) {

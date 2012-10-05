@@ -14,6 +14,7 @@ public class Constants {
 	public static final String SCOREBOARD_BUTTON_FONT = "fonts/Asap_Bold.ttf"; 
 	public static final String EMPTY_JSON = "{}";
 	public static final String EMPTY_JSON_ARRAY = "[]";
+	public static final String DEFAULT_COMPLETED_GAMES_DATE = "10/6/2012";
  	public static final String WN_KEY = "48f31f368d20791114b01067e1d05b68ca177aabdbab4150b";
  	
  	public static final String LAYOUT_SCOPE_WORD = "W";
@@ -29,10 +30,12 @@ public class Constants {
 	public static final int SPLASH_ACTIVITY_TIMEOUT = 3000;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
+	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
 
 	/**============================================
 	 * intent extras
 	 *=============================================*/
+	public static final String EXTRA_GAME_LIST_PREFETCHED = "isGameListFetched";
  	public static final String EXTRA_GAME = "game";
 	public static final String EXTRA_GAME_ID = "gameId";
 	public static final String EXTRA_PLAYER = "player";
@@ -47,6 +50,8 @@ public class Constants {
  	public static final String USER_PREFS_PWD = "user_pw";
  	public static final String USER_PREFS_ACTIVE_GAMES = "a_games";
  	public static final String USER_PREFS_PLAYER_JSON = "player_json";
+ 	public static final String USER_PREFS_FRIENDS_JSON = "friends_json";
+ 	public static final String USER_PREFS_LATEST_COMPLETED_GAME_DATE = "cg_date";
  	public static final String GAME_STATE = "game_state";
  	public static final String FB_TOKEN = "fb_token";
 	public static final String FB_TOKEN_EXPIRES = "fb_token_expires";
@@ -77,6 +82,7 @@ public class Constants {
 	public static final String REST_PLAYER_LOGOUT = REST_URL_SITE + "players/log_out.json";
 	public static final String REST_PLAYER_CHANGE_PASSWORD = REST_URL_SITE + "players/change_password.json";
 	public static final String REST_PLAYER_UPDATE_ACCOUNT = REST_URL_SITE + "players/update_account.json";
+	public static final String REST_PLAYER_GET_GAMES = REST_URL_SITE + "games/get_active_games.json";
 	
 	/**=============================================
 	 * rails

@@ -157,7 +157,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 						String json = PlayerService.setupConnectViaFB(context, fbId, fbEmail, fbFirstName, fbLastName);
 						
 						//kick off thread
-						new NetworkTask(context, RequestType.POST, getString(R.string.progress_updating), json).execute(Constants.REST_CREATE_PLAYER_URL);
+						new NetworkTask(context, RequestType.POST, getString(R.string.progress_connecting), json).execute(Constants.REST_CREATE_PLAYER_URL);
 					} catch (DesignByContractException e) {
 						Logger.w(TAG,"handleFacebookMeResponse email=" + fbEmail+ " " + e.getLocalizedMessage());
 						DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
@@ -182,13 +182,18 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		 
 		 
 		    public void run() {
-		    	Logger.w(TAG, "handleFacebookMeResponse");
-		    	Logger.w(TAG,"fbFriendsRequestListener.onComplete.JSONException=" + response);
+		    	Logger.w(TAG, "handleFacebookMeResponse response=" + response);
+		    	//Logger.w(TAG,"fbFriendsRequestListener.onComplete.JSONException=" + response);
 				JSONObject json;
 				try {
-					PlayerService.saveFacebookFriendsFromJSONResponse(context, response);
-		 
+					if (response.length() > 0){
+						PlayerService.saveFacebookFriendsFromJSONResponse(context, response);
+					}
+					else {
+						Logger.w(TAG,"fbFriendsRequestListener. response from facebook empty");
+					}
 		     	    Intent intent = new Intent(context, com.riotapps.word.MainLanding.class);
+		     	    intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 		     	    context.startActivity(intent);
 					
 				} catch (FacebookError e) {

@@ -119,15 +119,15 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	     //check for turn number, if not a match, clearGameState
 	     
 	     
-	     Log.w(TAG, "contextUserID=" + this.contextUserId);
+	 //    Log.w(TAG, "contextUserID=" + this.contextUserId);
 		
 		 Display display = getWindowManager().getDefaultDisplay(); 
 	     this.windowHeight = display.getHeight();  // deprecated
 	     
 	     
-	     Log.w(TAG, "long press " + android.view.ViewConfiguration.getLongPressTimeout() + 
-	    		 " dbltap " + android.view.ViewConfiguration.getDoubleTapTimeout() + 
-	    		  " tap  " + android.view.ViewConfiguration.getTapTimeout());
+	 //    Log.w(TAG, "long press " + android.view.ViewConfiguration.getLongPressTimeout() + 
+	  //  		 " dbltap " + android.view.ViewConfiguration.getDoubleTapTimeout() + 
+	 //   		  " tap  " + android.view.ViewConfiguration.getTapTimeout());
 	     
 	     
 	  	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);

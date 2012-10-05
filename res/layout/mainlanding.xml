@@ -70,6 +70,11 @@
 		        style="@style/ContentAreaTextTopStyle"
 		        android:layout_width="fill_parent"
 		        android:text="@string/main_landing_opponents_turn" />
+		     <ListView
+		        android:id="@+id/listOpponentTurn"
+		        android:isScrollContainer="false"  
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" />
    			 <View
 		        style="@style/ContentAreaTextBottomStyle"
 		        android:layout_width="fill_parent"
@@ -86,6 +91,11 @@
 		        style="@style/ContentAreaTextTopStyle"
 		        android:layout_width="fill_parent"
 		        android:text="@string/main_landing_completed_games" />
+		     <ListView
+		        android:id="@+id/listCompletedGames"
+		        android:isScrollContainer="false"  
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" />
    			 <View
 		        style="@style/ContentAreaTextBottomStyle"
 		        android:layout_width="fill_parent"

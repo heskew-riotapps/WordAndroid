@@ -132,12 +132,21 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			         
 			         Log.i(JoinNative.TAG, "StatusCode: " + statusCode);
 
-			         switch(statusCode){  
-			             case 200:  
+			         switch(statusCode){   
+			             case 200:   
 			             case 201: {  
 			          
 			            	 Player player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
-			         	     Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+			            	 Intent intent;
+			            	 if (player.getTotalNumLocalGames() == 0){
+			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
+			            	 }
+			            	 else {
+			            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+			            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+			            	 }
+			         	    // Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+			         	     //intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 			      	      
 			      	      	 this.context.startActivity(intent);
 			                 break;  

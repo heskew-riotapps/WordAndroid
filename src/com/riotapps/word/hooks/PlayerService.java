@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -31,6 +34,7 @@ import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
+import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
@@ -114,6 +118,26 @@ public class PlayerService {
 	}
 	
 	
+	public static String setupAuthTokenCheck(Context ctx, String authToken) throws DesignByContractException{
+		Gson gson = new Gson();
+	
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 
+		Check.Require(authToken.length() > 0, ctx.getString(R.string.validation_auth_token_required));
+		 
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+		TransportAuthToken player = new TransportAuthToken();
+		player.setToken(authToken);
+		player.setCompletedGameDate(new Date(completedDate));
+
+		
+		return gson.toJson(player);
+	}
+	
+	
 	public static String setupAccountUpdate(Context ctx, String email, String nickname) throws DesignByContractException{
 		Gson gson = new Gson(); 
 	
@@ -161,7 +185,7 @@ public class PlayerService {
 	        
 	        Logger.w(TAG, "saveFacebookFriendsFromJSONResponse fbFriends=" + friendJSON);
  
-	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(friendJSON));
+	        editor.putString(Constants.USER_PREFS_FRIENDS_JSON, gson.toJson(friendJSON));
 	        editor.commit();  
 	}
 	
@@ -272,7 +296,7 @@ public class PlayerService {
 			 		}
 				});
 			}
-		}
+		} 
 		
 		ImageView ivContextPlayerBadge = (ImageView) context.findViewById(R.id.ivHeaderContextPlayerBadge);
 		int contextPlayerBadgeId = context.getResources().getIdentifier("com.riotapps.word:drawable/" + player.getBadgeDrawable(), null, null);
@@ -290,6 +314,8 @@ public class PlayerService {
 		 Gson gson = new Gson(); 
 		 Type type = new TypeToken<Player>() {}.getType();
 	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);
+	     
+	     //Logger.w(TAG, "getPlayerFromLocal player=" + settings.getString(Constants.USER_PREFS_PLAYER_JSON, Constants.EMPTY_JSON));
 	     Player player = gson.fromJson(settings.getString(Constants.USER_PREFS_PLAYER_JSON, Constants.EMPTY_JSON), type);
 	     return player;
 	}
@@ -306,9 +332,14 @@ public class PlayerService {
 	       return handlePlayerResponse(ctx, iStream);
 	}
 
+	public static Player handleAuthByTokenResponse(final Context ctx, InputStream iStream){
+	       return handlePlayerResponse(ctx, iStream);
+	}
+	
 	private static Player handlePlayerResponse(final Context ctx, InputStream iStream){
     	Gson gson = new Gson(); //wrap json return into a single call that takes a type
 	        
+         //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
 	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 	        
 	        Type type = new TypeToken<Player>() {}.getType();
@@ -319,8 +350,63 @@ public class PlayerService {
 	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 	        SharedPreferences.Editor editor = settings.edit();
 	        
-	        Logger.w(TAG, "handlePlayerResponse auth=" + player.getAuthToken());
+	   
+	        Logger.w(TAG, "handlePlayerResponse auth=" + player.getAuthToken() + " " + gson.toJson(player));
+	        Date completedDate = new Date(settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE));
 	        
+	        if (player.getCompletedGames().size() > 0) {
+	        	//reset the rolling latest completion date to last completed game's date. this makes the response from the server as small as possible
+	        	for (Game game : player.getCompletedGames()) {
+	        		if (completedDate.before(game.getCompletionDate())){
+	        			completedDate = game.getCompletionDate();
+	        		}
+	            }
+	        }
+	        
+	        //manage the local completed games list, only keep 10 max in the list. roll off older games.
+	        //do this before the player is stored locally
+	        Player storedPlayer = getPlayerFromLocal();
+	        if (storedPlayer != null){
+	        	if (storedPlayer.getCompletedGames().size() + player.getCompletedGames().size() > Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE){
+	        		//more than x games are found in combined list. remove earliest to get the list down to x number
+	        		List<Game> combinedGames = storedPlayer.getCompletedGames();
+	        		for (Game game : player.getCompletedGames()) {
+	        			combinedGames.add(game);
+		            }
+	        		
+	        		Collections.sort(combinedGames);
+	        		
+	        		combinedGames.subList(Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE + 1, combinedGames.size()).clear();
+	        		player.setCompletedGames(combinedGames);
+	        	}
+	        }
+	        
+	        //now set activegames by turn
+			//also set activeGamesYourTurn and OpponentTurn
+	        List<Game> yourTurn = new ArrayList<Game>();
+	        List<Game> opponentTurn = new ArrayList<Game>();
+			for (Game game : player.getActiveGames()) {
+				Boolean isYourTurn = false;
+				for (PlayerGame pg : game.getPlayerGames()){
+					if (pg.getPlayerId() == player.getId()){
+						yourTurn.add(game);
+						isYourTurn = true;
+						break;
+					}
+				}
+				if (!isYourTurn){
+					opponentTurn.add(game);
+				}
+	        }
+			
+			//no need to duplicate the data that is in activeGamesYourTurn and activeGamesOpponentTurn
+			//so let's clear this out
+			player.getActiveGames().clear();
+
+
+	        
+	        
+	        editor.putString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, completedDate.toGMTString());
 	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
 	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
@@ -328,35 +414,6 @@ public class PlayerService {
 	        
 	        return player;
 
-	}
-	
-	public static void setContextPlayer(final Context ctx, InputStream iStream){
-        try {
-            
-        	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
- 	        
- 	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
- 	        
- 	        Type type = new TypeToken<Player>() {}.getType();
- 	        Player player = gson.fromJson(reader, type);
- 	        
- 	        ///save player info to shared preferences
- 	        //userId and auth_token ...email and password should have been stored before this call
- 	       SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
- 	       SharedPreferences.Editor editor = settings.edit();
- 	       editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
- 	       editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
- 	       editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
- 	       editor.commit();    
-         } 
-         catch (Exception e) {
-            //getRequest.abort();
-            Logger.w(TAG, "Error for HandleCreatePlayerResponse= ", e);
-            
-            Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
-            t.show(); 
-         }
-	 
 	}
 	
 	
@@ -399,7 +456,7 @@ public class PlayerService {
 	 
 	}
 	
-	public Player HandleFindPlayerByNicknameResponse(final Context ctx, InputStream iStream){
+	public static Player handleFindPlayerByNicknameResponse(final Context ctx, InputStream iStream){
         try {
             
         	 Gson gson = new Gson(); //wrap json return into a single call that takes a type

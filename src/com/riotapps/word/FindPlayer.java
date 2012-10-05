@@ -42,6 +42,8 @@ public class FindPlayer extends FragmentActivity implements View.OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.findplayer);
 		
+		PlayerService.loadPlayerInHeader(this);
+		
 		etFindPlayer = (EditText)findViewById(R.id.etFindPlayer);
 		etFindPlayer.setPressed(true);
 		bSearch = (Button)findViewById(R.id.bSearch);
@@ -129,7 +131,7 @@ public class FindPlayer extends FragmentActivity implements View.OnClickListener
 		             case 200:  
 		             case 201: {  
 		                //update text
-		            	 Player player = playerSvc.HandleFindPlayerByNicknameResponse(this.context, iStream);
+		            	 Player player = PlayerService.handleFindPlayerByNicknameResponse(this.context, iStream);
 
 		                // Toast t = Toast.makeText(this.context, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 		         	   // t.show();

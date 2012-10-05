@@ -1,0 +1,118 @@
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutStyle"
+    android:orientation="vertical" >
+   <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+    <LinearLayout 
+           style="@style/LayoutFormStyle"
+           android:layout_below="@id/topAreaLayout"
+        > 
+	    <ScrollView 
+	   		android:layout_width="fill_parent"
+	   		android:layout_height="fill_parent" 
+	   		android:fadingEdge="none">
+	   		<LinearLayout
+	   		    android:layout_width="fill_parent"
+	   		    android:layout_height="wrap_content"
+	   		    android:orientation="vertical"
+	   		    >
+			    <RelativeLayout
+					style="@style/FormBackgroundStyle"
+					android:layout_marginTop="5dp"
+				>
+					<RelativeLayout
+						style="@style/FormHeaderWrapperWithSubtitleStyle"
+						android:id="@+id/header"
+					>
+					    <com.riotapps.word.ui.MainFontTextView
+					        style="@style/FormHeaderAreaTextStyle"
+					       	android:id="@+id/tvTitle"
+					    />
+					    <com.riotapps.word.ui.MainFontTextView
+					        style="@style/FormHeaderAreaSubTextStyle"
+					        android:id="@+id/tvSubtitle"
+					        android:layout_below="@id/tvTitle"      />
+	 					</RelativeLayout>
+				    	<LinearLayout 
+				          android:layout_width="fill_parent"
+				   		    android:layout_height="wrap_content"
+				   		    android:orientation="vertical"
+				   		    android:layout_below="@id/header" > 
+						  	  <com.riotapps.word.ui.MainFontTextView
+						        style="@style/TextStyle"
+						        android:layout_width="fill_parent"
+						        android:layout_height="40dp"
+						        android:background="@drawable/text_selector"
+						        android:text="@string/start_game_fb_friends" 
+						        android:id="@+id/tvStartByFacebook"
+								android:clickable="true"
+								android:gravity="center"
+								
+						        />
+						   <com.riotapps.word.ui.MainFontTextView
+						        style="@style/ContentAreaTextStyle"
+						        android:background="@drawable/text_selector"
+						        android:text="@string/start_game_prev_opponents" 
+						        android:id="@+id/tvStartByOpponent"
+								android:clickable="true"
+								android:gravity="center"
+								 
+								android:layout_marginTop=".5dp"
+								android:layout_height="40dp"
+						        />
+						   <com.riotapps.word.ui.MainFontTextView
+						        style="@style/TextStyle"
+						        android:background="@drawable/text_selector_bottom"
+						        android:text="@string/start_game_by_nickname" 
+						        android:id="@+id/tvStartByNickname"
+								android:gravity="center"
+								 
+								android:layout_marginTop=".5dp"
+								android:layout_height="40dp"
+						        />
+					
+						 </LinearLayout>
+		      	 </RelativeLayout>
+ 
+					<LinearLayout
+						style="@style/FormBackgroundStyle"
+						android:layout_marginTop="10dp"
+					>
+				    	 <com.riotapps.word.ui.MainFontTextView
+        					style="@style/ContentAreaTextTopStyle"
+        					android:id="@+id/tvOpponentsAlreadyAddedTitle" 
+        					/>
+					   <ListView  
+					          android:id="@+id/listPlayers"
+					        android:isScrollContainer="false"  
+					        android:layout_width="fill_parent"
+					        android:layout_height="wrap_content" />
+						<LinearLayout
+					        style="@style/FormButtonAreaStyle"
+					          >
+				 
+							<com.riotapps.word.utils.TypefaceButton 
+						  	    style="@style/ButtonStyle"
+						  	    android:id="@+id/bStartGame"
+						        android:layout_width="0dp" 
+						        android:layout_weight="1.0"
+						        android:paddingLeft="3dp"
+						        android:paddingRight="3dp"
+						        android:text="@string/add_opponents_start_game"
+						    />
+						     
+							<com.riotapps.word.utils.TypefaceButton 
+						  	    style="@style/ButtonStyle"
+						  	    android:id="@+id/bCancelGame"
+						        android:layout_width="0dp" 
+						        android:layout_weight="1.0"
+						        android:paddingLeft="3dp"
+						        android:paddingRight="3dp"
+    					        android:text="@string/add_opponents_cancel_game"
+						    />
+			    	 
+			    	</LinearLayout>
+	    		</LinearLayout>
+	    	</LinearLayout>
+	    </ScrollView>
+</LinearLayout>
+</RelativeLayout>
