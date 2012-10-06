@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ContentAreaTextStyle"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"    
+    android:layout_height="36dp"
     >
+<RelativeLayout 
+    style="@style/ContentAreaTextStyle" 
+    android:layout_marginBottom=".5dp" >
    <ImageView 
 	   	android:layout_width="34dp"
    		android:layout_height="34dp"
 	    android:id="@+id/ivPlayer"	
-	     android:background="@drawable/image_border"
-	     android:layout_marginRight="5dp"
-	       android:layout_marginTop="3dp"
+	    android:background="@drawable/image_border"
+	    android:layout_marginRight="5dp"
+	    android:paddingTop="1dp"
         android:scaleType="fitXY"    
 	 />
 	<com.riotapps.word.ui.MainFontTextView
@@ -33,4 +37,8 @@
         android:layout_marginLeft="2.0dip"
         android:layout_below="@id/tvPlayerName"
         android:layout_toRightOf="@id/ivBadge"/>
+    
 </RelativeLayout>
+ 
+</LinearLayout>
+ 

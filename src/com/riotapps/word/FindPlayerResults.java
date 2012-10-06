@@ -81,7 +81,7 @@ public class FindPlayerResults extends FragmentActivity  implements View.OnClick
 			if (this.game.getPlayerGames().size() == 4){
 				
 				//save game to server and send user to gamesurface
-				intent = new Intent(this, com.riotapps.word.FindPlayerResults.class);
+				intent = new Intent(this, com.riotapps.word.AddOpponents.class);
 			}
 			else {
 				intent = new Intent(this, com.riotapps.word.AddOpponents.class);

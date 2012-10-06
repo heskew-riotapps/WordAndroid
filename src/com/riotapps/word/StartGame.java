@@ -19,6 +19,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +49,24 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
           // TextView tvRandom =(TextView)findViewById(R.id.tvStartByRandom);
            
            TextView tvByOpponent =(TextView)findViewById(R.id.tvStartByOpponent);
-           tvStartByNickname =(TextView)findViewById(R.id.tvStartByNickname);
+           tvStartByNickname = (TextView)findViewById(R.id.tvStartByNickname);
            tvStartByNickname.setOnClickListener(this);
+           LinearLayout llButtons = (LinearLayout)findViewById(R.id.llButtons);
+           Button bBadges = (Button)findViewById(R.id.bBadges);
+           Button bOptions = (Button)findViewById(R.id.bOptions);
            
             //not ready for this option
         //    tvRandom.setVisibility(View.GONE);
            //if not in by facebook, hide this option
+            if (player.getTotalNumLocalGames() == 0){
+            	bBadges.setOnClickListener(this);
+            	bOptions.setOnClickListener(this);
+            }
+            else{
+            	//only show first time around, since main landing is skipped
+            	llButtons.setVisibility(View.GONE);
+            }
+           
             if (!player.isFacebookUser()){
            	 tvFB.setVisibility(View.GONE);
             }
@@ -106,8 +120,15 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
 		     catch (DesignByContractException e) {
 					DialogManager.SetupAlert(this, this.getString(R.string.oops), e.getMessage(), false);
 		     }
-
-		break;
+		     break;
+	    case R.id.bBadges:  
+        	intent = new Intent(getApplicationContext(), Badges.class);
+			startActivity(intent);
+			break; 
+        case R.id.bOptions:  
+        	intent = new Intent(getApplicationContext(), Options.class);
+			startActivity(intent);
+			break;
  
     	}
     	

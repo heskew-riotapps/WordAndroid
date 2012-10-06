@@ -256,7 +256,7 @@ public class PlayerService {
 	}
 	
 	
-	public String setupFindPlayerByNickname(Context ctx, String nickname) throws DesignByContractException{
+	public static String setupFindPlayerByNickname(Context ctx, String nickname) throws DesignByContractException{
 		nickname = nickname.trim(); 
 		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
@@ -267,10 +267,6 @@ public class PlayerService {
 		String url = String.format(Constants.REST_FIND_PLAYER_BY_NICKNAME, nickname);
 		
 		return url;
-		//ok lets call the server now
-	 	//new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.FIND_PLAYER_BY_NICKNAME, ctx.getString(R.string.progress_searching), null).execute(url);
-		
-		//return player;
 	}
 	
 	public static void loadPlayerInHeader(final FragmentActivity context){

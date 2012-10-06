@@ -6,6 +6,27 @@
            style="@style/LayoutFormStyle"
            android:layout_below="@id/topAreaLayout"
         > 
+     <LinearLayout
+	        	android:layout_marginBottom="5dp"
+	        	android:id="@+id/llButtons"
+	         >
+            <com.riotapps.word.utils.TypefaceButton 
+		  	    style="@style/MainLandingButtonStyle"
+		  	    android:id="@+id/bOptions" 
+		        android:layout_width="0dp" 
+		        android:layout_weight="1.0"
+		        android:text="@string/options"
+		    />
+			<com.riotapps.word.utils.TypefaceButton 
+		  	    style="@style/MainLandingButtonStyle"
+		  	    android:id="@+id/bBadges" 
+		        android:layout_width="0dp" 
+		        android:layout_weight="1.0"
+		        android:text="@string/badges"
+		    />
+    </LinearLayout>   
+        
+        
     <ScrollView 
    		android:layout_width="fill_parent"
    		android:layout_height="fill_parent" 

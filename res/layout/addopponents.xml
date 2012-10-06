@@ -18,6 +18,7 @@
 			    <RelativeLayout
 					style="@style/FormBackgroundStyle"
 					android:layout_marginTop="5dp"
+					android:id="@+id/rlAddOpponents"
 				>
 					<RelativeLayout
 						style="@style/FormHeaderWrapperWithSubtitleStyle"
@@ -81,16 +82,18 @@
 				    	 <com.riotapps.word.ui.MainFontTextView
         					style="@style/ContentAreaTextTopStyle"
         					android:id="@+id/tvOpponentsAlreadyAddedTitle" 
+        					android:layout_height="24dp"
+        					android:paddingTop="2dp"
         					/>
-					   <ListView  
-					          android:id="@+id/listPlayers"
-					        
+					   <LinearLayout  
+					       
+					        android:id="@+id/llPlayers"
+					        android:orientation="vertical"
 					        android:layout_width="fill_parent"
-					        android:layout_height="fill_parent" />
+					        android:layout_height="wrap_content" />
 						<LinearLayout
 					        style="@style/FormButtonAreaStyle"
-					          >
-				 
+					        android:layout_marginTop="-.5dp" >
 							<com.riotapps.word.utils.TypefaceButton 
 						  	    style="@style/ButtonStyle"
 						  	    android:id="@+id/bStartGame"
@@ -100,7 +103,6 @@
 						        android:paddingRight="3dp"
 						        android:text="@string/add_opponents_start_game"
 						    />
-						     
 							<com.riotapps.word.utils.TypefaceButton 
 						  	    style="@style/ButtonStyle"
 						  	    android:id="@+id/bCancelGame"

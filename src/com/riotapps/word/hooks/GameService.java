@@ -60,6 +60,26 @@ public class GameService {
 //	     return games;
 //	}
 	
+	public static String setupStartGame(Context ctx, Game game) throws DesignByContractException{
+		 
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+		Check.Require(game.getPlayerGames().size() > 1 && game.getPlayerGames().size() < 5, ctx.getString(R.string.validation_must_have_between_2_and_4_players));
+		
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportCreateGame newGame = new TransportCreateGame();
+		newGame.setToken(player.getAuthToken());
+		
+		for(PlayerGame pg : game.getPlayerGames()){
+			newGame.addToPlayerGames(pg.getPlayerId(),pg.getPlayerOrder());
+		}
+		
+		return gson.toJson(newGame);
+	}
 	
 	public static void CreateGame(Context ctx, String email, String nickname, String password, Class<?> goToClass) throws DesignByContractException{
 
@@ -212,8 +232,12 @@ public class GameService {
 		
 		Player contextPlayer = PlayerService.getPlayerFromLocal();
 		
-	//	Check.Require(!contextPlayer.getId().equals(player.getId()), ctx.getString(R.string.validation_cannot_add_yourself));
-		
+	 	Check.Require(!contextPlayer.getId().equals(player.getId()), ctx.getString(R.string.validation_cannot_add_yourself));
+	 	Check.Require(!contextPlayer.getId().equals(player.getId()), ctx.getString(R.string.validation_cannot_add_yourself)); 
+	 	 for (Player p : game.getOpponents(contextPlayer)){
+	 		Check.Require(!p.getId().equals(player.getId()), String.format(ctx.getString(R.string.validation_opponent_already_added), p.getName())); 
+		 }
+
     	PlayerGame pg = new PlayerGame();
     	pg.setPlayerId(player.getId());
     	pg.setPlayer(player);

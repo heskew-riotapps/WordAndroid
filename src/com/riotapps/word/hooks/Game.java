@@ -8,6 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.riotapps.word.utils.Logger;
 
  
 public class Game implements Parcelable, Comparable<Game> {
@@ -70,6 +71,18 @@ public class Game implements Parcelable, Comparable<Game> {
 		    ret[i] = this.getPlayerGames().get(i);}
 		  return ret;
 		}
+	
+	public List<Player> getOpponents(Player contextPlayer){ 
+		//assume the context player is the first playergame
+		List<Player> ret = new ArrayList<Player>();
+		
+		 for (PlayerGame pg : this.getPlayerGames()){ 
+         	if (!pg.getPlayer().getId().equals(contextPlayer.getId())){
+         		ret.add(pg.getPlayer());
+         	}
+		}
+		  return ret;
+	}
 	
 	public PlayerGame[] getPlayerGameOpponentsArray (){ 
 		//assume the context player is the first playergame

@@ -73,7 +73,7 @@ public class FindPlayer extends FragmentActivity implements View.OnClickListener
 	
 	private void findPlayer(){
 		try {
-			String url = playerSvc.setupFindPlayerByNickname(context, etFindPlayer.getText().toString());
+			String url = PlayerService.setupFindPlayerByNickname(context, etFindPlayer.getText().toString());
 			
 			//kick off thread
 			new NetworkTask(this, RequestType.GET, getString(R.string.progress_searching)).execute(url);

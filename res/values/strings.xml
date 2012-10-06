@@ -54,9 +54,13 @@
 	<string name="validation_unauthorized">This action is unauthorized.</string>	
 	<string name="validation_nickname_not_supplied">Please enter a nickname.</string>
 	<string name="validation_email_is_already_in_use">The email associated with your Facebook account has already been registered in WordSmash.</string>
-	<string name="validation_cannot_add_yourself">Sorry, you cannot add yourself as an opponent.</string>
+	<string name="validation_cannot_add_yourself">You cannot add yourself as an opponent.</string>
+	<string name="validation_opponent_already_added">%s has already been added as an opponent.</string>
+	<string name="validation_must_have_between_2_and_4_players">The game must have either 2, 3, or 4 players.</string>
 		
 	<string name="ok">ok</string>
+	<string name="yes">yes</string>
+	<string name="no">no</string>
 	<string name="oops">Oops</string>
 	<string name="sorry">Sorry</string>
 	<string name="error_title">Holy Gandalf!!</string>
@@ -79,6 +83,7 @@
  	<string name="progress_logging_out">logging out&#8230;</string>
  	<string name="progress_syncing">syncing&#8230;</string>
  	<string name="progress_updating">updating&#8230;</string>
+ 	<string name="progress_starting_game">starting game&#8230;</string>
  	<string name="quick_rules_title">condensed game rules</string>
  	<string name="quick_rules_subtitle">enough to get you off and running</string>
   	<string name="quick_rules_1">To start the game, a letter of the first word must be placed on at least one of the smiley faces.</string>
@@ -247,6 +252,7 @@
  	<string name="badges_800_899">between 800 and 899 wins</string>
  	<string name="badges_900_999">between 900 and 999 wins</string>
  	<string name="badges_1000_1249">between 1000 and 1249 wins</string>
+ 	<string name="badges_1000_or_more">1000 or more wins</string>
  	<string name="badges_1250_1499">between 1250 and 1499 wins</string>
  	<string name="badges_1500_1749">between 1500 and 1749 wins</string>
  	<string name="badges_1750_1999">between 1750 and 1999 wins</string>
@@ -303,5 +309,7 @@
 	   <string name="add_opponents_add_one_more_subtitle">add one more or get started now</string>
 	   <string name="add_opponents_already_added_x_title">you\'ve already added these opponents:</string>
 	   <string name="add_opponents_already_added_one_title">you\'ve already added this opponent:</string>
-	   
+	   <string name="add_opponents_get_started">it\'s time to get started...</string>
+	   <string name="add_opponents_cancel_game_confirmation_title">cancel this game</string>
+	   <string name="add_opponents_cancel_game_confirmation_text">are you sure?</string>
 </resources>

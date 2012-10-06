@@ -79,7 +79,7 @@ public abstract class ImageWorker {
             final AsyncDrawable asyncDrawable =
                     new AsyncDrawable(mContext.getResources(), mLoadingBitmap, task);
             
-            Logger.d(TAG, (imageView == null) + " " + (asyncDrawable == null));
+           
             imageView.setImageDrawable(asyncDrawable);
             task.execute(data);
         }

@@ -18,11 +18,15 @@ public class CustomDialog {
 	//private Context context;
 	//private Boolean onCancelFinishActivity;
 	
+	public CustomDialog(Context context, String dialogTitle, String dialogText, String okText, String cancelText) {
+		this(context, dialogTitle, dialogText, false, okText, cancelText);
+	}
+	
 	public CustomDialog(Context context, String dialogTitle, String dialogText) {
-		this(context, dialogTitle, dialogText, false);
+		this(context, dialogTitle, dialogText, false, context.getString(R.string.ok), context.getString(R.string.cancel));
 	}
 
-	public CustomDialog(Context context, String dialogTitle, String dialogText, Boolean onCancelClickFinishActivity) {
+	public CustomDialog(Context context, String dialogTitle, String dialogText, Boolean onCancelClickFinishActivity, String okText, String cancelText) {
 	    final Context ctx = context;
 	    final boolean onCancelFinishActivity = onCancelClickFinishActivity;
 
@@ -35,8 +39,9 @@ public class CustomDialog {
 		text.setText(dialogText);
 
 		bOK = (Button) dialog.findViewById(R.id.bOK);
+		bOK.setText(okText);
 		bCancel = (Button) dialog.findViewById(R.id.bCancel);
-		
+		bCancel.setText(cancelText);
 		
 		bCancel.setOnClickListener(new View.OnClickListener() {
 			@Override

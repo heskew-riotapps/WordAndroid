@@ -16,6 +16,7 @@ public class Constants {
 	public static final String EMPTY_JSON_ARRAY = "[]";
 	public static final String DEFAULT_COMPLETED_GAMES_DATE = "10/6/2012";
  	public static final String WN_KEY = "48f31f368d20791114b01067e1d05b68ca177aabdbab4150b";
+ 	public static final String DRAWABLE_LOCATION = "com.riotapps.word:drawable/";
  	
  	public static final String LAYOUT_SCOPE_WORD = "W";
  	public static final String LAYOUT_SCOPE_LETTER = "L";
@@ -83,6 +84,7 @@ public class Constants {
 	public static final String REST_PLAYER_CHANGE_PASSWORD = REST_URL_SITE + "players/change_password.json";
 	public static final String REST_PLAYER_UPDATE_ACCOUNT = REST_URL_SITE + "players/update_account.json";
 	public static final String REST_PLAYER_GET_GAMES = REST_URL_SITE + "games/get_active_games.json";
+	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "games.json";
 	
 	/**=============================================
 	 * rails
