@@ -44,7 +44,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 	private static final String TAG = AddOpponents.class.getSimpleName();
 	TextView tvStartByNickname;
 	Player player;
-	Context context = this;
+	AddOpponents context = this;
 	Game game;
 	
     @Override
@@ -172,7 +172,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 				
 				Logger.d(TAG, "bStartGame json=" + json);
 				//kick off thread
-				//new NetworkTask(this, RequestType.POST, getString(R.string.progress_starting_game)).execute(Constants.REST_CREATE_GAME_URL);
+				 new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_starting_game)).execute(Constants.REST_CREATE_GAME_URL);
 				
 			} 
 			catch (DesignByContractException e) {
@@ -205,13 +205,26 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	dialog.show();	
     }
     
+    private void handleResponseFromIOThread(Game game){
+ //  	 Game game = GameService.handleCreateGameResponse(this.context, iStream);
+
+    	Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+	 
+    	Logger.d(TAG, "handleResponseFromIOThread game about to be added as extra");
+    	intent.putExtra(Constants.EXTRA_GAME, game);
+	     
+    	 Logger.d(TAG, "handleResponseFromIOThread game added as extra");
+    	 this.context.startActivity(intent);
+    }
+    
 private class NetworkTask extends AsyncNetworkRequest{
 		
-		FindPlayer context;
+	AddOpponents context;
 		
-		public NetworkTask(FindPlayer ctx, RequestType requestType,
+		public NetworkTask(AddOpponents ctx, RequestType requestType,
+				String json,
 				String shownOnProgressDialog) {
-			super(ctx, requestType, shownOnProgressDialog);
+			super(ctx, requestType, shownOnProgressDialog, json);
 			this.context = ctx;
 			// TODO Auto-generated constructor stub
 		}
@@ -248,21 +261,28 @@ private class NetworkTask extends AsyncNetworkRequest{
 
 		         switch(statusCode){  
 		             case 200:  
-		             case 201: {  
-		                //update text
-		            	 Player player = PlayerService.handleFindPlayerByNicknameResponse(this.context, iStream);
-
-		                // Toast t = Toast.makeText(this.context, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
-		         	   // t.show();
-		         	   Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
-		      	      //  intent.putExtra("gameId", game.getId());
-		      	      //	intent.putExtra("game", s);
-		         	 //   intent.putExtra(Constants.EXTRA_GAME, this.context.game);
-		      	     // 	intent.putExtra(Constants.EXTRA_PLAYER, player);
-		      	      	this.context.startActivity(intent);
+		             case 201: {
+		            	 
+		            	 Game game = GameService.handleCreateGameResponse(this.context, iStream);
+		            //	 handleResponseFromIOThread(game);
+		            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
+		            	 //was not working and driving me crazy
+		            	 GameService.putGameToLocal(context, game);
+		            	 
+		            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+		            	 
+		            	 Logger.d(TAG, "game about to be added as extra");
+		         	   //  intent.putExtra(Constants.EXTRA_GAME, game);
+		            	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
+		            	 Logger.d(TAG, "game added as extra");
+		      	      	 this.context.startActivity(intent);
 		                 break;  
 
-		             }//end of case 200 & 201  
+		             }//end of case 200 & 201 
+		             case 401:
+			             //case Status code == 422
+			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_unauthorized), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+			            	 break;
 		             case 404:
 		             //case Status code == 422
 		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.find_player_opponent_not_found), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
@@ -271,6 +291,7 @@ private class NetworkTask extends AsyncNetworkRequest{
 		             case 500:
 
 		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+		            	 break;
 		         }  
 		     }else if (exception instanceof ConnectTimeoutException) {
 		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);

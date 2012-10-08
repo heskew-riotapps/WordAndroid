@@ -12,38 +12,41 @@ import com.riotapps.word.utils.Logger;
 
  
 public class Game implements Parcelable, Comparable<Game> {
- 
+	private static final String TAG = Game.class.getSimpleName();
 	public Game(){}
 	
 	private String id = "";
 	
 	@SerializedName("a_t") //mainly just for transport via json
-	private String authToken = "";
+	private String authToken = ""; 
 	
 	@SerializedName("played_words")
-	private List<PlayedWord> playedWords;
+	private List<PlayedWord> playedWords = new ArrayList<PlayedWord>();
 	
 	@SerializedName("player_games")
 	private List<PlayerGame> playerGames = new ArrayList<PlayerGame>();
 	
 //	@SerializedName("last_action_alert_text")
 	//do not serialize
- 	private String lastActionText = "";
+ //	private String lastActionText = "";
 	
 	@SerializedName("left")
 	private int numLettersLeft = 0;
 	
-	@SerializedName("d_c")
-	private String dupCheck = "";
+//	@SerializedName("d_c")
+//	private String dupCheck = "";
 
 	@SerializedName("cr_d")
-	private Date createDate;  
+	private Date createDate = new Date(0);  
 	
 	@SerializedName("co_d")
-	private Date completionDate;  
+	private Date completionDate = new Date(0); 
 
 	@SerializedName("st")
 	private int status = 0;  
+	
+	@SerializedName("t")
+	private int turn = 0;  
 	
 	public String getId() {
 		return id;
@@ -98,15 +101,7 @@ public class Game implements Parcelable, Comparable<Game> {
 	public void setPlayerGames(List<PlayerGame> playerGames) {
 		this.playerGames = playerGames;
 	}
-	
-	public String getLastActionText() {
-		return lastActionText;
-	}
-
-	public void setLastActionText(String lastActionText) {
-		this.lastActionText = lastActionText;
-	}
-
+ 
 	public int getNumLettersLeft() {
 		return numLettersLeft;
 	}
@@ -115,14 +110,15 @@ public class Game implements Parcelable, Comparable<Game> {
 		this.numLettersLeft = numLettersLeft;
 	}
 
-	public String getDupCheck() {
-		return dupCheck;
+ 
+	public int getTurn() {
+		return turn;
 	}
 
-	public void setDupCheck(String dupCheck) {
-		this.dupCheck = dupCheck;
+	public void setTurn(int turn) {
+		this.turn = turn;
 	}
-	
+
 	public String getAuthToken() {
 		return authToken;
 	}
@@ -155,6 +151,24 @@ public class Game implements Parcelable, Comparable<Game> {
 		this.status = status;
 	}
 
+	public String getLastActionText(){
+		//find player that played last turn (this.turn - 1)
+		
+		
+		if (this.turn == 1){
+			//find player who played first turn
+			
+		}
+		else {
+			//find player who played last turn
+			
+			
+		
+		}
+		
+	}
+	
+	
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -163,17 +177,18 @@ public class Game implements Parcelable, Comparable<Game> {
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
+		Logger.d(TAG, "parcel out");
 		out.writeString(this.id);
-		out.writeString(this.authToken);
+		Logger.d(TAG, "parcel out id=" + this.id);
 		out.writeList(this.playedWords);
 		out.writeList(this.playerGames);
 		out.writeInt(this.numLettersLeft);
-		out.writeString(this.dupCheck);
 		//out.writeSerializable(this.createDate);
 		//out.writeSerializable(this.completionDate);
 		out.writeLong(this.createDate == null ? 0 : this.createDate.getTime());
 		out.writeLong(this.completionDate == null ? 0 : this.completionDate.getTime());
 		out.writeInt(this.status);
+		Logger.d(TAG, "parcel out status=" + this.status);
 	}
 
 	public static final Parcelable.Creator<Game> CREATOR
@@ -188,18 +203,23 @@ public class Game implements Parcelable, Comparable<Game> {
 	};
 	
 	 private Game(Parcel in) {
-     
+		 Logger.d(TAG, "parcel in");
          this.id = in.readString();
-         this.authToken = in.readString();
          in.readList(this.playedWords,PlayedWord.class.getClassLoader());
          in.readList(this.playerGames,PlayerGame.class.getClassLoader());
+         Logger.d(TAG, "parcel in this.playerGames.size()" + this.playerGames.size());
          this.numLettersLeft = in.readInt();
-         this.dupCheck = in.readString();
+
+         Logger.d(TAG, "parcel in numLettersLeft=" + numLettersLeft);
        //  this.createDate = in.readSerializable(); 
 
          this.createDate = new Date(in.readLong());
+         
+         Logger.d(TAG, "parcel in createDate=" + createDate.toString());
          this.completionDate = new Date(in.readLong());
+         Logger.d(TAG, "parcel in completionDate=" + completionDate.toString());
          this.status = in.readInt();
+         Logger.d(TAG, "parcel in status=" + status);
        	 
      }
 

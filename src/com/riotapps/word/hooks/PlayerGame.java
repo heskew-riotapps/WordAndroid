@@ -3,15 +3,19 @@ package com.riotapps.word.hooks;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.method.DateTimeKeyListener;
 
 import com.google.gson.annotations.SerializedName;
+import com.riotapps.word.hooks.Error.ErrorType;
+import com.riotapps.word.hooks.Player.LastAction;
+import com.riotapps.word.utils.Logger;
 
 public class PlayerGame implements Parcelable{
-
+	private static final String TAG = PlayerGame.class.getSimpleName();
 //	  key :player_id , ObjectId
 //	  key :score,     Integer, :default => 0
 //	  key :last_turn_date, Time
@@ -32,6 +36,12 @@ public class PlayerGame implements Parcelable{
 	private Player player; 
 	
 	private int score = 0;
+	
+	@SerializedName("l_t")
+	private int lastTurn;
+
+	@SerializedName("l_t_a")
+	private int lastTurnAction;
 	
 	@SerializedName("l_t_d")
 	private Date lastTurnDate;
@@ -169,6 +179,23 @@ public class PlayerGame implements Parcelable{
 	public void setPlayerOrder(int playerOrder) {
 		this.playerOrder = playerOrder;
 	}
+	
+
+	public int getLastTurn() {
+		return lastTurn;
+	}
+
+	public void setLastTurn(int lastTurn) {
+		this.lastTurn = lastTurn;
+	}
+
+	public int getLastTurnAction() {
+		return lastTurnAction;
+	}
+
+	public void setLastTurnAction(int lastTurnAction) {
+		this.lastTurnAction = lastTurnAction;
+	}
 
 	@Override
 	public int describeContents() {
@@ -178,9 +205,10 @@ public class PlayerGame implements Parcelable{
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		 
+//		Logger.d(TAG, "parcel out");
 		out.writeString(this.playerId); 
 		out.writeParcelable(player, flags);
+//		Logger.d(TAG, "parcel out playerId=" + this.player.getId());
 		out.writeInt(this.score);
 		out.writeLong(this.lastTurnDate == null ? 0 : this.lastTurnDate.getTime());
 		out.writeLong(this.lastAlertDate == null ? 0 : this.lastAlertDate.getTime());
@@ -191,7 +219,10 @@ public class PlayerGame implements Parcelable{
 		out.writeByte((byte) (this.isWinner ? 1 : 0));
 		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0)); 
 		out.writeInt(this.playerOrder);
- 		out.writeList(this.trayLetters);		
+ 		out.writeList(this.trayLetters);
+ 		out.writeInt(this.lastTurn);
+ 		out.writeInt(this.lastTurnAction);
+ 		
 	}
 	
 	public static final Parcelable.Creator<PlayerGame> CREATOR
@@ -206,9 +237,11 @@ public class PlayerGame implements Parcelable{
 	};
 	
 	private PlayerGame(Parcel in) {
+//		Logger.d(TAG, "parcel in");
 		// same order as writeToParcel
 	 	this.playerId = in.readString();
 	 	this.player = in.readParcelable(Player.class.getClassLoader());
+	// 	Logger.d(TAG, "parcel in playerId=" + this.playerId);
 	 	this.score = in.readInt();
 	 	this.lastTurnDate = new Date();
 	 	this.lastTurnDate.setTime(in.readLong());
@@ -225,6 +258,54 @@ public class PlayerGame implements Parcelable{
 	    this.playerOrder = in.readInt();
 	    this.trayLetters = new ArrayList<String>();
 	    in.readStringList(this.trayLetters);
+	    this.lastTurn = in.readInt();
+	    this.lastTurnAction = in.readInt();
+	  //  Logger.d(TAG, "parcel in playerOrder=" + this.playerOrder);
 	
 	}
+	
+	public enum LastAction{
+		NO_TRANSLATION(0),
+		ONE_LETTER_SWAPPED(1),
+		TWO_LETTERS_SWAPPED(2),
+		THREE_LETTERS_SWAPPED(3),
+		FOUR_LETTERS_SWAPPED(4),
+		FIVE_LETTERS_SWAPPED(5),
+		SIX_LETTERS_SWAPPED(6),
+		SEVEN_LETTERS_SWAPPED(7),
+		STARTED_GAME(8),
+		WORDS_PLAYED(9),
+		TURN_SKIPPED(10);
+				
+		private final int value;
+		private LastAction(int value) {
+		    this.value = value;
+		 }
+		
+	  public int value() {
+		    return value;
+		  }
+		
+	  private static TreeMap<Integer, LastAction> _map;
+	  static {
+		_map = new TreeMap<Integer, LastAction>();
+	    for (LastAction num: LastAction.values()) {
+	    	_map.put(new Integer(num.value()), num);
+	    }
+	    //no translation
+	    if (_map.size() == 0){
+	    	_map.put(new Integer(0), NO_TRANSLATION);
+	    }
+	  }
+	  
+	  public static LastAction lookup(int value) {
+		  return _map.get(new Integer(value));
+	  	}
+	}
+	
+	public LastAction getLastAction(){
+		return LastAction.lookup(this.lastTurnAction);
+	}
+	
+	
 }

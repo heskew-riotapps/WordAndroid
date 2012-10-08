@@ -38,18 +38,10 @@ public class Error {
 	  
 	  public static ErrorType lookup(int value) {
 		  return _map.get(new Integer(value));
-  }
+	  	}
 	}
 	
-//	public static final int SERVER_ERROR_INCORRECT_PASSWORD = 1;
-//	public static final int SEASON_SPRING = 1;
-//	public static final int SEASON_SUMMER = 2;
-//	public static final int SEASON_FALL   = 3;
-	//codes
-	//1 - incorrect password
-	//2 - nickname already in use 
-	//3 - email already in use 
-
+ 
 	
 	private String message;
 	public int getCode() {

@@ -312,4 +312,6 @@
 	   <string name="add_opponents_get_started">it\'s time to get started...</string>
 	   <string name="add_opponents_cancel_game_confirmation_title">cancel this game</string>
 	   <string name="add_opponents_cancel_game_confirmation_text">are you sure?</string>
+	   <string name="game_last_action_started_context">You started the game.</string>
+	   <string name="game_last_action_started">%s started the game.</string>
 </resources>

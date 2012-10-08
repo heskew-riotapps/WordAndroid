@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.riotapps.word.hooks.Game;
+import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.TrayTile;
@@ -13,6 +14,8 @@ import com.riotapps.word.ui.GameSurfaceView;
 import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.ImageFetcher;
+import com.riotapps.word.utils.Logger;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -112,6 +115,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	//this.bottom = (View)findViewById(R.id.bottomControlsPlaceholder);
 	 	//this.bottom.//se
 		
+		Logger.d(TAG, "oncreate");
+		
 		 SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
 	     this.contextUserId = settings.getString(Constants.USER_PREFS_USER_ID, "");  
 	     this.tvNumPoints = (TextView)findViewById(R.id.tvNumPoints);
@@ -140,21 +145,31 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	{
 	 		String value = extras.getString("gameId");
 	 	}
-	 	
+	 	 
+	 	Logger.d(TAG, "Game about to be fetched from extra");
 	 	Intent i = getIntent();
-	 	//Game game = (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
+	 	String gameId = i.getStringExtra(Constants.EXTRA_GAME_ID);
+	 	//this.game = (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
+	 	this.game = GameService.getGameFromLocal(gameId); //(Game) i.getParcelableExtra(Constants.EXTRA_GAME);
 	 	
 	 	//temp
-	 	this.game = getTempGame();
+	 	//this.game = getTempGame();
 
 		this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
-	 	this.gameSurfaceView.setParent(this);
+		this.gameSurfaceView.construct(this);
+		this.gameSurfaceView.setParent(this);
 	 	
+		Logger.d(TAG, "scoreboard about to be loaded");
 	 	this.loadScoreboard();
 	 	this.fillGameState();
 	 	
 	 	bShuffle = (Button) findViewById(R.id.bShuffle);
 	 	bShuffle.setOnClickListener(this);
+	 	
+	 	
+	//	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
+	// 	this.gameSurfaceView.setParent(this);
+	 	
 	 	
 	 //	this.gameSurfaceView.setGame(game);
 	 	//retrieve game from server
@@ -223,25 +238,32 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 int playerIndex3 = -1;
 		 int playerIndex4 = -1;
 		 
-		 String activePlayer;
+		 String activePlayer; 
 		 int playerGameCount = this.game.getPlayerGames().size();
 		 
-		 Log.w(TAG,"num players=" + playerGameCount);
+		 Log.d(TAG,"num players=" + playerGameCount); 
 		 
 		 //loop through once to find context player
-		 for(int x = 0; x < playerGameCount; x++){
+		 for(int x = 0; x < playerGameCount; x++){ 
+			 
+			 Log.d(TAG,"x=" + x);
 		 //for (PlayerGame pg : this.game.getPlayerGames()) {
 		    PlayerGame pg = this.game.getPlayerGames().get(x);	
-		    Log.w(TAG,"player=" + pg.getPlayer().getId());
+		    Log.d(TAG,"player=" + pg.getPlayer().getId());
 			 if (pg.getPlayer().getId() != null && pg.getPlayer().getId().equals(this.contextUserId)) {
+				 Log.d(TAG,"contextplayermatch=" + pg.getPlayer().getId());
 		    		contextPlayerIndex = x;
 		    		contextPlayerTurnOrder = pg.getPlayerOrder();
 		    		this.contextPlayerGame = pg;
 		     }
+			 Log.d(TAG,"about to check pg.isturn");
 			 if (pg.isTurn()){
+				 Log.d(TAG,"pg.isTurn=true");
 				 activePlayer = pg.getPlayer().getId();
 			 }
 		  }
+		 
+		 Log.d(TAG,"context playerid=" + contextPlayerIndex);
 		 
 		 if (contextPlayerIndex == -1){ 
 			 Log.w(TAG,"context player not found.  this is a problem that requires game to be removed from user's device.");
@@ -465,7 +487,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 PlayerGame pg1 = new PlayerGame();
 		 	Player p1 = new Player();
 		 	p1.setFirstName("Burgermeister");
-		 	p1.setLastname("Meisterburger");
+		// 	p1.setLastname("Meisterburger");
 		 	p1.setNumWins(175); 
 		 	pg1.setPlayer(p1);
 		 	pg1.setScore(101);
@@ -475,7 +497,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 	PlayerGame pg2 = new PlayerGame(); 
 		 	Player p2 = new Player();
 		 	p2.setFirstName("Flip");
-		 	p2.setLastname("Wilson");
+		 //	p2.setLastname("Wilson");
 		 	p2.setId(this.contextUserId);
 		 	p2.setNumWins(41); 
 		 	pg2.setPlayer(p2);
@@ -486,7 +508,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 	PlayerGame pg3 = new PlayerGame();
 		 	Player p3 = new Player();
 		 	p3.setFirstName("Junior18");
-		 	p3.setLastname("");
+		// 	p3.setLastname("");
 		 	p3.setNumWins(243); 
 		 	p3.setId(this.contextUserId);
 		 	pg3.setPlayer(p3);
@@ -533,7 +555,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 	PlayerGame pg4 = new PlayerGame();
 		 	Player p4 = new Player();
 		 	p4.setFirstName("Star");
-		 	p4.setLastname("Lizardface");
+		 //	p4.setLastname("Lizardface");
 		 	p4.setNumWins(11); 
 		 	pg4.setPlayer(p4);
 		 	pg4.setPlayerOrder(4);
@@ -546,7 +568,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		  //	players.add(pg3);
 		 //	players.add(pg4);
 		 	
-		 	game.setLastActionText("Junior18 played HAMMER for 21" );
+		 	//game.setLastActionText("Junior18 played HAMMER for 21" );
 		 	game.setNumLettersLeft(87);
 		 	
 		

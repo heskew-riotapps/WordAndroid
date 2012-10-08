@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -21,6 +23,7 @@ import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
+import com.riotapps.word.utils.Logger;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Enums.*;
@@ -31,7 +34,7 @@ import com.google.gson.reflect.TypeToken;
  
  
 public class GameService {
-	
+	private static final String TAG = GameService.class.getSimpleName();
 	
 	public static void GetPlayerGameFromServer(Context ctx, String id, Class<?> goToClass){
 		//retrieve player from server
@@ -62,6 +65,7 @@ public class GameService {
 	
 	public static String setupStartGame(Context ctx, Game game) throws DesignByContractException{
 		 
+		Logger.d(TAG, "setupStartGame");
 		Gson gson = new Gson();
 		
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
@@ -111,12 +115,22 @@ public class GameService {
 		//return player;
 	}
 	
-	public static Player GetGameFromLocal(){
+	public static void putGameToLocal(Context ctx,Game game){
+		Gson gson = new Gson(); 
+	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+	 
+	    editor.putString(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()), gson.toJson(game));
+	    editor.commit(); 
+	}
+	
+	
+	public static Game getGameFromLocal(String gameId){
 		 Gson gson = new Gson(); 
-		 Type type = new TypeToken<Player>() {}.getType();
+		 Type type = new TypeToken<Game>() {}.getType();
 	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);
-	     Player player = gson.fromJson(settings.getString(Constants.USER_PREFS_PLAYER_JSON, Constants.EMPTY_JSON), type);
-	     return player;
+	     Game game = gson.fromJson(settings.getString(String.format(Constants.USER_PREFS_GAME_JSON, gameId), Constants.EMPTY_JSON), type);
+	     return game;
 	}
 	
 	public static void HandleCreateGameResponse(final Context ctx, InputStream iStream){
@@ -195,7 +209,7 @@ public class GameService {
  	       
  	       //Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  
  	       // t.show(); 
-            
+             
          } 
          catch (Exception e) {
             //getRequest.abort();
@@ -207,6 +221,39 @@ public class GameService {
          }
 	 
 	}
+	public static Game handleCreateGameResponse(final Context ctx, InputStream iStream){
+        try {
+            
+        	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
+        	 
+        	  Logger.d(TAG, "handleCreateGameResponse");
+ 	        
+ 	         Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+ 	
+ 	         Type type = new TypeToken<Game>() {}.getType();
+ 	         Game game = gson.fromJson(reader, type);
+ 	        
+ 	       Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
+  	         
+ 	         PlayerService.updateAuthToken(ctx, game.getAuthToken());
+ 	         
+ 	         //should this be saved locally??????
+ 	         //perhaps save it locally if it's the context player's turn, since the only thing that can
+ 	         //change is chat in this state
+ 	         
+ 	         return game;  
+         
+        } 
+         catch (Exception e) {
+            //getRequest.abort();
+            Logger.w("GameService", "Error for handleCreateGameResponse= ", e);
+            
+            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "handleCreateGameResponse", e.getMessage(), 0);
+         }
+		return null;
+	 
+	}
+	
 	
 	public static Game createGame(Context ctx, Player contextPlayer) throws DesignByContractException{
 		

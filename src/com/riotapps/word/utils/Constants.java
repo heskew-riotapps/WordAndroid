@@ -37,9 +37,9 @@ public class Constants {
 	 * intent extras
 	 *=============================================*/
 	public static final String EXTRA_GAME_LIST_PREFETCHED = "isGameListFetched";
- 	public static final String EXTRA_GAME = "game";
+ 	public static final String EXTRA_GAME = "com.riotapps.word.hooks.Game";
 	public static final String EXTRA_GAME_ID = "gameId";
-	public static final String EXTRA_PLAYER = "player";
+	public static final String EXTRA_PLAYER = "com.riotapps.word.hooks.Player";
 	 	
  	/**============================================
 	 * storage
@@ -51,6 +51,7 @@ public class Constants {
  	public static final String USER_PREFS_PWD = "user_pw";
  	public static final String USER_PREFS_ACTIVE_GAMES = "a_games";
  	public static final String USER_PREFS_PLAYER_JSON = "player_json";
+ 	public static final String USER_PREFS_GAME_JSON = "game_json_%s";
  	public static final String USER_PREFS_FRIENDS_JSON = "friends_json";
  	public static final String USER_PREFS_LATEST_COMPLETED_GAME_DATE = "cg_date";
  	public static final String GAME_STATE = "game_state";

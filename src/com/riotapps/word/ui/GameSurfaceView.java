@@ -164,19 +164,19 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	public GameSurfaceView(Context context) {
 		super(context);
-		this.construct(context);
+		//this.construct(context);
 	 
 	}
 
 	public GameSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.construct(context);
+		//this.construct(context);
 		 
 		
 		// TODO Auto-generated constructor stub
 	}
 
-	private void construct(Context context) {
+	public void construct(Context context) {
 		Log.w(TAG, "construct called");
 		
 		this.context = context;
