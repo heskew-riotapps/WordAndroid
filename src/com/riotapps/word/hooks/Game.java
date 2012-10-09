@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.riotapps.word.R;
 import com.riotapps.word.utils.Logger;
 
  
@@ -151,22 +153,76 @@ public class Game implements Parcelable, Comparable<Game> {
 		this.status = status;
 	}
 
-	public String getLastActionText(){
+	public String getLastActionText(Context context, String contextPlayerId){
 		//find player that played last turn (this.turn - 1)
-		
-		
-		if (this.turn == 1){
-			//find player who played first turn
-			
+		String lastActionPlayerName = "";
+		int lastActionCode = 0;
+		boolean contextPlayerPerformedLastTurn = false;
+		PlayerGame.LastAction lastTurn = PlayerGame.LastAction.NO_TRANSLATION;
+		for(PlayerGame pg : this.playerGames){
+			if (pg.getLastTurn() == this.turn - 1){
+				lastActionPlayerName = pg.getPlayer().getAbbreviatedName();
+				lastActionCode = pg.getLastTurnAction();
+				lastTurn = pg.getLastAction();
+				contextPlayerPerformedLastTurn = contextPlayerId.equals(pg.getPlayer().getId());
+				break;
+			}
 		}
-		else {
-			//find player who played last turn
-			
-			
 		
+	//return "p";
+		
+		switch (lastTurn){
+			case ONE_LETTER_SWAPPED:
+				if (contextPlayerPerformedLastTurn){
+					return context.getString(R.string.game_last_action_swapped_1_context);
+				}
+				else{
+					return String.format(context.getString(R.string.game_last_action_swapped_1), lastActionPlayerName);				
+				}
+			
+			case TWO_LETTERS_SWAPPED:	
+			case THREE_LETTERS_SWAPPED:
+			case FOUR_LETTERS_SWAPPED:
+			case FIVE_LETTERS_SWAPPED:
+			case SIX_LETTERS_SWAPPED:
+			case SEVEN_LETTERS_SWAPPED:
+					if (contextPlayerPerformedLastTurn){
+						return String.format(context.getString(R.string.game_last_action_swapped_context), lastActionCode);
+					}
+					else{
+						return String.format(context.getString(R.string.game_last_action_swapped), lastActionPlayerName, lastActionCode);				
+					}
+			case STARTED_GAME:
+				if (contextPlayerPerformedLastTurn){
+					return context.getString(R.string.game_last_action_started_context);
+				}
+				else{
+					return String.format(context.getString(R.string.game_last_action_started), lastActionPlayerName);				
+				}
+				
+			case WORDS_PLAYED:
+				return "loops through words";
+			
+			case TURN_SKIPPED:
+				if (contextPlayerPerformedLastTurn){
+					return context.getString(R.string.game_last_action_skipped_context);
+				}
+				else{
+					return String.format(context.getString(R.string.game_last_action_skipped), lastActionPlayerName);				
+				}		
+			
+			case RESIGNED:
+				return "resigned"; 
+				
+			case CANCELLED:
+				return "cancelled"; ///probably not associated with game action, more of a pg status
+				
+			default:
+				return context.getString(R.string.game_last_action_undetermined);
+				
 		}
-		
-	}
+	
+ 	}
 	
 	
 	@Override

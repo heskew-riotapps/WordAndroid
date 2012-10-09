@@ -11,7 +11,6 @@ import android.text.method.DateTimeKeyListener;
 
 import com.google.gson.annotations.SerializedName;
 import com.riotapps.word.hooks.Error.ErrorType;
-import com.riotapps.word.hooks.Player.LastAction;
 import com.riotapps.word.utils.Logger;
 
 public class PlayerGame implements Parcelable{
@@ -42,6 +41,9 @@ public class PlayerGame implements Parcelable{
 
 	@SerializedName("l_t_a")
 	private int lastTurnAction;
+	
+	@SerializedName("l_t_p")
+	private int lastTurnPoints;
 	
 	@SerializedName("l_t_d")
 	private Date lastTurnDate;
@@ -197,6 +199,14 @@ public class PlayerGame implements Parcelable{
 		this.lastTurnAction = lastTurnAction;
 	}
 
+	public int getLastTurnPoints() {
+		return lastTurnPoints;
+	}
+
+	public void setLastTurnPoints(int lastTurnPoints) {
+		this.lastTurnPoints = lastTurnPoints;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -222,6 +232,7 @@ public class PlayerGame implements Parcelable{
  		out.writeList(this.trayLetters);
  		out.writeInt(this.lastTurn);
  		out.writeInt(this.lastTurnAction);
+ 		out.writeInt(this.lastTurnPoints);
  		
 	}
 	
@@ -260,6 +271,7 @@ public class PlayerGame implements Parcelable{
 	    in.readStringList(this.trayLetters);
 	    this.lastTurn = in.readInt();
 	    this.lastTurnAction = in.readInt();
+	    this.lastTurnPoints = in.readInt();
 	  //  Logger.d(TAG, "parcel in playerOrder=" + this.playerOrder);
 	
 	}
@@ -275,8 +287,10 @@ public class PlayerGame implements Parcelable{
 		SEVEN_LETTERS_SWAPPED(7),
 		STARTED_GAME(8),
 		WORDS_PLAYED(9),
-		TURN_SKIPPED(10);
-				
+		TURN_SKIPPED(10),
+		RESIGNED(11),
+		CANCELLED(12);	
+		
 		private final int value;
 		private LastAction(int value) {
 		    this.value = value;

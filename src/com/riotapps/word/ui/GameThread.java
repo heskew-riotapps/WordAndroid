@@ -57,7 +57,7 @@ public class GameThread extends Thread {
 	 public void run() {
 		 Canvas c;
 		    while (this.running) {
-		    	Log.d(TAG, "thread executed ");
+		    
 		    	//try {
 				//	Thread.sleep(15);
 				//} catch (InterruptedException e) {

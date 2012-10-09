@@ -119,7 +119,9 @@ public class GameService {
 		Gson gson = new Gson(); 
 	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 	    SharedPreferences.Editor editor = settings.edit();
-	 
+	    
+	    Logger.w(TAG, "game=" + gson.toJson(game));
+	   
 	    editor.putString(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()), gson.toJson(game));
 	    editor.commit(); 
 	}

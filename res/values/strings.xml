@@ -309,9 +309,16 @@
 	   <string name="add_opponents_add_one_more_subtitle">add one more or get started now</string>
 	   <string name="add_opponents_already_added_x_title">you\'ve already added these opponents:</string>
 	   <string name="add_opponents_already_added_one_title">you\'ve already added this opponent:</string>
-	   <string name="add_opponents_get_started">it\'s time to get started...</string>
+	   <string name="add_opponents_get_started">it\'s time to get started&#8230;</string>
 	   <string name="add_opponents_cancel_game_confirmation_title">cancel this game</string>
 	   <string name="add_opponents_cancel_game_confirmation_text">are you sure?</string>
-	   <string name="game_last_action_started_context">You started the game.</string>
+	   <string name="game_last_action_started_context">You started the game.  Have fun and thanks for playing!</string>
 	   <string name="game_last_action_started">%s started the game.</string>
+	   <string name="game_last_action_undetermined">The last action is undetermined.</string>
+	   <string name="game_last_action_swapped_1_context">You swapped 1 letter.</string>
+	   <string name="game_last_action_swapped_1">%s swapped 1 letter.</string>
+	   <string name="game_last_action_swapped_context">You swapped %s letters.</string>
+	   <string name="game_last_action_swapped">%1$s swapped %2$s letters.</string>
+	   <string name="game_last_action_skipped_context">You skipped your turn.</string>
+	   <string name="game_last_action_skipped">%s skipped a turn.</string>
 </resources>

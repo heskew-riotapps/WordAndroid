@@ -7,6 +7,7 @@ import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
+import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.TrayTile;
 import com.riotapps.word.ui.GameState;
 import com.riotapps.word.ui.GameStateService;
@@ -56,7 +57,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	private Game game;
 	private GameState gameState;
  
-	private String contextUserId;
+	private Player player;
 	private TextView tvNumPoints;
 	private PlayerGame contextPlayerGame;
  
@@ -93,6 +94,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		this.gameState = gameState;
 	}
 
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -117,9 +126,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		
 		Logger.d(TAG, "oncreate");
 		
-		 SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
-	     this.contextUserId = settings.getString(Constants.USER_PREFS_USER_ID, "");  
-	     this.tvNumPoints = (TextView)findViewById(R.id.tvNumPoints);
+		// SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
+	     //this.contextUserId = settings.getString(Constants.USER_PREFS_USER_ID, "");  
+	    this.player = PlayerService.getPlayerFromLocal(); 
+		this.tvNumPoints = (TextView)findViewById(R.id.tvNumPoints);
 	   
 	     //check for turn number, if not a match, clearGameState
 	     
@@ -250,7 +260,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 //for (PlayerGame pg : this.game.getPlayerGames()) {
 		    PlayerGame pg = this.game.getPlayerGames().get(x);	
 		    Log.d(TAG,"player=" + pg.getPlayer().getId());
-			 if (pg.getPlayer().getId() != null && pg.getPlayer().getId().equals(this.contextUserId)) {
+			 if (pg.getPlayer().getId() != null && pg.getPlayer().getId().equals(this.player.getId())) {
 				 Log.d(TAG,"contextplayermatch=" + pg.getPlayer().getId());
 		    		contextPlayerIndex = x;
 		    		contextPlayerTurnOrder = pg.getPlayerOrder();
@@ -498,7 +508,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 	Player p2 = new Player();
 		 	p2.setFirstName("Flip");
 		 //	p2.setLastname("Wilson");
-		 	p2.setId(this.contextUserId);
+		 	p2.setId(this.player.getId());
 		 	p2.setNumWins(41); 
 		 	pg2.setPlayer(p2);
 		 	pg2.setScore(4);
@@ -510,7 +520,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 	p3.setFirstName("Junior18");
 		// 	p3.setLastname("");
 		 	p3.setNumWins(243); 
-		 	p3.setId(this.contextUserId);
+		 	p3.setId(this.player.getId());
 		 	pg3.setPlayer(p3);
 		 	pg3.setPlayerOrder(1);
 		 	pg3.setTurn(true);
@@ -632,10 +642,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		Log.w(TAG, "onResume called");
 		super.onResume();
 		this.gameSurfaceView.onResume();
-	
-
 	}
 
+	
 //	@Override
 //	public void onWindowFocusChanged(boolean hasFocus) {
 //		// TODO Auto-generated method stub
@@ -652,6 +661,18 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
 	
 	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		//super.onBackPressed();
+		//override back button in case user just started game. this will make sure they don;t back through 
+		//all of the pick opponent activities
+		 Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+	     this.context.startActivity(intent);
+	     this.finish();
+	     
+	}
+
 	@Override
 	protected void onRestart() {
 		Log.w(TAG, "onRestart called");

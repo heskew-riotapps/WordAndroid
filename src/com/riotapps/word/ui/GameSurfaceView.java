@@ -910,7 +910,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     p.setAntiAlias(true);
 	     p.setTypeface(this.bonusTypeface);
 	     Rect bounds = new Rect();
-	     String lastActionText = this.parent.getGame().getLastActionText();
+	     String lastActionText = this.parent.getGame().getLastActionText(this.parent, this.parent.getPlayer().getId());
 	     p.getTextBounds(lastActionText, 0, lastActionText.length(), bounds);
 	     int textLeft =  this.midpoint - (Math.round(bounds.width() / 2));
 	     
@@ -983,8 +983,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 if (tile.getCurrentLetter().length() > 0){
 		     	 Paint pLetter = new Paint();
 		     	 pLetter.setColor(Color.DKGRAY);
-		     	 pLetter.setTextSize(Math.round(this.trayTileSize * .72));
-		     	 pLetter.setAntiAlias(true);
+		     	 pLetter.setTextSize(Math.round(this.trayTileSize * .78));
+		     	 pLetter.setAntiAlias(true); 
 		     	 pLetter.setTypeface(this.letterTypeface);
 			     Rect boundsLetter = new Rect();
 			     pLetter.getTextBounds(tile.getCurrentLetter(), 0, tile.getCurrentLetter().length(), boundsLetter);

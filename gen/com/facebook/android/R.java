@@ -509,6 +509,15 @@ containing a value of this type.
         public static final int full_rules_scoring_smasher_2=0x7f060071;
         public static final int full_rules_subtitle=0x7f06005c;
         public static final int full_rules_title=0x7f06005b;
+        public static final int game_last_action_skipped=0x7f06011a;
+        public static final int game_last_action_skipped_context=0x7f060119;
+        public static final int game_last_action_started=0x7f060113;
+        public static final int game_last_action_started_context=0x7f060112;
+        public static final int game_last_action_swapped=0x7f060118;
+        public static final int game_last_action_swapped_1=0x7f060116;
+        public static final int game_last_action_swapped_1_context=0x7f060115;
+        public static final int game_last_action_swapped_context=0x7f060117;
+        public static final int game_last_action_undetermined=0x7f060114;
         public static final int gameboard_cancel_button_text=0x7f0600f2;
         public static final int gameboard_chat_button_text=0x7f0600ee;
         public static final int gameboard_play_button_text=0x7f0600ef;
