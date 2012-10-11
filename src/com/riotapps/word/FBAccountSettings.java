@@ -19,7 +19,6 @@ import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -27,62 +26,49 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class JoinNative extends FragmentActivity implements View.OnClickListener{
-		private static final String TAG = JoinNative.class.getSimpleName();
+public class FBAccountSettings extends FragmentActivity implements View.OnClickListener{
+		private static final String TAG = FBAccountSettings.class.getSimpleName();
 		
 	    final Context context = this;		
-		Button bCancel; 
-		Button bSave;
-		EditText tEmail;
+
 		EditText tNickname;
-		EditText tPassword;
-		
-		//EditText 
 		
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
-	        setContentView(R.layout.joinnative);
+	        setContentView(R.layout.fbaccountsettings);
 	        
-	      //  bCancel = (Button) findViewById(R.id.bCancel);
-	        bSave = (Button) findViewById(R.id.bSave);
-	   
+	        Player player = PlayerService.getPlayerFromLocal();		 
+	        PlayerService.loadPlayerInHeader(this);
+	        
 	       
-	    //    TextView tvTitle =(TextView)findViewById(R.id.title_join_native);
-	    //    TextView tvSubTitle =(TextView)findViewById(R.id.sub_title_join_native);
-	     ////   TextView tvEmailLabel =(TextView)findViewById(R.id.email_label);
-	    //    TextView tvEmailGuarantee =(TextView)findViewById(R.id.email_guarantee);
-	      //  TextView tvPassword =(TextView)findViewById(R.id.password_label);
-	      //  TextView tvNickname =(TextView)findViewById(R.id.nickname_label);
- 
-	     //   bCancel.setOnClickListener(this);
+	        tNickname = (EditText)findViewById(R.id.tNickname);
+	        tNickname.setText(player.getNickname());
+	        
+	        Button bSave = (Button) findViewById(R.id.bSave);
 	        bSave.setOnClickListener(this);
-	  
+	       
 	    }
 
 	    @Override 
 	    public void onClick(View v) {
 	    	switch(v.getId()){  
-	       // case R.id.bCancel:  
-	        //	finish();  
-	        //	break;
 	        case R.id.bSave:  
-	            this.processPlayer();
-	            break;  
-	        }  
+	            this.processAccountUpdate();
+	            break; 
+  
+	    	}  
 	      }
 	    
-	    private void processPlayer(){
+	    private void processAccountUpdate(){
 	    	
 	    	try {
-	    		EditText tEmail = (EditText) findViewById(R.id.tEmail);
 				EditText tNickname = (EditText) findViewById(R.id.tNickname);
-				EditText tPassword = (EditText) findViewById(R.id.tPassword);
 				
-				String json = PlayerService.setupConnectViaEmail(this, tEmail.getText().toString(), tNickname.getText().toString(), tPassword.getText().toString());
+				String json = PlayerService.setupFBAccountUpdate(this, tNickname.getText().toString());
 				
 				//kick off thread
-				new NetworkTask(this, RequestType.POST, getString(R.string.progress_connecting), json).execute(Constants.REST_CREATE_PLAYER_URL);
+				new NetworkTask(this, RequestType.POST, getString(R.string.progress_updating), json).execute(Constants.REST_PLAYER_UPDATE_FB_ACCOUNT);
 				
 			} 
 			catch (DesignByContractException e) {
@@ -93,13 +79,13 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 	    
 	    private class NetworkTask extends AsyncNetworkRequest{
 			
-	    	JoinNative context;
+	    	FBAccountSettings context;
+ 
 			
-			public NetworkTask(JoinNative ctx, RequestType requestType,
+			public NetworkTask(FBAccountSettings ctx, RequestType requestType,
 					String shownOnProgressDialog, String jsonPost) {
 				super(ctx, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
-			 
 			}
 
 			@Override
@@ -108,8 +94,6 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 				super.onPostExecute(serverResponseObject);
 				
 				this.handleResponse(serverResponseObject);
-				
-				
 			}
 	 
 			private void handleResponse(ServerResponse serverResponseObject){
@@ -130,29 +114,20 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 
 			         int statusCode = response.getStatusLine().getStatusCode();  
 			         
-			         Log.i(JoinNative.TAG, "StatusCode: " + statusCode);
-
-			         switch(statusCode){   
-			             case 200:   
-			             case 201: {  
-			          
-			            	 Player player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
-			            	 Intent intent;
-			            	 if (player.getTotalNumLocalGames() == 0){
-			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
-			            	 }
-			            	 else {
-			            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
-			            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
-			            	 }
-			         	    // Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
-			         	     //intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
-			      	      
-			      	      	 this.context.startActivity(intent);
+			         Log.i(FBAccountSettings.TAG, "StatusCode: " + statusCode);
+ 
+			         switch(statusCode){  
+			             case 200:  
+			             case 201: {   
+			                //update text
+			            	 
+		            		 Player player = PlayerService.handleUpdateAccountResponse(this.context, iStream);
+			     			 DialogManager.SetupAlert(this.context, this.context.getString(R.string.success), this.context.getString(R.string.account_changed_successfully),Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+	 
 			                 break;  
 
 			             }//end of case 200 & 201 
-			             case 401:  
+			             case 401:
 			            	 ErrorType errorType = ErrorService.translateError(this.context, iStream);
 			            	 
 			            	 String errorMessage;
@@ -161,20 +136,23 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			            	 	case INCORRECT_PASSWORD:
 					            	errorMessage = this.context.getString(R.string.validation_incorrect_password);
 			            	 		break; 
-			            	 	case EMAIL_NOT_SUPPLIED:
-			            	 		errorMessage = this.context.getString(R.string.validation_email_not_supplied);
-			            	 		break;
 			            	 	case NICKNAME_IN_USE:
 			            	 		errorMessage = this.context.getString(R.string.validation_nickname_already_taken);
 			            	 		break;
-			            	 		
-			            	 	default:
+			            	 	case NICKNAME_NOT_SUPPLIED:
+			            	 		errorMessage = this.context.getString(R.string.validation_nickname_not_supplied);
+			            	 		break;
+			            	 	case UNAUTHORIZED:
 			            	 		errorMessage = this.context.getString(R.string.validation_unauthorized);
+			            	 		break;
+			            	 	default:
+			            	 		errorMessage = this.context.getString(R.string.validation_unspecified_error);
 			            	 		break;		            	 		
 			            	 }
 			            	 
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), errorMessage);
 			            	 break;
+			            	 
 			             case 404:
 			             //case Status code == 422
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_404_error), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
@@ -183,7 +161,6 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			             case 500:
 
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
-			            	 break;
 			         }  
 			     }else if (exception instanceof ConnectTimeoutException) {
 			    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);

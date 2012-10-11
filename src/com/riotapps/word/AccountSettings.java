@@ -109,10 +109,9 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 	    private class NetworkTask extends AsyncNetworkRequest{
 			
 	    	AccountSettings context;
-	    	Boolean isPasswordChange = false;
+	    	boolean isPasswordChange = false;
 			
-			public NetworkTask(AccountSettings ctx, RequestType requestType,
-					String shownOnProgressDialog, String jsonPost, Boolean isPasswordChange) {
+			public NetworkTask(AccountSettings ctx, RequestType requestType, String shownOnProgressDialog, String jsonPost, boolean isPasswordChange) {
 				super(ctx, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
 				this.isPasswordChange = isPasswordChange;

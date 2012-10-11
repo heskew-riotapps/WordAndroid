@@ -20,6 +20,7 @@
 	<string name="badges">badges</string>
 	<string name="settings">settings</string>
 	<string name="account_settings">account settings</string>
+	<string name="fb_account_settings">manage your nickname</string>
 	<string name="options">options</string>
 	<string name="logout">logout</string>
 	<string name="rules">game rules</string>

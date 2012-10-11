@@ -85,41 +85,60 @@ public class GameService {
 		return gson.toJson(newGame);
 	}
 	
-	public static void CreateGame(Context ctx, String email, String nickname, String password, Class<?> goToClass) throws DesignByContractException{
-
+	
+	public static String setupGetGame(Context ctx, String gameId) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupGetGame");
 		Gson gson = new Gson();
+		
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 		//are we connected to the web?
-		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
-		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
-		Check.Require(Validations.validateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
-	 
-		Player player = new Player();
-		player.setEmail(email);
-		player.setNickname(nickname);
-		player.setPassword(password);
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
 		
-		String json = gson.toJson(player);
+		TransportGetGame game = new TransportGetGame();
+		game.setToken(player.getAuthToken());
+		game.setGameId(gameId);
 		
-	//	  String shownOnProgressDialog = "progress test";//ctx.getString(R.string.progressDialogMessageSplashScreenRetrievingUserListing);
-		  
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putString(Constants.USER_PREFS_PWD, player.getPassword());
-		editor.putString(Constants.USER_PREFS_EMAIL, player.getEmail());
-		editor.commit();
-		
-		//ok lets call the server now
-		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json, goToClass).execute(Constants.REST_CREATE_PLAYER_URL);
-		
-		//return player;
+		return gson.toJson(game);
 	}
+//	public static void CreateGame(Context ctx, String email, String nickname, String password, Class<?> goToClass) throws DesignByContractException{
+//
+//		Gson gson = new Gson();
+//		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+//		//are we connected to the web?
+//		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+//		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
+//		Check.Require(Validations.validateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
+//	 
+//		Player player = new Player();
+//		player.setEmail(email);
+//		player.setNickname(nickname);
+//		player.setPassword(password);
+//		
+//		String json = gson.toJson(player);
+//		
+//	//	  String shownOnProgressDialog = "progress test";//ctx.getString(R.string.progressDialogMessageSplashScreenRetrievingUserListing);
+//		  
+//		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+//		SharedPreferences.Editor editor = settings.edit();
+//		editor.putString(Constants.USER_PREFS_PWD, player.getPassword());
+//		editor.putString(Constants.USER_PREFS_EMAIL, player.getEmail());
+//		editor.commit();
+//		
+//		//ok lets call the server now
+//		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json, goToClass).execute(Constants.REST_CREATE_PLAYER_URL);
+		
+//		//return player;
+//	}
 	
 	public static void putGameToLocal(Context ctx,Game game){
 		Gson gson = new Gson(); 
 	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 	    SharedPreferences.Editor editor = settings.edit();
 	    
+	    game.setLocalStorageDate(System.nanoTime());
 	    Logger.w(TAG, "game=" + gson.toJson(game));
 	   
 	    editor.putString(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()), gson.toJson(game));
@@ -224,38 +243,33 @@ public class GameService {
 	 
 	}
 	public static Game handleCreateGameResponse(final Context ctx, InputStream iStream){
-        try {
-            
-        	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
-        	 
-        	  Logger.d(TAG, "handleCreateGameResponse");
- 	        
- 	         Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
- 	
- 	         Type type = new TypeToken<Game>() {}.getType();
- 	         Game game = gson.fromJson(reader, type);
- 	        
- 	       Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
-  	         
- 	         PlayerService.updateAuthToken(ctx, game.getAuthToken());
- 	         
- 	         //should this be saved locally??????
- 	         //perhaps save it locally if it's the context player's turn, since the only thing that can
- 	         //change is chat in this state
- 	         
- 	         return game;  
-         
-        } 
-         catch (Exception e) {
-            //getRequest.abort();
-            Logger.w("GameService", "Error for handleCreateGameResponse= ", e);
-            
-            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "handleCreateGameResponse", e.getMessage(), 0);
-         }
-		return null;
-	 
+		return handleGameResponse(ctx, iStream); 
 	}
 	
+	public static Game handleGetGameResponse(final Context ctx, InputStream iStream){
+        return handleGameResponse(ctx, iStream); 
+	}
+	
+	private static Game handleGameResponse(final Context ctx, InputStream iStream){
+		 Gson gson = new Gson(); //wrap json return into a single call that takes a type
+    	 
+   	  Logger.d(TAG, "handleCreateGameResponse");
+        
+         Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+
+         Type type = new TypeToken<Game>() {}.getType();
+         Game game = gson.fromJson(reader, type);
+        
+       //Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
+	         
+         PlayerService.updateAuthToken(ctx, game.getAuthToken());
+         
+         //should this be saved locally??????
+         //perhaps save it locally if it's the context player's turn, since the only thing that can
+         //change is chat in this state
+         
+         return game;  
+	}
 	
 	public static Game createGame(Context ctx, Player contextPlayer) throws DesignByContractException{
 		

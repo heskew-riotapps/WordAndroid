@@ -22,6 +22,7 @@ public class Constants {
  	public static final String LAYOUT_SCOPE_LETTER = "L";
  	public static final String IMAGE_CACHE_DIR = "http";
  	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 4000;
+ 	public static final long LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS = 15000;
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm";
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
@@ -32,6 +33,7 @@ public class Constants {
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
+	public static final int DEFAULT_AVATAR_SIZE = 34;
 
 	/**============================================
 	 * intent extras
@@ -84,8 +86,10 @@ public class Constants {
 	public static final String REST_PLAYER_LOGOUT = REST_URL_SITE + "players/log_out.json";
 	public static final String REST_PLAYER_CHANGE_PASSWORD = REST_URL_SITE + "players/change_password.json";
 	public static final String REST_PLAYER_UPDATE_ACCOUNT = REST_URL_SITE + "players/update_account.json";
+	public static final String REST_PLAYER_UPDATE_FB_ACCOUNT = REST_URL_SITE + "players/update_fb_account.json";
 	public static final String REST_PLAYER_GET_GAMES = REST_URL_SITE + "games/get_active_games.json";
 	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "games.json";
+	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get.json";
 	
 	/**=============================================
 	 * rails

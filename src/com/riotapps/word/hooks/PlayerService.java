@@ -158,6 +158,26 @@ public class PlayerService {
 		
 		return gson.toJson(updateAccount);
 	}
+
+	public static String setupFBAccountUpdate(Context ctx, String nickname) throws DesignByContractException{
+		Gson gson = new Gson(); 
+	
+		Player player = PlayerService.getPlayerFromLocal();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	//check funky characters in nickname [a-zA-Z0-9\-#\.\(\)\/%&\s]
+
+		Check.Require(nickname.length() > 0, ctx.getString(R.string.validation_nickname_required));
+		Check.Require(Validations.validateNickname(nickname.trim()) == true, ctx.getString(R.string.validation_nickname_invalid));
+		
+		TransportFBUpdateAccount updateAccount = new TransportFBUpdateAccount();
+		updateAccount.setNickname(nickname);
+		updateAccount.setToken(player.getAuthToken());
+		
+		return gson.toJson(updateAccount);
+	}
+	
 	
 	public static void saveFacebookFriendsFromJSONResponse(Context ctx, String response) throws FacebookError, JSONException{
 		JSONObject json;
@@ -335,7 +355,7 @@ public class PlayerService {
 	private static Player handlePlayerResponse(final Context ctx, InputStream iStream){
     	Gson gson = new Gson(); //wrap json return into a single call that takes a type
 	        
-         //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
+          //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
 	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 	        
 	        Type type = new TypeToken<Player>() {}.getType();
@@ -384,7 +404,7 @@ public class PlayerService {
 			for (Game game : player.getActiveGames()) {
 				Boolean isYourTurn = false;
 				for (PlayerGame pg : game.getPlayerGames()){
-					if (pg.getPlayerId() == player.getId()){
+					if (pg.getPlayer().getId() == player.getId() && pg.isTurn()){
 						yourTurn.add(game);
 						isYourTurn = true;
 						break;
@@ -394,10 +414,14 @@ public class PlayerService {
 					opponentTurn.add(game);
 				}
 	        }
+			player.setActiveGamesOpponentTurn(opponentTurn);
+			player.setActiveGamesYourTurn(yourTurn);
 			
 			//no need to duplicate the data that is in activeGamesYourTurn and activeGamesOpponentTurn
 			//so let's clear this out
 			player.getActiveGames().clear();
+			
+			Logger.w(TAG, "handlePlayerResponse num active and opponent=" + player.getActiveGamesYourTurn().size() + " " + player.getActiveGamesOpponentTurn().size());
 
 	        
 	        editor.putString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, completedDate.toGMTString());

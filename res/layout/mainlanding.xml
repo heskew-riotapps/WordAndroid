@@ -2,14 +2,17 @@
     style="@style/LayoutStyle"
     android:orientation="vertical" >
     <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
-  
+   <ScrollView   
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" 
+    	android:fadingEdge="none"
+ 		android:layout_below="@id/topAreaLayout"
+    	 >
+
     	 <LinearLayout
 	        style="@style/LayoutFormStyle"
-	        android:layout_marginTop="0dp"
 	        android:layout_marginBottom="30dp"
-	        android:id="@+id/llOpponentsTurn"
-	         android:layout_below="@id/topAreaLayout"
-         >
+	        >
 	        <LinearLayout
 	       		android:paddingTop="8dp"
 	        	android:layout_marginBottom="5dp"
@@ -45,67 +48,73 @@
 			style="@style/FormBackgroundStyle"
 			android:layout_marginTop="5dp"
 			android:layout_width="fill_parent"
-			android:layout_below="@id/llButtons">
+			android:id="@+id/llYourTurnWrapper">
 		    
 		    <com.riotapps.word.ui.MainFontTextView
 		        style="@style/ContentAreaTextTopStyle"
 		        android:text="@string/main_landing_your_turn" />
-		    <ListView
-		        android:id="@+id/listYourTurn"
-		        android:isScrollContainer="false"  
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content" />
+		   
+			<LinearLayout 
+			    android:id="@+id/llYourTurn"
+			    android:orientation="vertical"
+			    />	
+		
 		    <View
 		        style="@style/ContentAreaTextBottomStyle"
 		        android:layout_width="fill_parent"
-		        android:layout_height="15dp" />
+		        android:layout_height="15dp" 
+		        android:layout_marginTop="-1dp"/>
 
 	     </LinearLayout>
 	     
 		<LinearLayout
 			style="@style/FormBackgroundStyle"
-			android:layout_marginTop="5dp">
+			android:layout_marginTop="5dp"
+			android:id="@+id/llOpponentsTurnWrapper">
 		    
 		    <com.riotapps.word.ui.MainFontTextView
 		        style="@style/ContentAreaTextTopStyle"
 		        android:layout_width="fill_parent"
 		        android:text="@string/main_landing_opponents_turn" />
-		     <ListView
-		        android:id="@+id/listOpponentTurn"
-		        android:isScrollContainer="false"  
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content" />
+			 <LinearLayout 
+			    android:id="@+id/llOpponentsTurn"
+			    android:orientation="vertical"
+			    />	
    			 <View
 		        style="@style/ContentAreaTextBottomStyle"
 		        android:layout_width="fill_parent"
-		        android:layout_height="15dp" />
+		        android:layout_height="15dp" 
+		        android:layout_marginTop="-1dp"/>
 		    
    		
 	     </LinearLayout>
 		
 		<LinearLayout
 			style="@style/FormBackgroundStyle"
-			android:layout_marginTop="5dp">
+			android:layout_marginTop="5dp"
+			android:id="@+id/llCompletedGamesWrapper">
 		    
 		    <com.riotapps.word.ui.MainFontTextView
 		        style="@style/ContentAreaTextTopStyle"
 		        android:layout_width="fill_parent"
 		        android:text="@string/main_landing_completed_games" />
-		     <ListView
-		        android:id="@+id/listCompletedGames"
-		        android:isScrollContainer="false"  
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content" />
+ 			<LinearLayout 
+			    android:id="@+id/llCompletedGames"
+			    android:orientation="vertical"
+			    />	
    			 <View
 		        style="@style/ContentAreaTextBottomStyle"
 		        android:layout_width="fill_parent"
-		        android:layout_height="15dp" />
+		        android:layout_height="15dp" 
+		        android:layout_marginTop="-1dp"/>
 		    
    		
 	     </LinearLayout>
 		
     </LinearLayout>
 
-       
+         	    
+  	</ScrollView>
+    
     
 </RelativeLayout>

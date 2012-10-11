@@ -15,6 +15,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Player implements Parcelable{
 	private static final String TAG = Player.class.getSimpleName();
+	
 	public Player(){}
 	
 	private String id = "";

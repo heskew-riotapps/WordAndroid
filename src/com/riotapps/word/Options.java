@@ -34,6 +34,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	 
 	
 		TextView tvAccountSettings;
+		TextView tvFBAccountSettings;
 		TextView tvQuickRules;
 		TextView tvFullRules;
 		Button bLogout;
@@ -48,12 +49,15 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 
 	        Player player = PlayerService.getPlayerFromLocal();		
 	        
+	        tvFBAccountSettings = (TextView) findViewById(R.id.tvFBAccountSettings);
 	        tvAccountSettings = (TextView) findViewById(R.id.tvAccountSettings);
 	        if (player.isFacebookUser()){
 	        	tvAccountSettings.setVisibility(View.GONE);
+	        	tvFBAccountSettings.setOnClickListener(this);
 	        }
 	        else {
 	        	tvAccountSettings.setOnClickListener(this);
+	        	tvFBAccountSettings.setVisibility(View.GONE);
 	        }
 	        tvQuickRules = (TextView) findViewById(R.id.tvQuickRules);
 	        tvQuickRules.setOnClickListener(this); 
@@ -88,7 +92,10 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	       	case R.id.bLogout:  
 	       		this.handleLogout();
 	       		break;
-
+	        case R.id.tvFBAccountSettings:  
+	        	intent = new Intent(this, FBAccountSettings.class);
+				startActivity(intent);
+				break;
 
     	}
 	    	
@@ -125,8 +132,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	  		FragmentActivity context;
 	    	//CustomDialog dialog;
 			
-			public NetworkTask(FragmentActivity ctx, RequestType requestType,
-					String shownOnProgressDialog, String jsonPost) {
+			public NetworkTask(FragmentActivity ctx, RequestType requestType, String shownOnProgressDialog, String jsonPost) {
 				super(ctx, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
 				//this.dialog = dialog;

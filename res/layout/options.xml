@@ -44,6 +44,11 @@
         android:text="@string/account_settings" 
         android:id="@+id/tvAccountSettings"
         />
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/TextLineItemStyle"
+        android:text="@string/fb_account_settings" 
+        android:id="@+id/tvFBAccountSettings"
+        />
      <com.riotapps.word.ui.MainFontTextView
         style="@style/TextLineItemStyle"
         android:text="@string/quick_rules_title" 
@@ -59,7 +64,7 @@
   
     </LinearLayout>
     </LinearLayout>
-           <RelativeLayout
+     <RelativeLayout
 		android:orientation="vertical"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

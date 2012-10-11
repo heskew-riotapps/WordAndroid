@@ -990,7 +990,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			     pLetter.getTextBounds(tile.getCurrentLetter(), 0, tile.getCurrentLetter().length(), boundsLetter);
 			     
 			     //find the midpoint and scoot over 5% to the left and 5% down
-			     int textLeft =  tile.getxPosition() + this.trayTileMidpoint - Math.round(this.trayTileMidpoint * .08f) - (Math.round(boundsLetter.width() / 2));
+			     int textLeft =  tile.getxPosition() + this.trayTileMidpoint - Math.round(this.trayTileMidpoint * .15f) - (Math.round(boundsLetter.width() / 2));
 			     int textTop =  tile.getyPosition() + this.trayTileMidpoint + Math.round(this.trayTileMidpoint * .08f) + (Math.round(boundsLetter.height() / 2));
 			     
 			     canvas.drawText(tile.getCurrentLetter(), textLeft, textTop, pLetter);
