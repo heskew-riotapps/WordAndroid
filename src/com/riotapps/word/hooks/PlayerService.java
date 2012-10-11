@@ -441,7 +441,7 @@ public class PlayerService {
 
         Player player = getPlayerFromLocal();
         player.setAuthToken(authToken);
-
+  
         editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
         editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
         editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
