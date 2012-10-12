@@ -23,6 +23,7 @@
     <RelativeLayout
 		style="@style/FormBackgroundStyle"
 		android:layout_marginTop="5dp"
+		 android:layout_marginBottom="5dp"
 	>
 		<RelativeLayout
 			style="@style/FormHeaderWrapperWithSubtitleStyle"
@@ -35,14 +36,20 @@
 	    />
 	    <com.riotapps.word.ui.MainFontTextView
 	        style="@style/FormHeaderAreaSubTextStyle"
-	        android:text="@string/start_game_sub" 
+	        android:id="@+id/tvSubtitle" 
 	        android:layout_below="@id/title"
 	        />
 	    </RelativeLayout>
     	<ListView 
     	    android:id="@+id/lvFBFriends"
-    	    />"
-		
+    	    android:layout_below="@id/header"
+    	    />
+		<TextView 
+		    android:layout_below="@id/lvFBFriends"
+		    style="@style/ContentAreaTextBottomStyle"
+		    android:layout_height="18dp"
+		    android:layout_width="fill_parent"
+		    />
     </RelativeLayout>
    
      </LinearLayout>

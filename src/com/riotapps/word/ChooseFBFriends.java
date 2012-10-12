@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import com.riotapps.word.hooks.FBFriend;
+import com.riotapps.word.hooks.FBFriends;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -48,6 +49,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 	ChooseFBFriends context = this;
 	Game game;
 	int maxAvailable;
+	ImageFetcher imageLoader;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
         
        // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
 
+        this.imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
+        this.imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
         
         player = PlayerService.getPlayerFromLocal();
     	PlayerService.loadPlayerInHeader(this);
@@ -103,23 +107,6 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     public void onClick(View v) {
     	Intent intent;
     	switch(v.getId()){  
-        case R.id.bAddFBFriends:  
-        	//find checked opponents and add to game
-        	//return error if none or too many checked
-          	intent = new Intent(this.context, FindPlayer.class);
-          	intent.putExtra(Constants.EXTRA_GAME, this.game);
-			this.context.startActivity(intent);
-			break;
-        case R.id.tvStartByFacebook:  
-        	intent = new Intent(this.context, FindPlayer.class);
-        	intent.putExtra(Constants.EXTRA_GAME, this.game);
-			this.context.startActivity(intent);
-			break;
-	    case R.id.tvStartByOpponent:  
-	    	intent = new Intent(this.context, FindPlayer.class);
-			intent.putExtra(Constants.EXTRA_GAME, this.game);
-			this.context.startActivity(intent);
-			break;
     
 	    case R.id.bStartGame:  
 	    	try {
@@ -167,25 +154,32 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 
     }
     
-    private class FBFriendArrayAdapter extends ArrayAdapter<Game> {
+    private class FBFriendArrayAdapter extends ArrayAdapter<FBFriend> {
 	   	  private final Context context;
-	   	  private final Game[] values;
+	   	  private final FBFriend[] values;
 	
 	   	  public FBFriendArrayAdapter(Context context, FBFriend[] values) {
 	   	    super(context, R.layout.choosefbfrienditem, values);
 	    	    this.context = context;
 	    	    this.values = values;
+	    	    
 	    	  }
 	
 	    	  @Override
 	    	  public View getView(int position, View convertView, ViewGroup parent) {
 	    	    LayoutInflater inflater = (LayoutInflater) context
 	    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    	    View rowView = inflater.inflate(R.layout.gameyourturnlistitem, parent, false);
-	    	    ImageView ivOpponent1 = (ImageView) rowView.findViewById(R.id.ivOpponent1);
+	    	    View rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
+	    	    
+	    	    FBFriend friend = values[position];
+	    	   // ImageView ivOpponent1 = (ImageView) rowView.findViewById(R.id.ivOpponent1);
 	    	   // textView.setText(values[position]);
 	    	
-	
+	    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
+	    	   tvPlayerName.setText(friend.getName());
+	    	   
+	    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
+	    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
 	    	    return rowView;
 	    	  }
 	    }
@@ -237,14 +231,14 @@ private class NetworkTask extends AsyncNetworkRequest{
 		             case 200:  
 		             case 201: {
 		            	 
-		              Game game = GameService.handleCreateGameResponse(this.context, iStream);
+		              FBFriends friends = PlayerService.findRegisteredFBFriendsResponse(this.context, iStream);
 		            //	 handleResponseFromIOThread(game);
 		            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
 		            	 //was not working and driving me crazy
 		            //	 GameService.putGameToLocal(context, game);
 		            	 
 		            //	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
-		            	 
+		            	 loadList(friends.getArray());
 		           // 	 Logger.d(TAG, "game about to be added as extra");
 		         	   //  intent.putExtra(Constants.EXTRA_GAME, game);
 		           // 	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
@@ -255,11 +249,11 @@ private class NetworkTask extends AsyncNetworkRequest{
 		             }//end of case 200 & 201 
 		             case 401:
 			             //case Status code == 422
-			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_unauthorized), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
-			            	 break;
+		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_unauthorized), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+		            	 break;
 		             case 404:
 		             //case Status code == 422
-		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.find_player_opponent_not_found), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_404_error), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
 		            	 break;
 		             case 422: 
 		             case 500:

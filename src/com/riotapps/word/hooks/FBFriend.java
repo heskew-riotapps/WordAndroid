@@ -14,9 +14,15 @@ public class FBFriend {
 	
 	@SerializedName("p")
 	private String playerId = "";
+	
+	@SerializedName("w")
+	private int numWins = 0;
+	
 	public String getPlayerId() {
 		return playerId;
 	}
+	
+	
 	public void setPlayerId(String playerId) {
 		this.playerId = playerId;
 	}
@@ -41,4 +47,8 @@ public class FBFriend {
 		return String.format(Constants.FACEBOOK_IMAGE_URL, this.id);
 	}
 
+	public Player getPlayer(){
+		return new Player();
+	}
+	
 }

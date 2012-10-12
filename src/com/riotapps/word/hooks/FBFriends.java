@@ -15,7 +15,8 @@ public class FBFriends {
 	}
 	
 	public FBFriend[] getArray(){
-		return (FBFriend[]) friends.toArray();
+		return friends.toArray(new FBFriend[friends.size()]);// (FBFriend[]) friends.toArray();
+		//new TypeA[a.size()]
 	}
 
 }
