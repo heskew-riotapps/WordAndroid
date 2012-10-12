@@ -53,6 +53,7 @@
 		<activity android:name=".Gravatar" android:label="@string/app_name" android:screenOrientation="portrait"/>
 		<activity android:name=".GravatarRefresh" android:label="@string/app_name" android:screenOrientation="portrait"/>
 		<activity android:name=".AddOpponents" android:label="@string/app_name" android:screenOrientation="portrait"/>
+		<activity android:name=".ChooseFBFriends" android:label="@string/app_name" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

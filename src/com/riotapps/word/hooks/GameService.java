@@ -261,7 +261,7 @@ public class GameService {
          Type type = new TypeToken<Game>() {}.getType();
          Game game = gson.fromJson(reader, type);
         
-       //Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
+        Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
 	         
          PlayerService.updateAuthToken(ctx, game.getAuthToken());
          

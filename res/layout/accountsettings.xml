@@ -6,19 +6,14 @@
    <ScrollView
         android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
-    	android:fillViewport="true" 
+    		android:fadingEdge="none"
         >
 
-   <LinearLayout 
-       android:orientation="vertical" 
-        android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-   
-        >
-			
-		    <LinearLayout 
+    <LinearLayout 
 	           style="@style/LayoutFormStyle"
-	           android:layout_below="@id/topAreaLayout"> 
+	        > 
+			
+ 
 			     <RelativeLayout
 					style="@style/FormBackgroundStyle">
 				    <RelativeLayout
@@ -100,11 +95,8 @@
 						</LinearLayout>
    
     			</RelativeLayout>
-    		</LinearLayout>		
-    		     
-	       <LinearLayout 
-	           style="@style/LayoutFormStyle"
-	        > 
+    	 
+    	 
 		     	<LinearLayout
 				style="@style/FormBackgroundStyle"
 				android:layout_marginTop="5dp">
@@ -163,7 +155,7 @@
    
 					</LinearLayout>
     			</LinearLayout>
-     		</LinearLayout>
+      
     	</LinearLayout>
     </ScrollView>
 </LinearLayout>

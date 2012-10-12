@@ -101,7 +101,7 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
  
 			break;
         case R.id.tvStartByFacebook:  
-         	 intent = new Intent(this.context, FindPlayer.class);
+         	 intent = new Intent(this.context, ChooseFBFriends.class);
     	     try {
 				intent.putExtra(Constants.EXTRA_GAME, GameService.createGame(context, player));
 				 this.context.startActivity(intent);

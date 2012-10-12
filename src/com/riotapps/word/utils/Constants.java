@@ -22,7 +22,7 @@ public class Constants {
  	public static final String LAYOUT_SCOPE_LETTER = "L";
  	public static final String IMAGE_CACHE_DIR = "http";
  	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 4000;
- 	public static final long LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS = 15000;
+ 	public static final long LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS = 30000;
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm";
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
@@ -55,6 +55,7 @@ public class Constants {
  	public static final String USER_PREFS_PLAYER_JSON = "player_json";
  	public static final String USER_PREFS_GAME_JSON = "game_json_%s";
  	public static final String USER_PREFS_FRIENDS_JSON = "friends_json";
+ 	public static final String USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME = "friends_reg_check";
  	public static final String USER_PREFS_LATEST_COMPLETED_GAME_DATE = "cg_date";
  	public static final String GAME_STATE = "game_state";
  	public static final String FB_TOKEN = "fb_token";
@@ -76,8 +77,8 @@ public class Constants {
 	/**=============================================
 	 * the web
 	 *==============================================*/
-	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";
-	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";
+	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/"; 
+	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/"; 
 	public static final String FACEBOOK_API_ID = "314938401925933";
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
@@ -90,6 +91,7 @@ public class Constants {
 	public static final String REST_PLAYER_GET_GAMES = REST_URL_SITE + "games/get_active_games.json";
 	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "games.json";
 	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get.json";
+	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_by_fb";
 	
 	/**=============================================
 	 * rails

@@ -159,7 +159,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	ImageView ivOpponent3 = (ImageView)view.findViewById(R.id.ivOpponent3);
 
 	 	int numPlayers = game.getPlayerGames().size();
-	 	Logger.w(TAG, "getGameYourTurnView numPlayers=" + numPlayers);
+	 	//Logger.w(TAG, "getGameYourTurnView numPlayers=" + numPlayers);
 	 	if (numPlayers == 1){
 	 		view.setVisibility(View.GONE);
 	 		return view;
@@ -242,15 +242,22 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
    private void handleGameClick(String gameId){
 	   
 	   try { 
+		   //this logic needs to be refactored more than likely
+		   Logger.w(TAG, "handleGameClick called");
+		   
 		   Game game = GameService.getGameFromLocal(gameId);
-		   if (game.getId() == gameId){
-			   if (System.nanoTime() / 1000000 - game.getLocalStorageDateInMilliseconds() < Constants.LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS){
+		   
+		   Logger.w(TAG, "handleGameClick gameId param=" + gameId + " stored=" + game.getId());
+		   if (game.getId().equals(gameId)){
+			   long localStorageDuration = System.nanoTime() / 1000000 - game.getLocalStorageDateInMilliseconds();
+			   Logger.w(TAG, "handleGameClick game Found localStorageDuration=" + localStorageDuration);
+			   if (localStorageDuration < Constants.LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS){
 			 	//game was found locally and was stored there less than 15 seconds ago, no need to hit the server
-				   
-		            Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+				   Logger.w(TAG, "handleGameClick game Found with local storage duration. bypassing server fetch");
+		            Intent intent = new Intent(context, com.riotapps.word.GameSurface.class);
 		            intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
-		      	    this.context.startActivity(intent);
-				   
+		      	    context.startActivity(intent);
+				    
 		      	    return;
 			   }
 		   }

@@ -1,9 +1,25 @@
 package com.riotapps.word.hooks;
 
+import com.google.gson.annotations.SerializedName;
+import com.riotapps.word.utils.Constants;
+
 public class FBFriend {
 	
+	public FBFriend(){}
+	
 	private String id;
+	
+	@SerializedName("n")
 	private String name;
+	
+	@SerializedName("p")
+	private String playerId = "";
+	public String getPlayerId() {
+		return playerId;
+	}
+	public void setPlayerId(String playerId) {
+		this.playerId = playerId;
+	}
 	public String getId() {
 		return id;
 	}
@@ -17,6 +33,12 @@ public class FBFriend {
 		this.name = name;
 	}
 	
+	public boolean isRegisteredPlayer(){
+		return this.playerId.length() > 0;
+	}
 	
+	public String getImageUrl(){
+		return String.format(Constants.FACEBOOK_IMAGE_URL, this.id);
+	}
 
 }

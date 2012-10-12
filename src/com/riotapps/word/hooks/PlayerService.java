@@ -7,8 +7,10 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -46,6 +48,10 @@ import com.riotapps.word.utils.Validations;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
  
 ////make this class statisc
@@ -192,23 +198,67 @@ public class PlayerService {
 			
 			JSONObject row = friends.getJSONObject(i);
 			fbFriend.setId(row.getString("id"));
-			fbFriend.setId(row.getString("name"));
+			fbFriend.setName(row.getString("name"));
 			
 			fbFriends.add(fbFriend);
 		}
-		Gson gson = new Gson(); 
 		
-		String friendJSON = gson.toJson(fbFriends);
+		FBFriends friendsList = new FBFriends();
+		friendsList.setFriends(fbFriends);
 		
-		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
-	        SharedPreferences.Editor editor = settings.edit();
+		Gson gson = new Gson(); 	
+	//	Type fooType = new TypeToken<Foo<Bar>>() {}.getType();
+	//	gson.toJson(foo, fooType);
+		String friendJSON = gson.toJson(friendsList, FBFriends.class);
+		
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences.Editor editor = settings.edit();
 	        
-	        Logger.w(TAG, "saveFacebookFriendsFromJSONResponse fbFriends=" + friendJSON);
+	  //  Logger.w(TAG, "saveFacebookFriendsFromJSONResponse fbFriends=" + friendJSON.length());
  
-	        editor.putString(Constants.USER_PREFS_FRIENDS_JSON, gson.toJson(friendJSON));
-	        editor.commit();  
+	    //String json1 = gson.toJson(friendJSON);
+	    editor.putString(Constants.USER_PREFS_FRIENDS_JSON, friendJSON);
+	    
+	 
+	    editor.commit(); 
+	    
+	    String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
+	    Logger.w(TAG, "saveFacebookFriendsFromJSONResponse friendsLocal=" + friendsLocal.length());
 	}
 	
+	public static String setupFindPlayersByFB(Context ctx) throws DesignByContractException{
+		Gson gson = new Gson();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
+		//are we connected to the web?
+		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+	 	
+	 	Check.Require(player.getAuthToken().length() > 0, ctx.getString(R.string.msg_not_connected));
+	 	
+		TransportFindByFB fbFriends = new TransportFindByFB();
+		fbFriends.setToken(player.getAuthToken());
+		
+
+		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	     String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
+		 
+	   //  friendsLocal.
+	     
+	   //  Logger.d(TAG, "setupFindPlayersByFB friendsLocal=" + friendsLocal.length());  
+	  //   Logger.d(TAG, "setupFindPlayersByFB friendsLocal=" + friendsLocal);//new StringBuffer(friendsLocal).reverse().toString());
+ 
+	     FBFriends friends = gson.fromJson(friendsLocal, FBFriends.class);
+	        
+	  //   Logger.d(TAG, "setupFindPlayersByFB friends=" + friends.getFriends().size());
+	     
+	 //    for(FBFriend fb : friends.getFriends()){
+	     for(FBFriend fb : friends.getFriends()){
+	    	 fbFriends.addToFBList(fb.getId());
+	     }
+	 
+		return gson.toJson(fbFriends);
+	}
 	
 	public static String setupPasswordChange(Context ctx, String password, String passwordConfirm) throws DesignByContractException{
 		Gson gson = new Gson();
@@ -288,6 +338,7 @@ public class PlayerService {
 		
 		return url;
 	}
+	
 	
 	public static void loadPlayerInHeader(final FragmentActivity context){
 		loadPlayerInHeader(context, true);
@@ -452,6 +503,60 @@ public class PlayerService {
         return player;
 	}
 	
+	public static FBFriends findRegisteredFBFriendsResponse(final Context ctx, InputStream iStream){
+		Gson gson = new Gson();
+        
+	    Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+        
+        Type type = new TypeToken<List<Player>>() {}.getType();
+        List<Player> players = gson.fromJson(reader, type);
+    
+		
+		
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+        SharedPreferences.Editor editor = settings.edit();	
+        
+   	 	String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
+	 
+   	 	
+   //  friendsLocal.
+     
+   //  Logger.d(TAG, "setupFindPlayersByFB friendsLocal=" + friendsLocal.length());  
+  //   Logger.d(TAG, "setupFindPlayersByFB friendsLocal=" + friendsLocal);//new StringBuffer(friendsLocal).reverse().toString());
+
+     FBFriends friends = gson.fromJson(friendsLocal, FBFriends.class);
+        
+  //   Logger.d(TAG, "setupFindPlayersByFB friends=" + friends.getFriends().size());
+     
+ //loop through friends with inner loop that tries to match friend with registered player coming back from server
+     	for(FBFriend fb : friends.getFriends()){
+     		for (Player player : players){
+     			if (fb.getId().equals(player.getFB())){
+     				fb.setPlayerId(player.getId());
+     			}
+     		}
+     	}
+        
+     	//save last date this was done, only do this once a week or so
+     	//although change this list on fly elsewhere if fb user found to be registered
+
+     //   Player player = getPlayerFromLocal();
+     //   player.setAuthToken(authToken);
+  
+     //   editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
+     //   editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
+     //   editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+      editor.putString(Constants.USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME, Long.toString(System.nanoTime()));
+   	  editor.putString(Constants.USER_PREFS_FRIENDS_JSON, gson.toJson(friends));
+        
+     	editor.commit();  
+     	
+     	return friends;
+       
+      //  Logger.d(TAG,"updateAuthToken");
+        
+       // return player;
+	}
 	
 	//public void HandleGetPlayerResponse(final Context ctx, InputStream iStream){
     //    try {

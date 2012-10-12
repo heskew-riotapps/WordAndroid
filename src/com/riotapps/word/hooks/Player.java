@@ -171,12 +171,7 @@ public class Player implements Parcelable{
 		this.gravatar = gravatar;
 	}
 	
-	public String getFb() {
-		return fb;
-	}
-	public void setFb(String fb) {
-		this.fb = fb;
-	}
+ 
 	
 	public int getNumCompletedGames() {
 		return numCompletedGames;

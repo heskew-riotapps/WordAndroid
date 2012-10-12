@@ -322,4 +322,10 @@
 	   <string name="game_last_action_swapped">%1$s swapped %2$s letters.</string>
 	   <string name="game_last_action_skipped_context">You skipped your turn.</string>
 	   <string name="game_last_action_skipped">%s skipped a turn.</string>
+	   <string name="choose_fb_friends_add_button_text">add chosen friend(s) to this game</string>
+	   <string name="choose_fb_friend_add_button_text">add chosen friend to this game</string>
+	     <string name="choose_fb_friends_title">choose from your facebook friends</string>
+	   <string name="choose_opponents_one_more_subtitle">choose one more opponent</string>
+		<string name="choose_opponents_up_to_2_subtitle">choose up to 2 more opponents</string>
+		<string name="choose_opponents_up_to_3_subtitle">choose up to 3 opponents</string>
 </resources>
