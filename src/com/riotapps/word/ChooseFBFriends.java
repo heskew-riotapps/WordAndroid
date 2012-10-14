@@ -2,6 +2,7 @@ package com.riotapps.word;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -24,9 +25,11 @@ import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
+import com.riotapps.word.utils.Utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -59,7 +62,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
        // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
 
         this.imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
-        this.imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
+       this.imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
         
         player = PlayerService.getPlayerFromLocal();
     	PlayerService.loadPlayerInHeader(this);
@@ -108,19 +111,16 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	Intent intent;
     	switch(v.getId()){  
     
-	    case R.id.bStartGame:  
-	    	try {
-				String json = GameService.setupStartGame(context, this.game);
-				
-				Logger.d(TAG, "bStartGame json=" + json);
-				//kick off thread
-				 new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_starting_game)).execute(Constants.REST_CREATE_GAME_URL);
-				
-			} 
-			catch (DesignByContractException e) {
-				//e.printStackTrace();
-				DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage(), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
-			}
+	    case R.id.bAddFBFriends:  
+	    	
+	    	FBFriendArrayAdapter adapter;
+	    	
+	    //	Iterator<String> it = adapter.getCheckedItems().values().iterator();
+        //    for (int i=0;i<bAdapter.getCheckedItems().size();i++){
+        //        //Do whatever
+         //       bAdapter.getItem(Integer.parseInt(it.next());
+         //   }
+	    	
 			break;
 
     	}
@@ -132,11 +132,23 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	
     	String json;
 		try {
-			json = PlayerService.setupFindPlayersByFB(context);
-			//fetch fb friends (which is already stored locally) that are registered with wordsmash already
-			Logger.d(TAG, "loadListPrep json=" + json);
 			
-	    	new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_syncing)).execute(Constants.REST_FIND_REGISTERED_FB_FRIENDS);
+			SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+			long currentTime = Utils.convertNanosecondsToMilliseconds(System.nanoTime());
+			long lastCheckTime = settings.getLong(Constants.USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME, 0);
+			
+			if (lastCheckTime == 0 || currentTime - lastCheckTime > Constants.REGISTERED_FB_FRIENDS_CACHE_DURATION){
+
+				json = PlayerService.setupFindPlayersByFB(context);
+				//fetch fb friends (which is already stored locally) that are registered with wordsmash already
+			//	Logger.d(TAG, "loadListPrep json=" + json);
+				
+		    	new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_syncing)).execute(Constants.REST_FIND_REGISTERED_FB_FRIENDS);
+			}
+			else {
+				 FBFriends friends = PlayerService.getLocalFBFriends(this.context);
+            	 loadList(friends.getArray());
+			}
 		
 		} catch (DesignByContractException e) {
 			DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage(), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
@@ -155,14 +167,13 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     }
     
     private class FBFriendArrayAdapter extends ArrayAdapter<FBFriend> {
-	   	  private final Context context;
+	   	  private final ChooseFBFriends context;
 	   	  private final FBFriend[] values;
 	
-	   	  public FBFriendArrayAdapter(Context context, FBFriend[] values) {
+	   	  public FBFriendArrayAdapter(ChooseFBFriends context, FBFriend[] values) {
 	   	    super(context, R.layout.choosefbfrienditem, values);
 	    	    this.context = context;
 	    	    this.values = values;
-	    	    
 	    	  }
 	
 	    	  @Override
@@ -171,16 +182,28 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 	    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    	    View rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
 	    	    
+	    	  //  ImageFetcher imageLoader = new ImageFetcher(context, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
+	          //  imageLoader.setImageCache(ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR));
+	    	    
 	    	    FBFriend friend = values[position];
-	    	   // ImageView ivOpponent1 = (ImageView) rowView.findViewById(R.id.ivOpponent1);
-	    	   // textView.setText(values[position]);
 	    	
 	    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
-	    	   tvPlayerName.setText(friend.getName());
+	    	   tvPlayerName.setText(friend.getAdjustedName(23));
 	    	   
 	    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
 	    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
-	    	    return rowView;
+	    	   
+	    	   if (friend.isRegisteredPlayer()){
+	    		   int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + friend.getBadgeDrawable(), null, null);
+	   				ImageView ivBadge = (ImageView)findViewById(R.id.ivBadge);	 
+		   			ivBadge.setImageResource(badgeId);
+		   			
+		   			TextView tvPlayerWins = (TextView)findViewById(R.id.tvPlayerWins);
+					tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
+	    	   }
+	    	   
+	    	   rowView.setTag(friend.getId());
+	    	   return rowView;
 	    	  }
 	    }
 
@@ -231,19 +254,8 @@ private class NetworkTask extends AsyncNetworkRequest{
 		             case 200:  
 		             case 201: {
 		            	 
-		              FBFriends friends = PlayerService.findRegisteredFBFriendsResponse(this.context, iStream);
-		            //	 handleResponseFromIOThread(game);
-		            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
-		            	 //was not working and driving me crazy
-		            //	 GameService.putGameToLocal(context, game);
-		            	 
-		            //	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+		            	 FBFriends friends = PlayerService.findRegisteredFBFriendsResponse(this.context, iStream);
 		            	 loadList(friends.getArray());
-		           // 	 Logger.d(TAG, "game about to be added as extra");
-		         	   //  intent.putExtra(Constants.EXTRA_GAME, game);
-		           // 	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
-		           // 	 Logger.d(TAG, "game added as extra");
-		      	     // 	 this.context.startActivity(intent);
 		                 break;  
 
 		             }//end of case 200 & 201 

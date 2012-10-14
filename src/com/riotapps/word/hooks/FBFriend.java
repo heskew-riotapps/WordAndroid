@@ -1,9 +1,11 @@
 package com.riotapps.word.hooks;
 
+import java.util.Comparator;
+
 import com.google.gson.annotations.SerializedName;
 import com.riotapps.word.utils.Constants;
 
-public class FBFriend {
+public class FBFriend{
 	
 	public FBFriend(){}
 	
@@ -39,7 +41,17 @@ public class FBFriend {
 		this.name = name;
 	}
 	
-	public boolean isRegisteredPlayer(){
+	public int getNumWins() {
+		return numWins;
+	}
+
+
+	public void setNumWins(int numWins) {
+		this.numWins = numWins;
+	}
+
+
+	public Boolean isRegisteredPlayer(){
 		return this.playerId.length() > 0;
 	}
 	
@@ -47,8 +59,37 @@ public class FBFriend {
 		return String.format(Constants.FACEBOOK_IMAGE_URL, this.id);
 	}
 
-	public Player getPlayer(){
-		return new Player();
+	public String getBadgeDrawable(){
+		return PlayerService.getBadgeDrawable(this.numWins);
 	}
+		
+	public String getAdjustedName(int max){
+		if (this.name.length() <= max) {return this.name;}
+		else{
+			String[] parts = this.name.split(" ");
+			
+			StringBuilder sb = new StringBuilder();
+			for (int x = 0;x < parts.length; x++){
+				if (x == 0) {
+					sb.append(parts[x]);
+				}
+				else{
+					sb.append(" ");
+					sb.append(parts[x].substring(0, 1));
+					sb.append(".");
+				}
+			}
+			String adjusted = sb.toString();
+			
+			if (adjusted.length() > max){
+				adjusted = adjusted.substring(0, max - 3) + "...";
+			}
+			return adjusted;
+		}
+	}
+ 
+
+
 	
 }
+ 

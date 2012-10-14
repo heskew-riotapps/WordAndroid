@@ -122,7 +122,7 @@ public class FBAccountSettings extends FragmentActivity implements View.OnClickL
 			                //update text
 			            	 
 		            		 Player player = PlayerService.handleUpdateAccountResponse(this.context, iStream);
-			     			 DialogManager.SetupAlert(this.context, this.context.getString(R.string.success), this.context.getString(R.string.account_changed_successfully),Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+			     			 DialogManager.SetupAlert(this.context, this.context.getString(R.string.success), this.context.getString(R.string.fb_account_changed_successfully), true);
 	 
 			                 break;  
 

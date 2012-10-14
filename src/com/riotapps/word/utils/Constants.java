@@ -26,9 +26,10 @@ public class Constants {
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm";
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
- 	public static final int DEFAULT_CONNECTION_TIMEOUT = 15000;
-	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 25000;
+ 	public static final int DEFAULT_CONNECTION_TIMEOUT = 12000;
+	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 20000;
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 4000;
+	public static final int REGISTERED_FB_FRIENDS_CACHE_DURATION = 604800000; //a week of milliseconds
 	public static final int SPLASH_ACTIVITY_TIMEOUT = 3000;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
@@ -78,7 +79,7 @@ public class Constants {
 	 * the web
 	 *==============================================*/
 	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/"; 
-	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/"; 
+	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";    
 	public static final String FACEBOOK_API_ID = "314938401925933";
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
@@ -91,7 +92,7 @@ public class Constants {
 	public static final String REST_PLAYER_GET_GAMES = REST_URL_SITE + "games/get_active_games.json";
 	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "games.json";
 	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get.json";
-	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_by_fb";
+	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_all_by_fb";
 	
 	/**=============================================
 	 * rails

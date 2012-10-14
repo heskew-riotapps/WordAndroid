@@ -39,7 +39,7 @@
 	        android:id="@+id/tvSubtitle" 
 	        android:layout_below="@id/title"
 	        />
-	    </RelativeLayout>
+	    </RelativeLayout>h
     	<ListView 
     	    android:id="@+id/lvFBFriends"
     	    android:layout_below="@id/header"

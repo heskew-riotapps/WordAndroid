@@ -40,22 +40,22 @@
          android:orientation="vertical"
         >
     <com.riotapps.word.ui.MainFontTextView
-        style="@style/TextLineItemStyle"
+        style="@style/TextLineItemCenteredStyle"
         android:text="@string/account_settings" 
         android:id="@+id/tvAccountSettings"
         />
     <com.riotapps.word.ui.MainFontTextView
-        style="@style/TextLineItemStyle"
+        style="@style/TextLineItemCenteredStyle"
         android:text="@string/fb_account_settings" 
         android:id="@+id/tvFBAccountSettings"
         />
      <com.riotapps.word.ui.MainFontTextView
-        style="@style/TextLineItemStyle"
+        style="@style/TextLineItemCenteredStyle"
         android:text="@string/quick_rules_title" 
         android:id="@+id/tvQuickRules"
         />
       <com.riotapps.word.ui.MainFontTextView
-        style="@style/TextLineItemStyle"
+        style="@style/TextLineItemCenteredStyle"
         android:text="@string/full_rules_option" 
         android:id="@+id/tvFullRules"
             android:background="@drawable/text_selector_bottom"

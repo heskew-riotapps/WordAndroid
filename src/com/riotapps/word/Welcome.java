@@ -52,6 +52,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	Facebook facebook = new Facebook(Constants.FACEBOOK_API_ID);
 	AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
 	
+	Player player;
     final Welcome context = this;	
     
     protected Handler handler;
@@ -192,8 +193,19 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 					else {
 						Logger.w(TAG,"fbFriendsRequestListener. response from facebook empty");
 					}
-		     	    Intent intent = new Intent(context, com.riotapps.word.MainLanding.class);
-		     	    intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+					
+					Intent intent;
+					
+					 if (player.getTotalNumLocalGames() == 0){
+	            		 intent = new Intent(context, com.riotapps.word.StartGame.class);
+	            	 }
+	            	 else {
+	            		 intent = new Intent(context, com.riotapps.word.MainLanding.class);
+	            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+	            	 }
+					
+		     	  //  Intent intent = new Intent(context, com.riotapps.word.MainLanding.class);
+		     	  //  intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 		     	    context.startActivity(intent);
 					
 				} catch (FacebookError e) {
@@ -388,7 +400,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		             case 200:  
 		             case 201: {   
 		            	 	//update local player context
-		            		Player player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
+		            		player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
 		            		 
 		            		//go get user's friends
    	            		    mAsyncRunner.request("me/friends", new fbFriendsRequestListener());
@@ -397,35 +409,41 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 
 		             }//end of case 200 & 201 
 		             case 401:
-		            	 ErrorType errorType = ErrorService.translateError(context, iStream);
 		            	 
 		            	 String errorMessage;
+
+		            	 try{
+			            	 ErrorType errorType = ErrorService.translateError(context, iStream);
+			            	 
+			            	 switch (errorType){
+			            	 	case INCORRECT_PASSWORD:
+					            	errorMessage = context.getString(R.string.validation_incorrect_password);
+			            	 		break; 
+			            	 	case EMAIL_NOT_SUPPLIED:
+			            	 		errorMessage = context.getString(R.string.validation_email_not_supplied);
+			            	 		break;
+			            	 	case NICKNAME_IN_USE:
+			            	 		errorMessage = context.getString(R.string.validation_nickname_already_taken);
+			            	 		break;
+			            	 	case EMAIL_IN_USE:
+			            	 		errorMessage = context.getString(R.string.validation_email_already_taken);
+			            	 		break;
+			            	 	case NICKNAME_NOT_SUPPLIED:
+			            	 		errorMessage = context.getString(R.string.validation_nickname_not_supplied);
+			            	 		break;
+			            	 	case FB_USER_EMAIL_ALREADY_IN_USE:
+			            	 		errorMessage = context.getString(R.string.validation_email_is_already_in_use);
+			            	 		break;
+			            	 	case UNAUTHORIZED:
+			            	 		errorMessage = context.getString(R.string.validation_unauthorized);
+			            	 		break;
+			            	 	default:
+			            	 		errorMessage = context.getString(R.string.validation_unspecified_error);
+			            	 		break;		            	 		
+			            	 }
 		            	 
-		            	 switch (errorType){
-		            	 	case INCORRECT_PASSWORD:
-				            	errorMessage = context.getString(R.string.validation_incorrect_password);
-		            	 		break; 
-		            	 	case EMAIL_NOT_SUPPLIED:
-		            	 		errorMessage = context.getString(R.string.validation_email_not_supplied);
-		            	 		break;
-		            	 	case NICKNAME_IN_USE:
-		            	 		errorMessage = context.getString(R.string.validation_nickname_already_taken);
-		            	 		break;
-		            	 	case EMAIL_IN_USE:
-		            	 		errorMessage = context.getString(R.string.validation_email_already_taken);
-		            	 		break;
-		            	 	case NICKNAME_NOT_SUPPLIED:
-		            	 		errorMessage = context.getString(R.string.validation_nickname_not_supplied);
-		            	 		break;
-		            	 	case FB_USER_EMAIL_ALREADY_IN_USE:
-		            	 		errorMessage = context.getString(R.string.validation_email_is_already_in_use);
-		            	 		break;
-		            	 	case UNAUTHORIZED:
-		            	 		errorMessage = context.getString(R.string.validation_unauthorized);
-		            	 		break;
-		            	 	default:
-		            	 		errorMessage = context.getString(R.string.validation_unspecified_error);
-		            	 		break;		            	 		
+		            	 } catch (Exception e){
+		            		 errorMessage =  e.getLocalizedMessage();
 		            	 }
 		            	 
 		            	 DialogManager.SetupAlert(context, context.getString(R.string.sorry), errorMessage);

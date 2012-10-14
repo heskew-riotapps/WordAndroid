@@ -6,8 +6,8 @@
    <ScrollView
         android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
-    		android:fadingEdge="none"
-        >
+    	android:fadingEdge="none"
+    >
 
     <LinearLayout 
 	           style="@style/LayoutFormStyle"
