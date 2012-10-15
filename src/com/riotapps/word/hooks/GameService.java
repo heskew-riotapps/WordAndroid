@@ -299,7 +299,7 @@ public class GameService {
 	 	Check.Require(!contextPlayer.getId().equals(player.getId()), ctx.getString(R.string.validation_cannot_add_yourself));
 	 	Check.Require(!contextPlayer.getId().equals(player.getId()), ctx.getString(R.string.validation_cannot_add_yourself)); 
 	 	 for (Player p : game.getOpponents(contextPlayer)){
-	 		Check.Require(!p.getId().equals(player.getId()), String.format(ctx.getString(R.string.validation_opponent_already_added), p.getName())); 
+	 		Check.Require(player.getFB().length() > 0 || !p.getId().equals(player.getId()), String.format(ctx.getString(R.string.validation_opponent_already_added), p.getName())); 
 		 }
 
     	PlayerGame pg = new PlayerGame();

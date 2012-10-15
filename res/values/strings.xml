@@ -329,4 +329,9 @@
 	   <string name="choose_opponents_one_more_subtitle">choose one more opponent</string>
 		<string name="choose_opponents_up_to_2_subtitle">choose up to 2 more opponents</string>
 		<string name="choose_opponents_up_to_3_subtitle">choose up to 3 opponents</string>
+		<string name="choose_fb_friends_not_registered_yet">not registered yet, an invitation will be sent</string>
+		<string name="choose_fb_friends_already_chosen_2">this game already has 3 opponents chosen.  if you want to add %1$s, please first de-select %2$s or %3$s by tapping on their name.</string>
+		<string name="choose_fb_friends_already_chosen_3">this game already has 3 opponents chosen.  if you want to add %1$s, please first de-select %2$s, %3$s, or %4$s by tapping on their name.</string>
+		<string name="choose_fb_friends_choose_1">please tap on an opponent to add to the game or tap back to cancel.</string>
+
 </resources>

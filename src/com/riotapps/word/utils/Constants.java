@@ -17,6 +17,9 @@ public class Constants {
 	public static final String DEFAULT_COMPLETED_GAMES_DATE = "10/6/2012";
  	public static final String WN_KEY = "48f31f368d20791114b01067e1d05b68ca177aabdbab4150b";
  	public static final String DRAWABLE_LOCATION = "com.riotapps.word:drawable/";
+ 	public static final String CONTENT_AREA_BACKGROUND_COLOR = "content_area_background_color";
+ 	public static final String CONTENT_AREA_BACKGROUND_SELECTED_COLOR = "content_area_background_selected_color";
+
  	
  	public static final String LAYOUT_SCOPE_WORD = "W";
  	public static final String LAYOUT_SCOPE_LETTER = "L";

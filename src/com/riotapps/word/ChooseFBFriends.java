@@ -2,6 +2,7 @@ package com.riotapps.word;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,17 +31,23 @@ import com.riotapps.word.utils.Utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,6 +60,10 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 	Game game;
 	int maxAvailable;
 	ImageFetcher imageLoader;
+	ArrayList<Integer> selectedIds = new ArrayList<Integer>();
+	int itemBGColor;
+	int itemBGSelectedColor;
+	FBFriends friends;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,20 +80,23 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
    
     	Intent i = getIntent();
     	this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
+    	this.itemBGColor =  getResources().getIdentifier(Constants.DRAWABLE_LOCATION + Constants.CONTENT_AREA_BACKGROUND_COLOR, null, null);
+    	this.itemBGSelectedColor =  getResources().getIdentifier(Constants.DRAWABLE_LOCATION + Constants.CONTENT_AREA_BACKGROUND_SELECTED_COLOR, null, null);
     	
     	
       //  Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 	  //  t.show();
     	  
     	Button bAddFBFriends = (Button)findViewById(R.id.bAddFBFriends); 
+    	bAddFBFriends.setOnClickListener(this);
      
     	TextView tvSubtitle =(TextView)findViewById(R.id.tvSubtitle);
     	 
-    	if (this.game.getPlayerGames().size() == 1 ){
+    	if (this.game.getNumPlayers() == 1 ){
     		tvSubtitle.setText(this.getString(R.string.choose_opponents_up_to_3_subtitle));
     		this.maxAvailable = 3;
        	}
-    	else if(this.game.getPlayerGames().size() == 2) {
+    	else if(this.game.getNumPlayers() == 2) {
     		tvSubtitle.setText(this.getString(R.string.choose_opponents_up_to_2_subtitle));
     		this.maxAvailable = 2;
     	}
@@ -108,24 +122,47 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     
     @Override 
     public void onClick(View v) {
-    	Intent intent;
-    	switch(v.getId()){  
     
-	    case R.id.bAddFBFriends:  
-	    	
-	    	FBFriendArrayAdapter adapter;
-	    	
-	    //	Iterator<String> it = adapter.getCheckedItems().values().iterator();
-        //    for (int i=0;i<bAdapter.getCheckedItems().size();i++){
-        //        //Do whatever
-         //       bAdapter.getItem(Integer.parseInt(it.next());
-         //   }
-	    	
-			break;
-
+    	switch(v.getId()){  
+	    	case R.id.bAddFBFriends:  
+		    	this.addPlayers();
+				break;
     	}
     	
     }  
+    
+    private void addPlayers(){
+		
+		try 
+		{
+			if (this.selectedIds.size() == 0){
+				DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.choose_fb_friends_choose_1), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+			}
+			else if (this.selectedIds.size() > 3){
+				DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.validation_too_many_players), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+			}
+			else{
+				
+				for(int i : this.selectedIds){
+					FBFriend friend = friends.getFriends().get(selectedIds.get(i));
+					Player opponent = new Player();
+					opponent.setId(friend.getPlayerId());
+					opponent.setFB(friend.getId());
+					opponent.setNumWins(friend.getNumWins());
+					opponent.setNickname(friend.getName());
+					this.game = GameService.addPlayerToGame(this, this.game, opponent);
+				}
+	
+				Intent intent = new Intent(this, com.riotapps.word.AddOpponents.class);
+	       	    intent.putExtra(Constants.EXTRA_GAME, this.game);
+	    	    this.startActivity(intent);
+			}
+		} 
+		catch (DesignByContractException e) {
+			DialogManager.SetupAlert(this, this.getString(R.string.oops), e.getMessage(), true);
+		}
+	}
+    
     private void loadListPrep() {
     	
     	//only do this once a day at the most (or so)
@@ -146,8 +183,8 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 		    	new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_syncing)).execute(Constants.REST_FIND_REGISTERED_FB_FRIENDS);
 			}
 			else {
-				 FBFriends friends = PlayerService.getLocalFBFriends(this.context);
-            	 loadList(friends.getArray());
+				 this.friends = PlayerService.getLocalFBFriends(this.context);
+            	 loadList(this.friends.getArray());
 			}
 		
 		} catch (DesignByContractException e) {
@@ -158,54 +195,139 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 		//this.loadList();
     }
     
-    private void loadList(FBFriend[] friends){
-    	FBFriendArrayAdapter adapter = new FBFriendArrayAdapter(context, friends);
+    private void loadList(FBFriend[] fbFriends){
+    	FBFriendArrayAdapter adapter = new FBFriendArrayAdapter(context, fbFriends);
     
     	ListView lvFBFriends = (ListView) findViewById(R.id.lvFBFriends);
     	lvFBFriends.setAdapter(adapter); 
+    	
+    	lvFBFriends.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+    
+            	  RelativeLayout rlItem = (RelativeLayout) view.findViewById(R.id.rlItem);
+            	  
+      		      Integer pos = new Integer(position);
+      		      if(selectedIds.contains(pos)) {
+      		           selectedIds.remove(pos);
+      		          
+      		           rlItem.setBackgroundResource(itemBGColor);
+      		           
+      		       }
+      		       else {
+      		    	   if (maxAvailable == 1){
+    		        	   //remove others first
+      		    		   selectedIds.clear();
+      		    		   ((FBFriendArrayAdapter)parent.getAdapter()).notifyDataSetChanged();
+    		        	   selectedIds.add(pos);
+    		    		   rlItem.setBackgroundResource(itemBGSelectedColor);
+    		           }
+      		    	   else if (maxAvailable == 2 && selectedIds.size() == maxAvailable){
+      		    		   FBFriend friendSelected = friends.getFriends().get(pos);
+      		    		   FBFriend friend1 = friends.getFriends().get(selectedIds.get(0));
+      		    		   FBFriend friend2 = friends.getFriends().get(selectedIds.get(1));
+      		    		   
+      		    		   DialogManager.SetupAlert(context, context.getString(R.string.sorry), 
+      		    				   String.format(context.getString(R.string.choose_fb_friends_already_chosen_2, 
+      		    						   						friendSelected.getAdjustedName(23), 
+      		    						   						friend1.getAdjustedName(23),
+      		    						   						friend2.getAdjustedName(23))));
+      		    	   }
+    		    	   else if (maxAvailable == 3 && selectedIds.size() == maxAvailable){
+      		    		   FBFriend friendSelected = friends.getFriends().get(pos);
+      		    		   FBFriend friend1 = friends.getFriends().get(selectedIds.get(0));
+      		    		   FBFriend friend2 = friends.getFriends().get(selectedIds.get(1));
+      		    		   FBFriend friend3 = friends.getFriends().get(selectedIds.get(2));
+      		    		   
+      		    		   DialogManager.SetupAlert(context, context.getString(R.string.sorry), 
+      		    				   String.format(context.getString(R.string.choose_fb_friends_already_chosen_3, 
+      		    						   						friendSelected.getAdjustedName(23),
+      		    						   						friend1.getAdjustedName(23),
+      		    						   						friend2.getAdjustedName(23),
+      		    						   						friend3.getAdjustedName(23))));
+      		    	   }
+      		    	   else {
+      		    		   selectedIds.add(pos);
+      		    		   rlItem.setBackgroundResource(itemBGSelectedColor);
+      		    	   }
+      		       }
+            }
+        });
 
     }
     
     private class FBFriendArrayAdapter extends ArrayAdapter<FBFriend> {
 	   	  private final ChooseFBFriends context;
 	   	  private final FBFriend[] values;
+	   	  LayoutInflater inflater;
+	   	//  public ArrayList<Integer> selectedIds = new ArrayList<Integer>();
 	
 	   	  public FBFriendArrayAdapter(ChooseFBFriends context, FBFriend[] values) {
 	   	    super(context, R.layout.choosefbfrienditem, values);
 	    	    this.context = context;
 	    	    this.values = values;
+	    	    
+	    	    this.inflater = (LayoutInflater) context
+		    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    	  }
 	
 	    	  @Override
-	    	  public View getView(int position, View convertView, ViewGroup parent) {
-	    	    LayoutInflater inflater = (LayoutInflater) context
-	    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    	    View rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
+	    	  public View getView(int position, View rowView, ViewGroup parent) {
+	    		 
+	    		  if ( rowView == null ) {
+	    			  rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
+	    		  }
 	    	    
-	    	  //  ImageFetcher imageLoader = new ImageFetcher(context, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
-	          //  imageLoader.setImageCache(ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR));
+	    	   // View rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
+	    		  RelativeLayout rlItem = (RelativeLayout) rowView.findViewById(R.id.rlItem);
+	    		  
+	    		 // rlItem.setBackgroundColor(selectedIds.contains(position) ? Color.CYAN : android.R.color.transparent);  
 	    	    
-	    	    FBFriend friend = values[position];
-	    	
-	    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
-	    	   tvPlayerName.setText(friend.getAdjustedName(23));
-	    	   
-	    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
-	    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
-	    	   
-	    	   if (friend.isRegisteredPlayer()){
-	    		   int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + friend.getBadgeDrawable(), null, null);
-	   				ImageView ivBadge = (ImageView)findViewById(R.id.ivBadge);	 
-		   			ivBadge.setImageResource(badgeId);
-		   			
-		   			TextView tvPlayerWins = (TextView)findViewById(R.id.tvPlayerWins);
-					tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
-	    	   }
-	    	   
-	    	   rowView.setTag(friend.getId());
-	    	   return rowView;
+	    		  rlItem.setBackgroundResource(selectedIds.contains(position) ? itemBGSelectedColor : itemBGColor);
+	    		  
+		    	  FBFriend friend = values[position];
+		    	 
+		    	   TextView tvInvitationWillBeSent = (TextView) rowView.findViewById(R.id.tvInvitationWillBeSent);
+		    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
+		    	   tvPlayerName.setText(friend.getAdjustedName(23));
+		    	   
+		    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
+		    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
+		    	   
+		    	   if (friend.isRegisteredPlayer()){
+		    		   int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + friend.getBadgeDrawable(), null, null);
+		   				ImageView ivBadge = (ImageView)findViewById(R.id.ivBadge);	 
+			   			ivBadge.setImageResource(badgeId);
+			   			
+			   			TextView tvPlayerWins = (TextView)findViewById(R.id.tvPlayerWins);
+						tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
+						tvInvitationWillBeSent.setVisibility(View.GONE);
+		    	   }
+		    	   else{
+		    		 
+		    	   }
+		    	   
+		    	   rowView.setTag(friend.getId());
+		    	   return rowView;
 	    	  }
+	    		  
+    	//	  @Override
+    	//	  public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//
+ //   		       ArrayList<Integer> selectedIds = ((FBFriendArrayAdapter) parent).selectedIds;
+  //  		       Integer pos = new Integer(position);
+   // 		       if(selectedIds.contains(pos) {
+   // 		           selectedIds.remove(pos);
+   // 		       }
+   // 		       else {
+   // 		           selectedIds.add(pos);
+   // 		       }
+///
+  //  		       parent.notifyDataChanged();
+   // 		  }
 	    }
+  
 
     
 private class NetworkTask extends AsyncNetworkRequest{
@@ -254,7 +376,7 @@ private class NetworkTask extends AsyncNetworkRequest{
 		             case 200:  
 		             case 201: {
 		            	 
-		            	 FBFriends friends = PlayerService.findRegisteredFBFriendsResponse(this.context, iStream);
+		            	 friends = PlayerService.findRegisteredFBFriendsResponse(this.context, iStream);
 		            	 loadList(friends.getArray());
 		                 break;  
 

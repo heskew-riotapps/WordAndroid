@@ -156,7 +156,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 			this.context.startActivity(intent);
 			break;
         case R.id.tvStartByFacebook:  
-        	intent = new Intent(this.context, FindPlayer.class);
+        	intent = new Intent(this.context, ChooseFBFriends.class);
         	intent.putExtra(Constants.EXTRA_GAME, this.game);
 			this.context.startActivity(intent);
 			break;
@@ -210,10 +210,10 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 
     	Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
 	 
-    	Logger.d(TAG, "handleResponseFromIOThread game about to be added as extra");
+    	//Logger.d(TAG, "handleResponseFromIOThread game about to be added as extra");
     	intent.putExtra(Constants.EXTRA_GAME, game);
 	     
-    	 Logger.d(TAG, "handleResponseFromIOThread game added as extra");
+    	 //Logger.d(TAG, "handleResponseFromIOThread game added as extra");
     	 this.context.startActivity(intent);
     }
     

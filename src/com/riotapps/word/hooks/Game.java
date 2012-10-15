@@ -167,7 +167,15 @@ public class Game implements Parcelable, Comparable<Game> {
 	public void setLocalStorageDate(long localStorageDate) {
 		this.localStorageDate = localStorageDate;
 	}
+	
+	public int getNumPlayerSlotsLeft(){
+		return 4 - this.getPlayerGames().size(); 
+	}
 
+	public int getNumPlayers(){
+		return this.getPlayerGames().size(); 
+	}
+	
 	public String getLastActionText(Context context, String contextPlayerId){
 		//find player that played last turn (this.turn - 1)
 		String lastActionPlayerName = "";
