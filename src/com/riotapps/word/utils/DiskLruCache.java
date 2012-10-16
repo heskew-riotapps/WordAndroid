@@ -193,7 +193,7 @@ public class DiskLruCache {
             final String file = mLinkedHashMap.get(key);
             if (file != null) {
 
-                Logger.d(TAG, "Disk cache hit");
+             //   Logger.d(TAG, "Disk cache hit");
                 return BitmapFactory.decodeFile(file);
             } else {
                 final String existingFile = createFilePath(mCacheDir, key);
@@ -234,7 +234,7 @@ public class DiskLruCache {
      * Removes all disk cache entries from this instance cache dir
      */
     public void clearCache() {
-    	Logger.d(TAG, "clearCache cacheDir=" + mCacheDir.getName());
+    //	Logger.d(TAG, "clearCache cacheDir=" + mCacheDir.getName());
         DiskLruCache.clearCache(mCacheDir);
     }
 
@@ -247,7 +247,7 @@ public class DiskLruCache {
      */
     public static void clearCache(Context context, String uniqueName) {
         File cacheDir = getDiskCacheDir(context, uniqueName);
-        Logger.d(TAG, "clearCache2 cacheDir=" + cacheDir.getName());
+    //    Logger.d(TAG, "clearCache2 cacheDir=" + cacheDir.getName());
         clearCache(cacheDir);
     }
 
@@ -264,7 +264,7 @@ public class DiskLruCache {
         for (int i=0; i<files.length; i++) {
             deleted = files[i].delete();
             
-            Logger.d(TAG, "clearCache - deleted=" + files[i].getName() + " " + deleted);
+        //    Logger.d(TAG, "clearCache - deleted=" + files[i].getName() + " " + deleted);
         }
     }
 

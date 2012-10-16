@@ -247,28 +247,28 @@ public class Player implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
 		
-		Logger.d(TAG, "parcelout");
+//		Logger.d(TAG, "parcelout");
 		out.writeString(this.id);
-		Logger.d(TAG, "parcel out id=" + this.id);
+//		Logger.d(TAG, "parcel out id=" + this.id);
 		out.writeString(this.nickname);
-		Logger.d(TAG, "parcel out nickname=" + this.nickname);
+//		Logger.d(TAG, "parcel out nickname=" + this.nickname);
 		out.writeString(this.firstName);
-		Logger.d(TAG, "parcel out firstname=" + this.firstName);
+//		Logger.d(TAG, "parcel out firstname=" + this.firstName);
 		out.writeString(this.lastName);
-		Logger.d(TAG, "parcel out lastName=" + this.lastName);
+//		Logger.d(TAG, "parcel out lastName=" + this.lastName);
 		out.writeString(this.email);
-		Logger.d(TAG, "parcel out email=" + this.email);
+//		Logger.d(TAG, "parcel out email=" + this.email);
 	//	out.writeString(this.password);
 		out.writeString(this.fb);
-		Logger.d(TAG, "parcel out fb=" + this.fb);
+//		Logger.d(TAG, "parcel out fb=" + this.fb);
 		out.writeString(this.authToken);
-		Logger.d(TAG, "parcel out authToken=" + this.authToken);
+//		Logger.d(TAG, "parcel out authToken=" + this.authToken);
 		out.writeInt(this.numWins);
 		out.writeInt(this.numLosses);
 		out.writeInt(this.numDraws);
 	//	out.writeString(this.badge_drawable);
 		out.writeString(this.gravatar);
-		Logger.d(TAG, "parcel out gravatar=" + this.gravatar);
+//		Logger.d(TAG, "parcel out gravatar=" + this.gravatar);
 	}
 	
 	public static final Parcelable.Creator<Player> CREATOR
@@ -284,29 +284,29 @@ public class Player implements Parcelable{
 
 	private Player(Parcel in) {
 		// same order as writeToParcel
-		Logger.d(TAG, "parcelin");
+	//	Logger.d(TAG, "parcelin");
 		this.id = in.readString();
-		Logger.d(TAG, "parcel in id=" + this.id);
+	//	Logger.d(TAG, "parcel in id=" + this.id);
 		this.nickname = in.readString();
-		Logger.d(TAG, "parcel in nickname=" + this.nickname);
+//		Logger.d(TAG, "parcel in nickname=" + this.nickname);
 		this.firstName = in.readString();
-		Logger.d(TAG, "parcel in firstname=" + this.firstName);
+//		Logger.d(TAG, "parcel in firstname=" + this.firstName);
 		this.lastName = in.readString();
-		Logger.d(TAG, "parcel in lastName=" + this.lastName);
+//		Logger.d(TAG, "parcel in lastName=" + this.lastName);
 		this.email = in.readString();
-		Logger.d(TAG, "parcel in email=" + this.email);
+//		Logger.d(TAG, "parcel in email=" + this.email);
 //		this.password = in.readString();
 	
 		this.fb = in.readString();
-		Logger.d(TAG, "parcel in fb=" + this.fb);
+//		Logger.d(TAG, "parcel in fb=" + this.fb);
 		this.authToken = in.readString();
-		Logger.d(TAG, "parcel in authToken=" + this.authToken);
+//		Logger.d(TAG, "parcel in authToken=" + this.authToken);
 		this.numWins = in.readInt();
 		this.numLosses = in.readInt();
 		this.numDraws = in.readInt();
 	//	this.badge_drawable = in.readString();
 		this.gravatar = in.readString();
-		Logger.d(TAG, "parcel in gravatar=" + this.gravatar);
+//		Logger.d(TAG, "parcel in gravatar=" + this.gravatar);
 	}
 
 	

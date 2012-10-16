@@ -176,6 +176,18 @@ public class Game implements Parcelable, Comparable<Game> {
 		return this.getPlayerGames().size(); 
 	}
 	
+	public String getInvitedFBPlayersString(){
+		String invited = "";
+		
+		for (PlayerGame pg : this.getPlayerGames()){
+		Logger.d(TAG,"getInvitedFBPlayersString pg=" + pg.getPlayerId().length() + " " + pg.getPlayer().getFB());
+			if (pg.getPlayerId().length() == 0){		
+				invited = invited + pg.getPlayer().getFB() + ",";
+			}
+		}
+		return invited.length() == 0 ? "" : invited.substring(0,invited.length() - 1); //remove trailing comma
+	}
+	
 	public String getLastActionText(Context context, String contextPlayerId){
 		//find player that played last turn (this.turn - 1)
 		String lastActionPlayerName = "";
@@ -256,9 +268,9 @@ public class Game implements Parcelable, Comparable<Game> {
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		Logger.d(TAG, "parcel out");
+//		Logger.d(TAG, "parcel out");
 		out.writeString(this.id);
-		Logger.d(TAG, "parcel out id=" + this.id);
+	//	Logger.d(TAG, "parcel out id=" + this.id);
 		out.writeList(this.playedWords);
 		out.writeList(this.playerGames);
 		out.writeInt(this.numLettersLeft);
@@ -267,7 +279,7 @@ public class Game implements Parcelable, Comparable<Game> {
 		out.writeLong(this.createDate == null ? 0 : this.createDate.getTime());
 		out.writeLong(this.completionDate == null ? 0 : this.completionDate.getTime());
 		out.writeInt(this.status);
-		Logger.d(TAG, "parcel out status=" + this.status);
+	//	Logger.d(TAG, "parcel out status=" + this.status);
 	}
 
 	public static final Parcelable.Creator<Game> CREATOR
@@ -282,23 +294,23 @@ public class Game implements Parcelable, Comparable<Game> {
 	};
 	
 	 private Game(Parcel in) {
-		 Logger.d(TAG, "parcel in");
+		// Logger.d(TAG, "parcel in");
          this.id = in.readString();
          in.readList(this.playedWords,PlayedWord.class.getClassLoader());
          in.readList(this.playerGames,PlayerGame.class.getClassLoader());
-         Logger.d(TAG, "parcel in this.playerGames.size()" + this.playerGames.size());
+      //   Logger.d(TAG, "parcel in this.playerGames.size()" + this.playerGames.size());
          this.numLettersLeft = in.readInt();
 
-         Logger.d(TAG, "parcel in numLettersLeft=" + numLettersLeft);
+      //   Logger.d(TAG, "parcel in numLettersLeft=" + numLettersLeft);
        //  this.createDate = in.readSerializable(); 
 
          this.createDate = new Date(in.readLong());
          
-         Logger.d(TAG, "parcel in createDate=" + createDate.toString());
+      // Logger.d(TAG, "parcel in createDate=" + createDate.toString());
          this.completionDate = new Date(in.readLong());
-         Logger.d(TAG, "parcel in completionDate=" + completionDate.toString());
+      //   Logger.d(TAG, "parcel in completionDate=" + completionDate.toString());
          this.status = in.readInt();
-         Logger.d(TAG, "parcel in status=" + status);
+      //   Logger.d(TAG, "parcel in status=" + status);
        	 
      }
 

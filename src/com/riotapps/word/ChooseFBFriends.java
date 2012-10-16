@@ -143,13 +143,14 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 			}
 			else{
 				
-				for(int i : this.selectedIds){
+				for(int i = 0; i < this.selectedIds.size(); i++){
 					FBFriend friend = friends.getFriends().get(selectedIds.get(i));
+					Logger.d(TAG, "addPlayers friend.getPlayerId()=" + friend.getPlayerId() );
 					Player opponent = new Player();
 					opponent.setId(friend.getPlayerId());
 					opponent.setFB(friend.getId());
 					opponent.setNumWins(friend.getNumWins());
-					opponent.setNickname(friend.getName());
+					opponent.setFirstName(friend.getName());
 					this.game = GameService.addPlayerToGame(this, this.game, opponent);
 				}
 	

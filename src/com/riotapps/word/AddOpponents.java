@@ -1,16 +1,24 @@
 package com.riotapps.word;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.List;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
-
+import org.json.JSONException;
+import org.json.JSONObject;
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.FacebookError;
+import com.facebook.android.Util;
+import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.Facebook.DialogListener;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
-import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.ui.CustomDialog;
 import com.riotapps.word.ui.DialogManager;
@@ -22,9 +30,8 @@ import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
-
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -46,6 +53,10 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 	Player player;
 	AddOpponents context = this;
 	Game game;
+	Facebook facebook = new Facebook(Constants.FACEBOOK_API_ID);
+	AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
+	private SharedPreferences settings;
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
    
     	Intent i = getIntent();
     	this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
+    	settings = this.getSharedPreferences(Constants.USER_PREFS, MODE_PRIVATE); //getPreferences(MO
     	
     	
       //  Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
@@ -124,6 +136,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 			}
 
     }
+    
     public View getView(Player opponent ) {
   		View view = LayoutInflater.from(this).inflate(R.layout.playerlistitem, null);
   
@@ -147,7 +160,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
   	}
     
     @Override 
-    public void onClick(View v) {
+    public void onClick(View v) { 
     	Intent intent;
     	switch(v.getId()){  
         case R.id.tvStartByNickname:  
@@ -168,11 +181,15 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     
 	    case R.id.bStartGame:  
 	    	try {
+	    		//don't forget to sign up for google web services notifications!!!!!! 
 				String json = GameService.setupStartGame(context, this.game);
+				
+				Logger.d(TAG, "bStartGame fb invites=" + this.game);
+				handleFacebookInvitationAppRequests();
 				
 				Logger.d(TAG, "bStartGame json=" + json);
 				//kick off thread
-				 new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_starting_game)).execute(Constants.REST_CREATE_GAME_URL);
+				// new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_starting_game)).execute(Constants.REST_CREATE_GAME_URL);
 				
 			} 
 			catch (DesignByContractException e) {
@@ -216,6 +233,191 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	 //Logger.d(TAG, "handleResponseFromIOThread game added as extra");
     	 this.context.startActivity(intent);
     }
+    
+    private void handleFacebookInvitationAppRequests() {
+        String access_token = settings.getString(Constants.FB_TOKEN, null);
+        long expires = settings.getLong(Constants.FB_TOKEN_EXPIRES, 0);
+        
+        Logger.d(TAG, "handleFacebookInvitationAppRequests access_token=" + access_token + " expires" + expires);
+        if(access_token != null) {
+            facebook.setAccessToken(access_token);
+        }
+        if(expires != 0) {
+            facebook.setAccessExpires(expires);
+        }
+        
+        /*
+         * Only call authorize if the access_token has expired.
+         */
+        if(!facebook.isSessionValid()) {
+        	 Logger.d(TAG, "handleFacebookInvitationAppRequests isSessionValid=false");
+    	 facebook.authorize(this, new String[] { Constants.FACEBOOK_PERMISSIONS }, new DialogListener() {
+	             @Override
+	             public void onComplete(Bundle values) {
+	            	 Logger.d(TAG, "facebook.authorize..onComplete:");
+	            	// getFriends();
+	            	 startFacebookAppRequestCallChain();
+      
+	             }
+
+	             @Override
+	             public void onFacebookError(FacebookError error) {
+	            	 
+	            	 Logger.d(TAG,"onFacebookError=" + error.getLocalizedMessage());
+	            	 //DialogManager.SetupAlert(context, "fbDialogListener", dialogMessage)
+	            	 
+	             }
+
+	             @Override
+	             public void onError(DialogError e) {
+	            	 Logger.d(TAG,"DialogError=" + e.getLocalizedMessage());
+	             }
+	             @Override
+	             public void onCancel() {}
+	         });
+        }
+        else{
+        	handleFacebookAppRequest();
+        }
+ 
+    }
+    
+    private void handleFacebookAppRequest(){
+    	
+    	Logger.d(TAG, "handleFacebookAppRequest this.game.getInvitedFBPlayersString()=" + this.game.getInvitedFBPlayersString());
+    	Bundle params = new Bundle();
+	    params.putString("message", this.getString(R.string.add_opponents_fb_dialog_message));
+ 
+	    params.putString("to", this.game.getInvitedFBPlayersString());
+	    facebook.dialog(context, "apprequests", params, new fbAppRequestsListener());
+
+    }
+    
+    private void startFacebookAppRequestCallChain(){
+    	Logger.w(TAG, "handleFacebookMeRequest");
+   	 	SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
+        editor.putLong(Constants.FB_TOKEN_EXPIRES, facebook.getAccessExpires());
+        editor.commit();
+     
+        // get information about the currently logged in user
+        mAsyncRunner.request("me", new fbMeRequestListener());
+    	
+    }
+    
+    private class fbAppRequestsListener implements DialogListener {
+
+		@Override
+		public void onComplete(Bundle values) {
+			// TODO Auto-generated method stub
+			Logger.d(TAG, "fbAppRequestsListener.onComplete");
+		}
+
+		@Override
+		public void onFacebookError(FacebookError e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onError(DialogError e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onCancel() {
+			// TODO Auto-generated method stub
+			
+		}
+
+    }
+    
+    private class fbMeRequestListener implements RequestListener {
+
+    	@Override
+    	public void onComplete(String response, Object state) {
+            
+    		// get the logged-in user's friends
+    		//save user to server...
+    		Logger.d(TAG, "fbMeRequestListener.onComplete response=" + response);
+    		
+    		context.runOnUiThread(new handleFacebookMeResponseRunnable(response));
+		
+     	}
+
+    	@Override
+    	public void onIOException(IOException e, Object state) {
+    		// TODO Auto-generated method stub
+
+    	}
+
+    	@Override
+    	public void onFileNotFoundException(FileNotFoundException e, Object state) {
+    		// TODO Auto-generated method stub
+
+    	}
+
+    	@Override
+    	public void onMalformedURLException(MalformedURLException e, Object state) {
+    		// TODO Auto-generated method stub
+
+    	}
+
+    	@Override
+    	public void onFacebookError(FacebookError e, Object state) {
+    		// TODO Auto-generated method stub
+
+    	}
+
+    }
+    
+    private class handleFacebookMeResponseRunnable implements Runnable {
+		 private String response;	
+		 
+		 public handleFacebookMeResponseRunnable(String response){
+		 		this.response = response;
+		 	}
+		 
+		 
+		    public void run() {
+		    	Logger.w(TAG, "handleFacebookMeResponse");
+		    	String fbId; 
+				String fbFirstName; 
+				String fbLastName; 
+				String fbEmail; 
+				try {
+					JSONObject json_fb = Util.parseJson(this.response);
+					fbId = json_fb.getString("id");
+					fbFirstName = json_fb.getString("first_name");
+					fbLastName = json_fb.getString("last_name");
+					fbEmail = json_fb.getString("email");
+					
+					
+					//something is wrong...the currently logged in user is not the proper FB user...
+					//clear all cache and settings and re-route to welcome
+					Player player = PlayerService.getPlayerFromLocal();
+					if (!player.getFB().equals(fbId)){
+					 
+						Intent intent = new Intent(context, com.riotapps.word.Welcome.class);
+			    	    context.startActivity(intent);
+					
+					}
+					else{
+						
+					
+					}
+					
+				} catch (FacebookError e) {
+					Logger.w(TAG,"handleFacebookMeResponse.FacebookError=" + e.getLocalizedMessage());
+					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+				} catch (JSONException e) {
+					Logger.w(TAG,"handleFacebookMeResponse.JSONException=" + e.getLocalizedMessage());
+					
+					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+				}
+		    }
+		  }
     
 private class NetworkTask extends AsyncNetworkRequest{
 		

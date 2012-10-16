@@ -372,6 +372,7 @@ containing a value of this type.
         public static final int add_opponents_cancel_game=0x7f06010c;
         public static final int add_opponents_cancel_game_confirmation_text=0x7f060113;
         public static final int add_opponents_cancel_game_confirmation_title=0x7f060112;
+        public static final int add_opponents_fb_dialog_message=0x7f060127;
         public static final int add_opponents_get_started=0x7f060111;
         public static final int add_opponents_start_game=0x7f06010b;
         public static final int app_name=0x7f060000;

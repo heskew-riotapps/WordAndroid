@@ -309,8 +309,8 @@
 	     <string name="add_opponents_cancel_game">cancel this game</string>
 	   <string name="add_opponents_add_x_more_subtitle">add up to %s more or get started now</string>
 	   <string name="add_opponents_add_one_more_subtitle">add one more or get started now</string>
-	   <string name="add_opponents_already_added_x_title">you\'ve already added these opponents:</string>
-	   <string name="add_opponents_already_added_one_title">you\'ve already added this opponent:</string>
+	   <string name="add_opponents_already_added_x_title">you\'ve added these opponents:</string>
+	   <string name="add_opponents_already_added_one_title">you\'ve added this opponent:</string>
 	   <string name="add_opponents_get_started">it\'s time to get started&#8230;</string>
 	   <string name="add_opponents_cancel_game_confirmation_title">cancel this game</string>
 	   <string name="add_opponents_cancel_game_confirmation_text">are you sure?</string>
@@ -333,5 +333,5 @@
 		<string name="choose_fb_friends_already_chosen_2">this game already has 3 opponents chosen.  if you want to add %1$s, please first de-select %2$s or %3$s by tapping on their name.</string>
 		<string name="choose_fb_friends_already_chosen_3">this game already has 3 opponents chosen.  if you want to add %1$s, please first de-select %2$s, %3$s, or %4$s by tapping on their name.</string>
 		<string name="choose_fb_friends_choose_1">please tap on an opponent to add to the game or tap back to cancel.</string>
-
+  		<string name="add_opponents_fb_dialog_message">A game is waiting for you in WordSmash, the new multi-player crossword Android game!</string>
 </resources>

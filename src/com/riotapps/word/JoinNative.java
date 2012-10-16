@@ -130,7 +130,7 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 
 			         int statusCode = response.getStatusLine().getStatusCode();  
 			         
-			         Log.i(JoinNative.TAG, "StatusCode: " + statusCode);
+			        // Log.i(JoinNative.TAG, "StatusCode: " + statusCode);
 
 			         switch(statusCode){   
 			             case 200:   

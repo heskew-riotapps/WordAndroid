@@ -119,7 +119,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	 //}
     
     private void handleFacebookMeRequest(){
-    	Logger.w(TAG, "handleFacebookMeRequest");
+    	//Logger.w(TAG, "handleFacebookMeRequest");
    	 	SharedPreferences.Editor editor = settings.edit();
         editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
         editor.putLong(Constants.FB_TOKEN_EXPIRES, facebook.getAccessExpires());
@@ -220,8 +220,10 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 
     
     private void routeToFacebook() {
-    	settings = getPreferences(MODE_PRIVATE);
+    	settings = this.getSharedPreferences(Constants.USER_PREFS, MODE_PRIVATE); //getPreferences(MODE_PRIVATE);
         String access_token = settings.getString(Constants.FB_TOKEN, null);
+        
+        Logger.d(TAG, "routeToFacebook token=" + access_token);
         long expires = settings.getLong(Constants.FB_TOKEN_EXPIRES, 0);
         if(access_token != null) {
             facebook.setAccessToken(access_token);
@@ -238,7 +240,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	    	  new DialogListener() {
 	             @Override
 	             public void onComplete(Bundle values) {
-	            	 Logger.w(TAG, "facebook.authorize..onComplete:");
+	            	 Logger.d(TAG, "facebook.authorize..onComplete:");
 	            	// getFriends();
 	            	 handleFacebookMeRequest();
       
@@ -261,7 +263,8 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	         });
         }
         else{
-        	handleFacebookMeRequest();
+        	 mAsyncRunner.request("me", new fbMeRequestListener());
+        	//handleFacebookMeRequest();
         }
  
     }
@@ -325,7 +328,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     			      }
     		}
     */		
-    		Logger.d(TAG, "fbFriendsRequestListener.onComplete response=" + response);
+    //		Logger.d(TAG, "fbFriendsRequestListener.onComplete response=" + response);
     		
     		context.runOnUiThread(new handleFacebookFriendsResponseRunnable(response));
     
