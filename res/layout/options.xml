@@ -5,16 +5,17 @@
      <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
 
    <ScrollView
+       android:layout_marginTop="0dp"
         android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
     	android:fillViewport="true" 
         >
 
    <LinearLayout 
+         android:layout_marginTop="0dp"
        android:orientation="vertical" 
         android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
-   
         >
 
    <LinearLayout

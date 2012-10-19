@@ -73,16 +73,16 @@ public class Player implements Parcelable{
 		return this.id;
 	}
 	public void setNickname(String nickname) {
-		this.nickname = nickname.trim();
+		this.nickname = nickname;
 	}
 	public String getNickname() {
-		return this.nickname;
+		return  (nickname == null ? "" : nickname.trim());
 	}
 	public void setEmail(String email) {
-		this.email = email.trim();
+		this.email = email;
 	}
 	public String getEmail() {
-		return this.email;
+		return (email == null ? "" : email.trim());
 	}
 	public void setPassword(String password) {
 		this.password = password.trim();
@@ -91,10 +91,10 @@ public class Player implements Parcelable{
 		return this.password;
 	}
 	public void setFB(String fb) {
-		this.fb = fb.trim();
+		this.fb = fb;
 	}
 	public String getFB() {
-		return this.fb;
+		return (fb == null ? "" : fb.trim());
 	}
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken.trim();
@@ -104,23 +104,23 @@ public class Player implements Parcelable{
 	}
 	
 	public String getFirstName() {
-		return firstName;
+		return (firstName == null ? "" : firstName.trim());
 	}
 	
 	public void setFirstName(String firstName) {
-		this.firstName = firstName.trim();
+		this.firstName = firstName;
 	}
 	
-	public String getlastName() {
-		return lastName;
+	public String getLastName() {
+		return (lastName == null ? "" : lastName.trim());
 	}
 	
-	public void setlastName(String lastName) {
-		this.lastName = lastName.trim();
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 	
 	public boolean isFacebookUser(){
-		return this.fb.length() > 0;
+		return this.getFB().length() > 0;
 	}
 	
 	public int getNumGames(){
@@ -133,10 +133,10 @@ public class Player implements Parcelable{
 	
 	public String getName(){
 		if (this.isFacebookUser()){
-			return this.firstName + " " + this.lastName;	
+			return this.getFirstName() + " " + this.getLastName();	
 		}
 		else{
-			return this.nickname;
+			return this.getNickname();
 		}
 		//if (this.nickname.length() > 0){return this.nickname;}
 		
@@ -145,17 +145,35 @@ public class Player implements Parcelable{
 	public String getAbbreviatedName(){
 		//eventually check for fb friendship
 		if (this.isFacebookUser()){
-			return this.firstName + (this.lastName.length() > 0 ? " " + this.lastName.substring(0,1) + "." : "");	
+			return this.getFirstName() + (this.getLastName().length() > 0 ? " " + this.getLastName().substring(0,1) + "." : "");	
 		}
 		else{
-			return this.nickname;
+			return this.getNickname();
 		}
+	}
+	
+	public String getShortName(){
+		String[] parts = this.getName().split(" ");
+		
+		//keep first name (before first space, initialize everything else
+		StringBuilder sb = new StringBuilder();
+		for (int x = 0;x < parts.length; x++){
+			if (x == 0) {
+				sb.append(parts[x]);
+			}
+			else{
+				sb.append(" ");
+				sb.append(parts[x].substring(0, 1));
+				sb.append(".");
+			}
+		}
+		return sb.toString();
 	}
 		//if (this.nickname.length() > 0){return this.nickname;}
 		//	}
 	
 	public String getImageUrl(){
-		return this.fb.length() > 0 ? String.format(Constants.FACEBOOK_IMAGE_URL, this.fb) : String.format(Constants.GRAVATAR_URL, this.gravatar);
+		return this.isFacebookUser() ? String.format(Constants.FACEBOOK_IMAGE_URL, this.fb) : String.format(Constants.GRAVATAR_URL, this.gravatar);
 	}
 	
 	public int getNumWins() {

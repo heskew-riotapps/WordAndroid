@@ -483,6 +483,7 @@ public class PlayerService {
 	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
 	        editor.commit();  
 	        
+	        //Logger.w(TAG, "player=" + gson.toJson(player));
 	        return player;
 
 	}

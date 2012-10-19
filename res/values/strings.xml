@@ -16,6 +16,7 @@
 	<string name="password">password</string>
 	<string name="change_password">change your password</string>
 	<string name="save">save</string>
+	<string name="send">send</string>
 	<string name="back">back</string>
 	<string name="badges">badges</string>
 	<string name="settings">settings</string>
@@ -334,4 +335,8 @@
 		<string name="choose_fb_friends_already_chosen_3">this game already has 3 opponents chosen.  if you want to add %1$s, please first de-select %2$s, %3$s, or %4$s by tapping on their name.</string>
 		<string name="choose_fb_friends_choose_1">please tap on an opponent to add to the game or tap back to cancel.</string>
   		<string name="add_opponents_fb_dialog_message">A game is waiting for you in WordSmash, the new multi-player crossword Android game!</string>
+  		<string name="add_opponents_cancel_app_request_1_message">%s is not registered in WordSmash yet so the Facebook app request is the only way for us to send a notification for the new game.</string>
+  		<string name="add_opponents_cancel_app_request_2_message">%1$s and %2$s are not registered in WordSmash yet so the Facebook app request is the only way for us to send a notification for the new game.</string>
+  		<string name="add_opponents_cancel_app_request_3_message">%1$s, %2$s, and %3$s are not registered in WordSmash yet so the Facebook app request is the only way for us to send a notification for the new game.</string>
+  		
 </resources>

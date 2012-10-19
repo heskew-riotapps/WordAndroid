@@ -199,7 +199,7 @@ public class DiskLruCache {
                 final String existingFile = createFilePath(mCacheDir, key);
                 if (new File(existingFile).exists()) {
                     put(key, existingFile);
-                    Logger.d(TAG, "Disk cache hit (existing file)");
+                   // Logger.d(TAG, "Disk cache hit (existing file)");
 
                     return BitmapFactory.decodeFile(existingFile);
                 }

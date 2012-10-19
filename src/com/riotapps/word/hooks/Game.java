@@ -80,6 +80,18 @@ public class Game implements Parcelable, Comparable<Game> {
 		  return ret;
 		}
 	
+	public List<PlayerGame> getOpponentPlayerGames(Player contextPlayer){ 
+		//assume the context player is the first playergame
+		List<PlayerGame> ret = new ArrayList<PlayerGame>();
+		
+		 for (PlayerGame pg : this.getPlayerGames()){ 
+         	if (!pg.getPlayer().getId().equals(contextPlayer.getId())){
+         		ret.add(pg);
+         	}
+		}
+		  return ret;
+	}
+	
 	public List<Player> getOpponents(Player contextPlayer){ 
 		//assume the context player is the first playergame
 		List<Player> ret = new ArrayList<Player>();
@@ -176,14 +188,23 @@ public class Game implements Parcelable, Comparable<Game> {
 		return this.getPlayerGames().size(); 
 	}
 	
-	public String getInvitedFBPlayersString(){
+	public List<Player> getUnregisteredFBPlayers(){
+		List<Player> players = new ArrayList<Player>();
+		
+		for (PlayerGame pg : this.getPlayerGames()){	 
+			if (pg.getPlayerId().length() == 0){		
+				players.add(pg.getPlayer());
+			}
+		}
+		return players;
+	}
+	
+	public String getUnregisteredFBPlayersString(){
 		String invited = "";
 		
-		for (PlayerGame pg : this.getPlayerGames()){
-		Logger.d(TAG,"getInvitedFBPlayersString pg=" + pg.getPlayerId().length() + " " + pg.getPlayer().getFB());
-			if (pg.getPlayerId().length() == 0){		
-				invited = invited + pg.getPlayer().getFB() + ",";
-			}
+		for (Player player : this.getUnregisteredFBPlayers()){
+		//Logger.d(TAG,"getInvitedFBPlayersString pg=" + pg.getPlayerId().length() + " " + pg.getPlayer().getFB());
+			invited = invited + player.getFB() + ",";
 		}
 		return invited.length() == 0 ? "" : invited.substring(0,invited.length() - 1); //remove trailing comma
 	}

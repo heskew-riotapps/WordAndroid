@@ -180,22 +180,10 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 			break;
     
 	    case R.id.bStartGame:  
-	    	try {
-	    		//don't forget to sign up for google web services notifications!!!!!! 
-				String json = GameService.setupStartGame(context, this.game);
-				
-				Logger.d(TAG, "bStartGame fb invites=" + this.game);
-				handleFacebookInvitationAppRequests();
-				
-				Logger.d(TAG, "bStartGame json=" + json);
-				//kick off thread
-				// new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_starting_game)).execute(Constants.REST_CREATE_GAME_URL);
-				
-			} 
-			catch (DesignByContractException e) {
-				//e.printStackTrace();
-				DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage(), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
-			}
+    		//don't forget to sign up for google web services notifications!!!!!! 
+			Logger.d(TAG, "bStartGame clicked");
+			this.handleGameStart();
+		
 			break;
 	    case R.id.bCancelGame:  
 	    	this.handleCancel();
@@ -203,6 +191,82 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	}
     	
     }  
+    
+    private void handleGameStart(){
+    	//don't forget to sign up for google web services notifications!!!!!! 
+    	
+    	//1. determine if any new facebook players have been added to this game
+    	//2. if so, call fb's apprequest dialog to send apprequest informing new players of 
+    	//   their invitation
+    	//3. if the app request dialog is canceled, assume the game will be canceled since their will 
+    	//   generally be no way for new fb player to be informed of their invitation to play (outside of word-of-mouth_
+    	//4. during the apprequest dialog process, if the fb session token has to be renewed and a different fb user
+    	//   other than the content player fb user is authorized by fb, kill local cache, log user out and 
+    	//   send player to welcome screen to start over.  this should be a very rare occurrence
+    	//5. if apprequest is completed successfully (or there are no new fb users), start the game
+    	
+    	if (this.game.getUnregisteredFBPlayers().size() > 0){
+    		this.handleFacebookInvitationAppRequests();
+    	}
+    	else{
+    		this.startGame();
+    	}
+ 	
+    }
+    
+    private void startGame(){
+    	//don't forget to sign up for google web services notifications!!!!!! 
+		String json;
+		try {
+			json = GameService.setupStartGame(context, this.game);
+			
+			//kick off thread
+		    new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_starting_game)).execute(Constants.REST_CREATE_GAME_URL);
+		
+		} catch (DesignByContractException e) {
+			//this should be rare also, but if it occurs, show error and cancel the game (by finalizing activity)
+			DialogManager.SetupAlert(context, this.getString(R.string.oops), e.getLocalizedMessage(), true);
+		}
+		
+    }
+    
+    
+    private void handleAppRequestCancel(){
+    	String message;
+    	
+    	Logger.d(TAG, "handleAppRequestCancel fired");
+    	if (this.game.getUnregisteredFBPlayers().size() == 1){
+    		message = String.format(this.getString(R.string.add_opponents_cancel_app_request_1_message), 
+    				this.game.getUnregisteredFBPlayers().get(0).getShortName());
+    	}
+    	else if(this.game.getUnregisteredFBPlayers().size() == 2){
+    		message = String.format(this.getString(R.string.add_opponents_cancel_app_request_2_message), 
+    				this.game.getUnregisteredFBPlayers().get(0).getShortName(),
+    				this.game.getUnregisteredFBPlayers().get(1).getShortName());
+    	}
+    	else {
+    		message = String.format(this.getString(R.string.add_opponents_cancel_app_request_3_message), 
+    				this.game.getUnregisteredFBPlayers().get(0).getShortName(),
+    				this.game.getUnregisteredFBPlayers().get(1).getShortName(),
+    				this.game.getUnregisteredFBPlayers().get(2).getShortName());
+    	}
+    	
+    	
+    	final CustomDialog dialog = new CustomDialog(this, 
+    			this.getString(R.string.dialog_title_are_you_sure), 
+    			message);
+    	
+    	dialog.setOnOKClickListener(new View.OnClickListener() {
+	 		@Override
+			public void onClick(View v) {
+	 			dialog.dismiss(); 
+	 			context.startGame();
+	 		}
+		});
+
+    	dialog.show();	
+    }
+    
     private void handleCancel(){
     	final CustomDialog dialog = new CustomDialog(this, 
     			this.getString(R.string.add_opponents_cancel_game_confirmation_title), 
@@ -222,17 +286,17 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	dialog.show();	
     }
     
-    private void handleResponseFromIOThread(Game game){
+  //  private void handleResponseFromIOThread(Game game){
  //  	 Game game = GameService.handleCreateGameResponse(this.context, iStream);
 
-    	Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+   // 	Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
 	 
     	//Logger.d(TAG, "handleResponseFromIOThread game about to be added as extra");
-    	intent.putExtra(Constants.EXTRA_GAME, game);
+   // 	intent.putExtra(Constants.EXTRA_GAME, game);
 	     
     	 //Logger.d(TAG, "handleResponseFromIOThread game added as extra");
-    	 this.context.startActivity(intent);
-    }
+   // 	 this.context.startActivity(intent);
+   // }
     
     private void handleFacebookInvitationAppRequests() {
         String access_token = settings.getString(Constants.FB_TOKEN, null);
@@ -273,7 +337,10 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 	            	 Logger.d(TAG,"DialogError=" + e.getLocalizedMessage());
 	             }
 	             @Override
-	             public void onCancel() {}
+	             public void onCancel() {
+	            	 
+	            	 
+	             }
 	         });
         }
         else{
@@ -284,11 +351,11 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     
     private void handleFacebookAppRequest(){
     	
-    	Logger.d(TAG, "handleFacebookAppRequest this.game.getInvitedFBPlayersString()=" + this.game.getInvitedFBPlayersString());
+    	Logger.d(TAG, "handleFacebookAppRequest this.game.getInvitedFBPlayersString()=" + this.game.getUnregisteredFBPlayersString());
     	Bundle params = new Bundle();
 	    params.putString("message", this.getString(R.string.add_opponents_fb_dialog_message));
  
-	    params.putString("to", this.game.getInvitedFBPlayersString());
+	    params.putString("to", this.game.getUnregisteredFBPlayersString());
 	    facebook.dialog(context, "apprequests", params, new fbAppRequestsListener());
 
     }
@@ -311,17 +378,20 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 		public void onComplete(Bundle values) {
 			// TODO Auto-generated method stub
 			Logger.d(TAG, "fbAppRequestsListener.onComplete");
+			context.startGame();
 		}
 
 		@Override
 		public void onFacebookError(FacebookError e) {
 			// TODO Auto-generated method stub
-			
+			DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());
+			Logger.e(TAG, "fbAppRequestsListener onFacebookError=" + e.getLocalizedMessage());			
 		}
 
 		@Override
 		public void onError(DialogError e) {
-			// TODO Auto-generated method stub
+			Logger.e(TAG, "fbAppRequestsListener onError=" + e.getLocalizedMessage());
+			DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());
 			
 		}
 
@@ -329,6 +399,10 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 		public void onCancel() {
 			// TODO Auto-generated method stub
 			
+			/////call custom dialog here to allow player to make the decision if the player cancels the apprequest
+			
+			context.handleAppRequestCancel();
+			//DialogManager.SetupAlert(context, context.getString(R.string.sorry), )
 		}
 
     }
@@ -398,13 +472,17 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 					//clear all cache and settings and re-route to welcome
 					Player player = PlayerService.getPlayerFromLocal();
 					if (!player.getFB().equals(fbId)){
-					 
+						Logger.e(TAG,"handleFacebookMeResponse.FacebookError=fbUser in context is a mismatch with local user");
+						
+						//clear out everything and send user to login
+						PlayerService.clearLocalStorageAndCache(context);
+						
 						Intent intent = new Intent(context, com.riotapps.word.Welcome.class);
 			    	    context.startActivity(intent);
 					
 					}
 					else{
-						
+						context.startGame();
 					
 					}
 					

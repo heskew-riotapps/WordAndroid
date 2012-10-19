@@ -76,14 +76,14 @@ public class Constants {
 	 *==============================================*/
 	//public static final String MODE_OF_PAGE = "MODE_OF_PAGE";
 	///public static final int PAGE_ADD = 300;
-	//public static final int PAGE_EDIT = 301;	
+	//public static final int PAGE_EDIT = 301;	  
 
 	/**=============================================
 	 * the web
-	 *==============================================*/
-	public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";    
-	//public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";    
-	public static final String FACEBOOK_API_ID = "314938401925933";
+	 *==============================================*/  
+	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";    
+	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";    
+	public static final String FACEBOOK_API_ID = "314938401925933"; 
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
 	public static final String REST_FIND_PLAYER_BY_NICKNAME = REST_URL_SITE + "players/find.json?n_n=%s";

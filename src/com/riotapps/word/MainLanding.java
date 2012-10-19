@@ -10,6 +10,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
+import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.AsyncNetworkRequest;
@@ -36,6 +37,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 public class MainLanding extends FragmentActivity implements View.OnClickListener{
@@ -62,6 +64,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
         
        // Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 	   // t.show();
+        
+    	//Logger.d(TAG, "onCreate started");
         this.imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
         this.imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
         
@@ -114,6 +118,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
      
     private void loadLists(){
  
+    	//Logger.d(TAG, "loadLists started");
     	LinearLayout llYourTurn = (LinearLayout)findViewById(R.id.llYourTurn);
     	LinearLayout llOpponentsTurn = (LinearLayout)findViewById(R.id.llOpponentsTurn);
       	LinearLayout llYourTurnWrapper = (LinearLayout)findViewById(R.id.llYourTurnWrapper);
@@ -150,66 +155,82 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     }
     
     public View getGameYourTurnView(Game game ) {
+    	
+    //	Logger.d(TAG, "getGameYourTurnView started");
   		View view = LayoutInflater.from(this).inflate(R.layout.gameyourturnlistitem, null);
   
-  	   // TextView tvPlayerName = (TextView)view.findViewById(R.id.tvOpponent1);
-	 //	tvPlayerName.setText(game.getId()); //temp
-	 	ImageView ivOpponent1 = (ImageView)view.findViewById(R.id.ivOpponent1);
-	 	ImageView ivOpponent2 = (ImageView)view.findViewById(R.id.ivOpponent2);
-	 	ImageView ivOpponent3 = (ImageView)view.findViewById(R.id.ivOpponent3);
-
-	 	int numPlayers = game.getPlayerGames().size();
+  		//just in case something fluky happened to the game and only one player was saved
+  	 	int numPlayers = game.getPlayerGames().size();
 	 	//Logger.w(TAG, "getGameYourTurnView numPlayers=" + numPlayers);
 	 	if (numPlayers == 1){
 	 		view.setVisibility(View.GONE);
 	 		return view;
 	 	}
+	//	Logger.d(TAG, "getGameYourTurnView 1");
+  		 ImageFetcher imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
+         imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
+ 	//	Logger.d(TAG, "getGameYourTurnView 2");
+  	   // TextView tvPlayerName = (TextView)view.findViewById(R.id.tvOpponent1);
+	 //	tvPlayerName.setText(game.getId()); //temp
+	 	ImageView ivOpponent1 = (ImageView)view.findViewById(R.id.ivOpponent1);
+	 	ImageView ivOpponent2 = (ImageView)view.findViewById(R.id.ivOpponent2);
+	 	ImageView ivOpponent3 = (ImageView)view.findViewById(R.id.ivOpponent3);
+		Logger.d(TAG, "getGameYourTurnView 3");
+	 	ImageView ivOpponentBadge_1 = (ImageView)view.findViewById(R.id.ivOpponentBadge_1);
+	 	TextView tvOpponent_1 = (TextView)view.findViewById(R.id.tvOpponent_1);
+		Logger.d(TAG, "getGameYourTurnView 4");
+	 	//first opponent
+	 	List<PlayerGame> opponentGames = game.getOpponentPlayerGames(this.player);
 	 	
-	 	//fill opponent images.  the context player should be ignored from this list, since only opponents are shown
-	 	//is the context player the first in the list?, if so skip him
-	 	int i = (game.getPlayerGames().get(0).getPlayer().getId().equals(this.player.getId()) ? 1 : 0);
-		imageLoader.loadImage(game.getPlayerGames().get(i).getPlayer().getImageUrl(), ivOpponent1);  
-		
-		//advance to next player
-		i += 1; 
-			
-		if (numPlayers >=3){
-			//is the context player the next in the list?, if so skip her
-		 	i = (game.getPlayerGames().get(i).getPlayer().getId().equals(this.player.getId()) ? i + 1 : i);
-		 	
-		 	//Logger.w(TAG, "getGameYourTurnView player3 imageUrl=" + numPlayers);
-			imageLoader.loadImage(game.getPlayerGames().get(i).getPlayer().getImageUrl(), ivOpponent2);  
-			i += 1;			
-		}
-		else{
-			ivOpponent2.setVisibility(View.GONE);
-		}
+	 	//Logger.d(TAG, "getGameYourTurnView opponebtGames count" + opponentGames.size());
+	 	//Logger.d(TAG, "getGameYourTurnView this.player" + this.player.getAbbreviatedName());
 
-		
-		if (numPlayers == 4){
-			//is the context player the next in the list?, if so skip her		
-		 	i = (game.getPlayerGames().get(i).getPlayer().getId().equals(this.player.getId()) ? i + 1 : i);
-			imageLoader.loadImage(game.getPlayerGames().get(i).getPlayer().getImageUrl(), ivOpponent3);  	
-		}
-		else{
-			ivOpponent3.setVisibility(View.GONE);
-		}
+	 	tvOpponent_1.setText(opponentGames.get(0).getPlayer().getAbbreviatedName());
+	 	//Logger.d(TAG, "getGameYourTurnView 4.1");
+		int opponentBadgeId_1 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(0).getPlayer().getBadgeDrawable(), null, null);
+	 	//Logger.d(TAG, "getGameYourTurnView 4.2");
+	
+		ivOpponentBadge_1.setImageResource(opponentBadgeId_1);
+	 	//Logger.d(TAG, "getGameYourTurnView 4.3");
+
+		imageLoader.loadImage(opponentGames.get(0).getPlayer().getImageUrl(), ivOpponent1);  
+		//Logger.d(TAG, "getGameYourTurnView 5");
+		//optional 2nd opponent
+	 	if (opponentGames.size() >= 2){
+		 	ImageView ivOpponentBadge_2 = (ImageView)view.findViewById(R.id.ivOpponentBadge_2);
+		 	TextView tvOpponent_2 = (TextView)view.findViewById(R.id.tvOpponent_2);
+		 	
+		 	tvOpponent_2.setText(opponentGames.get(1).getPlayer().getAbbreviatedName());
+			int opponentBadgeId_2 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(1).getPlayer().getBadgeDrawable(), null, null);
+			ivOpponentBadge_2.setImageResource(opponentBadgeId_2);
+			imageLoader.loadImage( opponentGames.get(1).getPlayer().getImageUrl(), ivOpponent2);
+	 	}
+	 	else {
+	 		TableRow trOpponent2 = (TableRow)view.findViewById(R.id.trOpponent2);
+	 		trOpponent2.setVisibility(View.GONE);
+	 		ivOpponent2.setVisibility(View.GONE);
+	 	}
+		//Logger.d(TAG, "getGameYourTurnView 6");
+	 	//optional 3rd opponent
+	 	if (opponentGames.size() >= 3){
+		 	ImageView ivOpponentBadge_3 = (ImageView)view.findViewById(R.id.ivOpponentBadge_3);
+		 	TextView tvOpponent_3 = (TextView)view.findViewById(R.id.tvOpponent_3);
+		 	
+		 	tvOpponent_3.setText(opponentGames.get(2).getPlayer().getAbbreviatedName());
+			int opponentBadgeId_3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(2).getPlayer().getBadgeDrawable(), null, null);
+			ivOpponentBadge_3.setImageResource(opponentBadgeId_3);
+			imageLoader.loadImage( opponentGames.get(2).getPlayer().getImageUrl(), ivOpponent3);
+	 	}
+	 	else {
+	 		TableRow trOpponent3 = (TableRow)view.findViewById(R.id.trOpponent3);
+	 		trOpponent3.setVisibility(View.GONE);
+	 		ivOpponent3.setVisibility(View.GONE);
+	 	}
+		///Logger.d(TAG, "getGameYourTurnView 7");
+	 	
+	 	
 	 	view.setTag(game.getId());
 	 	view.setOnClickListener(this);
-
-//		TextView tvPlayerWins = (TextView)view.findViewById(R.id.tvPlayerWins);
-//		tvPlayerWins.setText(String.format(this.context.getString(R.string.line_item_num_wins),opponent.getNumWins()));
-//	 	
-//	 	ImageFetcher imageLoader = new ImageFetcher(this.context, 34, 34, 0);
-//		imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
-//		ImageView ivPlayer = (ImageView) view.findViewById(R.id.ivPlayer);
-		
-//		imageLoader.loadImage(opponent.getImageUrl(), ivPlayer); //default image
-		
-//		int badgeId = getResources().getIdentifier(Constants.DRAWABLE_LOCATION + opponent.getBadgeDrawable(), null, null);
-//		ImageView ivBadge = (ImageView)view.findViewById(R.id.ivBadge);	 
-//		ivBadge.setImageResource(badgeId);
-	 
   	    return view;
   	}
     
@@ -239,8 +260,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	
     }  
     
-   private void handleGameClick(String gameId){
-	   
+   private void handleGameClick(String gameId){	   
 	   try { 
 		   //this logic needs to be refactored more than likely
 		   Logger.w(TAG, "handleGameClick called");
@@ -269,7 +289,6 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		}
  
    }
-      
     
     private class NetworkTask extends AsyncNetworkRequest{
 
@@ -332,7 +351,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		            		 player = PlayerService.handleAuthByTokenResponse(this.context, iStream);
 		            		 
 		            		 if (player.getTotalNumLocalGames() == 0){
-		            			 Intent intent = new Intent( this, com.riotapps.word.StartGame.class);
+		            			 Intent intent = new Intent( context, com.riotapps.word.StartGame.class);
 		            			 //intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 		            			 this.startActivity(intent);
 		            		 }
@@ -342,8 +361,11 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	            		 
 	            	 }
 	            	 catch(Exception e){
-	            		 Logger.w(TAG, e.getLocalizedMessage());
-	            		 DialogManager.SetupAlert(this, this.getString(R.string.sorry), e.getLocalizedMessage(), true, 0); 
+	            		// e.getStackTrace().toString()
+	            		 Logger.w(TAG, "status code=200 " + e.toString());
+	            		 String err = (e.getMessage()==null)?"status code=200, unknown error":e.getMessage();
+	            		 Logger.w(TAG, err);
+	            		 DialogManager.SetupAlert(context, this.getString(R.string.sorry), err, true, 0); 
 	            	 }
 	               break;
 	             case 401:    
@@ -351,23 +373,23 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	            	 //clear local storage and send to login
 	            	 PlayerService.clearLocalStorageAndCache(this);
 
-	            	 Intent intent = new Intent( this, com.riotapps.word.Welcome.class);
+	            	 Intent intent = new Intent( context, com.riotapps.word.Welcome.class);
 		     	     this.startActivity(intent);
 		     	     break;  
 
 	             case 404:
-	            	 DialogManager.SetupAlert(this, this.getString(R.string.sorry), this.getString(R.string.server_404_error), true, 0);
+	            	 DialogManager.SetupAlert(context, this.getString(R.string.sorry), this.getString(R.string.server_404_error), true, 0);
 	            	 break;
 	             case 422: 
 	             case 500:
 
-	            	 DialogManager.SetupAlert(this, this.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), true, 0);  
+	            	 DialogManager.SetupAlert(context, this.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), true, 0);  
 	            	 break;
 	         }  
 	     }else if (exception instanceof ConnectTimeoutException) {
-	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_connection_timeout), true, 0);
+	    	 DialogManager.SetupAlert(context, this.getString(R.string.oops), this.getString(R.string.msg_connection_timeout), true, 0);
 	     }else if(exception != null){  
-	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_not_connected), true, 0);  
+	    	 DialogManager.SetupAlert(context, this.getString(R.string.oops), this.getString(R.string.msg_not_connected), true, 0);  
 
 	     }  
 	     else{  

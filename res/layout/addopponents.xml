@@ -17,7 +17,8 @@
 	   		    >
 			    <RelativeLayout
 					style="@style/FormBackgroundStyle"
-					android:layout_marginTop="5dp"
+					android:layout_marginTop="0dp"
+					android:layout_marginBottom="10dp"
 					android:id="@+id/rlAddOpponents"
 				>
 					<RelativeLayout
@@ -76,7 +77,7 @@
  
 					<LinearLayout
 						style="@style/FormBackgroundStyle"
-						android:layout_marginTop="10dp"
+						
 
 					>
 				    	 <com.riotapps.word.ui.MainFontTextView

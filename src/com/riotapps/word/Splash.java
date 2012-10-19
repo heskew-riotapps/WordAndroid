@@ -191,7 +191,7 @@ public class Splash  extends FragmentActivity {
 
 	         int statusCode = response.getStatusLine().getStatusCode();  
 	         
-	         Logger.i(Splash.TAG, "StatusCode: " + statusCode);
+	         Logger.i(TAG, "StatusCode: " + statusCode);
 
 	         switch(statusCode){  
 	             case 200:  
@@ -219,7 +219,7 @@ public class Splash  extends FragmentActivity {
 	            	 }
 	            	 catch(Exception e){
 	            		 Logger.w(TAG, e.getLocalizedMessage());
-	            		 DialogManager.SetupAlert(this, this.getString(R.string.sorry), e.getLocalizedMessage(), true, 0); 
+	            		 DialogManager.SetupAlert(this, this.getString(R.string.sorry), e.getMessage(), true, 0); 
 	            	 }
 	               break;
 	             case 401:    
@@ -234,7 +234,7 @@ public class Splash  extends FragmentActivity {
 	            		 try {
 	            			 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime));
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
+							Logger.w(TAG, "Thread.sleep " + e.getMessage());
 							e.printStackTrace();
 						}
 	            	 }

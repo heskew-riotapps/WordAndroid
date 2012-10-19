@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fullLogoArea"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
+		android:orientation="vertical"
       >  
+      <LinearLayout  
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+      > 
       <RelativeLayout 
         android:id="@+id/logoArea" 
     	style="@style/TopLogoAreaStyle"
+    
     	>
     <ImageView 
         android:id="@+id/ivHeaderContextPlayer"
@@ -59,10 +64,17 @@
        android:id="@+id/logo"
 	    style="@style/TopLogoStyle"  
 	  />
+	
      </RelativeLayout>
-     <View
+     </LinearLayout>
+     <LinearLayout  
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        	android:layout_marginBottom="12dp"
+      > 
+      <View
          android:id="@+id/logoAreaBottom"
-         style="@style/TopLogoAreaBottomStyle" 
-
-         ></View>
-</RelativeLayout>
+         style="@style/TopLogoAreaBottomStyle"
+      /> 
+      </LinearLayout>
+</LinearLayout>

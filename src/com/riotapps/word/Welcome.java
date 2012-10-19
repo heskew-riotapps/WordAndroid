@@ -80,9 +80,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         };
         
     }
-    
-    
-   
+
     
     @Override 
     public void onClick(View v) {
@@ -119,7 +117,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	 //}
     
     private void handleFacebookMeRequest(){
-    	//Logger.w(TAG, "handleFacebookMeRequest");
+    	//Logger.e(TAG, "handleFacebookMeRequest");
    	 	SharedPreferences.Editor editor = settings.edit();
         editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
         editor.putLong(Constants.FB_TOKEN_EXPIRES, facebook.getAccessExpires());
@@ -140,7 +138,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		 
 		 
 		    public void run() {
-		    	Logger.w(TAG, "handleFacebookMeResponse");
+		    	//Logger.w(TAG, "handleFacebookMeResponse");
 		    	String fbId; 
 				String fbFirstName; 
 				String fbLastName; 
@@ -152,7 +150,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 					fbLastName = json_fb.getString("last_name");
 					fbEmail = json_fb.getString("email");
 					
-					//Logger.w(TAG, "handleFacebookMeResponse...response=" + this.response);
+					//Logger.e(TAG, "handleFacebookMeResponse...response=" + this.response);
 					//Logger.w(TAG, "handleFacebookMeResponse...email=" + fbEmail);
 					try { 
 						String json = PlayerService.setupConnectViaFB(context, fbId, fbEmail, fbFirstName, fbLastName);
@@ -160,14 +158,14 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 						//kick off thread
 						new NetworkTask(context, RequestType.POST, getString(R.string.progress_connecting), json).execute(Constants.REST_CREATE_PLAYER_URL);
 					} catch (DesignByContractException e) {
-						Logger.w(TAG,"handleFacebookMeResponse email=" + fbEmail+ " " + e.getLocalizedMessage());
-						DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+						Logger.e(TAG,"handleFacebookMeResponse email=" + fbEmail+ " " + e.getLocalizedMessage());
+						DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
 					}
 				} catch (FacebookError e) {
-					Logger.w(TAG,"handleFacebookMeResponse.FacebookError=" + e.getLocalizedMessage());
+					Logger.e(TAG,"handleFacebookMeResponse.FacebookError=" + e.getLocalizedMessage());
 					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
 				} catch (JSONException e) {
-					Logger.w(TAG,"handleFacebookMeResponse.JSONException=" + e.getLocalizedMessage());
+					Logger.e(TAG,"handleFacebookMeResponse.JSONException=" + e.getLocalizedMessage());
 					
 					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
 				}
@@ -183,7 +181,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		 
 		 
 		    public void run() {
-		    	Logger.w(TAG, "handleFacebookMeResponse response=" + response);
+		    	//Logger.w(TAG, "handleFacebookMeResponse response=" + response);
 		    	//Logger.w(TAG,"fbFriendsRequestListener.onComplete.JSONException=" + response);
 				JSONObject json;
 				try {
@@ -191,7 +189,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 						PlayerService.saveFacebookFriendsFromJSONResponse(context, response);
 					}
 					else {
-						Logger.w(TAG,"fbFriendsRequestListener. response from facebook empty");
+						Logger.e(TAG,"fbFriendsRequestListener. response from facebook empty");
 					}
 					
 					Intent intent;
@@ -209,10 +207,10 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		     	    context.startActivity(intent);
 					
 				} catch (FacebookError e) {
-					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
+					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
 				}
 			 
 		    }
@@ -223,7 +221,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     	settings = this.getSharedPreferences(Constants.USER_PREFS, MODE_PRIVATE); //getPreferences(MODE_PRIVATE);
         String access_token = settings.getString(Constants.FB_TOKEN, null);
         
-        Logger.d(TAG, "routeToFacebook token=" + access_token);
+        //Logger.d(TAG, "routeToFacebook token=" + access_token);
         long expires = settings.getLong(Constants.FB_TOKEN_EXPIRES, 0);
         if(access_token != null) {
             facebook.setAccessToken(access_token);
@@ -240,7 +238,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	    	  new DialogListener() {
 	             @Override
 	             public void onComplete(Bundle values) {
-	            	 Logger.d(TAG, "facebook.authorize..onComplete:");
+	            	// Logger.e(TAG, "facebook.authorize..onComplete:");
 	            	// getFriends();
 	            	 handleFacebookMeRequest();
       
@@ -249,14 +247,14 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	             @Override
 	             public void onFacebookError(FacebookError error) {
 	            	 
-	            	 Logger.d(TAG,"onFacebookError=" + error.getLocalizedMessage());
+	            	 Logger.e(TAG,"facebook.authorize..onFacebookError=" + error.getLocalizedMessage());
 	            	 //DialogManager.SetupAlert(context, "fbDialogListener", dialogMessage)
 	            	 
 	             }
 
 	             @Override
 	             public void onError(DialogError e) {
-	            	 Logger.d(TAG,"DialogError=" + e.getLocalizedMessage());
+	            	 Logger.e(TAG,"facebook.authorize..DialogError=" + e.getLocalizedMessage());
 	             }
 	             @Override
 	             public void onCancel() {}
@@ -266,10 +264,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         	 mAsyncRunner.request("me", new fbMeRequestListener());
         	//handleFacebookMeRequest();
         }
- 
     }
-    
-
     
     private class fbMeRequestListener implements RequestListener {
 
@@ -278,7 +273,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
             
     		// get the logged-in user's friends
     		//save user to server...
-    		Logger.d(TAG, "fbMeRequestListener.onComplete response=" + response);
+    		//Logger.e(TAG, "fbMeRequestListener.onComplete response=" + response);
     		
     		context.runOnUiThread(new handleFacebookMeResponseRunnable(response));
 		
@@ -287,25 +282,25 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     	@Override
     	public void onIOException(IOException e, Object state) {
     		// TODO Auto-generated method stub
-
+    		 Logger.e(TAG,"fbMeRequestListener onIOException=" + e.getMessage());
     	}
 
     	@Override
     	public void onFileNotFoundException(FileNotFoundException e, Object state) {
     		// TODO Auto-generated method stub
-
+    		 Logger.e(TAG,"fbMeRequestListener onFileNotFoundException=" + e.getMessage());
     	}
 
     	@Override
     	public void onMalformedURLException(MalformedURLException e, Object state) {
     		// TODO Auto-generated method stub
-
+    		 Logger.e(TAG,"fbMeRequestListener onMalformedURLException=" + e.getMessage());
     	}
 
     	@Override
     	public void onFacebookError(FacebookError e, Object state) {
     		// TODO Auto-generated method stub
-
+    		Logger.e(TAG,"fbMeRequestListener onFacebookError=" + e.getMessage());
     	}
 
     }
@@ -329,7 +324,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     		}
     */		
     //		Logger.d(TAG, "fbFriendsRequestListener.onComplete response=" + response);
-    		
+    		//Logger.e(TAG,"fbFriendsRequestListener onComplete=");
     		context.runOnUiThread(new handleFacebookFriendsResponseRunnable(response));
     
     	}
@@ -337,25 +332,25 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     	@Override
     	public void onIOException(IOException e, Object state) {
     		// TODO Auto-generated method stub
-
+    		Logger.e(TAG,"fbFriendsRequestListener IOException=" + e.getMessage());
     	}
 
     	@Override
     	public void onFileNotFoundException(FileNotFoundException e, Object state) {
     		// TODO Auto-generated method stub
-
+    		Logger.e(TAG,"fbFriendsRequestListener onFileNotFoundException=" + e.getMessage());
     	}
 
     	@Override
     	public void onMalformedURLException(MalformedURLException e, Object state) {
     		// TODO Auto-generated method stub
-
+    		Logger.e(TAG,"fbFriendsRequestListener onMalformedURLException=" + e.getMessage());
     	}
 
     	@Override
     	public void onFacebookError(FacebookError e, Object state) {
     		// TODO Auto-generated method stub
-
+    		Logger.e(TAG,"fbFriendsRequestListener onFacebookError=" + e.getMessage());
     	}
 
     }
@@ -374,7 +369,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		protected void onPostExecute(ServerResponse serverResponseObject) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(serverResponseObject);
-			
+			//Logger.e(TAG,"NetworkTask onPostExecute ");
 			this.handleResponse(serverResponseObject);
 
 		}
@@ -390,14 +385,14 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		         try {  
 		             iStream = response.getEntity().getContent();  
 		         } catch (IllegalStateException e) {  
-		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
+		             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
 		         } catch (IOException e) {  
-		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
+		             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
 		         }  
 
 		         int statusCode = response.getStatusLine().getStatusCode();  
 		         
-		         Log.i(Welcome.TAG, "StatusCode: " + statusCode);
+		        // Logger.e(Welcome.TAG, "StatusCode: " + statusCode);
 
 		         switch(statusCode){  
 		             case 200:  
@@ -446,7 +441,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 			            	 }
 		            	 
 		            	 } catch (Exception e){
-		            		 errorMessage =  e.getLocalizedMessage();
+		            		 errorMessage =  (e.getMessage() == null ? "unknown error" : e.getMessage());
 		            	 }
 		            	 
 		            	 DialogManager.SetupAlert(context, context.getString(R.string.sorry), errorMessage);
@@ -468,7 +463,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 
 		     }  
 		     else{  
-		         Log.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
+		         Logger.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
 
 		     }//end of else  
 		}
