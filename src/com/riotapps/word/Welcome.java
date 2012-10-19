@@ -255,6 +255,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	             @Override
 	             public void onError(DialogError e) {
 	            	 Logger.e(TAG,"facebook.authorize..DialogError=" + e.getLocalizedMessage());
+	            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), e.getLocalizedMessage());
 	             }
 	             @Override
 	             public void onCancel() {}

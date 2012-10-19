@@ -128,7 +128,7 @@ public class GameService {
 //		String json = gson.toJson(player);
 //		
 //	//	  String shownOnProgressDialog = "progress test";//ctx.getString(R.string.progressDialogMessageSplashScreenRetrievingUserListing);
-//		  
+//		   
 //		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 //		SharedPreferences.Editor editor = settings.edit();
 //		editor.putString(Constants.USER_PREFS_PWD, player.getPassword());
@@ -140,7 +140,7 @@ public class GameService {
 		
 //		//return player;
 //	}
-	
+	 
 	public static void putGameToLocal(Context ctx,Game game){
 		Gson gson = new Gson(); 
 	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
