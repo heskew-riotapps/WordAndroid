@@ -55,7 +55,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	Player player;
     final Welcome context = this;	
     
-    protected Handler handler;
+    NetworkTask runningTask = null;
   
 	TextView txtFB;
 	TextView txtNative;
@@ -71,13 +71,13 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         txtFB.setOnClickListener(this);
         txtNative = (TextView) findViewById(R.id.byEmail);
         txtNative.setOnClickListener(this);    
-        handler = new Handler() {
-            public void handleMessage(Message msg) {
-                // process incoming messages here
-            	
-            	//handleMessageFromHandler(msg);
-            }
-        };
+      //  handler = new Handler() {
+       //     public void handleMessage(Message msg) {
+       //         // process incoming messages here
+       //     	
+       //     	//handleMessageFromHandler(msg);
+        //    }
+       // };
         
     }
 
@@ -110,13 +110,24 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         facebook.extendAccessTokenIfNeeded(this, null);
     }
     
+    
 	 //private void handleMessageFromHandler(Message msg){
 	    
 		 
 		 
 	 //}
     
-    private void handleFacebookMeRequest(){
+    @Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+    	if (this.runningTask != null){
+    		this.runningTask.cancel(true);
+    	}
+		super.onPause();
+	}
+
+
+	private void handleFacebookMeRequest(){
     	//Logger.e(TAG, "handleFacebookMeRequest");
    	 	SharedPreferences.Editor editor = settings.edit();
         editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
@@ -138,7 +149,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		 
 		 
 		    public void run() {
-		    	//Logger.w(TAG, "handleFacebookMeResponse");
+		    	 Logger.w(TAG, "handleFacebookMeResponseRunnable");
 		    	String fbId; 
 				String fbFirstName; 
 				String fbLastName; 
@@ -156,7 +167,8 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 						String json = PlayerService.setupConnectViaFB(context, fbId, fbEmail, fbFirstName, fbLastName);
 						
 						//kick off thread
-						new NetworkTask(context, RequestType.POST, getString(R.string.progress_connecting), json).execute(Constants.REST_CREATE_PLAYER_URL);
+						runningTask = new NetworkTask(context, RequestType.POST, getString(R.string.progress_connecting), json);
+						runningTask.execute(Constants.REST_CREATE_PLAYER_URL);
 					} catch (DesignByContractException e) {
 						Logger.e(TAG,"handleFacebookMeResponse email=" + fbEmail+ " " + e.getLocalizedMessage());
 						DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
@@ -234,12 +246,14 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
          * Only call authorize if the access_token has expired.
          */
         if(!facebook.isSessionValid()) {
+        	Logger.w(TAG, "facebook.authorize about to be called");
     	 facebook.authorize(this, new String[] { Constants.FACEBOOK_PERMISSIONS },
 	    	  new DialogListener() {
 	             @Override
 	             public void onComplete(Bundle values) {
 	            	// Logger.e(TAG, "facebook.authorize..onComplete:");
 	            	// getFriends();
+	            	 Logger.w(TAG, "handleFacebookMeRequest about to be called");
 	            	 handleFacebookMeRequest();
       
 	             }
@@ -258,7 +272,10 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), e.getLocalizedMessage());
 	             }
 	             @Override
-	             public void onCancel() {}
+	             public void onCancel() {
+	            	 Logger.e(TAG,"facebook.authorize..onCancel called");
+	            	 
+	             }
 	         });
         }
         else{
@@ -275,7 +292,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     		// get the logged-in user's friends
     		//save user to server...
     		//Logger.e(TAG, "fbMeRequestListener.onComplete response=" + response);
-    		
+    		Logger.e(TAG, "handleFacebookMeResponseRunnable about to be called");
     		context.runOnUiThread(new handleFacebookMeResponseRunnable(response));
 		
      	}
@@ -324,7 +341,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     			      }
     		}
     */		
-    //		Logger.d(TAG, "fbFriendsRequestListener.onComplete response=" + response);
+     		Logger.e(TAG, "fbFriendsRequestListener.onComplete response=" + response);
     		//Logger.e(TAG,"fbFriendsRequestListener onComplete=");
     		context.runOnUiThread(new handleFacebookFriendsResponseRunnable(response));
     
@@ -401,6 +418,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		            	 	//update local player context
 		            		player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
 		            		 
+		            		Logger.e(TAG, "mAsyncRunner.request(me/friends) about to be called");
 		            		//go get user's friends
    	            		    mAsyncRunner.request("me/friends", new fbFriendsRequestListener());
 					     

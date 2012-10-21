@@ -51,6 +51,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	Context context = this;
 	Player player;
 	ImageFetcher imageLoader;
+	NetworkTask runningTask = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,35 +164,30 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
   	 	int numPlayers = game.getPlayerGames().size();
 	 	//Logger.w(TAG, "getGameYourTurnView numPlayers=" + numPlayers);
 	 	if (numPlayers == 1){
-	 		view.setVisibility(View.GONE);
+	 		view.setVisibility(View.GONE);  
 	 		return view;
 	 	}
 	//	Logger.d(TAG, "getGameYourTurnView 1");
-  		 ImageFetcher imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
+  		 ImageFetcher imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.LARGE_AVATAR_SIZE, 0);
          imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
  	//	Logger.d(TAG, "getGameYourTurnView 2");
   	   // TextView tvPlayerName = (TextView)view.findViewById(R.id.tvOpponent1);
 	 //	tvPlayerName.setText(game.getId()); //temp
+        ImageView ivOpponentBadge_1 = (ImageView)view.findViewById(R.id.ivOpponentBadge_11);
 	 	ImageView ivOpponent1 = (ImageView)view.findViewById(R.id.ivOpponent1);
 	 	ImageView ivOpponent2 = (ImageView)view.findViewById(R.id.ivOpponent2);
 	 	ImageView ivOpponent3 = (ImageView)view.findViewById(R.id.ivOpponent3);
-		Logger.d(TAG, "getGameYourTurnView 3");
-	 	ImageView ivOpponentBadge_1 = (ImageView)view.findViewById(R.id.ivOpponentBadge_1);
+	 	
 	 	TextView tvOpponent_1 = (TextView)view.findViewById(R.id.tvOpponent_1);
-		Logger.d(TAG, "getGameYourTurnView 4");
+	 
 	 	//first opponent
 	 	List<PlayerGame> opponentGames = game.getOpponentPlayerGames(this.player);
-	 	
-	 	//Logger.d(TAG, "getGameYourTurnView opponebtGames count" + opponentGames.size());
-	 	//Logger.d(TAG, "getGameYourTurnView this.player" + this.player.getAbbreviatedName());
 
 	 	tvOpponent_1.setText(opponentGames.get(0).getPlayer().getAbbreviatedName());
 	 	//Logger.d(TAG, "getGameYourTurnView 4.1");
 		int opponentBadgeId_1 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(0).getPlayer().getBadgeDrawable(), null, null);
-	 	//Logger.d(TAG, "getGameYourTurnView 4.2");
 	
 		ivOpponentBadge_1.setImageResource(opponentBadgeId_1);
-	 	//Logger.d(TAG, "getGameYourTurnView 4.3");
 
 		imageLoader.loadImage(opponentGames.get(0).getPlayer().getImageUrl(), ivOpponent1);  
 		//Logger.d(TAG, "getGameYourTurnView 5");
@@ -206,8 +202,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			imageLoader.loadImage( opponentGames.get(1).getPlayer().getImageUrl(), ivOpponent2);
 	 	}
 	 	else {
-	 		TableRow trOpponent2 = (TableRow)view.findViewById(R.id.trOpponent2);
-	 		trOpponent2.setVisibility(View.GONE);
+	 		//TableRow trOpponent2 = (TableRow)view.findViewById(R.id.trOpponent2);
+	 	//	trOpponent2.setVisibility(View.GONE);
 	 		ivOpponent2.setVisibility(View.GONE);
 	 	}
 		//Logger.d(TAG, "getGameYourTurnView 6");
@@ -222,8 +218,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			imageLoader.loadImage( opponentGames.get(2).getPlayer().getImageUrl(), ivOpponent3);
 	 	}
 	 	else {
-	 		TableRow trOpponent3 = (TableRow)view.findViewById(R.id.trOpponent3);
-	 		trOpponent3.setVisibility(View.GONE);
+	 	//	TableRow trOpponent3 = (TableRow)view.findViewById(R.id.trOpponent3);
+	 	//	trOpponent3.setVisibility(View.GONE);
 	 		ivOpponent3.setVisibility(View.GONE);
 	 	}
 		///Logger.d(TAG, "getGameYourTurnView 7");
@@ -260,7 +256,16 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	
     }  
     
-   private void handleGameClick(String gameId){	   
+   @Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+	  	if (this.runningTask != null){
+	  		this.runningTask.cancel(true);
+	  	}
+		super.onPause();
+	}
+
+private void handleGameClick(String gameId){	   
 	   try { 
 		   //this logic needs to be refactored more than likely
 		   Logger.w(TAG, "handleGameClick called");
@@ -283,7 +288,10 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		   }
 			String json = GameService.setupGetGame(this, gameId);
 			//this will bring back the players games too
-			new NetworkTask(this, RequestType.POST, getString(R.string.progress_loading), json, true).execute(Constants.REST_GET_GAME_URL);
+			this.runningTask = new NetworkTask(this, RequestType.POST, getString(R.string.progress_loading), json, true);
+			this.runningTask.execute(Constants.REST_GET_GAME_URL);
+			
+		 
 		} catch (DesignByContractException e) {
 			 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
 		}

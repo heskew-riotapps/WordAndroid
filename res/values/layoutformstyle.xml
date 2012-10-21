@@ -2,8 +2,8 @@
 <resources>
     <style name="LayoutFormStyle" >
         <item name="android:orientation">vertical</item>
-    	<item name="android:paddingLeft">15dp</item>
-    	<item name="android:paddingRight">15dp</item>
+    	<item name="android:paddingLeft">8dp</item>
+    	<item name="android:paddingRight">8dp</item>
     	
    
    </style>

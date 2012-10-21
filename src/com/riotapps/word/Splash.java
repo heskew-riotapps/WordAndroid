@@ -44,6 +44,7 @@ public class Splash  extends FragmentActivity {
     Splash me = this;
     Handler handler;
     long startTime = System.nanoTime();
+    NetworkTask runningTask = null;
     
     public void test(){}
     
@@ -68,7 +69,8 @@ public class Splash  extends FragmentActivity {
 				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
 			}
  
-			new NetworkTask(this, RequestType.POST, json).execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
+			this.runningTask = new NetworkTask(this, RequestType.POST, json);
+			this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
 	    }
 	    else{
 	    	 Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token");
@@ -82,8 +84,13 @@ public class Splash  extends FragmentActivity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
+		if (this.runningTask != null){
+	  		this.runningTask.cancel(true);
+	  	}
 		finish();
 	}
+	
+	  
 	private class CheckConnectivityTask extends AsyncTask<String, Void, Boolean> {
 
 		 @Override
