@@ -4,7 +4,7 @@
     name="ContentAreaTextStyle" >
 	<item name="android:layout_width">fill_parent</item>
 	<item name="android:layout_height">wrap_content</item>
-	<item name="android:background">@drawable/content_area_background_color</item>
+	<item name="android:background">@drawable/text_selector</item>
 	<item name="android:textSize">12dp</item>
 	<item name="android:textColor">@drawable/content_area_font_color</item>
 	<item name="android:textStyle">bold</item>

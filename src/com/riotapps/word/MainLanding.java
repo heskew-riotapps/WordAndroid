@@ -29,14 +29,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -168,40 +171,47 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 		return view;
 	 	}
 	//	Logger.d(TAG, "getGameYourTurnView 1");
-  		 ImageFetcher imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.LARGE_AVATAR_SIZE, 0);
+  		 ImageFetcher imageLoader = new ImageFetcher(this, Constants.LARGE_AVATAR_SIZE, Constants.LARGE_AVATAR_SIZE, 0);
          imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
  	//	Logger.d(TAG, "getGameYourTurnView 2");
   	   // TextView tvPlayerName = (TextView)view.findViewById(R.id.tvOpponent1);
 	 //	tvPlayerName.setText(game.getId()); //temp
-        ImageView ivOpponentBadge_1 = (ImageView)view.findViewById(R.id.ivOpponentBadge_11);
-	 	ImageView ivOpponent1 = (ImageView)view.findViewById(R.id.ivOpponent1);
+        ImageView ivOpponentBadge_1 = (ImageView)view.findViewById(R.id.ivOpponentBadge_1);
+	 	ImageView ivOpponentBadge_2 = (ImageView)view.findViewById(R.id.ivOpponentBadge_2);
+	 	ImageView ivOpponentBadge_3 = (ImageView)view.findViewById(R.id.ivOpponentBadge_3);
+
+        ImageView ivOpponent1 = (ImageView)view.findViewById(R.id.ivOpponent1);
 	 	ImageView ivOpponent2 = (ImageView)view.findViewById(R.id.ivOpponent2);
 	 	ImageView ivOpponent3 = (ImageView)view.findViewById(R.id.ivOpponent3);
 	 	
 	 	TextView tvOpponent_1 = (TextView)view.findViewById(R.id.tvOpponent_1);
+	 	TextView tvOpponent_2 = (TextView)view.findViewById(R.id.tvOpponent_2);
+	 	TextView tvOpponent_3 = (TextView)view.findViewById(R.id.tvOpponent_3);
 	 
 	 	//first opponent
 	 	List<PlayerGame> opponentGames = game.getOpponentPlayerGames(this.player);
 
 	 	tvOpponent_1.setText(opponentGames.get(0).getPlayer().getAbbreviatedName());
 	 	//Logger.d(TAG, "getGameYourTurnView 4.1");
+	 	//RelativeLayout rlPlayer_1 = (RelativeLayout)view.findViewById(R.id.rlPlayer_1);
 		int opponentBadgeId_1 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(0).getPlayer().getBadgeDrawable(), null, null);
-	
 		ivOpponentBadge_1.setImageResource(opponentBadgeId_1);
 
 		imageLoader.loadImage(opponentGames.get(0).getPlayer().getImageUrl(), ivOpponent1);  
 		//Logger.d(TAG, "getGameYourTurnView 5");
 		//optional 2nd opponent
-	 	if (opponentGames.size() >= 2){
-		 	ImageView ivOpponentBadge_2 = (ImageView)view.findViewById(R.id.ivOpponentBadge_2);
-		 	TextView tvOpponent_2 = (TextView)view.findViewById(R.id.tvOpponent_2);
-		 	
+
+		
+		if (opponentGames.size() >= 2){
+
 		 	tvOpponent_2.setText(opponentGames.get(1).getPlayer().getAbbreviatedName());
 			int opponentBadgeId_2 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(1).getPlayer().getBadgeDrawable(), null, null);
 			ivOpponentBadge_2.setImageResource(opponentBadgeId_2);
 			imageLoader.loadImage( opponentGames.get(1).getPlayer().getImageUrl(), ivOpponent2);
 	 	}
 	 	else {
+	 		RelativeLayout rlPlayer_2 = (RelativeLayout)view.findViewById(R.id.rlPlayer_2);
+	 		rlPlayer_2.setVisibility(View.GONE);
 	 		//TableRow trOpponent2 = (TableRow)view.findViewById(R.id.trOpponent2);
 	 	//	trOpponent2.setVisibility(View.GONE);
 	 		ivOpponent2.setVisibility(View.GONE);
@@ -209,8 +219,6 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//Logger.d(TAG, "getGameYourTurnView 6");
 	 	//optional 3rd opponent
 	 	if (opponentGames.size() >= 3){
-		 	ImageView ivOpponentBadge_3 = (ImageView)view.findViewById(R.id.ivOpponentBadge_3);
-		 	TextView tvOpponent_3 = (TextView)view.findViewById(R.id.tvOpponent_3);
 		 	
 		 	tvOpponent_3.setText(opponentGames.get(2).getPlayer().getAbbreviatedName());
 			int opponentBadgeId_3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(2).getPlayer().getBadgeDrawable(), null, null);
@@ -220,10 +228,27 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	else {
 	 	//	TableRow trOpponent3 = (TableRow)view.findViewById(R.id.trOpponent3);
 	 	//	trOpponent3.setVisibility(View.GONE);
+	 		RelativeLayout rlPlayer_3 = (RelativeLayout)view.findViewById(R.id.rlPlayer_3);
+	 		rlPlayer_3.setVisibility(View.GONE);
 	 		ivOpponent3.setVisibility(View.GONE);
 	 	}
 		///Logger.d(TAG, "getGameYourTurnView 7");
 	 	
+	 	int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Constants.BADGE_SIZE, getResources().getDisplayMetrics());
+		if (opponentGames.size() == 1){
+			tvOpponent_1.setTextSize(14);
+			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(size, size);
+		    rlp.setMargins(0, 4, 1, 0); // llp.setMargins(left, top, right, bottom);
+		    ivOpponentBadge_1.setLayoutParams(rlp);
+		}
+		else if (opponentGames.size() == 2){
+			tvOpponent_1.setTextSize(12);
+			tvOpponent_2.setTextSize(12);	
+			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(size, size);
+		    rlp.setMargins(0, 3, 1, 0); // llp.setMargins(left, top, right, bottom);
+		    ivOpponentBadge_2.setLayoutParams(rlp);
+		    ivOpponentBadge_1.setLayoutParams(rlp);
+		}
 	 	
 	 	view.setTag(game.getId());
 	 	view.setOnClickListener(this);

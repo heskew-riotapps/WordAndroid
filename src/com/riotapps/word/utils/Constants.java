@@ -38,7 +38,8 @@ public class Constants {
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
 	public static final int DEFAULT_AVATAR_SIZE = 34;
-	public static final int LARGE_AVATAR_SIZE = 48;
+	public static final int LARGE_AVATAR_SIZE = 46;
+	public static final int BADGE_SIZE = 10;
 
 	/**============================================
 	 * intent extras
@@ -77,7 +78,7 @@ public class Constants {
 	 *==============================================*/
 	//public static final String MODE_OF_PAGE = "MODE_OF_PAGE";
 	///public static final int PAGE_ADD = 300;
-	//public static final int PAGE_EDIT = 301;	  
+	//public static final int PAGE_EDIT = 301; 	  
 
 	/**=============================================
 	 * the web
