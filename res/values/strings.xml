@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Word Smash</string>
+    <string name="app_name">WordSmash</string>
     <string name="join_via_facebook">connect with facebook</string>
 	<string name="join_via_native">connect with your email address</string>
 	<string name="join_title">Join WordSmash to get started</string>

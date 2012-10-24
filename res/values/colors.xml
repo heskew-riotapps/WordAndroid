@@ -2,7 +2,7 @@
 <resources>
 
     <drawable name="pressed_color">#D3D3D3</drawable> <!--custom color for pressed state -->
-    <drawable name="normal_color">#fff5ee</drawable> <!--transperent color for normal state -->
+    <drawable name="normal_color">#fff5ee</drawable>  
     <drawable name="form_background_color">#fff5ee</drawable> 
     <drawable name="tab_pressed_color">#fbc200</drawable> 
     <drawable name="tab_background_color">#3366dd</drawable> 

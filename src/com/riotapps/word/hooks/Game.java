@@ -216,7 +216,13 @@ public class Game implements Parcelable, Comparable<Game> {
 		boolean contextPlayerPerformedLastTurn = false;
 		PlayerGame.LastAction lastTurn = PlayerGame.LastAction.NO_TRANSLATION;
 		for(PlayerGame pg : this.playerGames){
+			
+			Logger.d(TAG, "getLastActionText pg.getLastTurn()=" + pg.getLastTurn() + " this.turn=" + this.turn  + " pg.getLastAction()=" + pg.getLastAction() +
+					" player=" + pg.getPlayer().getName() + " lastturn=" + pg.getLastTurn() + " lastturnaction=" + pg.getLastTurnAction());
+			
 			if (pg.getLastTurn() == this.turn - 1){
+				
+				
 				lastActionPlayerName = pg.getPlayer().getAbbreviatedName();
 				lastActionCode = pg.getLastTurnAction();
 				lastTurn = pg.getLastAction();

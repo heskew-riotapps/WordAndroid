@@ -476,7 +476,8 @@ public class PlayerService {
 			
 			//Logger.w(TAG, "handlePlayerResponse num active and opponent=" + player.getActiveGamesYourTurn().size() + " " + player.getActiveGamesOpponentTurn().size());
 
-	        
+			Logger.d(TAG, "current date=" + new Date().toGMTString());
+			editor.putString(Constants.USER_PREFS_PLAYER_CHECK_TIME, new Date().toGMTString());
 	        editor.putString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, completedDate.toGMTString());
 	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());

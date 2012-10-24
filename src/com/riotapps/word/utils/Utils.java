@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
  
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.TypedValue;
  
 
 import java.io.File;
@@ -174,5 +175,9 @@ public class Utils {
     
     public static long convertNanosecondsToMilliseconds(long nanoseconds){
     	return Math.round(nanoseconds / 1000000);
+    }
+    
+    public static int convertDensityPixelsToPixels(Context context, int dp){
+    	return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 }

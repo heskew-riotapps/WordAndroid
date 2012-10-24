@@ -141,7 +141,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
   		View view = LayoutInflater.from(this).inflate(R.layout.playerlistitem, null);
   
   	    TextView tvPlayerName = (TextView)view.findViewById(R.id.tvPlayerName);
-	 	tvPlayerName.setText(opponent.getName());
+	 	tvPlayerName.setText(opponent.getNameWithMaxLength(28));
 
 		TextView tvPlayerWins = (TextView)view.findViewById(R.id.tvPlayerWins);
 		tvPlayerWins.setText(String.format(this.context.getString(R.string.line_item_num_wins),opponent.getNumWins()));

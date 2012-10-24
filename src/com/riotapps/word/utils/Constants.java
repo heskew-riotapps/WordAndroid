@@ -25,7 +25,8 @@ public class Constants {
  	public static final String LAYOUT_SCOPE_LETTER = "L";
  	public static final String IMAGE_CACHE_DIR = "http";
  	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 4000;
- 	public static final long LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS = 30000;
+ 	public static final long LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS = 300000;//5 minutes in milliseconds
+ 	public static final long LOCAL_GAME_LIST_STORAGE_DURATION_IN_MILLISECONDS = 300000; //5 minutes in milliseconds
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm";
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
@@ -38,7 +39,7 @@ public class Constants {
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
 	public static final int DEFAULT_AVATAR_SIZE = 34;
-	public static final int LARGE_AVATAR_SIZE = 46;
+	public static final int LARGE_AVATAR_SIZE = 54;
 	public static final int BADGE_SIZE = 10;
 
 	/**============================================
@@ -62,6 +63,7 @@ public class Constants {
  	public static final String USER_PREFS_GAME_JSON = "game_json_%s";
  	public static final String USER_PREFS_FRIENDS_JSON = "friends_json";
  	public static final String USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME = "friends_reg_check";
+ 	public static final String USER_PREFS_PLAYER_CHECK_TIME = "player_check";
  	public static final String USER_PREFS_LATEST_COMPLETED_GAME_DATE = "cg_date";
  	public static final String GAME_STATE = "game_state";
  	public static final String FB_TOKEN = "fb_token";

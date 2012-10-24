@@ -97,7 +97,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		
 	 	this.loadLists();
 	 	
-		if (!isGameListPrefetched){
+	 	long lastPlayerCheckTime = settings.getLong(Constants.USER_PREFS_PLAYER_CHECK_TIME, 0);
+		if (!isGameListPrefetched && Utils.convertNanosecondsToMilliseconds(System.nanoTime()) - lastPlayerCheckTime > Constants.LOCAL_GAME_LIST_STORAGE_DURATION_IN_MILLISECONDS){
 			//fetch games
  
 			try { 
@@ -120,7 +121,13 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//}
     }
      
-    private void loadLists(){
+    @Override
+	public void onBackPressed() {
+		// do nothing if back is pressed
+		//super.onBackPressed();
+	}
+
+	private void loadLists(){
  
     	//Logger.d(TAG, "loadLists started");
     	LinearLayout llYourTurn = (LinearLayout)findViewById(R.id.llYourTurn);
@@ -136,9 +143,11 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
    //	Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() size=" + this.player.getActiveGamesYourTurn().size() );
     //	Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() size=" + this.player.getActiveGamesOpponentTurn().size() );
     	
+    	int i = 1;
     	if (this.player.getActiveGamesYourTurn().size() > 0){
 	        for (Game g : this.player.getActiveGamesYourTurn()){
-	        	 llYourTurn.addView(getGameYourTurnView(g));
+	        	 llYourTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesYourTurn().size() == i));
+	        	 i += 1;
 			}
 	        llYourTurnWrapper.setVisibility(View.VISIBLE);
     	}
@@ -146,9 +155,11 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     		llYourTurnWrapper.setVisibility(View.GONE);
     	}
 
+    	i = 1;
     	if (this.player.getActiveGamesOpponentTurn().size() > 0){
 	        for (Game g : this.player.getActiveGamesOpponentTurn()){
-	        	llOpponentsTurn.addView(getGameYourTurnView(g));
+	        	llOpponentsTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesOpponentTurn().size() == i));
+	        	 i += 1;
 			}
 	        llOpponentsTurnWrapper.setVisibility(View.VISIBLE);
     	}
@@ -158,7 +169,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 
     }
     
-    public View getGameYourTurnView(Game game ) {
+    public View getGameYourTurnView(Game game, boolean firstItem, boolean lastItem ) {
     	
     //	Logger.d(TAG, "getGameYourTurnView started");
   		View view = LayoutInflater.from(this).inflate(R.layout.gameyourturnlistitem, null);
@@ -187,6 +198,10 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	TextView tvOpponent_1 = (TextView)view.findViewById(R.id.tvOpponent_1);
 	 	TextView tvOpponent_2 = (TextView)view.findViewById(R.id.tvOpponent_2);
 	 	TextView tvOpponent_3 = (TextView)view.findViewById(R.id.tvOpponent_3);
+	 	
+	 	TextView tvLastAction = (TextView)view.findViewById(R.id.tvLastAction);
+	 	
+	 	tvLastAction.setText(game.getLastActionText(context, player.getId()));
 	 
 	 	//first opponent
 	 	List<PlayerGame> opponentGames = game.getOpponentPlayerGames(this.player);
@@ -200,7 +215,20 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		imageLoader.loadImage(opponentGames.get(0).getPlayer().getImageUrl(), ivOpponent1);  
 		//Logger.d(TAG, "getGameYourTurnView 5");
 		//optional 2nd opponent
-
+		
+		if (lastItem){
+			RelativeLayout rlLineItem = (RelativeLayout)view.findViewById(R.id.rlLineItem);
+			int bgLineItem = context.getResources().getIdentifier("com.riotapps.word:drawable/text_selector_bottom", null, null);
+			rlLineItem.setBackgroundResource(bgLineItem);
+			LinearLayout llBottomBorder = (LinearLayout)view.findViewById(R.id.llBottomBorder);
+			llBottomBorder.setVisibility(View.GONE);
+		}
+	//	if (firstItem){
+	//		RelativeLayout rlLineItem = (RelativeLayout)view.findViewById(R.id.rlLineItem);
+	//		int bgLineItem = context.getResources().getIdentifier("com.riotapps.word:drawable/text_selector_top", null, null);
+	//		rlLineItem.setBackgroundResource(bgLineItem);
+	//	}
+		//drawable/text_selector_bottom
 		
 		if (opponentGames.size() >= 2){
 
@@ -234,18 +262,25 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	}
 		///Logger.d(TAG, "getGameYourTurnView 7");
 	 	
-	 	int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Constants.BADGE_SIZE, getResources().getDisplayMetrics());
+	 	int badgeSize = Utils.convertDensityPixelsToPixels(context, 11);
+	 	int badgeRightMargin = Utils.convertDensityPixelsToPixels(context, 2);
+	 	int textSize;
+	 	
+	 	int badgeTopMargin;
 		if (opponentGames.size() == 1){
+			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 5);
+			textSize = Utils.convertDensityPixelsToPixels(context, 14);
 			tvOpponent_1.setTextSize(14);
-			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(size, size);
-		    rlp.setMargins(0, 4, 1, 0); // llp.setMargins(left, top, right, bottom);
+			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
+		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_1.setLayoutParams(rlp);
 		}
 		else if (opponentGames.size() == 2){
+			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 4);
 			tvOpponent_1.setTextSize(12);
 			tvOpponent_2.setTextSize(12);	
-			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(size, size);
-		    rlp.setMargins(0, 3, 1, 0); // llp.setMargins(left, top, right, bottom);
+			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
+		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_2.setLayoutParams(rlp);
 		    ivOpponentBadge_1.setLayoutParams(rlp);
 		}
