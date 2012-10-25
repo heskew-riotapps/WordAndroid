@@ -64,6 +64,7 @@ public class Constants {
  	public static final String USER_PREFS_FRIENDS_JSON = "friends_json";
  	public static final String USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME = "friends_reg_check";
  	public static final String USER_PREFS_PLAYER_CHECK_TIME = "player_check";
+ 	public static final String USER_PREFS_GAME_LIST_CHECK_TIME = "game_list_check";
  	public static final String USER_PREFS_LATEST_COMPLETED_GAME_DATE = "cg_date";
  	public static final String GAME_STATE = "game_state";
  	public static final String FB_TOKEN = "fb_token";

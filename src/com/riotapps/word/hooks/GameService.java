@@ -28,6 +28,7 @@ import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Enums.*;
@@ -67,6 +68,27 @@ public class GameService {
 //	     return games;
 //	}
 	
+	public static void updateLastGameListCheckTime(Context context){
+		
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, Utils.convertNanosecondsToMilliseconds(System.nanoTime()));
+		editor.commit();
+	}
+	
+	public static void clearLastGameListCheckTime(Context context){
+		
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, 0);
+		editor.commit();
+	}
+	
+	public static long getLastGameListCheckTime(Context context){ 
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		return settings.getLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, 0);
+	}
+		
 	public static String setupStartGame(Context ctx, Game game) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupStartGame");

@@ -97,7 +97,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		
 	 	this.loadLists();
 	 	
-	 	long lastPlayerCheckTime = settings.getLong(Constants.USER_PREFS_PLAYER_CHECK_TIME, 0);
+	 	long lastPlayerCheckTime = GameService.getLastGameListCheckTime(this);
 		if (!isGameListPrefetched && Utils.convertNanosecondsToMilliseconds(System.nanoTime()) - lastPlayerCheckTime > Constants.LOCAL_GAME_LIST_STORAGE_DURATION_IN_MILLISECONDS){
 			//fetch games
  
@@ -111,6 +111,9 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			}
 
 		}	
+		else if (isGameListPrefetched){
+			GameService.updateLastGameListCheckTime(this);
+		}
 		//no games yet, send player to StartGame to get started
 	//	else if (this.player.getTotalNumLocalGames() == 0){
      //   	Intent intent = new Intent(getApplicationContext(), StartGame.class);
@@ -190,6 +193,11 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
         ImageView ivOpponentBadge_1 = (ImageView)view.findViewById(R.id.ivOpponentBadge_1);
 	 	ImageView ivOpponentBadge_2 = (ImageView)view.findViewById(R.id.ivOpponentBadge_2);
 	 	ImageView ivOpponentBadge_3 = (ImageView)view.findViewById(R.id.ivOpponentBadge_3);
+	 	RelativeLayout rlPlayer_1 = (RelativeLayout)view.findViewById(R.id.rlPlayer_1);
+	 	RelativeLayout rlPlayer_2 = (RelativeLayout)view.findViewById(R.id.rlPlayer_2);
+	 	LinearLayout rlAvatars = (LinearLayout)view.findViewById(R.id.rlAvatars);
+	 	
+		RelativeLayout.LayoutParams layoutLastAction = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 
         ImageView ivOpponent1 = (ImageView)view.findViewById(R.id.ivOpponent1);
 	 	ImageView ivOpponent2 = (ImageView)view.findViewById(R.id.ivOpponent2);
@@ -201,12 +209,20 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	
 	 	TextView tvLastAction = (TextView)view.findViewById(R.id.tvLastAction);
 	 	
-	 	tvLastAction.setText(game.getLastActionText(context, player.getId()));
+	 	tvLastAction.setText(game.getLastActionTextForList(context, player.getId()));
 	 
 	 	//first opponent
 	 	List<PlayerGame> opponentGames = game.getOpponentPlayerGames(this.player);
 
-	 	tvOpponent_1.setText(opponentGames.get(0).getPlayer().getAbbreviatedName());
+	 	if (opponentGames.size() == 1){
+	 		tvOpponent_1.setText(opponentGames.get(0).getPlayer().getNameWithMaxLength(25));
+	 	}
+	 	else if (opponentGames.size() == 2){
+	 		tvOpponent_1.setText(opponentGames.get(0).getPlayer().getNameWithMaxLength(19));
+	 	}
+	 	else{
+	 		tvOpponent_1.setText(opponentGames.get(0).getPlayer().getNameWithMaxLength(13));
+	 	}
 	 	//Logger.d(TAG, "getGameYourTurnView 4.1");
 	 	//RelativeLayout rlPlayer_1 = (RelativeLayout)view.findViewById(R.id.rlPlayer_1);
 		int opponentBadgeId_1 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(0).getPlayer().getBadgeDrawable(), null, null);
@@ -221,7 +237,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			int bgLineItem = context.getResources().getIdentifier("com.riotapps.word:drawable/text_selector_bottom", null, null);
 			rlLineItem.setBackgroundResource(bgLineItem);
 			LinearLayout llBottomBorder = (LinearLayout)view.findViewById(R.id.llBottomBorder);
-			llBottomBorder.setVisibility(View.GONE);
+			llBottomBorder.setVisibility(View.INVISIBLE);
+
 		}
 	//	if (firstItem){
 	//		RelativeLayout rlLineItem = (RelativeLayout)view.findViewById(R.id.rlLineItem);
@@ -231,14 +248,19 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//drawable/text_selector_bottom
 		
 		if (opponentGames.size() >= 2){
-
-		 	tvOpponent_2.setText(opponentGames.get(1).getPlayer().getAbbreviatedName());
+			if (opponentGames.size() == 2){
+				tvOpponent_2.setText(opponentGames.get(1).getPlayer().getNameWithMaxLength(19));
+		 	}
+		 	else{
+		 		tvOpponent_2.setText(opponentGames.get(1).getPlayer().getNameWithMaxLength(13));
+		 	}
+		  
 			int opponentBadgeId_2 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(1).getPlayer().getBadgeDrawable(), null, null);
 			ivOpponentBadge_2.setImageResource(opponentBadgeId_2);
 			imageLoader.loadImage( opponentGames.get(1).getPlayer().getImageUrl(), ivOpponent2);
 	 	}
 	 	else {
-	 		RelativeLayout rlPlayer_2 = (RelativeLayout)view.findViewById(R.id.rlPlayer_2);
+	 		
 	 		rlPlayer_2.setVisibility(View.GONE);
 	 		//TableRow trOpponent2 = (TableRow)view.findViewById(R.id.trOpponent2);
 	 	//	trOpponent2.setVisibility(View.GONE);
@@ -248,7 +270,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	//optional 3rd opponent
 	 	if (opponentGames.size() >= 3){
 		 	
-		 	tvOpponent_3.setText(opponentGames.get(2).getPlayer().getAbbreviatedName());
+		 	tvOpponent_3.setText(opponentGames.get(2).getPlayer().getNameWithMaxLength(13));
 			int opponentBadgeId_3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(2).getPlayer().getBadgeDrawable(), null, null);
 			ivOpponentBadge_3.setImageResource(opponentBadgeId_3);
 			imageLoader.loadImage( opponentGames.get(2).getPlayer().getImageUrl(), ivOpponent3);
@@ -274,15 +296,43 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
 		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_1.setLayoutParams(rlp);
+		    
+			layoutLastAction.addRule(RelativeLayout.RIGHT_OF, rlAvatars.getId());	
+			layoutLastAction.addRule(RelativeLayout.BELOW, rlPlayer_1.getId());
+			//layoutLastAction.setMargins(left, top, right, bottom); 
+			tvLastAction.setLayoutParams(layoutLastAction);
+			
+			//RelativeLayout.LayoutParams layoutAvatars = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			//layoutAvatars.setMargins(0, 0, 0, 30);
+			//rlAvatars.setLayoutParams(layoutAvatars);
+
 		}
 		else if (opponentGames.size() == 2){
+		
+			
 			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 4);
-			tvOpponent_1.setTextSize(12);
-			tvOpponent_2.setTextSize(12);	
+			textSize = Utils.convertDensityPixelsToPixels(context, 12);
+			tvOpponent_1.setTextSize(13);
+			tvOpponent_2.setTextSize(13);	
 			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
 		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_2.setLayoutParams(rlp);
 		    ivOpponentBadge_1.setLayoutParams(rlp);
+		    
+			layoutLastAction.addRule(RelativeLayout.BELOW, rlAvatars.getId());			
+			tvLastAction.setLayoutParams(layoutLastAction);
+			
+			RelativeLayout.LayoutParams layoutOpponent2  = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			layoutOpponent2.setMargins(0, 4, 0, 0);
+			layoutOpponent2.addRule(RelativeLayout.RIGHT_OF, rlAvatars.getId());	
+			layoutOpponent2.addRule(RelativeLayout.BELOW, rlPlayer_1.getId());
+			rlPlayer_2.setLayoutParams(layoutOpponent2);
+
+		}
+		else{
+			layoutLastAction.addRule(RelativeLayout.BELOW, rlAvatars.getId());			
+			tvLastAction.setLayoutParams(layoutLastAction);
+
 		}
 	 	
 	 	view.setTag(game.getId());
@@ -294,6 +344,12 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     @Override 
     public void onClick(View v) {
     	Intent intent;
+    	
+    	//stop running task if one is active
+    	if (this.runningTask != null){
+	  		this.runningTask.cancel(true);
+	  		this.runningTask = null;
+	  	} 
     	
     	switch(v.getId()){  
         case R.id.bStart:  
@@ -417,6 +473,7 @@ private void handleGameClick(String gameId){
 	            		 }
 	            		 else{	 //this is the same as authenticating, so this is ok
 		            		 player = PlayerService.handleAuthByTokenResponse(this.context, iStream);
+		            		 GameService.updateLastGameListCheckTime(this.context);
 		            		 
 		            		 if (player.getTotalNumLocalGames() == 0){
 		            			 Intent intent = new Intent( context, com.riotapps.word.StartGame.class);

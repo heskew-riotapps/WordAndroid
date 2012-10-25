@@ -547,14 +547,12 @@ private class NetworkTask extends AsyncNetworkRequest{
 		            //	 handleResponseFromIOThread(game);
 		            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
 		            	 //was not working and driving me crazy
-		            	 GameService.putGameToLocal(context, game);
+		            	 GameService.putGameToLocal(this.context, game);
+		            	 GameService.clearLastGameListCheckTime(this.context);
 		            	 
 		            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
-		            	 
-		            	 Logger.d(TAG, "game about to be added as extra");
-		         	   //  intent.putExtra(Constants.EXTRA_GAME, game);
 		            	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
-		            	 Logger.d(TAG, "game added as extra");
+		             
 		      	      	 this.context.startActivity(intent);
 		                 break;  
 

@@ -29,13 +29,17 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+
+import com.riotapps.word.R;
+import com.riotapps.word.hooks.PlayerService;
 
 /**
  * Class containing some static utility methods.
  */
 public class Utils {
     public static final int IO_BUFFER_SIZE = 8 * 1024;
-
+    private static final String TAG = Utils.class.getSimpleName();
     private Utils() {};
 
     /**
@@ -179,5 +183,51 @@ public class Utils {
     
     public static int convertDensityPixelsToPixels(Context context, int dp){
     	return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+    
+    public static String getTimeSinceString(Context context,Date targetDate){
+    	//date diff in milliseconds
+		long diff = System.currentTimeMillis() - targetDate.getTime();
+		
+		
+		long diffSeconds = (long)diff/1000;
+		long diffMinutes = (long)diff/60000;
+		long diffHours = (long)diff/3600000;
+		long diffDays = (long)diff/86400000;
+		
+		Logger.d(TAG, "getTimeSinceString System.currentTimeMillis()=" + System.currentTimeMillis() + " diff=" + diff + "  targetDate.getTime()=" +  targetDate.getTime() + " diffSeconds=" + diffSeconds);
+	
+		
+		String timeSince = "";
+		if (diffSeconds < 15){
+			timeSince = context.getString(R.string.few_seconds_ago);
+		}
+		else if (diffSeconds < 60){
+			timeSince = String.format(context.getString(R.string.seconds_ago), diffSeconds);		
+		}
+		else if (diffMinutes < 3){
+			timeSince = context.getString(R.string.about_a_minute_ago);		
+		}
+		else if (diffMinutes < 60){
+			timeSince = String.format(context.getString(R.string.minutes_ago), diffMinutes);		
+		}
+		else if (diffHours == 1){
+			timeSince = context.getString(R.string.an_hour_ago);		
+		}
+		else if (diffHours < 23){
+			timeSince = String.format(context.getString(R.string.hours_ago), diffHours);		
+		}
+		else if (diffHours < 36){
+			timeSince = context.getString(R.string.a_day_ago);		
+		}
+		else if (diffHours < 56){
+			timeSince = String.format(context.getString(R.string.days_ago), "2");		
+		}
+		else {
+			timeSince = String.format(context.getString(R.string.days_ago), diffDays);		
+		}
+
+		
+		return timeSince;
     }
 }

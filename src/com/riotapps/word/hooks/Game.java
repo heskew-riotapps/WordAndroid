@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.riotapps.word.R;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.Utils;
 
  
 public class Game implements Parcelable, Comparable<Game> {
@@ -210,36 +211,17 @@ public class Game implements Parcelable, Comparable<Game> {
 	}
 	
 	public String getLastActionText(Context context, String contextPlayerId){
-		//find player that played last turn (this.turn - 1)
-		String lastActionPlayerName = "";
-		int lastActionCode = 0;
-		boolean contextPlayerPerformedLastTurn = false;
-		PlayerGame.LastAction lastTurn = PlayerGame.LastAction.NO_TRANSLATION;
-		for(PlayerGame pg : this.playerGames){
-			
-			Logger.d(TAG, "getLastActionText pg.getLastTurn()=" + pg.getLastTurn() + " this.turn=" + this.turn  + " pg.getLastAction()=" + pg.getLastAction() +
-					" player=" + pg.getPlayer().getName() + " lastturn=" + pg.getLastTurn() + " lastturnaction=" + pg.getLastTurnAction());
-			
-			if (pg.getLastTurn() == this.turn - 1){
-				
-				
-				lastActionPlayerName = pg.getPlayer().getAbbreviatedName();
-				lastActionCode = pg.getLastTurnAction();
-				lastTurn = pg.getLastAction();
-				contextPlayerPerformedLastTurn = contextPlayerId.equals(pg.getPlayer().getId());
-				break;
-			}
-		}
+		LastTurn lastTurn = this.getLastTurn(contextPlayerId);
 		
 	//return "p";
 		
-		switch (lastTurn){
+		switch (lastTurn.lastAction){
 			case ONE_LETTER_SWAPPED:
-				if (contextPlayerPerformedLastTurn){
+				if (lastTurn.isContextPlayerPerformedLastTurn()){
 					return context.getString(R.string.game_last_action_swapped_1_context);
 				}
 				else{
-					return String.format(context.getString(R.string.game_last_action_swapped_1), lastActionPlayerName);				
+					return String.format(context.getString(R.string.game_last_action_swapped_1), lastTurn.getPlayerName());				
 				}
 			
 			case TWO_LETTERS_SWAPPED:	
@@ -248,29 +230,29 @@ public class Game implements Parcelable, Comparable<Game> {
 			case FIVE_LETTERS_SWAPPED:
 			case SIX_LETTERS_SWAPPED:
 			case SEVEN_LETTERS_SWAPPED:
-					if (contextPlayerPerformedLastTurn){
-						return String.format(context.getString(R.string.game_last_action_swapped_context), lastActionCode);
+					if (lastTurn.isContextPlayerPerformedLastTurn()){
+						return String.format(context.getString(R.string.game_last_action_swapped_context), lastTurn.getLastActionCode());
 					}
 					else{
-						return String.format(context.getString(R.string.game_last_action_swapped), lastActionPlayerName, lastActionCode);				
+						return String.format(context.getString(R.string.game_last_action_swapped), lastTurn.getPlayerName(), lastTurn.getLastActionCode());				
 					}
 			case STARTED_GAME:
-				if (contextPlayerPerformedLastTurn){
+				if (lastTurn.isContextPlayerPerformedLastTurn()){
 					return context.getString(R.string.game_last_action_started_context);
 				}
 				else{
-					return String.format(context.getString(R.string.game_last_action_started), lastActionPlayerName);				
+					return String.format(context.getString(R.string.game_last_action_started), lastTurn.getPlayerName());				
 				}
 				
 			case WORDS_PLAYED:
 				return "loops through words";
 			
 			case TURN_SKIPPED:
-				if (contextPlayerPerformedLastTurn){
+				if (lastTurn.isContextPlayerPerformedLastTurn()){
 					return context.getString(R.string.game_last_action_skipped_context);
 				}
 				else{
-					return String.format(context.getString(R.string.game_last_action_skipped), lastActionPlayerName);				
+					return String.format(context.getString(R.string.game_last_action_skipped), lastTurn.getPlayerName());				
 				}		
 			
 			case RESIGNED:
@@ -285,6 +267,92 @@ public class Game implements Parcelable, Comparable<Game> {
 		}
 	
  	}
+	
+	
+	public String getLastActionTextForList(Context context, String contextPlayerId){
+		LastTurn lastTurn = this.getLastTurn(contextPlayerId);
+		
+	// return "p";
+		Logger.d(TAG, "getLastActionTextForList lastTurn.getTurnDate()=" + lastTurn.getTurnDate());
+		String timeSince = Utils.getTimeSinceString(context, lastTurn.getTurnDate());
+			
+			switch (lastTurn.lastAction){
+				case ONE_LETTER_SWAPPED:
+					if (lastTurn.isContextPlayerPerformedLastTurn()){
+						return String.format(context.getString(R.string.game_last_action_list_swapped_1_context), timeSince);
+					}
+					else{
+						return String.format(context.getString(R.string.game_last_action_list_swapped_1), lastTurn.getPlayerName());				
+					}
+				
+				case TWO_LETTERS_SWAPPED:	
+				case THREE_LETTERS_SWAPPED:
+				case FOUR_LETTERS_SWAPPED:
+				case FIVE_LETTERS_SWAPPED:
+				case SIX_LETTERS_SWAPPED:
+				case SEVEN_LETTERS_SWAPPED:
+						if (lastTurn.isContextPlayerPerformedLastTurn()){
+							return String.format(context.getString(R.string.game_last_action_list_swapped_context), timeSince, lastTurn.getLastActionCode());
+						}
+						else{
+							return String.format(context.getString(R.string.game_last_action_list_swapped), timeSince, lastTurn.getPlayerName(), lastTurn.getLastActionCode());				
+						}
+				case STARTED_GAME:
+					if (lastTurn.isContextPlayerPerformedLastTurn()){
+						return String.format(context.getString(R.string.game_last_action_list_started_context), timeSince);
+					}
+					else{
+						return String.format(context.getString(R.string.game_last_action_list_started), timeSince, lastTurn.getPlayerName());				
+					}
+					
+				case WORDS_PLAYED:
+					return "loops through words";
+				
+				case TURN_SKIPPED:
+					if (lastTurn.isContextPlayerPerformedLastTurn()){
+						return String.format(context.getString(R.string.game_last_action_list_skipped_context), timeSince);
+					}
+					else{
+						return String.format(context.getString(R.string.game_last_action_list_skipped), timeSince, lastTurn.getPlayerName());				
+					}		
+				
+				case RESIGNED:
+					return "resigned"; 
+					
+				case CANCELLED:
+					return "cancelled"; ///probably not associated with game action, more of a pg status
+					
+				default:
+					return context.getString(R.string.game_last_action_undetermined);
+			}
+
+
+			
+				
+	}
+		
+	public LastTurn getLastTurn(String contextPlayerId){
+		
+		LastTurn lastTurn = new LastTurn();
+		
+		//find player that played last turn (this.turn - 1)
+		for(PlayerGame pg : this.playerGames){
+			
+			//Logger.d(TAG, "getLastActionText pg.getLastTurn()=" + pg.getLastTurn() + " this.turn=" + this.turn  + " pg.getLastAction()=" + pg.getLastAction() +
+			//		" player=" + pg.getPlayer().getName() + " lastturn=" + pg.getLastTurn() + " lastturnaction=" + pg.getLastTurnAction());
+			
+			if (pg.getLastTurn() == this.turn - 1){
+				lastTurn.setPlayerName(pg.getPlayer().getAbbreviatedName());
+				lastTurn.setLastActionCode(pg.getLastTurnAction());
+				lastTurn.setLastAction(pg.getLastAction());
+				lastTurn.setContextPlayerPerformedLastTurn(contextPlayerId.equals(pg.getPlayer().getId()));
+				lastTurn.setTurnDate(pg.getLastTurnDate());
+				break;
+			}
+		}
+		
+		return lastTurn;
+	}
 	
 	
 	@Override
@@ -350,4 +418,45 @@ public class Game implements Parcelable, Comparable<Game> {
         else
             return 1;
     }
+	
+	private class LastTurn{
+	
+		private String playerName; 
+		private int lastActionCode;
+		private PlayerGame.LastAction lastAction;
+		private boolean contextPlayerPerformedLastTurn;
+		private Date turnDate;
+		
+		public String getPlayerName() {
+			return playerName;
+		}
+		public void setPlayerName(String playerName) {
+			this.playerName = playerName;
+		}
+		public int getLastActionCode() {
+			return lastActionCode;
+		}
+		public void setLastActionCode(int lastActionCode) {
+			this.lastActionCode = lastActionCode;
+		}
+		public PlayerGame.LastAction getLastAction() {
+			return lastAction;
+		}
+		public void setLastAction(PlayerGame.LastAction lastAction) {
+			this.lastAction = lastAction;
+		}
+		public boolean isContextPlayerPerformedLastTurn() {
+			return contextPlayerPerformedLastTurn;
+		}
+		public void setContextPlayerPerformedLastTurn(boolean contextPlayerPerformedLastTurn) {
+			this.contextPlayerPerformedLastTurn = contextPlayerPerformedLastTurn;
+		}	
+		public void setTurnDate(Date turnDate) {
+			this.turnDate = turnDate;
+		}
+		public Date getTurnDate() {
+			return turnDate;
+		}	
+		
+	}
 }

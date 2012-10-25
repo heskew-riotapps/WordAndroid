@@ -4,6 +4,7 @@
 	style="@style/ContentAreaTextStyle"
 	android:paddingLeft="0dp"
     android:paddingRight="0dp"
+    android:paddingBottom="0dp"
     android:layout_width="fill_parent"    
     android:layout_height="fill_parent" 
     android:id="@+id/rlLineItem">
@@ -119,19 +120,21 @@
 	            style="@style/SubTextStyle"
 	            android:textSize="11dp"
 	            android:layout_marginTop="2dp"
-	            android:paddingBottom="3dp"
-	            android:layout_below="@id/rlAvatars"
+	          
+	            android:paddingTop="4dp"
+	         
 	        />
  	 </RelativeLayout>
   
 		<LinearLayout 
-		android:paddingLeft="0dp"
-	    android:paddingRight="0dp"
-	    android:layout_width="fill_parent"    
-	    android:layout_height="1dp" 
-	    android:layout_below="@id/rlGame"
-	    android:layout_marginBottom="0dp"
-	    android:id="@+id/llBottomBorder">
+			android:paddingLeft="0dp"
+		    android:paddingRight="0dp"
+		    android:layout_marginTop="5dp"
+		    android:layout_width="fill_parent"    
+		    android:layout_height="1dp" 
+		    android:layout_below="@id/rlGame"
+		    android:layout_marginBottom="0dp"
+		    android:id="@+id/llBottomBorder">
 	    
 	    	 <View 
  			      android:id="@+id/vBottomBorder"
@@ -139,7 +142,7 @@
 				android:layout_height="1dp"
 				android:background="@drawable/form_border_color"
 				 android:layout_below="@id/rlGame"
-				 android:layout_marginBottom="0dp"
+			 
  			     />
 	    </LinearLayout>
  
