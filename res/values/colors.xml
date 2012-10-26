@@ -25,4 +25,5 @@
     <drawable name="button_text_color">#fff5ee</drawable>
 	<drawable name="player_image_border_color">#000000</drawable>
 	<drawable name="player_image_background_color">#d2bfa6</drawable>
+	<drawable name="game_surface_fill_color">#eec591</drawable>
 </resources>

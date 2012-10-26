@@ -187,6 +187,10 @@ public class Utils {
     
     public static String getTimeSinceString(Context context,Date targetDate){
     	//date diff in milliseconds
+    	if (targetDate == null) {
+    		return "? (date)"; 
+    	}
+    	
 		long diff = System.currentTimeMillis() - targetDate.getTime();
 		
 		

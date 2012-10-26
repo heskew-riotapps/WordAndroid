@@ -127,6 +127,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     
   //  private Game game;
     private GameTile currentTile = null;
+    private TrayTile currentTrayTile = null;
     private Bitmap trayBackground;
     private Bitmap logo;
     private boolean surfaceCreated = false;
@@ -410,7 +411,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 this.previousY = this.currentY;
             	 this.coordinates.clear();
             	 this.isMomentum = false;
-            	 currentTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
+            	 this.currentTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);
+            	 
+            	 if (this.currentTile == null){
+            		 this.currentTrayTile = this.FindTrayTileFromPositionInFullViewMode(this.currentX, this.currentY);
+            	 }
+            	 else{
+            		 this.currentTrayTile = null;
+            	 }
             	// this.currentTouchMotion = MotionEvent.ACTION_DOWN;
             	// return false; //??
             	  break;
@@ -594,7 +602,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 			this.currentY <= Math.round(this.previousY * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
 	 			this.currentY >= Math.round(this.previousY * (1 - MOVEMENT_TRIGGER_THRESHOLD))){
 	 			 Log.w(TAG,"onDraw minimum threshold not met");
-	 			 	this.readyToDraw = false; 
+	 			// 	this.readyToDraw = false; 
 	 			 }
 		}
 		 
@@ -808,38 +816,47 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	
 	 
-   private void drawBoardZoomOnUp(Canvas canvas){
-	   GameTile tappedTile = this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);    
+	private void drawBoardZoomOnUp(Canvas canvas){
+		 TrayTile tappedTrayTile = null;
+		 GameTile tappedTile = this.currentTile; //this.FindTileFromPositionInFullViewMode(this.currentX, this.currentY);    
 		 
-		 //check for specific tile action (as opposed to full board action) here
+		 //we are coming out of a single click here.  this means the player tapped on any area outside of the board.  lets just redraw the board
+		 //but also clear out the current tray tile just in case it was tapped
+		 if (tappedTile == null){
+			 //clear current tray tile
+			 this.currentTrayTile = null; //this.FindTrayTileFromPositionInFullViewMode(this.currentX, this.currentY);
 		 
-		 if (tappedTile == null) { return; } //do something here
-	 
-	     //find the equivalent tapped top location in zoomed layout
-	     int tappedTop = this.midpoint - (((tappedTile.getRow() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
-	     
-	     //make sure we don't pass the upper top boundary (this upper boundary is calculated to ensure that bottom of board does
-	     //not render too high)
-	     if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
-	     
-	     //make sure we don't pass the visible top boundary (this is the visible top boundary of the surface view minus padding)
-	     if (tappedTop > 0) {tappedTop = 0;}
-	     
-	     //find the equivalent tapped left location in zoomed layout
-	     int tappedLeft = this.midpoint - (((tappedTile.getColumn() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
-	     
-	    //make sure we don't pass the far left boundary (this far left boundary is calculated to ensure that right side of the board does
-	     //not render too far to the left)
-	     if (tappedLeft < this.outerZoomLeft) {tappedLeft = this.outerZoomLeft;}
-	     
-	     //make sure we don't pass the visible left boundary (this is the visible left boundary of the surface view minus padding)
-	     if (tappedLeft > 1) {tappedLeft = 1;}
-	     
-	     //draw the board to the canvas
-	     this.drawZoomedBoard(canvas, tappedLeft, tappedTop); 
-	      
-	     //release the current tile context 
-	     this.currentTile = null;  
+			 //redraw the board as is  
+			 this.drawBoardOnMove(canvas, 0, 0);
+		 }
+		 else{
+		 
+		     //find the equivalent tapped top location in zoomed layout
+			 int tappedTop = this.midpoint - (((tappedTile.getRow() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+			 
+			 //make sure we don't pass the upper top boundary (this upper boundary is calculated to ensure that bottom of board does
+			 //not render too high)
+			 if (tappedTop < this.outerZoomTop) {tappedTop = this.outerZoomTop;}
+			 
+			 //make sure we don't pass the visible top boundary (this is the visible top boundary of the surface view minus padding)
+			 if (tappedTop > 0) {tappedTop = 0;}
+			 
+			 //find the equivalent tapped left location in zoomed layout
+			 int tappedLeft = this.midpoint - (((tappedTile.getColumn() - 1) * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+			 
+			//make sure we don't pass the far left boundary (this far left boundary is calculated to ensure that right side of the board does
+			 //not render too far to the left)
+			 if (tappedLeft < this.outerZoomLeft) {tappedLeft = this.outerZoomLeft;}
+			 
+			 //make sure we don't pass the visible left boundary (this is the visible left boundary of the surface view minus padding)
+			 if (tappedLeft > 1) {tappedLeft = 1;}
+			 
+			 //draw the board to the canvas
+			 this.drawZoomedBoard(canvas, tappedLeft, tappedTop); 
+			  
+			 //release the current tile context 
+			 this.currentTile = null;  
+		 }
    }
 	
 	private void drawZoomedBoardByDiff(Canvas canvas, int leftDiff, int topDiff) {
@@ -1168,6 +1185,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 return null;
 	 }
 	 
+	 
+	 private TrayTile FindTrayTileFromPositionInFullViewMode(int xPosition, int yPosition){
+		 for (TrayTile tile : this.trayTiles) { 
+	    	 if (xPosition >= tile.getxPosition() && xPosition <= tile.getxPosition() + this.fullViewTileWidth + this.tileGap &&
+	    	 		 yPosition >= tile.getyPosition() && yPosition <= tile.getyPosition() + this.fullViewTileWidth + this.tileGap){
+	    		 return tile;
+	    	 }
+	    	}
+		 return null;
+	 }
 
 	 private void drawFullView(Canvas canvas){
         for (GameTile tile : this.tiles) { 

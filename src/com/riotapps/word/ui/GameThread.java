@@ -58,12 +58,12 @@ public class GameThread extends Thread {
 		 Canvas c;
 		    while (this.running) {
 		    
-		    	//try {
-				//	Thread.sleep(15);
-				//} catch (InterruptedException e) {
-			//		// TODO Auto-generated catch block
-			//		e.printStackTrace();
-			//	}
+		    	try {
+		    		Thread.sleep(3);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		    	if (parent.isReadyToDraw()) {
 			        c = null;
 			        try {

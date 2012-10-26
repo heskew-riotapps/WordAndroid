@@ -88,6 +88,7 @@ containing a value of this type.
         public static final int form_item_bottom_pressed=0x7f020034;
         public static final int form_item_top=0x7f020035;
         public static final int form_top_background=0x7f020036;
+        public static final int game_surface_fill_color=0x7f020089;
         public static final int gameboard_btn_area_bg=0x7f020037;
         public static final int horiz_divider=0x7f020038;
         public static final int horiz_divider2=0x7f020039;
