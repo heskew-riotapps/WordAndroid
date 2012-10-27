@@ -298,6 +298,9 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
    // 	 this.context.startActivity(intent);
    // }
     
+    
+    //if player is invited non-registered facebook friends, use facebook app requests to inform those friends.
+    //it's the only way to inform them since we don't have their email address
     private void handleFacebookInvitationAppRequests() {
         String access_token = settings.getString(Constants.FB_TOKEN, null);
         long expires = settings.getLong(Constants.FB_TOKEN_EXPIRES, 0);

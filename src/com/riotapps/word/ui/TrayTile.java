@@ -14,6 +14,8 @@ public class TrayTile {
 	private int yPositionDragging = 0;
 	private String originalLetter = "";
 	private String currentLetter = "";
+	private String draggingLetter = "";
+	private boolean dragging = false;
 	
 	public int getId() {
 		return id;
@@ -68,14 +70,38 @@ public class TrayTile {
 	}
 	public void setOriginalLetter(String originalLetter) {
 		this.originalLetter = originalLetter;
+		this.currentLetter = originalLetter;
 	}
-	public String getCurrentLetter() {
+	public String getVisibleLetter() {
 		return currentLetter.length() > 0 ? currentLetter : originalLetter;
+	}
+	
+	public String getCurrentLetter() {
+		return currentLetter;
 	}
 	public void setCurrentLetter(String currentLetter) {
 		this.currentLetter = currentLetter;
 	}
+	public String getDraggingLetter() {
+		return draggingLetter;
+	}
+	public void setDraggingLetter(String draggingLetter) {
+		this.draggingLetter = draggingLetter;
+	}
+	public boolean isDragging() {
+		return dragging;
+	}
+	public void setDragging(boolean dragging) {
+		this.dragging = dragging;
+	}
 
+	public void setUpForDrag(){
+		this.dragging = true;
+	}
+	
+	public void removeDrag(){
+		this.dragging = false;
+	}
 
 }
 

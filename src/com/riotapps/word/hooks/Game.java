@@ -93,6 +93,24 @@ public class Game implements Parcelable, Comparable<Game> {
 		  return ret;
 	}
 	
+	public boolean isContextPlayerStarter(Player contextPlayer){ 
+		for (PlayerGame pg : this.getPlayerGames()){ 
+         	if (pg.getPlayerOrder() == 1 && pg.getPlayer().getId().equals(contextPlayer.getId())){
+         		return true;
+         	}
+		}
+		return false;
+	}
+	
+	public int getContextPlayerOrder(Player contextPlayer){ 
+		for (PlayerGame pg : this.getPlayerGames()){ 
+         	if (pg.getPlayer().getId().equals(contextPlayer.getId())){
+         		return pg.getPlayerOrder();
+         	}
+		}
+		return 0;
+	}
+	
 	public List<Player> getOpponents(Player contextPlayer){ 
 		//assume the context player is the first playergame
 		List<Player> ret = new ArrayList<Player>();
@@ -103,6 +121,11 @@ public class Game implements Parcelable, Comparable<Game> {
          	}
 		}
 		  return ret;
+	} 
+	
+	public int getNumActiveOpponents(){
+		//refactor to take resigned/declined players out of the count
+		return this.getPlayerGames().size() - 1;
 	}
 	
 	public PlayerGame[] getPlayerGameOpponentsArray (){ 

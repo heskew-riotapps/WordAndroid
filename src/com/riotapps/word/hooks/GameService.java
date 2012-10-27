@@ -41,24 +41,24 @@ import com.google.gson.reflect.TypeToken;
 public class GameService {
 	private static final String TAG = GameService.class.getSimpleName();
 	
-	public static void GetPlayerGameFromServer(Context ctx, String id, Class<?> goToClass){
-		//retrieve player from server
-		//convert using gson
-		//return player to caller
-		String url = String.format(Constants.REST_GET_PLAYER_URL,id);
-		new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.GET_GAME, ctx.getString(R.string.progress_syncing)).execute(url);
-	}
+//	public static void GetPlayerGameFromServer(Context ctx, String id, Class<?> goToClass){
+//		//retrieve player from server
+//		//convert using gson
+//		//return player to caller
+//		String url = String.format(Constants.REST_GET_PLAYER_URL,id);
+//		new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.GET_GAME, ctx.getString(R.string.progress_syncing)).execute(url);
+//	}
 	
 	
-	public Game SaveGame(String id){
-		//retrieve player from server
-		//convert using gson
-		//return player to caller
-		
-		//check validations here
-		
-		return new Game();
-	}
+//	public Game SaveGame(String id){
+//		//retrieve player from server
+//		//convert using gson
+//		//return player to caller
+//		
+//		//check validations here
+//		
+//		return new Game();
+//	}
 	
 //	public static List<Game> getGamesFromLocal(){
 //		 Gson gson = new Gson(); 
@@ -115,6 +115,23 @@ public class GameService {
 		return gson.toJson(newGame);
 	}
 	
+	public static String setupCancelGame(Context ctx, String gameId) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupCancelGame");
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportGetGame game = new TransportGetGame();
+		game.setToken(player.getAuthToken());
+		game.setGameId(gameId);
+		
+		return gson.toJson(game);
+	}
 	
 	public static String setupGetGame(Context ctx, String gameId) throws DesignByContractException{
 		 

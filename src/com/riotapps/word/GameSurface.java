@@ -1,7 +1,13 @@
 package com.riotapps.word;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.conn.ConnectTimeoutException;
 
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
@@ -9,13 +15,20 @@ import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.TrayTile;
+import com.riotapps.word.hooks.Error.ErrorType;
+import com.riotapps.word.ui.CustomDialog;
+import com.riotapps.word.ui.DialogManager;
+import com.riotapps.word.ui.GameAction.GameActionType;
 import com.riotapps.word.ui.GameState;
 import com.riotapps.word.ui.GameStateService;
 import com.riotapps.word.ui.GameSurfaceView;
 import com.riotapps.word.ui.GameTile;
+import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.ServerResponse;
+import com.riotapps.word.utils.Enums.RequestType;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -45,10 +58,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	ImageFetcher imageLoader;
 	private RelativeLayout scoreboard;
 	 SurfaceView surfaceView;
-	 Button bShuffle;
-	 Button bChat;
-	 Button bPlayedWords;
-	//View bottom;
+	
+	 //View bottom;
 	
 	public static final int MSG_SCOREBOARD_VISIBILITY = 1;
 	public static final int MSG_POINTS_SCORED = 2;
@@ -178,15 +189,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	
 	 	this.fillGameState();
 	 	
-	 	bShuffle = (Button) findViewById(R.id.bShuffle);
-	 	bChat = (Button) findViewById(R.id.bChat);
-		bPlayedWords = (Button) findViewById(R.id.bPlayedWords);
-	 	bShuffle.setOnClickListener(this);
-	 	bChat.setOnClickListener(this);
-	 	bPlayedWords.setOnClickListener(this);
-	 	
-	//	this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
-	// 	this.gameSurfaceView.setParent(this);
+	 	this.setupButtons();
 	 	
 	 	
 	 //	this.gameSurfaceView.setGame(game);
@@ -219,6 +222,111 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	        }
 	    };
 
+	 private void setupButtons(){
+		Button bShuffle = (Button) findViewById(R.id.bShuffle);
+		Button bChat = (Button) findViewById(R.id.bChat);
+		Button bPlayedWords = (Button) findViewById(R.id.bPlayedWords);
+		Button bCancel = (Button) findViewById(R.id.bCancel);
+		Button bResign = (Button) findViewById(R.id.bResign);
+		Button bDecline = (Button) findViewById(R.id.bDecline);
+	 	bShuffle.setOnClickListener(this);
+	 	bChat.setOnClickListener(this);
+	 	bPlayedWords.setOnClickListener(this);
+	 	
+	 	//set cancel button area mode:
+	 	//if it's the first play of the game by starting player, it should be "CANCEL" mode
+	 	//if it's the first play of the game by a non-starting player, it should be in "DECLINE" mode
+	 	//if it's not the first play of the game, it should be in "RESIGN" mode
+	 	
+	 	//the starting player get one chance (one turn) to cancel
+	 	if (this.game.getTurn() == 1 && this.game.isContextPlayerStarter(this.player)){
+	 		bCancel.setOnClickListener(this);	
+	 		bResign.setVisibility(View.GONE);
+	 		bDecline.setVisibility(View.GONE);
+	 	}
+	 	else if (this.game.getNumActiveOpponents() == 1){
+	 		if (this.game.getTurn() < 3 && !this.game.isContextPlayerStarter(this.player)){
+	 			//in a two player game, the invited player gets one chance to decline
+	 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
+	 			//makes the first move
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setVisibility(View.GONE);
+		 		bDecline.setOnClickListener(this);
+	 		}
+	 		else{
+	 			//else we are past each opponents first turn, therefore show the resign button 
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setOnClickListener(this);
+		 		bDecline.setVisibility(View.GONE);
+	 		}
+	 	}
+	 	else if (this.game.getNumActiveOpponents() == 2){
+	 		if (this.game.getTurn() < 3 && this.game.getContextPlayerOrder(this.player) < 3){
+	 			//in a three player game, the invited players gets one chance to decline
+	 			//in this case we are checking for the second player in order
+	 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
+	 			//makes the first move
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setVisibility(View.GONE);
+		 		bDecline.setOnClickListener(this);
+	 		}
+	 		else if (this.game.getTurn() < 4 && this.game.getContextPlayerOrder(this.player) == 3){
+	 			//in a three player game, the invited players get one chance to decline
+	 			//in this case we are checking for the third player in order
+	 			//we check for turn 1 and 2 (which are not his turns) in case he sees the game before the starting player
+	 			//makes the first move or the second player makes a move
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setVisibility(View.GONE);
+		 		bDecline.setOnClickListener(this);
+	 		}
+	 		else{
+	 			//else we are past each opponents first turn, therefore show the resign button 
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setOnClickListener(this);
+		 		bDecline.setVisibility(View.GONE);
+	 		}
+	 	}
+	 	else if (this.game.getNumActiveOpponents() == 3){
+	 		if (this.game.getTurn() < 3 && this.game.getContextPlayerOrder(this.player) < 3){
+	 			//in a four player game, the invited players get one chance to decline
+	 			//in this case we are checking for the second player in order
+	 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
+	 			//makes the first move
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setVisibility(View.GONE);
+		 		bDecline.setOnClickListener(this);
+	 		}
+	 		else if (this.game.getTurn() < 4 && this.game.getContextPlayerOrder(this.player) == 3){
+	 			//in a four player game, the invited players get one chance to decline
+	 			//in this case we are checking for the third player in order
+	 			//we check for turn 1 and 2(which are not his turns) in case he sees the game before the starting player
+	 			//makes the first move or the second player makes a move
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setVisibility(View.GONE);
+		 		bDecline.setOnClickListener(this);
+	 		}
+	 		else if (this.game.getTurn() < 5 && this.game.getContextPlayerOrder(this.player) == 4){
+	 			//in a four player game, the invited players get one chance to decline
+	 			//in this case we are checking for the fourth player in order
+	 			//we check for turn 1, 2, 3 (which are not his turns) in case he sees the game before the starting player
+	 			//makes the first move or the second player makes a move
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setVisibility(View.GONE);
+		 		bDecline.setOnClickListener(this);
+	 		}
+	 		else{
+	 			//else we are past each opponents first turn, therefore show the resign button 
+	 			bCancel.setVisibility(View.GONE);	
+		 		bResign.setOnClickListener(this);
+		 		bDecline.setVisibility(View.GONE);
+	 		}
+ 		
+	 	}
+	 
+	}
+	    
+	    
+	    
 	 private void fillGameState(){
 		 this.gameState = GameStateService.getGameState(context, "123"); ///fix this temp code
 		 
@@ -351,7 +459,153 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		        	intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
 					startActivity(intent);
 					break;
+		        case R.id.bCancel:  
+		        	this.handleCancel();
+					break;
 	    	}
 	 }
 	
+	 
+	    private void handleCancel(){
+	    	final CustomDialog dialog = new CustomDialog(this, 
+	    			this.getString(R.string.game_surface_cancel_game_confirmation_title), 
+	    			this.getString(R.string.game_surface_cancel_game_confirmation_text),
+	    			this.getString(R.string.yes),
+	    			this.getString(R.string.no));
+	    	
+	    	dialog.setOnOKClickListener(new View.OnClickListener() {
+		 		@Override
+				public void onClick(View v) {
+		 			dialog.dismiss(); 
+		 			handleGameCancelOnClick();
+		 			//kickoff network task to cancel game and refresh player's game list.
+		 			//then send user back to main landing
+		 		}
+			});
+
+	    	dialog.show();	
+	    }
+	    
+	    
+	    private void handleGameCancelOnClick(){
+	    	//stop thread first
+	    	this.gameSurfaceView.onStop();
+	    	
+	    	
+	    	
+	    }
+	    
+	    private class NetworkTask extends AsyncNetworkRequest{
+			
+	    	GameSurface context;
+	    	//int action = 0; //1 = cancel game, 2 = decline, 3 = resign, 4 = play a turn
+	    	GameActionType actionType;
+	    		
+	    		public NetworkTask(GameSurface ctx, RequestType requestType,
+	    				String json,
+	    				String shownOnProgressDialog,
+	    				GameActionType actionType) {
+	    			super(ctx, requestType, shownOnProgressDialog, json);
+	    			this.context = ctx;
+	    			this.actionType = actionType;
+	    			// TODO Auto-generated constructor stub
+	    		}
+
+	    		@Override
+	    		protected void onPostExecute(ServerResponse serverResponseObject) {
+	    			// TODO Auto-generated method stub
+	    			super.onPostExecute(serverResponseObject);
+	    			
+	    			this.handleResponse(serverResponseObject);
+	    			
+	    			
+	    		}
+	     
+	    		private void handleResponse(ServerResponse serverResponseObject){
+	    		     HttpResponse response = serverResponseObject.response;   
+	    		     Exception exception = serverResponseObject.exception;   
+
+	    		     if(response != null){  
+
+	    		         InputStream iStream = null;  
+
+	    		         try {  
+	    		             iStream = response.getEntity().getContent();  
+	    		         } catch (IllegalStateException e) {  
+	    		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
+	    		         } catch (IOException e) {  
+	    		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
+	    		         }  
+
+	    		         int statusCode = response.getStatusLine().getStatusCode();  
+	    		         
+	    		         Log.i(GameSurface.TAG, "StatusCode: " + statusCode);
+
+	    		         switch(statusCode){  
+	    		             case 200:  
+	    		             case 201: {
+	    		            	 switch(this.actionType){
+	    		            	 	case CANCEL_GAME:
+	    		            		 
+	    		            	 		break;
+	    		            	 	case DECLINE_GAME:
+	    		            	 		
+	    		            	 		break;
+	    		            	 	case RESIGN:
+	    		            	 		
+	    		            	 		break;
+	    		            	 	case PLAY:
+	    		            	 		
+	    		            	 		break;
+	    		            	 	case SKIP:
+	    		            	 		
+	    		            	 		break;
+	    		            	 	case SWAP:
+	    		            		 
+	    		            	 		break;
+	    		            	 
+	    		            	 }
+	    		            	 Game game = GameService.handleCreateGameResponse(this.context, iStream);
+	    		            //	 handleResponseFromIOThread(game);
+	    		            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
+	    		            	 //was not working and driving me crazy
+	    		            	 GameService.putGameToLocal(this.context, game);
+	    		            	 GameService.clearLastGameListCheckTime(this.context);
+	    		            	 
+	    		            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+	    		            	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
+	    		             
+	    		      	      	 this.context.startActivity(intent);
+	    		                 break;  
+
+	    		             }//end of case 200 & 201 
+	    		             case 401:
+	    			             //case Status code == 422
+	    			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_unauthorized), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+	    			            	 break;
+	    		             case 404:
+	    		             //case Status code == 422
+	    		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.find_player_opponent_not_found), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+	    		            	 break;
+	    		             case 422: 
+	    		             case 500:
+
+	    		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+	    		            	 break;
+	    		         }  
+	    		     }else if (exception instanceof ConnectTimeoutException) {
+	    		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);
+	    		     }else if(exception != null){  
+	    		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_not_connected), 0);  
+
+	    		     }  
+	    		     else{  
+	    		         Log.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
+
+	    		     }//end of else  
+	    		}
+	    		
+	     
+	    	}
+	    
 }

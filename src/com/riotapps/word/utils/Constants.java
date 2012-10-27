@@ -35,6 +35,8 @@ public class Constants {
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 4000;
 	public static final int REGISTERED_FB_FRIENDS_CACHE_DURATION = 604800000; //a week of milliseconds
 	public static final int SPLASH_ACTIVITY_TIMEOUT = 3000;
+	public static final int NETWORK_CONNECTIVITY_CHECK_DURATION = 2000;
+	
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
@@ -113,6 +115,7 @@ public class Constants {
 	/**=============================================
 	 * badge drawables
 	 *==============================================*/
+	public static final String BADGE_INVITED = "badge_invited";
 	public static final String BADGE_0 = "badge_0";
 	public static final String BADGE_1_4 = "badge_1_4";
 	public static final String BADGE_5_9 = "badge_5_9";

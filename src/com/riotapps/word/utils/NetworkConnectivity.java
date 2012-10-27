@@ -16,14 +16,32 @@ public class NetworkConnectivity {
 	  * =========================================================*/   
 	public boolean checkNetworkConnectivity() {   
 
+		//put thread sleep in here
+		
 	     ConnectivityManager connec = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);   
 
 	     boolean isMobileNetworkConnected = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();   
 
 	     boolean isWiFiNetworkConnected = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();  
 
-	     return (isMobileNetworkConnected || isWiFiNetworkConnected);  
+	     //try again in 2 seconds
+	     if (isMobileNetworkConnected || isWiFiNetworkConnected == false){
+	    	 try {
+				Thread.sleep(Constants.NETWORK_CONNECTIVITY_CHECK_DURATION);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	 connec = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);   
 
+		     isMobileNetworkConnected = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();   
+
+		     isWiFiNetworkConnected = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();  
+
+	     }
+	     
+	    return (isMobileNetworkConnected || isWiFiNetworkConnected);  
+	   
 	 }//end method checkNetworkConnectivity
 
 }

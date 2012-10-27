@@ -562,6 +562,9 @@ public class PlayerService {
 	
 	
 	public static String getBadgeDrawable(int numWins){
+		if (numWins == -1) {
+			return Constants.BADGE_INVITED;
+		}
 		if (numWins == 0) {
 			return Constants.BADGE_0;
 		}

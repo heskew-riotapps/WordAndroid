@@ -40,6 +40,11 @@
         >
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
+        android:text="@string/badges_invited" 
+		android:drawableLeft="@drawable/badge_invited"
+        />
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/BadgeLineStyle"
         android:text="@string/badges_0" 
 		android:drawableLeft="@drawable/badge_0"
         />
