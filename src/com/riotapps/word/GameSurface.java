@@ -8,7 +8,6 @@ import java.util.TreeMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
-
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -25,6 +24,7 @@ import com.riotapps.word.ui.GameSurfaceView;
 import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
+import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.ServerResponse;
@@ -58,6 +58,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	ImageFetcher imageLoader;
 	private RelativeLayout scoreboard;
 	 SurfaceView surfaceView;
+	 NetworkTask runningTask = null;
 	
 	 //View bottom;
 	
@@ -391,6 +392,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		Log.w(TAG, "onPause called");
 		super.onPause();
+		if (this.runningTask != null){
+    		this.runningTask.cancel(true);
+    	}
 		this.gameSurfaceView.onPause();
 		
 	}
@@ -426,15 +430,23 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		//super.onBackPressed();
 		//override back button in case user just started game. this will make sure they don;t back through 
 		//all of the pick opponent activities
-		 Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
-	     this.context.startActivity(intent);
-	     this.finish();
-	     
+		this.handleBack(com.riotapps.word.MainLanding.class);
+	}
+	
+	private void handleBack(Class<?> cls){
+		if (this.runningTask != null){
+    		this.runningTask.cancel(true);
+    	}
+		
+		this.gameSurfaceView.onStop();
+		Intent intent = new Intent(this.context, cls );
+	    this.context.startActivity(intent);
+	    this.finish();
 	}
 
 	@Override
 	protected void onRestart() {
-		Log.w(TAG, "onRestart called");
+		//Log.w(TAG, "onRestart called");
 		super.onRestart();
 		this.gameSurfaceView.onRestart();
 		
@@ -478,8 +490,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				public void onClick(View v) {
 		 			dialog.dismiss(); 
 		 			handleGameCancelOnClick();
-		 			//kickoff network task to cancel game and refresh player's game list.
-		 			//then send user back to main landing
+		 		
 		 		}
 			});
 
@@ -490,9 +501,16 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    private void handleGameCancelOnClick(){
 	    	//stop thread first
 	    	this.gameSurfaceView.onStop();
-	    	
-	    	
-	    	
+	    	try { 
+				String json = GameService.setupCancelGame(context, this.game.getId());
+				
+				//kick off thread to cancel game on server
+				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_cancelling), GameActionType.CANCEL_GAME);
+				runningTask.execute(Constants.REST_CANCEL_GAME);
+			} catch (DesignByContractException e) {
+				 
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+			}
 	    }
 	    
 	    private class NetworkTask extends AsyncNetworkRequest{
@@ -508,17 +526,16 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    			super(ctx, requestType, shownOnProgressDialog, json);
 	    			this.context = ctx;
 	    			this.actionType = actionType;
-	    			// TODO Auto-generated constructor stub
+	    		 
 	    		}
 
 	    		@Override
 	    		protected void onPostExecute(ServerResponse serverResponseObject) {
-	    			// TODO Auto-generated method stub
+	    		 
 	    			super.onPostExecute(serverResponseObject);
 	    			
 	    			this.handleResponse(serverResponseObject);
-	    			
-	    			
+
 	    		}
 	     
 	    		private void handleResponse(ServerResponse serverResponseObject){
@@ -546,7 +563,22 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		             case 201: {
 	    		            	 switch(this.actionType){
 	    		            	 	case CANCEL_GAME:
-	    		            		 
+	    		            	 		 
+	    		    		 				//remove game from local storage
+	    		            	 			GameService.removeGameFromLocal(context, context.game);
+	    		            	 			
+	    		            	 			//refresh player's game list with response from server
+	    		            	 			Player player = GameService.handleCancelGameResponse(context, iStream);
+	    		            	 			GameService.updateLastGameListCheckTime(this.context);
+	    		            	 			
+	    		            	 			if (player.getTotalNumLocalGames() == 0){
+	    		            	 				context.handleBack(com.riotapps.word.StartGame.class);	    		            	 					
+	    		            	 			}
+	    		            	 			else{
+	    		            	 				//send player back to main landing 
+	    		            	 				context.handleBack(com.riotapps.word.MainLanding.class);
+	    		            	 			}
+	    		            	 			
 	    		            	 		break;
 	    		            	 	case DECLINE_GAME:
 	    		            	 		
@@ -565,23 +597,11 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 		break;
 	    		            	 
 	    		            	 }
-	    		            	 Game game = GameService.handleCreateGameResponse(this.context, iStream);
-	    		            //	 handleResponseFromIOThread(game);
-	    		            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
-	    		            	 //was not working and driving me crazy
-	    		            	 GameService.putGameToLocal(this.context, game);
-	    		            	 GameService.clearLastGameListCheckTime(this.context);
-	    		            	 
-	    		            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
-	    		            	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
 	    		             
-	    		      	      	 this.context.startActivity(intent);
-	    		                 break;  
-
 	    		             }//end of case 200 & 201 
 	    		             case 401:
 	    			             //case Status code == 422
-	    			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_unauthorized), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+	    			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_unauthorized));  
 	    			            	 break;
 	    		             case 404:
 	    		             //case Status code == 422

@@ -18,7 +18,7 @@ public class FBFriend{
 	private String playerId = "";
 	
 	@SerializedName("w")
-	private int numWins = 0;
+	private int numWins = -1;
 	
 	public String getPlayerId() {
 		return playerId;

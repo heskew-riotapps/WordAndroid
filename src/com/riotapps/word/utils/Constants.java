@@ -103,6 +103,7 @@ public class Constants {
 	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "games.json";
 	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get.json";
 	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_all_by_fb";
+	public static final String REST_CANCEL_GAME = REST_URL_SITE + "games/cancel";
 	
 	/**=============================================
 	 * rails

@@ -90,6 +90,7 @@
  	<string name="progress_saving">saving&#8230;</string>
  	<string name="progress_searching">searching&#8230;</string>
  	<string name="progress_connecting">connecting&#8230;</string>
+ 	<string name="progress_cancelling">cancelling&#8230;</string>
  	<string name="progress_logging_out">logging out&#8230;</string>
  	<string name="progress_syncing">syncing&#8230;</string>
  	<string name="progress_updating">updating&#8230;</string>

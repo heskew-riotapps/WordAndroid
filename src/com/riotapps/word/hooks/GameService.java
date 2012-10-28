@@ -201,6 +201,15 @@ public class GameService {
 	     return game;
 	}
 	
+	public static void removeGameFromLocal(Context ctx,Game game){
+		Gson gson = new Gson(); 
+	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+	 
+	    editor.remove(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()));
+	    editor.commit(); 
+	}
+	
 //	public static void HandleCreateGameResponse(final Context ctx, InputStream iStream){
  //       try {
  //           
@@ -289,6 +298,9 @@ public class GameService {
    //      }
 	 
 //	}
+	public static Player handleCancelGameResponse(final Context ctx, InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
+	}
 
 	public static Game handleCreateGameResponse(final Context ctx, InputStream iStream){
 		return handleGameResponse(ctx, iStream); 

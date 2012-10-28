@@ -418,7 +418,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		            	 	//update local player context
 		            		player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
 		            		 
-		            		Logger.e(TAG, "mAsyncRunner.request(me/friends) about to be called");
+		            		//Logger.e(TAG, "mAsyncRunner.request(me/friends) about to be called");
 		            		//go get user's friends
    	            		    mAsyncRunner.request("me/friends", new fbFriendsRequestListener());
 					     
