@@ -8,6 +8,11 @@ import java.util.TreeMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.facebook.android.FacebookError;
+import com.facebook.android.Util;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -59,6 +64,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	private RelativeLayout scoreboard;
 	 SurfaceView surfaceView;
 	 NetworkTask runningTask = null;
+	 Button bRecall;
+	 Button bShuffle;
 	
 	 //View bottom;
 	
@@ -223,16 +230,58 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	        }
 	    };
 
+	 public void switchToRecall(){
+		//by default recall button will be hidden, it will be switched with shuffle button when a letter is dropped on the board
+		 context.runOnUiThread(new handleButtonSwitchRunnable(2));
+		 //	this.bRecall.setVisibility(View.VISIBLE);
+		 //	this.bShuffle.setVisibility(View.GONE);
+	 }
+
+	 public void switchToShuffle(){
+		 context.runOnUiThread(new handleButtonSwitchRunnable(1));
+		 
+		 
+			//this.bRecall.setVisibility(View.GONE);
+		 	//this.bShuffle.setVisibility(View.VISIBLE);
+	 }
+	 
+	 private class handleButtonSwitchRunnable implements Runnable {
+		 private int activeButton; //1 = shuffle, 2 = recall 	
+		 
+		 public handleButtonSwitchRunnable(int activeButton){
+		 		this.activeButton = activeButton;
+		 	}
+		 
+		 
+		    public void run() {
+		    	switch (this.activeButton){
+			    	case 1:
+			    		bRecall.setVisibility(View.GONE);
+					 	bShuffle.setVisibility(View.VISIBLE);
+			    		break;
+			    	case 2:
+			    		bRecall.setVisibility(View.VISIBLE);
+					 	bShuffle.setVisibility(View.GONE);
+			    		break;
+		    	}
+		    }
+	  }
+	 
 	 private void setupButtons(){
-		Button bShuffle = (Button) findViewById(R.id.bShuffle);
+		this.bRecall = (Button) findViewById(R.id.bRecall);
+		this.bShuffle = (Button) findViewById(R.id.bShuffle);
 		Button bChat = (Button) findViewById(R.id.bChat);
 		Button bPlayedWords = (Button) findViewById(R.id.bPlayedWords);
 		Button bCancel = (Button) findViewById(R.id.bCancel);
 		Button bResign = (Button) findViewById(R.id.bResign);
 		Button bDecline = (Button) findViewById(R.id.bDecline);
-	 	bShuffle.setOnClickListener(this);
+	 	this.bShuffle.setOnClickListener(this);
 	 	bChat.setOnClickListener(this);
 	 	bPlayedWords.setOnClickListener(this);
+	 	this.bRecall.setOnClickListener(this);
+	 	
+	 	//by default recall button will be hidden, it will be switched with shuffle button when a letter is dropped on the board
+	 	this.bRecall.setVisibility(View.GONE); 
 	 	
 	 	//set cancel button area mode:
 	 	//if it's the first play of the game by starting player, it should be "CANCEL" mode
@@ -473,6 +522,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 					break;
 		        case R.id.bCancel:  
 		        	this.handleCancel();
+					break;
+		        case R.id.bRecall:
+		        	this.gameSurfaceView.recallLetters();
 					break;
 	    	}
 	 }

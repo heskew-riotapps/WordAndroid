@@ -14,14 +14,19 @@ public class GameTile {
 	private int xPositionZoomed = 0;
 	private int yPositionZoomed = 0;
 	private String originalText = "";
-	private String placedText = "";
+	private String originalLetter = "";
+	private String draggingLetter = "";
+
+	//private String placedText = "";
 
 	private int row;
 	private int column;
     private boolean isLastPlayed = false;
     private boolean isOverlay = false;
     private boolean isPlacement = false;
-    private int placedLetter = 0;
+    private String placedLetter = "";
+    private boolean isDraggable = false;
+    private boolean isDragging = false;
     private Canvas canvas;
 
 
@@ -150,26 +155,71 @@ public class GameTile {
 		this.yPositionZoomed = yPositionZoomed;
 	}
 	
+	public String getDisplayLetter(){
+		return (this.placedLetter.length() > 0 ? this.placedLetter : this.originalLetter);
+	}
 
-	public String getOriginalText() {
+ 
+public String getOriginalText() {
 		return originalText;
 	}
 	public void setOriginalText(String originalText) {
 		this.originalText = originalText;
 	}
-	public String getPlacedText() {
-		return placedText;
+	public String getOriginalLetter() {
+		return originalLetter;
 	}
-	public void setPlacedText(String placeText) {
-		this.placedText = placedText;
-	}
-	public void setPlacedLetter(int placedLetter) {
+	//	public String getPlacedText() {
+//		return placedText;
+//	}
+//	public void setPlacedText(String placeText) {
+//		this.placedText = placedText;
+//	}
+	public void setPlacedLetter(String placedLetter) {
 		this.placedLetter = placedLetter;
+		if (placedLetter.length() > 0) {
+			this.isDraggable = true;
+		}
+		else{
+			this.isDraggable = false;
+		}
 	}
 	
-	public String getCurrentText() {
-		return placedText.length() > 0 ? placedText : originalText;
+	public String getPlacedLetter() {
+		return placedLetter;
 	}
+	public void setOriginalLetter(String originalLetter) {
+		this.originalLetter = originalLetter;
+	}
+	public String getCurrentLetter() {
+		return placedLetter.length() > 0 ? placedLetter : originalLetter;
+	}
+	public boolean isDraggable() {
+		return isDraggable;
+	}
+	public void setDraggable(boolean isDraggable) {
+		this.isDraggable = isDraggable;
+	}
+	public boolean isDragging() {
+		return isDragging;
+	}
+	public void setDragging(boolean isDragging) {
+		this.isDragging = isDragging;
+	}
+	public String getDraggingLetter() {
+		return draggingLetter;
+	}
+	public void setDraggingLetter(String draggingLetter) {
+		this.draggingLetter = draggingLetter;
+	}
+	
+	public void recallLetter(){
+		this.placedLetter = "";
+		this.draggingLetter = "";
+		this.isDragging = false;
+		this.isDraggable = false;
+	}
+	
 }
 
 

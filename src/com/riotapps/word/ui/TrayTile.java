@@ -93,14 +93,31 @@ public class TrayTile {
 	}
 	public void setDragging(boolean dragging) {
 		this.dragging = dragging;
+		
 	}
 
 	public void setUpForDrag(){
 		this.dragging = true;
+		this.draggingLetter = this.currentLetter;
+		this.currentLetter = "";
 	}
 	
 	public void removeDrag(){
 		this.dragging = false;
+		if (this.draggingLetter.length() > 0){
+			this.currentLetter =  this.draggingLetter;
+		}
+		this.draggingLetter = "";
+	}
+	
+	public void removeActiveDrag(){
+		this.dragging = false;
+		this.draggingLetter = "";
+	}
+	
+	public void setTileAsDropped(){
+		this.dragging = false;
+		this.draggingLetter = "";
 	}
 
 }

@@ -186,7 +186,7 @@ public class GameService {
 	    SharedPreferences.Editor editor = settings.edit();
 	    
 	    game.setLocalStorageDate(System.nanoTime());
-	    Logger.w(TAG, "game=" + gson.toJson(game));
+	 //   Logger.w(TAG, "game=" + gson.toJson(game));
 	   
 	    editor.putString(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()), gson.toJson(game));
 	    editor.commit(); 
@@ -313,14 +313,14 @@ public class GameService {
 	private static Game handleGameResponse(final Context ctx, InputStream iStream){
 		 Gson gson = new Gson(); //wrap json return into a single call that takes a type
     	 
-   	  Logger.d(TAG, "handleCreateGameResponse");
+   	  //Logger.d(TAG, "handleCreateGameResponse");
         
          Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 
          Type type = new TypeToken<Game>() {}.getType();
          Game game = gson.fromJson(reader, type);
         
-        Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
+       // Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
 	         
          PlayerService.updateAuthToken(ctx, game.getAuthToken());
          

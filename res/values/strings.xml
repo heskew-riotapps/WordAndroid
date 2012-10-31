@@ -282,6 +282,7 @@
  	<string name="scoreboard_letters_left">%s letters left</string>
  	<string name="scoreboard_1_letter_left">1 letter left</string>
  	<string name="scoreboard_num_points">%s points</string>
+ 	<string name="gameboard_recall_button_text">recall</string>
  	<string name="gameboard_shuffle_button_text">shuffle</string>
  	<string name="gameboard_chat_button_text">chat</string>
  	<string name="gameboard_play_button_text">play</string>
