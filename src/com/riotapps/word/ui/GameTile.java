@@ -26,16 +26,19 @@ public class GameTile {
     private boolean isPlacement = false;
     private String placedLetter = "";
     private boolean isDraggable = false;
+ 
     private boolean isDragging = false;
-    private Canvas canvas;
-
+    private int xPositionCenter = 0;
+    private int yPositionCenter = 0;
+    private int xPositionCenterRelativeZoomed = 0;
+    private int yPositionCenterRelativeZoomed = 0;
 
 	public GameTile(){
 		
 	}
-	public GameTile(Canvas canvas){
-		this.canvas = canvas; //???is canvas needed?
-	}
+//	public GameTile(Canvas canvas){
+//		this.canvas = canvas; //???is canvas needed?
+//	}
 
 	public int getId() {
 		return id;
@@ -205,6 +208,7 @@ public String getOriginalText() {
 	}
 	public void setDragging(boolean isDragging) {
 		this.isDragging = isDragging;
+
 	}
 	public String getDraggingLetter() {
 		return draggingLetter;
@@ -219,7 +223,56 @@ public String getOriginalText() {
 		this.isDragging = false;
 		this.isDraggable = false;
 	}
+	public int getxPositionCenter() {
+		return xPositionCenter;
+	}
+	public void setxPositionCenter(int xPositionCenter) {
+		this.xPositionCenter = xPositionCenter;
+	}
+	public int getyPositionCenter() {
+		return yPositionCenter;
+	}
+	public void setyPositionCenter(int yPositionCenter) {
+		this.yPositionCenter = yPositionCenter;
+	}
+
+	public int getxPositionCenterRelativeZoomed() {
+		return xPositionCenterRelativeZoomed;
+	}
+
+	public void setxPositionCenterRelativeZoomed(int xPositionCenterRelativeZoomed) {
+		this.xPositionCenterRelativeZoomed = xPositionCenterRelativeZoomed;
+	}
+
+	public int getyPositionCenterRelativeZoomed() {
+		return yPositionCenterRelativeZoomed;
+	}
+
+	public void setyPositionCenterRelativeZoomed(int yPositionCenterRelativeZoomed) {
+		this.yPositionCenterRelativeZoomed = yPositionCenterRelativeZoomed;
+	}
+
+	public boolean isDroppable() {
+		return this.placedLetter.length() == 0;
+	}
+
+	public void removePlacement(){
+		this.placedLetter = "";
+	}
+	 
+	public void removeDrag(){
+		this.isDragging = false;
+		if (this.draggingLetter.length() > 0){
+			this.placedLetter =  this.draggingLetter;
+		}
+		this.draggingLetter = "";
+	}
 	
+	public void setDrag(){
+		this.isDragging = true;
+		this.draggingLetter = this.placedLetter;
+		this.placedLetter = "";
+	}
 }
 
 
