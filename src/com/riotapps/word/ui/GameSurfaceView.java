@@ -800,6 +800,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	 }
 	 
+	 private TrayTile findClosestTrayTile(int xPosition, int yPosition){
+		 TrayTile dropTargetTile = null;
+		 ///find it based on center of tiles		 
+		 		 
+		 //TODO
+		 
+		 
+		 return dropTargetTile;
+	 }
+	 
 	 private GameTile findClosestOpenTile(int xPosition, int yPosition){
 		 GameTile dropTargetTile = null;
 		 boolean zoomed = this.isZoomed;
@@ -1562,6 +1572,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 tile.setId(y);
 			 tile.setxPosition(this.trayTileLeftMargin + ((this.trayTileSize + TRAY_TILE_GAP) * tile.getId()));
 			 tile.setyPosition(this.trayTop);
+			 
+			 tile.setxPositionCenter(Math.round(tile.getxPosition() + (this.trayTileSize / 2)));
+			 tile.setyPositionCenter(Math.round(tile.getyPosition() + (this.trayTileSize / 2)));
+
 			 tile.setOriginalBitmap(this.bgTrayBaseScaled);
 			 //tile.setOriginalBitmapDragging(this.bgTrayBaseDragging);
 
@@ -1621,8 +1635,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 tile.setColumn(x + 1);
 				 tile.setRow(y + 1);
 				 
-				 tile.setxPositionCenterRelativeZoomed((tile.getColumn() * this.zoomedTileWidth) + (this.zoomedTileWidth / 2));
-				 tile.setyPositionCenterRelativeZoomed((tile.getRow() * this.zoomedTileWidth) + (this.zoomedTileWidth / 2));
+				 tile.setxPositionCenterRelativeZoomed((tile.getColumn() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
+				 tile.setyPositionCenterRelativeZoomed((tile.getRow() * this.zoomedTileWidth) + Math.round(this.zoomedTileWidth / 2));
 								 
 				 //set center of the tile.  this will be used for drop assignments later as the player
 				 //drops tiles on the board

@@ -16,6 +16,8 @@ public class TrayTile {
 	private String currentLetter = "";
 	private String draggingLetter = "";
 	private boolean dragging = false;
+	private int xPositionCenter = 0;
+	private int yPositionCenter = 0
 	
 	public int getId() {
 		return id;
@@ -118,6 +120,18 @@ public class TrayTile {
 	public void setTileAsDropped(){
 		this.dragging = false;
 		this.draggingLetter = "";
+	}
+	public int getxPositionCenter() {
+		return xPositionCenter;
+	}
+	public void setxPositionCenter(int xPositionCenter) {
+		this.xPositionCenter = xPositionCenter;
+	}
+	public int getyPositionCenter() {
+		return yPositionCenter;
+	}
+	public void setyPositionCenter(int yPositionCenter) {
+		this.yPositionCenter = yPositionCenter;
 	}
 
 }
