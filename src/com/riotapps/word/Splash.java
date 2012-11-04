@@ -128,11 +128,12 @@ public class Splash  extends FragmentActivity {
 	        else{
 	        	 long currentTime = System.nanoTime();
 	        	 
-            	 //default time in which to leave splash up
-            	 if (Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime) < Constants.SPLASH_ACTIVITY_TIMEOUT){
+            	 //default time in which to leave splash up//watch out for negative values
+	        	 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime);
+            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
             		 try {
-            			 Logger.w(TAG, " checkInitialConnectivity OK , about to sleep" + Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime)  + " milliseconds" ); 
-						Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime));
+            			// Logger.w(TAG, " checkInitialConnectivity OK , about to sleep" + Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime)  + " milliseconds" ); 
+						Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -208,8 +209,9 @@ public class Splash  extends FragmentActivity {
 	            		 long currentTime = System.nanoTime();
 		            	 
 		            	 //default time in which to leave splash up
-		            	 if (Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime) < Constants.SPLASH_ACTIVITY_TIMEOUT){
-		            		 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime));
+	            		 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime);
+		            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
+		            		 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
 		            	 }
 	            		 
 		            	 Intent intent;
@@ -237,9 +239,10 @@ public class Splash  extends FragmentActivity {
 	            	 long currentTime = System.nanoTime();
 	            	 
 	            	 //default time in which to leave splash up
-	            	 if (Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime) > Constants.SPLASH_ACTIVITY_TIMEOUT){
+	            	 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime);
+	            	 if (timeDiff > Constants.SPLASH_ACTIVITY_TIMEOUT){
 	            		 try {
-	            			 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime));
+	            			 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
 						} catch (InterruptedException e) {
 							Logger.w(TAG, "Thread.sleep " + e.getMessage());
 							e.printStackTrace();

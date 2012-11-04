@@ -194,9 +194,9 @@ public String getOriginalText() {
 	public void setOriginalLetter(String originalLetter) {
 		this.originalLetter = originalLetter;
 	}
-	public String getCurrentLetter() {
-		return placedLetter.length() > 0 ? placedLetter : originalLetter;
-	}
+//	public String getCurrentLetter() {
+//		return placedLetter.length() > 0 ? placedLetter : originalLetter;
+//	}
 	public boolean isDraggable() {
 		return isDraggable;
 	}

@@ -60,9 +60,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int fullWidth;
     private int fullHeight;
     private int fullViewTileWidth;
-    private int trayAreaTop = 0;
+    //private int trayAreaTop = 0;
     private boolean trayTileDropped = false;
+    private boolean trayTileDropTarget = false;
     private boolean isButtonStateInShuffle = true;  //this is the default value because board starts in shuffle state
+    private RectArea trayAreaRect = new RectArea();
   //  private int top;
   //  private int left;
     private boolean isZoomed = false;
@@ -92,6 +94,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int yPosition = 0;
     private int xDistance = 0;
     private int yDistance = 0;
+    
+    private int draggingTileId = -1;
 
     private static final float ANIMATION_TIMESTEP = .05f;
     private static final int NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING = 3;
@@ -134,7 +138,20 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     
   //  private Game game;
     private GameTile targetTile = null;
-    private GameTile draggingTile = null;
+    //private GameTile draggingTile = null;
+    
+    private GameTile getDraggingTile(){
+    	if (this.draggingTileId > -1){
+    		return this.tiles.get(this.draggingTileId);
+    	}
+    	
+    	return null;
+    }
+    
+    private void clearDraggingTile(){
+    	this.draggingTileId = -1;
+    }
+    
     private TrayTile currentTrayTile = null;
     private Bitmap trayBackground;
     private Bitmap logo;
@@ -279,7 +296,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 this.bgPlacedTileFull = Bitmap.createScaledBitmap(bgPlacedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 		 this.bgPlacedTileZoomed = Bitmap.createScaledBitmap(bgPlacedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 		
-		
+		 this.trayAreaRect.setTop(this.trayTop - TRAY_VERTICAL_MARGIN - TRAY_TOP_BORDER_HEIGHT);
+	     this.trayAreaRect.setBottom(this.trayTop + this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2));
+	     this.trayAreaRect.setLeft(0);
+	     this.trayAreaRect.setRight(this.fullWidth);
 		
 		//Toast t = Toast.makeText(context, "Hello " +  this.height + " " + this.fullWidth + " " + getMeasuredHeight() , Toast.LENGTH_LONG);   
 	    //t.show();
@@ -408,6 +428,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.currentTouchMotion = event.getAction();
 	     this.isSingleTap = false;
 	     this.trayTileDropped = false;
+	     this.trayTileDropTarget = false;
 	     this.alreadyInZoomedState = false;
 		// Logger.d(TAG, "onTouchEvent isSingleTap=off");	     
 	     long currentTouchTime = System.nanoTime(); 
@@ -455,10 +476,17 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             		 //targetTile.setDraggingLetter(targetTile.getPlacedLetter());
             		 //targetTile.removePlacement();
             		 //targetTile.setDragging(true);
-            		 targetTile.setDrag();
-            		 this.draggingTile = targetTile;
+            		 //targetTile.setDrag();
+            		// this.tiles.get(targetTile.getId()).setDrag();
+            		 this.tiles.get(targetTile.getId()).setDrag();
+            		 this.draggingTileId = targetTile.getId();
+            		 //this.draggingTile = this.tiles.get(targetTile.getId());
+            		 this.getDraggingTile().setDraggingLetter(targetTile.getDisplayLetter());
+            		 this.getDraggingTile().setDragging(true);
+            		 //targetTile = null;
+            		// this.targetTile = null;
             		 
-            		 Logger.d(TAG, "onTouch ACTION_DOWN targetTileId=" + targetTile.getId() + " letter=" + this.tiles.get(targetTile.getId()).getDisplayLetter());
+            		 Logger.d(TAG, "onTouch ACTION_DOWN this.draggingTile=" + this.getDraggingTile().getId() + " dragletter=" + this.getDraggingTile().getDraggingLetter());
             	 }
             	 //player has tapped a board tile
             	 else if (targetTile != null){
@@ -576,8 +604,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         			 //Logger.w(TAG,"onTouchEvent: ACTION_UP number of coordinates" + this.coordinates.size());
         			 
         			 //first check to see if a tray tile is being dragged. if so this means the tray tile is being dropped
-        			 if ((this.currentTrayTile != null && this.currentTrayTile.isDragging()) || this.draggingTile != null){
-        				 Logger.d(TAG, "ACTION_UP current tray tile is dragging");
+        			 if ((this.currentTrayTile != null && this.currentTrayTile.isDragging()) || this.getDraggingTile() != null){
+        				 Logger.d(TAG, "ACTION_UP a tile is dragging");
         				 //find out where we are on the board.
         				 //we need to determine if the tray tile was dropped 
         				 //if we are in full view mode (!zoomed) we need to determine if tile was dropped on the neutral areas
@@ -606,10 +634,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    						 this.currentTrayTile = null;		 
         					 }
         					 //handle board tile dropping
-        					 else if(this.draggingTile != null){
-        						 this.targetTile.setPlacedLetter(this.draggingTile.getDraggingLetter());
-	    						 this.draggingTile.setDraggingLetter("");
-	    						 this.draggingTile = null;		 
+        					 else if(this.getDraggingTile() != null){
+        						 this.targetTile.setPlacedLetter(this.getDraggingTile().getDraggingLetter());
+	    						 this.getDraggingTile().setDraggingLetter("");
+	    						 this.clearDraggingTile(); //this.draggingTile = null;		 
         					 }
     						 
     						 
@@ -629,6 +657,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         				 else
         				 {
         					 //find out if drop occurred on tray tile!!!
+        					 TrayTile trayDropTargetTile = this.findClosestTrayTile(this.currentX, this.currentY);
+        					 
+        					 //match found!!  let's drop the target letter on the tray tile and shift
+        					 //any letter (and subsequent letters) that might already be there
+        					 if (trayDropTargetTile !=null){
+        						 this.handleDropOnTray(trayDropTargetTile, this.getDraggingTile(), this.currentTrayTile);
+        						 this.readyToDraw = true;
+        						 this.trayTileDropTarget = true;
+        					 }
+        							 
         				 }
         					 
     					 //if current tile is still null, return dragged tile to its origin
@@ -638,9 +676,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     							 this.currentTrayTile.removeDrag();
     							 this.currentTrayTile = null;
     						 }
-    						 else if(this.draggingTile != null){
-    							 this.draggingTile.removeDrag();
-    							 this.draggingTile = null;
+    						 else if(this.getDraggingTile() != null){
+    							 this.getDraggingTile().removeDrag();
+    							 this.clearDraggingTile(); //this.draggingTile = null;
     						 }
     					 }
         			 }
@@ -720,7 +758,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	
             	 
             	 //check to see if a board tile is being dragged
-            	 if (this.draggingTile != null){
+            	 if (this.getDraggingTile() != null){
             		 this.readyToDraw = true;
             	 }
             	 //check to see if a tray tile is being dragged
@@ -732,7 +770,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	            		 this.readyToDraw = false;
 	            	 }
 	            	 //don't drag board outside of board area
-	            	 else if (this.currentY > this.trayAreaTop){
+	            	 else if (this.currentY > this.trayAreaRect.getTop()){ //this.trayAreaTop){
 	            		 this.readyToDraw = false;
 	            	 }
 	            	 //use absolute values here????
@@ -778,17 +816,93 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	 }
 	 
+	 private void handleDropOnTray(TrayTile dropTargetTile, GameTile draggingTile, TrayTile draggingTrayTile){
+		 
+		 Logger.d(TAG, "handleDropOnTray called");
+		 //shift letters as needed and reset GameState
+		 //
+		 //determine which type of tile is being dropped, a board tile or another tray tile
+		 String dropLetter;
+		 
+		 //just in case the draggingTrayTile is being dropped back into it's own location
+		 if (draggingTrayTile != null && draggingTrayTile.getId() == dropTargetTile.getId()){
+			 //just remove drag and we are back in business
+			 this.trayTiles.get(dropTargetTile.getId()).removeDrag();
+
+			 draggingTile = null;
+			 draggingTrayTile = null;
+			 
+			 Logger.d(TAG, "handleDropOnTray tray tile dropped back into its own location");
+			 return;
+		 }
+		 
+		 if (draggingTile != null){
+			 dropLetter = draggingTile.getDraggingLetter();
+		 }
+		 else{
+			 dropLetter = draggingTrayTile.getDraggingLetter();
+		 }
+	 
+		 //if the target tray tile is already empty, just assign it a letter with no shifting
+		 if (dropTargetTile.isEmpty()){
+			 this.trayTiles.get(dropTargetTile.getId()).setCurrentLetter(dropLetter);
+			 if (draggingTile != null){
+				// this.targetTile.removePlacement();
+				 this.getDraggingTile().removePlacement();
+				 draggingTile.removePlacement();
+				 //this.tiles.get(draggingTile.getId()).removePlacement();
+				 Logger.d(TAG, "handleDropOnTray  target tray tile is already empty ." + this.tiles.get(draggingTile.getId()).getDisplayLetter() + " - " + this.tiles.get(draggingTile.getId()).getPlacedLetter()); 
+			 }
+			 
+			 
+			 draggingTile = null;
+			 draggingTrayTile = null;
+			 return;
+		 }
+		 
+		 //ok, based on the location of the closest empty tray tile in relation to the drop target
+		 //let's determine the direction of the shift
+		 //look to the left first, then look to the right
+		 String loopLetter = dropTargetTile.getCurrentLetter();
+		 int direction = 0;
+		 int j = 1;
+		 for(TrayTile tile : this.trayTiles){
+			 if (tile.getId() != dropTargetTile.getId() && tile.isEmpty() && direction == 0){
+				 if (tile.getId() < dropTargetTile.getId()) { direction = -1; } else { direction = 1; }
+			 }
+		 }
+		 
+		 //multiplying by direction will send the loop into the proper direction
+		 j = j * direction;
+		 Logger.d(TAG, "handleDropOnTray j=" + j);
+	    int i = (dropTargetTile.getId() - 1) + (1 * direction);
+	    
+		 Logger.d(TAG, "handleDropOnTray dropTargetTile.getId()=" + dropTargetTile.getId() + " i=" + i);
+	    boolean loopRun = true;
+	    while (loopRun == true) {
+	        String letter = this.trayTiles.get(i).getCurrentLetter();
+	        this.trayTiles.get(i).setCurrentLetter(loopLetter);
+	        loopLetter = letter;
+
+	        //stop at first formerly empty tile 
+	        if (letter == "") { loopRun = false; }
+	        i = i + (1 * j);
+	    }
+
+	   
+	 }
+	 
 	 private GameTile findTapTargetTile(int xPosition, int yPosition){
 		 GameTile tapTargetTile = null;
 		 boolean zoomed = this.isZoomed;
  
-		 Logger.d(TAG, "findTapTargetTile yPosition=" + yPosition + " trayAreaTop=" + this.trayAreaTop);
+		 Logger.d(TAG, "findTapTargetTile yPosition=" + yPosition + " trayAreaTop=" + this.trayAreaRect.getTop());
 		 
 		 //let's see if a tile was tapped on 
 		 if (zoomed){
 			 //in zoom mode, make sure user didn't tap outside of board view, else we might get a false positive hit 
 			 //on tiles that are underneath the tray
-			 if (yPosition < this.trayAreaTop){
+			 if (yPosition < this.trayAreaRect.getTop()){ //this.trayAreaTop){
 				 tapTargetTile = this.FindTileFromPositionInZoomedMode(xPosition, yPosition);
 			 }
 		 }
@@ -802,11 +916,38 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 
 	 private TrayTile findClosestTrayTile(int xPosition, int yPosition){
 		 TrayTile dropTargetTile = null;
-		 ///find it based on center of tiles		 
-		 		 
-		 //TODO
 		 
+		 Logger.d(TAG, "findClosestTrayTile isCoordinateWithinArea=" + this.trayAreaRect.isCoordinateWithinArea(xPosition, yPosition));
+		 Logger.d(TAG, "findClosestTrayTile trayArea top=" + this.trayAreaRect.getTop() + " bottom=" + this.trayAreaRect.getBottom() + 
+				" left=" + this.trayAreaRect.getLeft() + " right=" + this.trayAreaRect.getRight());
 		 
+		 Logger.d(TAG,  "findClosestTrayTile xPosition=" + xPosition + " yPosition=" + yPosition);
+		 
+		 //if x and y positions are anywhere within the entire tray area (including borders, gaps etc)
+		 //then find closest based on center of tiles		 
+		if (this.trayAreaRect.isCoordinateWithinArea(xPosition, yPosition)){
+			int smallestSummedDifference = 250000;
+			
+			 for(TrayTile tile : this.trayTiles){
+
+			 
+				 int summedDifference = Math.abs(tile.getxPositionCenter() - xPosition) +
+						 Math.abs(tile.getyPositionCenter() - (yPosition));
+				 
+				Logger.d(TAG, "findClosestTrayTile xCenter=" + tile.getxPositionCenter() + " yCenter=" + tile.getyPositionCenter());
+
+				 
+				 if (summedDifference < smallestSummedDifference){
+					 dropTargetTile = tile;
+					 smallestSummedDifference = summedDifference;
+				 }
+					// Logger.d(TAG, "findClosestOpenTile xCenter=" + (zoomed ? tile.getxPositionCenterRelativeZoomed() : tile.getxPositionCenter()) + " yCenter=" +  (zoomed ? tile.getyPositionCenterRelativeZoomed() : tile.getyPositionCenter()));
+					  Logger.d(TAG, "findClosestTrayTile summedDifference=" + summedDifference + " smallestSummedDifference=" + smallestSummedDifference);
+			 
+			 }
+			 Logger.d(TAG, "findClosestTrayTile closestTile.Id=" + dropTargetTile.getId());
+		}
+	
 		 return dropTargetTile;
 	 }
 	 
@@ -930,7 +1071,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 Logger.d(TAG, "onDraw this.isZoomed == true");
 				 //a tray tile has been tapped down
 				 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN && 
-						 this.currentTrayTile.isDragging() || this.draggingTile != null){
+						 this.currentTrayTile.isDragging() || this.getDraggingTile() != null){
 					 //board stays the same
 					 this.drawBoardOnMove(canvas, 0, 0);
 					 Logger.d(TAG, "onDraw a tray tile has been tapped down");
@@ -966,7 +1107,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					
 
 					//if board is already zoomed and a tile was dropped, do not move board, keep it in the same position
-					if (this.trayTileDropped && this.alreadyInZoomedState){
+					if ((this.trayTileDropped || this.trayTileDropTarget) && this.alreadyInZoomedState){
 						this.drawBoardOnMove(canvas, 0, 0); //////////////?????????????
 					}
 					else if (this.targetTile != null){
@@ -1004,8 +1145,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 //let's see if a board tile is being dragged
 		 //(dragging a board tile means the player has previously dropped a tray tile on the board and
 		 //now he is moving it again
-		 if (this.draggingTile != null){
-			 this.drawDraggingTileGuts(canvas, this.draggingTile.getDraggingLetter());
+		 if (this.getDraggingTile() != null){
+			 this.drawDraggingTileGuts(canvas, this.getDraggingTile().getDraggingLetter());
 		 }
 		 //let's see if a tray tile is being dragged
 		 else if (this.currentTrayTile != null && this.currentTrayTile.isDragging()){
@@ -1308,8 +1449,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 	 if (tile.getDisplayLetter().length() > 0){
     		 canvas.drawBitmap(this.bgPlacedTileZoomed,tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
      
-    		 this.drawLetter(canvas, tile.getCurrentLetter(), this.zoomedTileWidth, tile.getxPositionZoomed(), tile.getyPositionZoomed());
-    	
+    		 this.drawLetter(canvas, tile.getDisplayLetter(), this.zoomedTileWidth, tile.getxPositionZoomed(), tile.getyPositionZoomed());
+    		 Logger.d(TAG, "drawZoomedBoardGuts tile.getDisplayLetter()=" + tile.getDisplayLetter());
     	 } 
 	 	 //original text represents bonus text
     	 else if (tile.getOriginalText().length() > 0){
@@ -1426,12 +1567,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	  //   p.setTypeface(this.bonusTypeface);
 	     Rect boundsBorder = new Rect();
 	     boundsBorder.left = 0;
-	     boundsBorder.right = this.fullWidth;
-	     boundsBorder.top = this.trayTop - TRAY_VERTICAL_MARGIN - TRAY_TOP_BORDER_HEIGHT;
+	     boundsBorder.right = this.trayAreaRect.getRight(); //this.fullWidth;
+	     boundsBorder.top = this.trayAreaRect.getTop(); //this.trayTop - TRAY_VERTICAL_MARGIN - TRAY_TOP_BORDER_HEIGHT;
 	     boundsBorder.bottom = this.trayTop - TRAY_VERTICAL_MARGIN;
 	     canvas.drawRect(boundsBorder, pBorder);
 	     
-	     this.trayAreaTop = boundsBorder.top;
+	    // this.trayAreaTop = boundsBorder.top;
 	     
 		canvas.drawBitmap(this.trayBackground, 0, this.trayTop - TRAY_VERTICAL_MARGIN, null);
 		
@@ -1727,7 +1868,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         	 if (tile.getDisplayLetter().length() > 0){
 	    		 canvas.drawBitmap(this.bgPlacedTileFull,tile.getxPosition(), tile.getyPosition(), null);
 	     
-	    		 this.drawLetter(canvas, tile.getCurrentLetter(), this.fullViewTileWidth, tile.getxPosition(), tile.getyPosition());
+	    		 this.drawLetter(canvas, tile.getDisplayLetter(), this.fullViewTileWidth, tile.getxPosition(), tile.getyPosition());
 	    	
 	    	 } 
         	 else if (tile.getOriginalText().length() > 0){
