@@ -6,6 +6,8 @@ public class Coordinate{
 	 private int yLocation;
 	 private long timestamp;
 	 
+	 public Coordinate(){}
+	 
 	 public Coordinate(int xLocation, int yLocation, long timestamp){
 		 this.xLocation = xLocation;
 		 this.yLocation = yLocation;

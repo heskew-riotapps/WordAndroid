@@ -16,7 +16,8 @@ public class GameTile {
 	private String originalText = "";
 	private String originalLetter = "";
 	private String draggingLetter = "";
-
+	private int xPositionDragging = 0;
+	private int yPositionDragging = 0;
 	//private String placedText = "";
 
 	private int row;
@@ -266,6 +267,8 @@ public String getOriginalText() {
 			this.placedLetter =  this.draggingLetter;
 		}
 		this.draggingLetter = "";
+		this.xPositionDragging = 0;
+		this.yPositionDragging = 0;
 	}
 	
 	public void setDrag(){
@@ -273,6 +276,32 @@ public String getOriginalText() {
 		this.draggingLetter = this.placedLetter;
 		this.placedLetter = "";
 	}
+	
+	public void removeDragAndPlacement(){
+		this.isDragging = false;
+		this.placedLetter = "";
+		this.draggingLetter = "";
+		this.xPositionDragging = 0;
+		this.yPositionDragging = 0;
+	}
+
+	public int getxPositionDragging() {
+		return xPositionDragging;
+	}
+
+	public void setxPositionDragging(int xPositionDragging) {
+		this.xPositionDragging = xPositionDragging;
+	}
+
+	public int getyPositionDragging() {
+		return yPositionDragging;
+	}
+
+	public void setyPositionDragging(int yPositionDragging) {
+		this.yPositionDragging = yPositionDragging;
+	}
+	
+	
 }
 
 

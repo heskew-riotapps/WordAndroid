@@ -18,6 +18,7 @@ public class TrayTile {
 	private boolean dragging = false;
 	private int xPositionCenter = 0;
 	private int yPositionCenter = 0;
+ 
 	
 	public int getId() {
 		return id;
@@ -137,6 +138,8 @@ public class TrayTile {
 	public boolean isEmpty(){
 		return this.currentLetter.length() == 0;
 	}
+	
+ 
 }
 
 
