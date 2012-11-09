@@ -189,6 +189,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
 		this.gameSurfaceView.construct(this);
 		this.gameSurfaceView.setParent(this);
+		
+	
+	 
 	 	
 		//Logger.d(TAG, "scoreboard about to be loaded");
 	 	//this.loadScoreboard();

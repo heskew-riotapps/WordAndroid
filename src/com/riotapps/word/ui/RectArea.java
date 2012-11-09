@@ -82,7 +82,7 @@ public class RectArea {
 			overlap.setLeft(rect.getLeft() <= this.getLeft()  ? this.getLeft() : rect.getLeft());
 
 			//if rect is situated across the right side of this, take right side of this (outer) (since right side of rect is out of bounds)
-			overlap.setLeft(rect.getRight() >= this.getRight()  ? this.getRight() : rect.getRight());
+			overlap.setRight(rect.getRight() >= this.getRight()  ? this.getRight() : rect.getRight());
 			
 			return overlap;
 		}

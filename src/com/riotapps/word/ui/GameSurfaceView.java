@@ -47,6 +47,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.parent = parent;
 	}
 	
+	int absoluteTop = 0;
+	int absoluteLeft = 0;
+	
 	GameSurfaceView me = this;
 	Context context;
 	GameThread gameThread = null;
@@ -300,6 +303,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	private void SetDerivedValues(){
 		LayoutParams lp = me.getLayoutParams();
+ 
+		int[] coordinates = new int[2];
+		this.getLocationOnScreen(coordinates);
+		
+		this.absoluteTop = coordinates[1];
+		this.absoluteLeft = coordinates[0];
+		
+		//Logger.d(TAG, "SetDerivedValues top=" + coordinates[1] + " left" + coordinates[0]  );
+		
 	 	 this.fullWidth = this.getWidth();
 	 	 this.height = this.getHeight() - GameSurface.BUTTON_CONTROL_HEIGHT - GameSurface.SCOREBOARD_HEIGHT + 6;// lp.height; //getMeasuredHeight();
 	 //	this.height = this.parent.getWindowHeight() - GameSurface.SCOREBOARD_HEIGHT - GameSurface.BUTTON_CONTROL_HEIGHT-100;
@@ -474,8 +486,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	 @Override
 	 public boolean onTouchEvent(MotionEvent event) {
-	     this.currentX = (int) event.getX();
-	     this.currentY = (int) event.getY();
+		 
+		 //getX seems to be unreliable so lets use getRawX and convert to relative
+	 //    int x = (int) event.getRawX();
+	 //    int y = (int) event.getRawY();
+
+	     //convert absolute coordinates to relative to this view
+	     this.currentX = (int) event.getRawX() - this.absoluteLeft;
+	     this.currentY = (int) event.getRawY() - this.absoluteTop;
+	     
 	     this.currentTouchMotion = event.getAction();
 	     this.isSingleTap = false;
 	     this.trayTileDropped = false;
@@ -484,7 +503,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		// Logger.d(TAG, "onTouchEvent isSingleTap=off");	     
 	     long currentTouchTime = System.nanoTime(); 
 	    
-         Log.w(getClass().getSimpleName() + "onTouchEvent", event.toString());
+         Logger.w(TAG,  "onTouchEvent event=" + event.toString());
+         Logger.w(TAG,  "onTouchEvent currentX=" + this.currentX + " currentY=" + this.currentY + " x=" + event.getX() + " y=" + event.getY() + " rawX=" + event.getRawX() + " rawY=" + event.getRawY());
+ 
 
     	 
 	     synchronized (this.gameThread.getSurfaceHolder()) {
@@ -611,9 +632,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	   
             	   
             	   this.readyToDraw = false;
-            	   Log.w(TAG, "ACTION_UP tapcheck = " + this.tapCheck + " dbltapcheck = " + this.dblTapCheck + " diff = " + (this.tapCheck - this.dblTapCheck)); 
+            	   Logger.w(TAG, "ACTION_UP tapcheck = " + this.tapCheck + " currentTouchTime=" + currentTouchTime + " dbltapcheck = " + this.dblTapCheck + " diff = " + (this.tapCheck - this.dblTapCheck)); 
             	   
             	 if (this.tapCheck > 0 && currentTouchTime - this.tapCheck <= SINGLE_TAP_DURATION_IN_NANOSECONDS) { 
+            		 
+            		 Logger.d(TAG, "onTouchEvent past first tap check");
             	 // && (currentTouchTime - this.dblTapCheck >= 800000000 || this.dblTapCheck == 0)) {
             	//	 if (this.isMoving){
             	//		 //if we are coming out of a drag, up event just means drag is finished, nothing to do here, just move along
@@ -624,11 +647,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	            	
             		 //first make sure action up event is not associated with move event
             		 if (!this.isMoving) {  
-            			  
+
+                		 Logger.d(TAG, "onTouchEvent not moving");
+
             			 //check for a single tap
             			 //and make sure to ignore double tap events
             			 if((this.tapCheck - this.dblTapCheck) >= (DOUBLE_TAP_DURATION_IN_NANOSECONDS - SINGLE_TAP_DURATION_IN_NANOSECONDS) || this.dblTapCheck == 0){
             				 
+                    		 Logger.d(TAG, "onTouchEvent not a double tap");
+
             	
             				 //Logger.d(TAG,"this.targetTile null? " + this.targetTile == null);
             				 
@@ -642,7 +669,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             					// this.currentTrayTile = null;
             				 }
             				 else {
-            					 //what situation is this???
+            					 //a tile was tapped on, at this precise moment the finger is pulled off the tapped tile
             					 Logger.d(TAG, "onTouchEvent ACTION_UP this.targetTile != null");
             					 this.isZoomed = !this.isZoomed;
             					 this.readyToDraw = true;
@@ -1070,8 +1097,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 //find the closest available tile, either on board or tray.
 		 //if we are in zoomed mode, make sure not to find any tiles that are fully below the tray
 		
-		 int xPosition = this.xPosition;
-		 int yPosition = this.yPosition;
+		 int xPosition = this.currentX;
+		 int yPosition = this.currentY;
 		 
 		 
 		 Logger.d(TAG, "setClosestDropTarget pre xPosition=" + xPosition + " yPosition=" + yPosition);
@@ -1161,8 +1188,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 int smallestSummedDifference = 250000;
 		 
 		 for(GameTile tile : this.tiles){
-
-			 if (tile.isDroppable()){
+			 RectArea tileRect = null;
+			 if (this.isZoomed){
+				 tileRect = new RectArea(tile.getyPositionZoomed(), tile.getxPositionZoomed(), tile.getyPositionZoomed() + this.zoomedTileWidth, tile.getxPositionZoomed() + this.zoomedTileWidth); 
+			 }
+			 else{
+				 tileRect = new RectArea(tile.getyPosition(), tile.getxPosition(), tile.getyPosition() + this.fullViewTileWidth, tile.getxPosition() + this.fullViewTileWidth); 			 
+			 }
+			 if (tile.isDroppable() && this.boardAreaRect.isRectPartiallyWithinArea(tileRect)){
 				 int summedDifference = Math.abs((zoomed ? tile.getxPositionCenterRelativeZoomed() : tile.getxPositionCenter()) - xPosition) +
 						 Math.abs((zoomed ? tile.getyPositionCenterRelativeZoomed() : tile.getyPositionCenter()) - (yPosition));
 				 
@@ -1327,6 +1360,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 //let's see if a tray tile is being dragged
 		 else if (this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()){
 			 position = this.drawDraggingTileGuts(canvas, this.getCurrentTrayTile().getDraggingLetter());
+			
+			// Logger.d(TAG, "drawDraggingTile positionX=" + position.getxLocation() + " Y=" + position.getyLocation());
+			 
 			 this.getCurrentTrayTile().setxPositionDragging(position.getxLocation());
 			 this.getCurrentTrayTile().setyPositionDragging(position.getyLocation());
 		 }
@@ -2043,12 +2079,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 ///look for x and y position values coming in.
 		 
 		 int tileId = -1;
-		 Logger.d(TAG, "FindTileFromPositionInZoomedMode xPosition=" + xPosition + " yPosition=" + yPosition);
+//		 Logger.d(TAG, "FindTileFromPositionInZoomedMode xPosition=" + xPosition + " yPosition=" + yPosition);
 		 
-		 Logger.d(TAG, "FindTileFromPositionInZoomedMode this.boardAreaRect top=" + this.boardAreaRect.getTop() 
-				 + " bottom=" + this.boardAreaRect.getBottom() 
-				 + " left=" + this.boardAreaRect.getLeft() 
-				 + " right=" + this.boardAreaRect.getRight());
+//		 Logger.d(TAG, "FindTileFromPositionInZoomedMode this.boardAreaRect top=" + this.boardAreaRect.getTop() 
+//				 + " bottom=" + this.boardAreaRect.getBottom() 
+//				 + " left=" + this.boardAreaRect.getLeft() 
+//				 + " right=" + this.boardAreaRect.getRight());
 		 
 		 for (GameTile tile : this.tiles) { 
 	    	  //if (xPosition >= tile.getxPositionZoomed() && xPosition <= tile.getxPositionZoomed() + this.zoomedTileWidth + this.tileGap &&
@@ -2065,32 +2101,33 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			// Logger.d(TAG, "FindTileFromPositionInZoomedMode " + tile.getId() + " " + (overlapWithBoard != null));
 	
 			 
-			 Logger.d(TAG, "FindTileFromPositionInZoomedMode tile top=" + tile.getyPositionZoomed()
-					 + " bottom=" + (tile.getyPositionZoomed() + this.zoomedTileWidth + this.tileGap)
-					 + " left=" + tile.getxPositionZoomed()
-					 + " right=" + (tile.getxPositionZoomed() + this.zoomedTileWidth  + this.tileGap));
+//			 Logger.d(TAG, "FindTileFromPositionInZoomedMode tile top=" + tile.getyPositionZoomed()
+//					 + " bottom=" + (tile.getyPositionZoomed() + this.zoomedTileWidth + this.tileGap)
+//					 + " left=" + tile.getxPositionZoomed()
+//					 + " right=" + (tile.getxPositionZoomed() + this.zoomedTileWidth  + this.tileGap));
 
 			 if (overlapWithBoard != null){
-			 		Logger.d(TAG, "FindTileFromPositionInZoomedMode overlapWithBoard top=" + overlapWithBoard.getTop() 
-					+ " bottom=" + overlapWithBoard.getBottom()
-					+ " height=" + (overlapWithBoard.getBottom() - overlapWithBoard.getTop())
-					+ " left=" + overlapWithBoard.getLeft() 
-					+ " right=" + overlapWithBoard.getRight() 
-					+ " width=" + (overlapWithBoard.getRight() - overlapWithBoard.getLeft()));
+//			 		Logger.d(TAG, "FindTileFromPositionInZoomedMode overlapWithBoard top=" + overlapWithBoard.getTop() 
+//					+ " bottom=" + overlapWithBoard.getBottom()
+//					+ " height=" + (overlapWithBoard.getBottom() - overlapWithBoard.getTop())
+//					+ " left=" + overlapWithBoard.getLeft() 
+//					+ " right=" + overlapWithBoard.getRight() 
+//					+ " width=" + (overlapWithBoard.getRight() - overlapWithBoard.getLeft()));
 			 
 			 
 			
     			 if (xPosition >= overlapWithBoard.getLeft() && xPosition <= overlapWithBoard.getRight() &&
     	    	 		 yPosition >= overlapWithBoard.getTop() && yPosition <= overlapWithBoard.getBottom()){
     				 
-    				 Logger.d(TAG, "FindTileFromPositionInZoomedMode match found=" + tile.getId());
+ //   				 Logger.d(TAG, "FindTileFromPositionInZoomedMode match found=" + tile.getId());
     				 
     				 return tile.getId();	 
     			 }
-    			 else{
-    				 Logger.d(TAG, "FindTileFromPositionInZoomedMode " + tile.getId() + " is fully outside of the given boundary");
-    			 }
 	    	 }
+//			 else{
+//				 Logger.d(TAG, "FindTileFromPositionInZoomedMode " + tile.getId() + " is fully outside of the given boundary");
+//			 }
+
 	     }
 		 Logger.d(TAG, "FindTileFromPositionInZoomedMode tileId match=" + tileId);
 		 return tileId; //null;
