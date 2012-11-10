@@ -18,6 +18,7 @@ public class GameTile {
 	private String draggingLetter = "";
 	private int xPositionDragging = 0;
 	private int yPositionDragging = 0;
+	private boolean dragPending = false;
 	//private String placedText = "";
 
 	private int row;
@@ -275,6 +276,7 @@ public String getOriginalText() {
 		this.isDragging = true;
 		this.draggingLetter = this.placedLetter;
 		this.placedLetter = "";
+		this.dragPending = false;
 	}
 	
 	public void removeDragAndPlacement(){
@@ -299,6 +301,14 @@ public String getOriginalText() {
 
 	public void setyPositionDragging(int yPositionDragging) {
 		this.yPositionDragging = yPositionDragging;
+	}
+
+	public boolean isDragPending() {
+		return dragPending;
+	}
+
+	public void setDragPending(boolean dragPending) {
+		this.dragPending = dragPending;
 	}
 	
 	

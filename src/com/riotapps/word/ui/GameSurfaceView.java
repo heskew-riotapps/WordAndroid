@@ -555,7 +555,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 
             		 //this.tiles.get(targetTile.getId()).setDrag();
             		 this.draggingTileId = this.targetTileId;// targetTile.getId();
-            		 this.getDraggingTile().setDrag();
+            		 
+            		 //let's mark this tile as pending dragging.  we need to determine that a move is coming or a tap
+            		 //if it's a tap, we don't want to start dragging yet
+            		 this.getDraggingTile().setDragPending(true);
+            		 //this.getDraggingTile().setDrag();
             		 
             		 //this.draggingTile = this.tiles.get(targetTile.getId());
             		 //this.getDraggingTile().setDraggingLetter(this.targetTile.getDisplayLetter());
@@ -671,6 +675,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             				 else {
             					 //a tile was tapped on, at this precise moment the finger is pulled off the tapped tile
             					 Logger.d(TAG, "onTouchEvent ACTION_UP this.targetTile != null");
+            					 
+            					 //a tile was tapped on that contains a placed letter.  the single tap function overrides the drag function
+            					 //so cancel the pending drag function
+            					 if (this.getDraggingTile() != null && this.getDraggingTile().isDragPending()){
+            						 Logger.d(TAG, "onTouchEvent ACTION_UP this.draggingTile is pending dragging");
+            					
+            						 this.clearTargetTile();
+            						 this.getDraggingTile().setDragPending(false);
+            						 this.clearDraggingTile();
+            					 }
             					 this.isZoomed = !this.isZoomed;
             					 this.readyToDraw = true;
             					 this.isSingleTap = true;
@@ -864,8 +878,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 this.isMoving = true;
             	
             	 
+            	 //check to see if a board tile is pending dragging. 
+            	 //if so, change pending state to dragging state  
+            	 if (this.getDraggingTile() != null && this.getDraggingTile().isDragPending()){
+            		 this.getDraggingTile().setDrag();
+            	 }
             	 //check to see if a board tile is being dragged
-            	 if (this.getDraggingTile() != null){
+            	 else if (this.getDraggingTile() != null){
             		 this.readyToDraw = true;
             	 }
             	 //check to see if a tray tile is being dragged
@@ -1218,8 +1237,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 @Override
 	 protected void onDraw(Canvas canvas) {
  		// super.onDraw(canvas);
-	 Log.w(getClass().getSimpleName() + "onDraw ",this.currentTouchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
-	 			 + " " + this.currentX + " " + this.currentY);
+	 Logger.d(TAG,  "onDraw motion=" + this.currentTouchMotion + " " + " zoom=" + this.isZoomed + " tapCheck=" + this.tapCheck + " osMoving=" +  this.isMoving  + " readyToDraw=" + this.readyToDraw + " prevX=" + this.previousX + " prevY=" + this.previousY
+	 			 + " currX=" + this.currentX + " currY=" + this.currentY);
+	 
+	 Logger.d(TAG, "this.getDraggingTile()=" + (this.getDraggingTile() == null));
 		 
 		long currentTouchTime = System.nanoTime();
 		
@@ -1227,13 +1248,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			//  if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
 			 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN && 
 					 (this.getCurrentTrayTile() != null && !this.getCurrentTrayTile().isDragging())){ 
+				 Logger.d(TAG, "currentTrayTile not dragging");
 				 this.readyToDraw = false;}  
 			 
 			//this will have to change if dragging a tile 
 			 //if(this.currentTrayTile == null || !this.currentTrayTile.isDragging()){
-			 if(this.getCurrentTrayTile() == null || !this.getCurrentTrayTile().isDragging()){
-				 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { this.readyToDraw = false; }
+			 
+			 //only drag in full view mode if dragging a tile, since board will only drag in zoomed view mode
+			 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) {
+				 if (this.getDraggingTile() != null || this.getCurrentTrayTile() == null || !this.getCurrentTrayTile().isDragging()) { 
+					 Logger.d(TAG, "getCurrentTrayTile nullish");
+					 this.readyToDraw = false; 
+				 }
 			 }
+			 
+			// if ((this.getCurrentTrayTile() == null || !this.getCurrentTrayTile().isDragging() && 
+			// 	(this.getDraggingTile() == null || !this.getDraggingTile().isDragging() || !this.getDraggingTile().isDragPending())){
+			//	 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) { this.readyToDraw = false; }
+			// }
 			 //if we are in middle of action move but we are not moving (the finger is pressed but not moving, don't redraw
 			 //this condition was causing major shaking issues on the device, commented out for now
 	 		 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && 
@@ -1242,15 +1274,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 			this.currentX >= Math.round(this.previousX * (1 - MOVEMENT_TRIGGER_THRESHOLD)) && 
 	 			this.currentY <= Math.round(this.previousY * (1 + MOVEMENT_TRIGGER_THRESHOLD)) && 
 	 			this.currentY >= Math.round(this.previousY * (1 - MOVEMENT_TRIGGER_THRESHOLD))){
-	 			 Log.w(TAG,"onDraw minimum threshold not met");
+	 			 Logger.w(TAG,"onDraw minimum threshold not met");
 	 			// 	this.readyToDraw = false; 
 	 			 }
-		}
+			}
 		
 	
-		 
+		 Logger.d(TAG, "onDraw this.readyToDraw=" + this.readyToDraw);
 		 if (this.readyToDraw == true){ 
- 
+			
 			 // Log.w(getClass().getSimpleName() + "onDraw2 ",this.currentTouchMotion + " " + this.tapCheck + " " +  this.isMoving  + " " + this.readyToDraw + " " + this.previousX + " " + this.previousY
 			//	 		 + " " + this.currentX + " " + this.currentY + " " + this.previousTouchMotion);
 			 
@@ -1329,6 +1361,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 }
 			// this.previousTouchMotion = this.currentTouchMotion;
 			// this.currentTouchMotion = ;
+			 
+			 Logger.d(TAG, "onDraw about to draw tray");
 		    this.drawTray(canvas);
 		    
 		    this.drawDraggingTile(canvas);
@@ -1473,7 +1507,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 	
 	private void drawBoardOnMove(Canvas canvas, int leftDiff, int topDiff){
-			
+		Logger.d(TAG, "drawBoardOnMove");
 		 this.readyToDraw = false;
 		   
 		 boolean setReadyToDraw = false;
