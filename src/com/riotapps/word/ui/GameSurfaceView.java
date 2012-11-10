@@ -1256,7 +1256,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 
 			 //only drag in full view mode if dragging a tile, since board will only drag in zoomed view mode
 			 if (this.currentTouchMotion == MotionEvent.ACTION_MOVE && this.isZoomed == false) {
-				 if (this.getDraggingTile() != null || this.getCurrentTrayTile() == null || !this.getCurrentTrayTile().isDragging()) { 
+				 if (this.getDraggingTile() != null) {}
+				 else if (this.getCurrentTrayTile() == null || !this.getCurrentTrayTile().isDragging()) { 
 					 Logger.d(TAG, "getCurrentTrayTile nullish");
 					 this.readyToDraw = false; 
 				 }
