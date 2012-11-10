@@ -381,19 +381,25 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    
 	    
 	 private void fillGameState(){
-		 this.gameState = GameStateService.getGameState(context, "123"); ///fix this temp code
+		 this.gameState = GameStateService.getGameState(context, this.game.getId());  
 		 
 		 //if this.turn != gameState.turn, clearGameState
 		 
-		 ////come back and add this logic back
+		 //if the game state is dated, clear it out
+		 if (this.game.getContextPlayerTrayVersion(this.player) != this.gameState.getTrayVersion()){
+			 GameStateService.clearGameState(context, this.game.getId());
+		 }
 		 
-		 if (this.gameState.getTrayTiles().size() == 0){
+		 if (this.gameState.getLocations().size() == 0){
+			 //reset the gameState since it was cleared above (or has never been set)
+			 //reset the game tiles based on the locally saved state (as long as the tray tiles have not been updated on the server)
+  
 			 for(int x = 0; x < 7; x++){
-				 TrayTile trayTile = new TrayTile();
-				 trayTile.setIndex(x);
-				 trayTile.setLetter(this.contextPlayerGame.getTrayLetters().size() > x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
-				 this.gameState.getTrayTiles().add(trayTile);
-				 
+				// TrayTile trayTile = new TrayTile();
+				// trayTile.setIndex(x);
+				// trayTile.setLetter(this.contextPlayerGame.getTrayLetters().size() > x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
+				 this.gameState.getLocations().get(x).setTrayLocation(x);
+				 this.gameState.getLocations().get(x).setLetter(this.contextPlayerGame.getTrayLetters().size() > x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
 			 }
 			 //this.gameState.setTrayTiles(this.contextPlayerGame.getTrayLetters());
 		 }

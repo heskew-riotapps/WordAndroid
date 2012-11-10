@@ -1,5 +1,5 @@
-package com.riotapps.word.ui;
-
+ package com.riotapps.word.ui;
+ 
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class GameState {
 	
 	public int getNumTrayTiles(){
 		int num = 0;
-		for(com.riotapps.word.hooks.TrayTile tile : this.trayTiles){
+	for(com.riotapps.word.hooks.TrayTile tile : this.trayTiles){
 			if (tile.getLetter().length() > 0){
 				num += 1;
 			}
@@ -42,4 +42,5 @@ public class GameState {
 	}
  
 	
-}
+
+ }

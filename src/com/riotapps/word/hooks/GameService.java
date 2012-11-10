@@ -631,4 +631,10 @@ public class GameService {
 		 return contextPlayerGame;
 	 }
 	
+	public void checkPlayRules(){
+		
+	}
+	}
+	
+	
 }

@@ -111,6 +111,16 @@ public class Game implements Parcelable, Comparable<Game> {
 		return 0;
 	}
 	
+	public int getContextPlayerTrayVersion(Player contextPlayer){ 
+		for (PlayerGame pg : this.getPlayerGames()){ 
+         	if (pg.getPlayer().getId().equals(contextPlayer.getId())){
+         		return pg.getTrayVersion();
+         	}
+		}
+		return 1;
+	}
+	
+	
 	public List<Player> getOpponents(Player contextPlayer){ 
 		//assume the context player is the first playergame
 		List<Player> ret = new ArrayList<Player>();

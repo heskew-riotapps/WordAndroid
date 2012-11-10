@@ -72,6 +72,8 @@ public class PlayerGame implements Parcelable{
 	@SerializedName("o")
 	private int playerOrder = 0;
 
+	@SerializedName("t_v")
+	private int trayVersion = 1;
 	
 	@SerializedName("t_l")
 	private List<String> trayLetters = new ArrayList<String>();
@@ -207,6 +209,14 @@ public class PlayerGame implements Parcelable{
 		this.lastTurnPoints = lastTurnPoints;
 	}
 
+	public int getTrayVersion() {
+		return trayVersion;
+	}
+
+	public void setTrayVersion(int trayVersion) {
+		this.trayVersion = trayVersion;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -233,6 +243,7 @@ public class PlayerGame implements Parcelable{
  		out.writeInt(this.lastTurn);
  		out.writeInt(this.lastTurnAction);
  		out.writeInt(this.lastTurnPoints);
+ 		out.writeInt(this.trayVersion);
  		
 	}
 	
@@ -272,6 +283,7 @@ public class PlayerGame implements Parcelable{
 	    this.lastTurn = in.readInt();
 	    this.lastTurnAction = in.readInt();
 	    this.lastTurnPoints = in.readInt();
+	    this.trayVersion = in.readInt();
 	  //  Logger.d(TAG, "parcel in playerOrder=" + this.playerOrder);
 	
 	}
