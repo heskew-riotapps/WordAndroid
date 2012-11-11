@@ -393,7 +393,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 if (this.gameState.getLocations().size() == 0){
 			 //reset the gameState since it was cleared above (or has never been set)
 			 //reset the game tiles based on the locally saved state (as long as the tray tiles have not been updated on the server)
-  
+			 this.gameState.setTrayVersion(this.game.getContextPlayerTrayVersion(this.player));
+			 
 			 for(int x = 0; x < 7; x++){
 				// TrayTile trayTile = new TrayTile();
 				// trayTile.setIndex(x);

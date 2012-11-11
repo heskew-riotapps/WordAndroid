@@ -1954,7 +1954,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			return;
 		}
 
-		Collections.shuffle(this.parent.getGameState().getTrayTiles());
+		this.parent.getGameState().shuffleLetters();
 	
 		GameStateService.setGameState(this.context, this.parent.getGameState());
 
@@ -2005,7 +2005,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 //tile.setOriginalBitmapDragging(this.bgTrayBaseDragging);
 
 			 //this will come from state object if it exists for this turn, this is temp
-			 tile.setOriginalLetter(this.parent.getGameState().getLetterForTrayTile(y)); //getTrayTiles().get(y).getLetter());
+			 tile.setOriginalLetter(this.parent.getGameState().getTrayLetter(y)); //getTrayTiles().get(y).getLetter());
 			 
 			 this.trayTiles.add(tile);
 		 }

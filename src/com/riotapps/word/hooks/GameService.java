@@ -633,7 +633,7 @@ public class GameService {
 	
 	public void checkPlayRules(){
 		
-	}
+ 
 	}
 	
 	
