@@ -27,7 +27,7 @@ public class GameStateService {
 
 	    Gson gson = new Gson();
 		Type type = new TypeToken<GameState>() {}.getType();
-		gameState = gson.fromJson(FileUtils.ReadRawTextFile(context, R.raw.alphabet), type);
+		gameState = gson.fromJson(gameStatejson, type);
 		
 		//just in case
 		gameState.setGameId(gameId);

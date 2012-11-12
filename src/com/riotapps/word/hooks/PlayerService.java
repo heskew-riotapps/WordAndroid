@@ -314,6 +314,7 @@ public class PlayerService {
 	
 	public static void clearLocalStorageAndCache(FragmentActivity context){
 		context.getSharedPreferences(Constants.USER_PREFS, 0).edit().clear().commit();
+		context.getSharedPreferences(Constants.GAME_STATE, 0).edit().clear().commit();
 		
 		clearImageCache(context);
 		

@@ -726,6 +726,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         				// this.targetTileId = this.findClosestOpenTile(this.currentX, this.currentY);
         				
         				 if (this.getTargetTile() != null){
+    						
         					 Logger.d(TAG, "ACTION_UP droptargetId=" + this.getTargetTile().getId() + " placetext length=" + this.getTargetTile().getPlacedLetter().length());
         					 
         					 //we have a match for the drop target!!  However the tile is not eligible to be dropped on if it already has a placed letter
@@ -750,7 +751,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    						 this.getDraggingTile().setDraggingLetter("");
 	    						 this.clearDraggingTile(); //this.draggingTile = null;		 
         					 }
-    						 
+        					 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
     						 
     						 //let's make sure the board zooms (if it's not already in that state, upon drop)
     						 if (this.isZoomed){
@@ -780,6 +781,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         					 if (this.getDropTargetTrayTile() !=null){
         						 //this.handleDropOnTray(trayDropTargetTile, this.currentTrayTile);
         						 this.handleDropOnTray();
+        						 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
         						 this.readyToDraw = true;
         						 this.trayTileDropTarget = true;
         					 }
@@ -1909,6 +1911,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			tile.recallLetter();
 		}
 		
+		this.parent.getGameState().resetLettersFromOriginal(tiles, trayTiles);
 		this.LoadTray(); //reloads from the latest game state
 		
 		this.recallLettersRedraw = true;
@@ -1942,9 +1945,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				numLettersInTray += 1;
 			}
 		}
+		Logger.d(TAG, "isTrayFull numLettersInTray=" + numLettersInTray);
+		Logger.d(TAG, "isTrayFull this.parent.getGameState().getNumTrayTiles()=" + this.parent.getGameState().getNumTrayTiles());
 		
 		//some letters are out of the tray, only recall is allowed now, not shuffling
-		return (numLettersInTray == this.parent.getGameState().getNumTrayTiles());
+		return (numLettersInTray == this.parent.getGameState().getLocations().size());
 	}
 	
 	public void shuffleTray(){

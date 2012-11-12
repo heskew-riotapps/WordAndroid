@@ -2,7 +2,7 @@ package com.riotapps.word.ui;
 
 public class GameStateLocation {
 
-	private String letter;
+	private String letter = "";
 	private int boardLocation = -1;
 	private int trayLocation = -1;
 	public String getLetter() {
@@ -23,6 +23,13 @@ public class GameStateLocation {
 	public void setTrayLocation(int trayLocation) {
 		this.trayLocation = trayLocation;
 	}
- 
+	
+	public boolean isOnBoard(){
+		return this.boardLocation > -1;
+	}
+
+	public boolean isOnTray(){
+		return this.trayLocation > -1;
+	}
 	
 }

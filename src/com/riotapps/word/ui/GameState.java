@@ -75,6 +75,7 @@ public class GameState {
 		return "";
 	}	
 	public void shuffleLetters(){
+		//pull all of the letters into a list
 		 List<String> list = new ArrayList<String>();
 		 list.add(this.locations.get(0).getLetter());
 		 if (this.locations.size() > 1) {list.add(this.locations.get(1).getLetter());}
@@ -83,11 +84,96 @@ public class GameState {
 		 if (this.locations.size() > 4) {list.add(this.locations.get(4).getLetter());}
 		 if (this.locations.size() > 5) {list.add(this.locations.get(5).getLetter());}
 		 if (this.locations.size() > 6) {list.add(this.locations.get(6).getLetter());}
+		 
+		 //then shuffle them
 		 Collections.shuffle(list);
 		 
+		 //then reassign those letters back to the locations
 		 int n = this.locations.size();
 		 for (int i = 0; i < n; i++) {
-			 this.locations.get(n).setLetter(list.get(n));
+			 this.locations.get(i).setLetter(list.get(i));
 		 }
+	}
+	
+	public void addTrayLocation(int index, String letter){
+		if (this.locations.size() < 7){
+			GameStateLocation location = new GameStateLocation();
+			location.setLetter(letter);
+			location.setTrayLocation(index);
+			this.locations.add(location);
+		}
+		
+	}
+	
+//	public void setLetterOnBoard(String letter, int trayId, int boardId){
+//		for (GameStateLocation location : this.locations){
+//			if (location.getLetter().equals(letter) && location.getTrayLocation() == trayId){
+//				location.setBoardLocation(boardId);
+//			}
+//		}
+//	}
+	
+//	public void moveLetterOnBoard(String letter, int sourceBoardId, int targetBoardId){
+//		for (GameStateLocation location : this.locations){
+//			if (location.getLetter().equals(letter) && location.getTrayLocation() == sourceBoardId){
+//				location.setBoardLocation(targetBoardId);
+//			}
+//		}
+//	}
+	
+//	public void setLetterOnTray(String letter, int trayId, int boardId){
+//		for (GameStateLocation location : this.locations){
+//			if (location.getLetter().equals(letter) && location.getBoardLocation() == boardId){
+//				location.setTrayLocation(trayId);
+//			}
+//		}
+//	}
+	public void resetLettersFromOriginal(List<GameTile> boardTiles, List<TrayTile> trayTiles){
+		this.resetLetters(boardTiles, trayTiles, false);
+	}
+	
+	public void resetLettersFromCurrent(List<GameTile> boardTiles, List<TrayTile> trayTiles){
+		this.resetLetters(boardTiles, trayTiles, true);
+	}
+	
+	private void resetLetters(List<GameTile> boardTiles, List<TrayTile> trayTiles, boolean current){
+		this.locations.clear();
+		
+		int count = 0;
+		//add a location for each tray tile, regardless whether a letter in placed on that tile
+		//this fills the location list
+		for(TrayTile tile : trayTiles){
+			GameStateLocation location = new GameStateLocation();
+
+			if ((current ? tile.getCurrentLetter() : tile.getOriginalLetter()).length() > 0){
+				location.setLetter(current ? tile.getCurrentLetter() : tile.getOriginalLetter());
+				location.setTrayLocation(tile.getId());
+				count += 1;
+			}
+			this.locations.add(location);
+		}
+		
+		
+		if (count < 7){
+			//then loop through the board tiles finding the placed tiles
+			//if a placed tile is found, add it to the first location that does not contain a tray tile
+			for(GameTile tile : boardTiles){
+				if (tile.getPlacedLetter().length() > 0){
+					this.assignBoardIdToOpenLocation(tile.getPlacedLetter(), tile.getId());
+					count += 1;
+					if (count == 7){ break; }
+				}
+			}
+		}
+	}
+	
+	private void assignBoardIdToOpenLocation(String letter, int boardId){
+		for (GameStateLocation location : this.locations){
+			if (!location.isOnTray()){
+				location.setBoardLocation(boardId);
+				location.setLetter(letter);
+				break;
+			}
+		}
 	}
  }
