@@ -259,9 +259,9 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	             }
 
 	             @Override
-	             public void onFacebookError(FacebookError error) {
-	            	 
-	            	 Logger.e(TAG,"facebook.authorize..onFacebookError=" + error.getLocalizedMessage());
+	             public void onFacebookError(FacebookError e) {
+	            	 DialogManager.SetupAlert(context, context.getString(R.string.facebook), e.getLocalizedMessage());
+	            	 Logger.e(TAG,"facebook.authorize..onFacebookError=" + e.getLocalizedMessage());
 	            	 //DialogManager.SetupAlert(context, "fbDialogListener", dialogMessage)
 	            	 
 	             }
@@ -269,7 +269,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	             @Override
 	             public void onError(DialogError e) {
 	            	 Logger.e(TAG,"facebook.authorize..DialogError=" + e.getLocalizedMessage());
-	            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), e.getLocalizedMessage());
+	            	 DialogManager.SetupAlert(context, context.getString(R.string.facebook), e.getLocalizedMessage());
 	             }
 	             @Override
 	             public void onCancel() {

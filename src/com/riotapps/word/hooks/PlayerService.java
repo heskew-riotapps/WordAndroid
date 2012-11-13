@@ -296,8 +296,9 @@ public class PlayerService {
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	
 		Player player = PlayerService.getPlayerFromLocal();
-	 	
-	 	Check.Require(player.getAuthToken().length() > 0, ctx.getString(R.string.msg_not_connected));
+		
+		Check.Require(player != null, ctx.getString(R.string.msg_no_local_player));
+	 	Check.Require(player.getAuthToken().length() > 0, ctx.getString(R.string.msg_no_local_player_token));
 	 	
 		TransportAuthToken token = new TransportAuthToken();
 		token.setToken(player.getAuthToken());

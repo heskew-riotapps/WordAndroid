@@ -65,6 +65,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 SurfaceView surfaceView;
 	 NetworkTask runningTask = null;
 	 Button bRecall;
+	 Button bPlay;
 	 Button bShuffle;
 	
 	 //View bottom;
@@ -248,6 +249,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 	//this.bShuffle.setVisibility(View.VISIBLE);
 	 }
 	 
+	 
+	 public void openAlertDialog(String title, String message){
+		 DialogManager.SetupAlert(this.context, title, message);
+	 }
+	 
+	 
 	 private class handleButtonSwitchRunnable implements Runnable {
 		 private int activeButton; //1 = shuffle, 2 = recall 	
 		 
@@ -272,6 +279,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 
 	 private void setupButtons(){
 		this.bRecall = (Button) findViewById(R.id.bRecall);
+		this.bPlay = (Button) findViewById(R.id.bPlay);
 		this.bShuffle = (Button) findViewById(R.id.bShuffle);
 		Button bChat = (Button) findViewById(R.id.bChat);
 		Button bPlayedWords = (Button) findViewById(R.id.bPlayedWords);
@@ -282,6 +290,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	bChat.setOnClickListener(this);
 	 	bPlayedWords.setOnClickListener(this);
 	 	this.bRecall.setOnClickListener(this);
+	 	this.bPlay.setOnClickListener(this);
 	 	
 	 	//by default recall button will be hidden, it will be switched with shuffle button when a letter is dropped on the board
 	 	this.bRecall.setVisibility(View.GONE); 
@@ -536,6 +545,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 					break;
 		        case R.id.bRecall:
 		        	this.gameSurfaceView.recallLetters();
+					break;
+		        case R.id.bPlay:
+		        	this.gameSurfaceView.onPlayClick();
 					break;
 	    	}
 	 }

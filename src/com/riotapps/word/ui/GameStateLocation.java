@@ -5,6 +5,7 @@ public class GameStateLocation {
 	private String letter = "";
 	private int boardLocation = -1;
 	private int trayLocation = -1;
+ 
 	public String getLetter() {
 		return letter;
 	}
@@ -31,5 +32,6 @@ public class GameStateLocation {
 	public boolean isOnTray(){
 		return this.trayLocation > -1;
 	}
+ 
 	
 }

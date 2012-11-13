@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.FileUtils;
+import com.riotapps.word.ui.RowCol;
 
 public class TileLayoutService {
 
@@ -31,7 +32,7 @@ public class TileLayoutService {
 		return gson.fromJson(FileUtils.ReadRawTextFile(context, R.raw.tile_layout), type);
 	}
 	
-	public eDefaultTile GetDefaultTile(int id, TileLayout layout){
+	public static eDefaultTile GetDefaultTile(int id, TileLayout layout){
 		
 		for(TileLayout.StarterTile x : layout.StarterTiles) {
 	        if(x.getId() == id){return eDefaultTile.Starter;}
@@ -47,6 +48,20 @@ public class TileLayoutService {
 	        }
 	    }
 		return eDefaultTile.None;
+	}
+	
+	public static RowCol getRowCol(int tileId){
+		//0 = 1,1
+        //14 = 1,15
+        //15 = 2,1
+        //16 = 2,2
+        //32 = 3,3
+        //44 = 3,15 
+
+        int row = Math.round((tileId / 15) + 1);
+        int col = Math.round(tileId - ((row - 1) * 15) + 1);
+
+        return new RowCol(row, col);
 	}
 	
 }

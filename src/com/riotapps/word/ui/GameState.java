@@ -6,8 +6,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import com.riotapps.word.hooks.Game;
+import com.riotapps.word.utils.Logger;
+
 public class GameState {
-	
+	private static final String TAG = GameState.class.getSimpleName();
 	public GameState(){
 		this.locations = new ArrayList<GameStateLocation>();
 	}
@@ -121,13 +124,41 @@ public class GameState {
 //		}
 //	}
 	
-//	public void setLetterOnTray(String letter, int trayId, int boardId){
-//		for (GameStateLocation location : this.locations){
-//			if (location.getLetter().equals(letter) && location.getBoardLocation() == boardId){
-//				location.setTrayLocation(trayId);
-//			}
-//		}
-//	}
+	//this might have to be adjusted to get closest possible match to original location
+	//but for now, finding the first open tray tile location will do
+	public void returnLetterToTray(String letter, int boardId){
+		//first find the id of the state location that holds the boardId 
+		int locationId = -1;
+		
+		for(int i = 0; i < 7; i++){
+			boolean found = false;
+			if (this.locations.get(i).getBoardLocation() == boardId){
+				locationId = i;
+				break;
+			}
+		}
+		
+		//something is awry, will refactor later to address potential issues...somehow
+		if (locationId == -1){ return; }
+		
+		//find the first empty trayId
+		for(int i = 0; i < 7; i++){
+			for (GameStateLocation location : this.locations){
+				boolean found = false;
+				if (location.getTrayLocation() == i){
+					found = true;
+				}
+				//we could not find the trayid which means it is an open slot.  so let's take it
+				if (found == false){
+					Logger.d(TAG, "returnLetterToTray letter " + letter + " is being recalled to tray location " + i);
+					this.locations.get(i).setBoardLocation(-1);
+					this.locations.get(i).setTrayLocation(i);
+					break;
+				}
+			}
+		}
+	
+	}
 	public void resetLettersFromOriginal(List<GameTile> boardTiles, List<TrayTile> trayTiles){
 		this.resetLetters(boardTiles, trayTiles, false);
 	}
@@ -169,7 +200,7 @@ public class GameState {
 	
 	private void assignBoardIdToOpenLocation(String letter, int boardId){
 		for (GameStateLocation location : this.locations){
-			if (!location.isOnTray()){
+			if (!location.isOnTray() && !location.isOnBoard()){
 				location.setBoardLocation(boardId);
 				location.setLetter(letter);
 				break;

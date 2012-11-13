@@ -40,6 +40,9 @@
 	<string name="header_num_wins">%s wins</string>
 	<string name="line_item_num_wins">%s wins</string>
 	<string name="never_share_email">(will never be shared)</string>
+	<string name="msg_no_local_player">WordSmash cannot find the player Id that should be stored on this device.</string>
+	<string name="msg_no_local_player_token">WordSmash cannot find the complete player Id that should be stored on this device.</string>
+	
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="msg_connection_timeout">The network connection took too long to return. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="validation_email_required">Please enter your email to connect to play.  Never fear, it will not be shared.</string>
@@ -72,6 +75,7 @@
 	<string name="yes">yes</string>
 	<string name="no">no</string>
 	<string name="oops">Oops</string>
+	<string name="facebook">facebook</string>
 	<string name="sorry">Sorry</string>
 	<string name="error_title">Holy Gandalf!!</string>
 	<string name="error_message">Unfortunately, something messy happened down in the bowels of the code. Not to worry, we will get it fixed.  In the meantime, you might want to restart WordSmash.</string>
@@ -369,5 +373,7 @@
   		<string name="add_opponents_cancel_app_request_1_message">%s is not registered in WordSmash yet so the Facebook app request is the only way for us to send a notification for the new game.</string>
   		<string name="add_opponents_cancel_app_request_2_message">%1$s and %2$s are not registered in WordSmash yet so the Facebook app request is the only way for us to send a notification for the new game.</string>
   		<string name="add_opponents_cancel_app_request_3_message">%1$s, %2$s, and %3$s are not registered in WordSmash yet so the Facebook app request is the only way for us to send a notification for the new game.</string>
-  		
+  		<string name="game_play_confirm_skip">You didn\'t place any letters. Are you sure you want to skip this turn?</string>
+  		<string name="game_play_too_few_letters">Please form a word at least 2 letters long.</string>
+  		<string name="game_play_invalid_start_position">To get started, at least one letter must be placed on a smiley.</string>
 </resources>

@@ -30,6 +30,7 @@ import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.DialogManager;
+import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
@@ -631,9 +632,88 @@ public class GameService {
 		 return contextPlayerGame;
 	 }
 	
-	public void checkPlayRules(){
+	//return int that represents the display message
+	public static void checkPlayRules(Context context, TileLayout layout, Game game, List<GameTile> boardTiles, List<com.riotapps.word.ui.TrayTile> trayTiles) throws DesignByContractException{
 		
+		
+		List<GameTile> placedTiles = getPlacedTiles(boardTiles);
+		
+		//determine how to differentiate between rule checks that require action vs confirmation
+		
+		//is the player skipping this turn on purpose? let's confirm it with the player
+	//	if(placedTiles.size() == 0) {
+	//		return R.string.game_play_confirm_skip;
+	//	}
  
+		//the first turn must have more than one letter played (every word must be at least two letters long
+	 	Check.Require(game.getTurn() > 1 || game.getTurn() == 1 && placedTiles.size() > 1, context.getString(R.string.game_play_too_few_letters));
+	//	if (game.getTurn() == 1 && placedTiles.size() == 1){
+	//		return R.string.game_play_too_few_letters;
+	//	}
+		
+	 	Check.Require(isMoveInValidStartPosition(layout, game, placedTiles), context.getString(R.string.game_play_invalid_start_position));
+	//	if (!this.isMoveInValidStartPosition(layout, game, placedTiles)){
+	//		return R.string.game_play_invalid_start_position;
+	//	}
+	}
+	
+	private static boolean isMoveInValidStartPosition(TileLayout layout, Game game, List<GameTile> placedTiles){
+		
+		//this rule only affects the first turn
+		if (game.getTurn() > 1) {return true;}
+		
+		for(GameTile tile : placedTiles){
+			if (TileLayoutService.GetDefaultTile(tile.getId(), layout) == TileLayoutService.eDefaultTile.Starter){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	  private String GetPlacedAxis(List<GameTile> tiles)
+      {
+          int row = 0;
+          int col = 0;
+          if (tiles.size() == 1) { return "x"; }
+          String axis = "";
+          int count = tiles.size();
+          for (int i = 0; i < count; i++)
+          {
+              int rowCol = TileCheck.GetRowCol(Tiles[i].Id);
+              if (i == 1)
+              {
+                  if (rowCol.Row != row && rowCol.Col != col) { return Riot.Shared.Constants.EmptyString; }
+                  axis = (rowCol.Row == row) ? "x" : "y";
+              }
+              else if (i > 1)
+              {
+                  if (axis == "x" && rowCol.Row != row) { return ""; }
+                  if (axis == "y" && rowCol.Col != col) { return ""; }
+              }
+              else
+              {
+                  row = rowCol.Row;
+                  col = rowCol.Col;
+              }
+
+          }
+
+          return axis;
+      }
+	
+	
+	
+	private static List<GameTile> getPlacedTiles(List<GameTile> boardTiles){
+		
+		List<GameTile> tiles = new ArrayList<GameTile>();
+		
+		for(GameTile tile : boardTiles){
+			if (tile.getPlacedLetter().length() > 0){
+				tiles.add(tile);
+			}
+		}
+		
+		return tiles;
 	}
 	
 	

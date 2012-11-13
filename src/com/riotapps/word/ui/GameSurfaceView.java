@@ -8,9 +8,11 @@ import com.riotapps.word.GameSurface;
 import com.riotapps.word.R;
 import com.riotapps.word.hooks.AlphabetService;
 import com.riotapps.word.hooks.Game;
+import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.TileLayout;
 import com.riotapps.word.hooks.TileLayoutService;
 import com.riotapps.word.utils.Constants;
+import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Logger;
 
 import android.os.Message;
@@ -287,12 +289,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		   	    me.LoadExtras();
 		   	    Log.w(TAG, "run called");
 		   	    
+		   	    
 		  
 		   	     LayoutParams lp = me.getLayoutParams();
 			 	  lp.height = me.height;
 			//	  // Apply to new dimension
 			 	  me.setLayoutParams( lp );
-		 
+			 	  me.setInitialRecallShuffleState();
 			 	   me.readyToDraw = true;
 		        }
 
@@ -752,6 +755,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    						 this.clearDraggingTile(); //this.draggingTile = null;		 
         					 }
         					 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
+        					 GameStateService.setGameState(this.context, this.parent.getGameState());
     						 
     						 //let's make sure the board zooms (if it's not already in that state, upon drop)
     						 if (this.isZoomed){
@@ -782,6 +786,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         						 //this.handleDropOnTray(trayDropTargetTile, this.currentTrayTile);
         						 this.handleDropOnTray();
         						 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
+        						 GameStateService.setGameState(this.context, this.parent.getGameState());
         						 this.readyToDraw = true;
         						 this.trayTileDropTarget = true;
         					 }
@@ -1908,10 +1913,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 		//clear out all placed letters
 		for(GameTile tile : this.tiles){
+			if (tile.getPlacedLetter().length() > 0){
+				this.parent.getGameState().returnLetterToTray(tile.getPlacedLetter(), tile.getId());
+			}
 			tile.recallLetter();
 		}
 		
-		this.parent.getGameState().resetLettersFromOriginal(tiles, trayTiles);
+		//this.parent.getGameState().resetLettersFromOriginal(tiles, trayTiles);
+		GameStateService.setGameState(this.context, this.parent.getGameState());
 		this.LoadTray(); //reloads from the latest game state
 		
 		this.recallLettersRedraw = true;
@@ -1920,7 +1929,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 	
 	private void setRecallShuffleState(){
-		//if a letter drops on the board, hide the shuffle button and display reclass button
+		//if a letter drops on the board, hide the shuffle button and display recall button
 		//
 		//first check says "if the recall button is showing yet the try is not not full after an ACTION_UP event, switch to recall
 		if (this.isButtonStateInShuffle && !this.isTrayFull()){
@@ -1930,6 +1939,23 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		else if (!this.isButtonStateInShuffle && this.isTrayFull()){
 			this.parent.switchToShuffle();
 			this.isButtonStateInShuffle = true;
+		}
+	}
+	
+	private void setInitialRecallShuffleState(){
+		//gameSurface class will default the button to shuffle.
+		//we just need to change it here if the tray is not full
+		if (!this.isTrayFull()){
+			this.parent.switchToRecall();
+		}
+	}
+	
+	public void onPlayClick(){
+		try{
+			GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles);
+		}
+		catch (DesignByContractException e){
+			this.parent.openAlertDialog("testing", e.getMessage());
 		}
 	}
 	
@@ -2072,10 +2098,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 //drops tiles on the board
 				 tile.setxPositionCenter(tile.getxPosition() + (this.fullViewTileWidth / 2));
 				 tile.setyPositionCenter(tile.getyPosition() + (this.fullViewTileWidth / 2));
-
+				 
 				 //check game object for already played letter
 				 //check defaultLayout for bonus tiles etc
-				 switch (this.layoutService.GetDefaultTile(tile.getId(), this.defaultLayout)) {
+				 switch (TileLayoutService.GetDefaultTile(tile.getId(), this.defaultLayout)) {
 				 case FourLetter:
 					 tile.setOriginalBitmap(bg4LScaled); //this will change as default bonus and played tiles are incorporated
 					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg4LZoomed); }
@@ -2109,6 +2135,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 tile.setOriginalBitmap(bgBaseScaled); //this will change as default bonus and played tiles are incorporated
 					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgBaseZoomed); }
 					 break;
+				 }
+				 
+				 if (this.parent.getGameState().getBoardLetter(tile.getId()).length() > 0){
+					  tile.setPlacedLetter(this.parent.getGameState().getBoardLetter(tile.getId()));
 				 }
 				 
 				 this.tiles.add(tile);
