@@ -31,6 +31,7 @@ import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameTile;
+import com.riotapps.word.ui.RowCol;
 import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
@@ -655,6 +656,11 @@ public class GameService {
 	//	if (!this.isMoveInValidStartPosition(layout, game, placedTiles)){
 	//		return R.string.game_play_invalid_start_position;
 	//	}
+	 	
+	 	String axis = getPlacedAxis(placedTiles);
+	 	
+	 	Check.Require(axis == "x" || axis == "y", context.getString(R.string.game_play_invalid_axis));
+	 	
 	}
 	
 	private static boolean isMoveInValidStartPosition(TileLayout layout, Game game, List<GameTile> placedTiles){
@@ -670,30 +676,63 @@ public class GameService {
 		return false;
 	}
 	
-	  private String GetPlacedAxis(List<GameTile> tiles)
+	
+	 private static boolean IsMoveFreeOfGaps(String axis, List<JsonTile> tiles, SortedList<byte, PlayedTile> sorted)
+     {
+         if (tiles.Count == 1) { return true; }
+         //in the direction of the axis, between the first placed tile and the last, there can be no gaps
+         SortedList<byte, JsonTile> sortedTiles = new SortedList<byte, JsonTile>();
+         
+         byte increment = Convert.ToByte(axis == "x" ? 1 : 15);
+
+         for (var i = 0; i < tiles.Count; i++)
+         {
+             sortedTiles.Add(tiles[i].Id, tiles[i]);
+         }
+
+         //if direction is horizontal, add 1 until we get to the last placed letter
+         //if direction is vertical, add 15 until we get to the last placed letter
+         //start at first and loop until the last...not looping each one because a previously played tile
+         //might be in between
+         byte x = sortedTiles.Values[0].Id;
+         do
+         {
+             if (sortedTiles.ContainsKey(x) != true && sorted.ContainsKey(x) != true)
+             {
+                 return false;
+             }
+             x += increment;
+         } while (x < sortedTiles.Values[sortedTiles.Count - 1].Id);  //x will max out at the highest placed tile
+
+         return true;
+    }
+	
+	  private static String getPlacedAxis(List<GameTile> placedTiles)
       {
           int row = 0;
           int col = 0;
-          if (tiles.size() == 1) { return "x"; }
+          if (placedTiles.size() == 1) { return "x"; }
           String axis = "";
-          int count = tiles.size();
-          for (int i = 0; i < count; i++)
+          int count = placedTiles.size();
+          for (int i = 0; i < count; i++) 
           {
-              int rowCol = TileCheck.GetRowCol(Tiles[i].Id);
+              RowCol rowCol = TileLayoutService.getRowCol(placedTiles.get(i).getId());
+              
+              Logger.d(TAG, "getPlacedAxis row=" + rowCol.getRow() + " col=" + rowCol.getColumn());
               if (i == 1)
               {
-                  if (rowCol.Row != row && rowCol.Col != col) { return Riot.Shared.Constants.EmptyString; }
-                  axis = (rowCol.Row == row) ? "x" : "y";
+                  if (rowCol.getRow() != row && rowCol.getColumn() != col) { return ""; }
+                  axis = (rowCol.getRow() == row) ? "x" : "y";
               }
               else if (i > 1)
               {
-                  if (axis == "x" && rowCol.Row != row) { return ""; }
-                  if (axis == "y" && rowCol.Col != col) { return ""; }
+                  if (axis == "x" && rowCol.getRow() != row) { return ""; }
+                  if (axis == "y" && rowCol.getColumn() != col) { return ""; }
               }
               else
               {
-                  row = rowCol.Row;
-                  col = rowCol.Col;
+                  row = rowCol.getRow();
+                  col = rowCol.getColumn();
               }
 
           }

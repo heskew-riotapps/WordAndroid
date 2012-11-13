@@ -1649,7 +1649,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	        	this.readyToDraw = false;
 	        }
 	        
-	        Log.w(TAG, "drawMomentumScroll xDistance=" + this.xDistance + " yDistance=" + this.yDistance );
+	        //Log.w(TAG, "drawMomentumScroll xDistance=" + this.xDistance + " yDistance=" + this.yDistance );
 	        
 	        if (!this.readyToDraw){this.isMomentum = false;}
 		
@@ -1707,10 +1707,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	private void drawZoomedBoardByDiff(Canvas canvas, int leftDiff, int topDiff) {
 	    int x = 0; 
 		for (GameTile tile : this.tiles) {
-	    	if (x == 0){ 
-	    	Log.w(TAG,"loadZoomedBoardByDiff before x=" + tile.getxPositionZoomed() + " after=" + (tile.getxPositionZoomed() - leftDiff));
-	    	Log.w(TAG,"loadZoomedBoardByDiff before y=" + tile.getyPositionZoomed() + " after=" + (tile.getyPositionZoomed() - topDiff));
-	    	}
+	    	//if (x == 0){ 
+	    	//Log.w(TAG,"loadZoomedBoardByDiff before x=" + tile.getxPositionZoomed() + " after=" + (tile.getxPositionZoomed() - leftDiff));
+	    	//Log.w(TAG,"loadZoomedBoardByDiff before y=" + tile.getyPositionZoomed() + " after=" + (tile.getyPositionZoomed() - topDiff));
+	    	//}
 			x += 1;
 	     	 tile.setxPositionZoomed(tile.getxPositionZoomed() - leftDiff);
 	     	 tile.setyPositionZoomed(tile.getyPositionZoomed() - topDiff);
@@ -1739,7 +1739,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     		 canvas.drawBitmap(this.bgPlacedTileZoomed,tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
      
     		 this.drawLetter(canvas, tile.getDisplayLetter(), this.zoomedTileWidth, tile.getxPositionZoomed(), tile.getyPositionZoomed());
-    		 Logger.d(TAG, "drawZoomedBoardGuts tile.getDisplayLetter()=" + tile.getDisplayLetter());
+    		 //Logger.d(TAG, "drawZoomedBoardGuts tile.getDisplayLetter()=" + tile.getDisplayLetter());
     	 } 
 	 	 //original text represents bonus text
     	 else if (tile.getOriginalText().length() > 0){
@@ -1971,8 +1971,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				numLettersInTray += 1;
 			}
 		}
-		Logger.d(TAG, "isTrayFull numLettersInTray=" + numLettersInTray);
-		Logger.d(TAG, "isTrayFull this.parent.getGameState().getNumTrayTiles()=" + this.parent.getGameState().getNumTrayTiles());
+		//Logger.d(TAG, "isTrayFull numLettersInTray=" + numLettersInTray);
+		//Logger.d(TAG, "isTrayFull this.parent.getGameState().getNumTrayTiles()=" + this.parent.getGameState().getNumTrayTiles());
 		
 		//some letters are out of the tray, only recall is allowed now, not shuffling
 		return (numLettersInTray == this.parent.getGameState().getLocations().size());
@@ -2201,7 +2201,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 //			 }
 
 	     }
-		 Logger.d(TAG, "FindTileFromPositionInZoomedMode tileId match=" + tileId);
+		// Logger.d(TAG, "FindTileFromPositionInZoomedMode tileId match=" + tileId);
 		 return tileId; //null;
 	 }
 	 
