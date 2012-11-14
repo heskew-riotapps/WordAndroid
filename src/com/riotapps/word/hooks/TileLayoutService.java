@@ -32,7 +32,7 @@ public class TileLayoutService {
 		return gson.fromJson(FileUtils.ReadRawTextFile(context, R.raw.tile_layout), type);
 	}
 	
-	public static eDefaultTile GetDefaultTile(int id, TileLayout layout){
+	public static eDefaultTile getDefaultTile(int id, TileLayout layout){
 		
 		for(TileLayout.StarterTile x : layout.StarterTiles) {
 	        if(x.getId() == id){return eDefaultTile.Starter;}
@@ -63,5 +63,63 @@ public class TileLayoutService {
 
         return new RowCol(row, col);
 	}
+	
+	
+	 public static int getTileIdAbove(int tileId)
+     {
+         //if already on the top row, can't get any lower
+         if (tileId < 15) { return 255; }
+         return tileId - 15;
+     }
+
+     public static int getTileIdBelow(int tileId)
+     {
+         //if already on the bottom row, can't get any lower
+         if (tileId > 209) { return 255; }
+         return tileId + 15;
+     }
+    
+     public static int getTileIdToTheRight(int tileId)
+     {
+         //if already on the far right, can't get any farther right
+         if (((tileId + 1) % 15) == 0){ return 255; }
+         return tileId + 1;
+     }
+
+     public static int getTileIdToTheLeft(int tileId)
+     {
+         //if already on the far left, can't get any farther left
+         if (tileId == 0) { return 255; }
+         if ((tileId % 15) == 0) { return 255; }
+         return tileId - 1;
+     }
+     
+     public static int getLetterMultiplier(int tileId, TileLayout layout)
+     {
+    	 switch(getDefaultTile(tileId, layout)){
+    		 case FourLetter:
+    			 return 4;
+    		 case ThreeLetter:
+    			 return 3;
+    		 case TwoLetter:
+    			 return 2;
+    		 default:
+    			 return 1;
+    	 }
+    		
+     }
+
+     public static int GetWordMultiplier(int tileId, TileLayout layout)
+     {
+    	 switch(getDefaultTile(tileId, layout)){
+			 case ThreeWord:
+				 return 3;
+			 case TwoWord:
+				 return 2;
+			 default:
+				 return 1;
+    	 }
+		
+     }
 	
 }

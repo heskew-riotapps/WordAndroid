@@ -33,6 +33,8 @@ import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameTile;
+import com.riotapps.word.ui.GameTileComparator;
+import com.riotapps.word.ui.PlacedWord;
 import com.riotapps.word.ui.RowCol;
 import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Enums.*;
@@ -640,7 +642,11 @@ public class GameService {
 		
 		
 		List<GameTile> placedTiles = getPlacedTiles(boardTiles);
+		List<PlayedTile> playedTiles = game.getPlayedTiles();
 		
+		//let's get these collections in the tileId order for certain
+		Collections.sort(placedTiles, new GameTileComparator());
+		Collections.sort(game.getPlayedTiles(), new PlayedTileComparator());
 		//determine how to differentiate between rule checks that require action vs confirmation
 		
 		//is the player skipping this turn on purpose? let's confirm it with the player
@@ -663,6 +669,7 @@ public class GameService {
 	 	
 	 	Check.Require(axis == "x" || axis == "y", context.getString(R.string.game_play_invalid_axis));
 	 	
+	 	//create a sorted set of integers for easier comparison and locating in gap check
         SortedSet<Integer> playedSet = new TreeSet<Integer>();     
         for (PlayedTile tile : game.getPlayedTiles()){
        	 playedSet.add(tile.getBoardPosition());
@@ -718,7 +725,7 @@ public class GameService {
  
     }
 	
-	  private static String getPlacedAxis(List<GameTile> placedTiles)
+	private static String getPlacedAxis(List<GameTile> placedTiles)
       {
           int row = 0;
           int col = 0;
@@ -750,9 +757,7 @@ public class GameService {
 
           return axis;
       }
-	
-	
-	
+		
 	private static List<GameTile> getPlacedTiles(List<GameTile> boardTiles){
 		
 		List<GameTile> tiles = new ArrayList<GameTile>();
@@ -766,5 +771,212 @@ public class GameService {
 		return tiles;
 	}
 	
+	//placed tiles = tiles with letters that were placed on the board during this turn
+	//played tiles = tiles with letters that were placed on the board during previous turns
+	//placed word = words that were formed this turn by the placed tiles (in combination with previously played tiles_
+	private List<PlacedWord> GetWords(String axis, List<GameTile> placedTiles, List<PlayedTile> playedTiles)
+    {
+        List<PlacedWord> words = new ArrayList<PlacedWord>();
+     
+
+        //let's start out by grabbing the first letter in the placed list
+        String word = placedTiles.get(0).getPlacedLetter();
+        
+        placedTiles[0].IsConnected = true; //first letter is always "connected" to the rest of the chain since it is the starting point
+        //Int16 points = Convert.ToInt16(TileCheck.GetTileValue(placedTiles[0].Id, placedTiles[0].Letter));
+        Int16 points = Convert.ToInt16(this.GetTileValue(placedTiles[0].Id, placedTiles[0].Letter, playedTiles));
+
+        int wordMultiplier = 1;
+        wordMultiplier = wordMultiplier * this.GetWordMultiplier(placedTiles[0].Id, playedTiles);
+
+
+        JsonTile loopTile = placedTiles[0];
+
+        //put placed tiles in a sorted list
+        SortedList<byte, JsonTile> placed = new SortedList<byte, JsonTile>();
+        for (var i = 0; i < placedTiles.Count; i++)
+        {
+            placed.Add(placedTiles[i].Id, placedTiles[i]);
+        }
+
+        //multiply each wordWultiplier by this value in a loop,
+        //then after the word value is calculated letter by letter,
+        //multiply by word multiplier to get the final word value
+        
+
+        //int wordValue = 
+        this.GetLettersAlongOnAxis(axis, placedTiles[0].Id, placed, playedTiles, ref word, ref points, ref wordMultiplier, true, true);
+        this.GetLettersAlongOnAxis(axis, placedTiles[0].Id, placed, playedTiles, ref word, ref points, ref wordMultiplier, true, false);
+
+
+        //it's possible to have a word that is only one letter long now
+        //if the word is played vertically and the top placed letter has no letter to either side, this will be the case
+        if (word.Length > 1)
+        {// are all placed tiles are connected.
+            foreach (JsonTile t in placedTiles)
+            {
+                Check.Require(t.IsConnected == true, "All placed letters must be connected together");
+            }
+
+            Check.Require(word.Length > 1, "Words must be at least 2 letters long.");
+        }
+
+        
+        //add word to the word  list
+        if (word.Length > 1) {words.Add(new DerivedWord(word, Convert.ToInt16(points * wordMultiplier), true));}
+
+        //ok, now we have discovered the main word, let's travel down the 
+        //main word looking for words played in the opposite axis that hang off the main word
+        //only look for words that hang off of placed (incoming) letters within the main word, not previously played letters
+        foreach (JsonTile t in placedTiles)
+        {
+            word = t.Letter;
+            points = Convert.ToInt16(this.GetTileValue(t.Id, t.Letter, playedTiles));
+            wordMultiplier = 1;
+            wordMultiplier = wordMultiplier * this.GetWordMultiplier(t.Id, playedTiles);
+
+            this.GetLettersAlongOnAxis(axis, t.Id, placed, playedTiles, ref word, ref points, ref wordMultiplier, false, true);
+            this.GetLettersAlongOnAxis(axis, t.Id, placed, playedTiles, ref word, ref points, ref wordMultiplier, false, false);
+
+            //add word to the word  list if it's longer than one letter
+            if (word.Length > 1)
+            {
+                words.Add(new DerivedWord(word, Convert.ToInt16(points * wordMultiplier), true));
+            }
+        }
+
+        return words;
+    }
 	
+	private static boolean containsPlayedTileId(List<PlayedTile> tiles, int tileId){
+		for (PlayedTile tile : tiles){
+			if (tile.getBoardPosition() == tileId) {return true;}
+		}
+		return false;
+	}
+	
+	private static boolean containsPlacedTileId(List<GameTile> tiles, int tileId){
+		for (GameTile tile : tiles){
+			if (tile.getId() == tileId) {return true;}
+		}
+		return false;
+	}
+	
+	private static GameTile getPlacedTile(List<GameTile> tiles, int tileId){
+		for (GameTile tile : tiles){
+			if (tile.getId() == tileId) {return tile;}
+		}
+		return null;
+	}
+	
+	private static PlayedTile getPlayedTile(List<PlayedTile> tiles, int tileId){
+		for (PlayedTile tile : tiles){
+			if (tile.getBoardPosition() == tileId) {return tile;}
+		}
+		return null;
+	}
+	
+	
+	 private static PlacedWord getLettersAlongOnAxis(String axis, int startingPosition, List<GameTile> placedTiles, 
+	            List<PlayedTile> playedTiles, boolean onMainAxis, boolean proceedBackward)  {
+  		 
+		 PlacedWord word = new PlacedWord();
+		 
+		 boolean loop = true;
+		 int tilePosition = 0;
+		 int loopPosition = startingPosition; // placedTiles[0].Id;
+		 while (loop == true)
+		 {
+            if (proceedBackward == true)
+            {
+                //going backward on the axis
+
+                //placedTiles are from this turn,  playedTiles are from previous turns
+                //find position on the board to check, go to the left if axis is horizontal, go up if axis is vertical
+                if (onMainAxis == true)
+                {
+                    tilePosition = (axis == "x" ? TileLayoutService.getTileIdToTheLeft(loopPosition) : TileLayoutService.getTileIdAbove(loopPosition));
+                }
+                else
+                {
+                    //when onMainAxis is false, we are wandering down the main word looking for connected words on the opposite
+                    //axis from the main axis
+                    tilePosition = (axis == "x" ? TileLayoutService.getTileIdAbove(loopPosition) : TileLayoutService.getTileIdToTheLeft(loopPosition));
+                }
+            }
+            else
+            {
+                //going forward on the axis
+
+                //placedTiles are from this turn,  playedTiles are from previous turns
+                //find position on the board to check, go to the right if axis is horizontal, go down if axis is vertical 
+                if (onMainAxis == true)
+                {
+                    tilePosition = (axis == "x" ? TileLayoutService.getTileIdToTheRight(loopPosition) : TileLayoutService.getTileIdBelow(loopPosition));
+                }
+                else
+                {
+                    tilePosition = (axis == "x" ? TileLayoutService.getTileIdBelow(loopPosition) : TileLayoutService.getTileIdToTheRight(loopPosition));
+                }
+            }
+            if (tilePosition == 255 || (containsPlacedTileId(placedTiles, tilePosition) == false && containsPlayedTileId(playedTiles, tilePosition) == false))
+            {
+                //no letter was placed in this tile position and no previously played tile was in this tile position
+                //or this position is off the board (tilePosition = 255)
+                loop = false;
+            }
+            else
+            {
+                //add this letter to the partially contructed word
+                String letter = (String) (containsPlacedTileId(placedTiles, tilePosition) == true ? getPlacedTile(placedTiles, tilePosition).getPlacedLetter() : getPlayedTile(playedTiles, tilePosition).getLetter()); 
+                if (proceedBackward == true) { word = letter + word; } else { word = word + letter; }
+
+                //keep track of the points as the word is being contructed
+                word.setPoints(word.getPoints() + this.GetTileValue(tilePosition, letter, playedTiles));
+
+                word.setMultiplier(word.getMultiplier() * this.GetWordMultiplier(tilePosition, playedTiles);
+
+                //advance to previous (backwards or up) position
+                loopPosition = tilePosition;
+
+                //if this letter is an incoming placed letter, mark is as connected
+                //to the rest of the letters.  At the end, this will allow us to
+                //determine if any incoming letters are on the same axis but separated 
+                //from the main word by space(s)
+                if (placed.ContainsKey(tilePosition) == true)
+                {
+                    placed[tilePosition].IsConnected = true;
+                }
+            }
+            }
+
+            //return word;
+        }
+
+	 
+	  public static int getTileValue(int tileId, String letter, List<PlayedTile> playedTiles, TileLayout layout)
+      {
+          int multiplier = 1;
+
+          //if the tile has not already been played, count its multiplier
+          if (containsPlayedTileId(playedTiles, tileId) == false)
+          {
+              multiplier = TileLayoutService.getLetterMultiplier(tileId, layout);
+          }
+          return this._alphabet.GetLetterValue(letter) * multiplier;
+      }
+
+      public int GetWordMultiplier(Int16 tileId, SortedList<byte, PlayedTile> playedTiles)
+      {
+          int multiplier = 1;
+
+          //if the tile has not already been played, count its multiplier
+          if (playedTiles.ContainsKey(Convert.ToByte(tileId)) == false)
+          {
+              multiplier = TileCheck.GetWordMultiplier(tileId);
+          }
+          return multiplier;
+      }
+
+	 
 }
