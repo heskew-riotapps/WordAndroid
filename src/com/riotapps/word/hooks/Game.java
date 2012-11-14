@@ -29,6 +29,9 @@ public class Game implements Parcelable, Comparable<Game> {
 	@SerializedName("player_games")
 	private List<PlayerGame> playerGames = new ArrayList<PlayerGame>();
 	
+	@SerializedName("played_tiles")
+	private List<PlayedTile> playedTiles = new ArrayList<PlayedTile>();
+	
 //	@SerializedName("last_action_alert_text")
 	//do not serialize
  //	private String lastActionText = "";
@@ -72,6 +75,16 @@ public class Game implements Parcelable, Comparable<Game> {
 
 	public List<PlayerGame> getPlayerGames() {
 		return playerGames;
+	}
+
+	
+	
+	public List<PlayedTile> getPlayedTiles() {
+		return playedTiles;
+	}
+
+	public void setPlayedTiles(List<PlayedTile> playedTiles) {
+		this.playedTiles = playedTiles;
 	}
 
 	public PlayerGame[] getPlayerGameArray(){

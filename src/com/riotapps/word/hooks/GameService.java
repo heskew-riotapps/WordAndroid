@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import android.content.Context;
 import android.content.Intent;
@@ -661,6 +663,18 @@ public class GameService {
 	 	
 	 	Check.Require(axis == "x" || axis == "y", context.getString(R.string.game_play_invalid_axis));
 	 	
+        SortedSet<Integer> playedSet = new TreeSet<Integer>();     
+        for (PlayedTile tile : game.getPlayedTiles()){
+       	 playedSet.add(tile.getBoardPosition());
+        }
+        
+        SortedSet<Integer> placedSet = new TreeSet<Integer>();     
+        for (GameTile tile : placedTiles){
+       	 placedSet.add(tile.getId());
+        }
+	 	
+        Check.Require(IsMoveFreeOfGaps(axis, playedSet, placedSet), context.getString(R.string.game_play_invalid_gaps));
+	 	
 	}
 	
 	private static boolean isMoveInValidStartPosition(TileLayout layout, Game game, List<GameTile> placedTiles){
@@ -677,34 +691,31 @@ public class GameService {
 	}
 	
 	
-	 private static boolean IsMoveFreeOfGaps(String axis, List<JsonTile> tiles, SortedList<byte, PlayedTile> sorted)
+	 private static boolean IsMoveFreeOfGaps(String axis, SortedSet<Integer> playedSet, SortedSet<Integer> placedSet)
      {
-         if (tiles.Count == 1) { return true; }
+         if (placedSet.size() == 1) { return true; }
          //in the direction of the axis, between the first placed tile and the last, there can be no gaps
-         SortedList<byte, JsonTile> sortedTiles = new SortedList<byte, JsonTile>();
-         
-         byte increment = Convert.ToByte(axis == "x" ? 1 : 15);
 
-         for (var i = 0; i < tiles.Count; i++)
-         {
-             sortedTiles.Add(tiles[i].Id, tiles[i]);
-         }
-
+         int increment = (axis == "x" ? 1 : 15);
          //if direction is horizontal, add 1 until we get to the last placed letter
          //if direction is vertical, add 15 until we get to the last placed letter
          //start at first and loop until the last...not looping each one because a previously played tile
          //might be in between
-         byte x = sortedTiles.Values[0].Id;
+
+         int i = placedSet.first();
+         int last = placedSet.last();
+
          do
          {
-             if (sortedTiles.ContainsKey(x) != true && sorted.ContainsKey(x) != true)
+             if (placedSet.contains(i) != true && playedSet.contains(i) != true)
              {
                  return false;
              }
-             x += increment;
-         } while (x < sortedTiles.Values[sortedTiles.Count - 1].Id);  //x will max out at the highest placed tile
+             i += increment;
+         } while (i < last);  //i will max out at the highest placed tile
 
          return true;
+ 
     }
 	
 	  private static String getPlacedAxis(List<GameTile> placedTiles)
