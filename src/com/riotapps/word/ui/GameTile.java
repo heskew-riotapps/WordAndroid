@@ -34,7 +34,10 @@ public class GameTile {
     private int yPositionCenter = 0;
     private int xPositionCenterRelativeZoomed = 0;
     private int yPositionCenterRelativeZoomed = 0;
+	private boolean isConnected = false;
 
+
+	
 	public GameTile(){
 		
 	}
@@ -141,6 +144,13 @@ public class GameTile {
 		this.isPlacement = isPlacement;
 	}
 
+	public boolean isConnected() {
+		return isConnected;
+	}
+
+	public void setConnected(boolean isConnected) {
+		this.isConnected = isConnected;
+	}
 	public Bitmap getOriginalBitmapZoomed() {
 		return originalBitmapZoomed;
 	}
