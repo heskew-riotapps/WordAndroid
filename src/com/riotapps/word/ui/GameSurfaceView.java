@@ -1952,7 +1952,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	public void onPlayClick(){
 		try{
-			GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles);
+			GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService);
 		}
 		catch (DesignByContractException e){
 			this.parent.openAlertDialog("testing", e.getMessage());
@@ -2101,7 +2101,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 
 				 //check game object for already played letter
 				 //check defaultLayout for bonus tiles etc
-				 switch (TileLayoutService.GetDefaultTile(tile.getId(), this.defaultLayout)) {
+				 switch (TileLayoutService.getDefaultTile(tile.getId(), this.defaultLayout)) {
 				 case FourLetter:
 					 tile.setOriginalBitmap(bg4LScaled); //this will change as default bonus and played tiles are incorporated
 					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg4LZoomed); }

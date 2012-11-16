@@ -590,6 +590,7 @@ containing a value of this type.
         public static final int game_play_confirm_skip=0x7f06014a;
         public static final int game_play_invalid_axis=0x7f06014d;
         public static final int game_play_invalid_gaps=0x7f06014e;
+        public static final int game_play_invalid_gaps_placed_words=0x7f06014f;
         public static final int game_play_invalid_start_position=0x7f06014c;
         public static final int game_play_too_few_letters=0x7f06014b;
         public static final int game_surface_cancel_game_confirmation_text=0x7f060121;

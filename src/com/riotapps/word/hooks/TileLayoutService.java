@@ -109,7 +109,7 @@ public class TileLayoutService {
     		
      }
 
-     public static int GetWordMultiplier(int tileId, TileLayout layout)
+     public static int getWordMultiplier(int tileId, TileLayout layout)
      {
     	 switch(getDefaultTile(tileId, layout)){
 			 case ThreeWord:

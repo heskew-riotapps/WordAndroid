@@ -5,8 +5,8 @@ public class PlacedWord {
 	private String word;
 	private int multiplier = 1;
 	private int points = 0;
-	private boolean isValid;
-	private boolean isConnected;
+	private boolean isValid = true;
+	private boolean isConnected = true;
 	
 	
 	public int getPoints() {
@@ -40,6 +40,8 @@ public class PlacedWord {
 		this.isConnected = isConnected;
 	}
 	
-	
+	public int getTotalPoints() {
+		return multiplier * points;
+	}
 
 }

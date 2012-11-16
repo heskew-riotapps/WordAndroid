@@ -378,4 +378,6 @@
   		<string name="game_play_invalid_start_position">To get started, at least one letter must be placed on a smiley.</string>
   		<string name="game_play_invalid_axis">Please be sure to place letters in a single axis with no gaps between letters.</string>
   		<string name="game_play_invalid_gaps">Sorry, there cannot be any gaps between letters.</string>
+  		<string name="game_play_invalid_gaps_placed_words">All placed letters must be connected together.</string>
+  		 
 </resources>
