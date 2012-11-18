@@ -7,6 +7,7 @@ import java.util.List;
 import com.riotapps.word.GameSurface;
 import com.riotapps.word.R;
 import com.riotapps.word.hooks.AlphabetService;
+import com.riotapps.word.hooks.WordService;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.TileLayout;
@@ -225,6 +226,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     TileLayout defaultLayout;
     TileLayoutService layoutService;
     AlphabetService alphabetService;
+    WordService wordService;
    
 
  
@@ -258,6 +260,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.defaultLayout = layoutService.GetDefaultLayout(context);
 		
 		this.alphabetService = new AlphabetService(context);
+		this.wordService = new WordService(context);
 		//
 		  this.setZOrderOnTop(true);
 		 this.holder = getHolder();
@@ -1952,7 +1955,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	public void onPlayClick(){
 		try{
-			GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService);
+			GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
 		}
 		catch (DesignByContractException e){
 			this.parent.openAlertDialog("testing", e.getMessage());

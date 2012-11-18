@@ -640,8 +640,7 @@ public class GameService {
 	
 	//return int that represents the display message
 	public static int checkPlayRules(Context context, TileLayout layout, Game game, List<GameTile> boardTiles, 
-					List<com.riotapps.word.ui.TrayTile> trayTiles, AlphabetService alphabetService) throws DesignByContractException{
-			
+					List<com.riotapps.word.ui.TrayTile> trayTiles, AlphabetService alphabetService, WordService wordService) throws DesignByContractException{
 		
 		List<GameTile> placedTiles = getGameTiles(boardTiles);
 		List<PlayedTile> playedTiles = game.getPlayedTiles();
@@ -694,7 +693,7 @@ public class GameService {
         	temp = temp + word.getWord() + "\n";
         }
         
-        Check.Require(1 == 2, temp);
+   //     Check.Require(1 == 2, temp);
         
         int totalPoints = 0;
         
@@ -703,21 +702,54 @@ public class GameService {
         for (PlacedWord word : words)
         {
             totalPoints += word.getTotalPoints();
-           // if (this._wordSvc.DoesWordExist(word.Word.ToLower()) == false)
-           // {
-           //     invalidWords.add(word);
-           // }
+            if (wordService.isWordValid(word.getWord().toLowerCase()) == false)
+            {
+                invalidWords.add(word);
+            }
         }
 
-        Check.Require(invalidWords.size() == 0, getInvalidWordsMessage(invalidWords));
+        Check.Require(invalidWords.size() == 0, getInvalidWordsMessage(context, invalidWords));
 
         return totalPoints;
         
 	}
 	
-	private static String getInvalidWordsMessage(List<PlacedWord> words){
+	private static String getInvalidWordsMessage(Context context, List<PlacedWord> words){
 	
-		return "test";
+		switch (words.size()){
+		case 1:
+			return String.format(context.getString(R.string.game_play_1_invalid_word), words.get(0).getWord());
+		case 2:
+			return String.format(context.getString(R.string.game_play_2_invalid_words), words.get(0).getWord(), words.get(1).getWord());
+		case 3:
+			return String.format(context.getString(R.string.game_play_3_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord());
+		case 4:
+			return String.format(context.getString(R.string.game_play_4_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord());
+		case 5:
+			return String.format(context.getString(R.string.game_play_5_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord());
+		case 6:
+			return String.format(context.getString(R.string.game_play_6_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord());
+		case 7:
+			return String.format(context.getString(R.string.game_play_7_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord());
+		case 8:
+			return String.format(context.getString(R.string.game_play_8_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord());
+		case 9:
+			return String.format(context.getString(R.string.game_play_9_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord());
+		default:
+			return String.format(context.getString(R.string.game_play_10_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
+					words.get(9).getWord());
+
+
+		}
+		
+
 	}
 	
 	private static boolean isMoveInValidStartPosition(TileLayout layout, Game game, List<GameTile> placedTiles){
