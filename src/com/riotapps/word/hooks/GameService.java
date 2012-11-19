@@ -35,6 +35,7 @@ import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.ui.GameTileComparator;
 import com.riotapps.word.ui.GameTile;
+import com.riotapps.word.ui.PlacedResult;
 import com.riotapps.word.ui.PlacedWord;
 import com.riotapps.word.ui.RowCol;
 import com.riotapps.word.utils.IOHelper;
@@ -639,8 +640,10 @@ public class GameService {
 	 }
 	
 	//return int that represents the display message
-	public static int checkPlayRules(Context context, TileLayout layout, Game game, List<GameTile> boardTiles, 
+	public static PlacedResult checkPlayRules(Context context, TileLayout layout, Game game, List<GameTile> boardTiles, 
 					List<com.riotapps.word.ui.TrayTile> trayTiles, AlphabetService alphabetService, WordService wordService) throws DesignByContractException{
+		
+		PlacedResult placedResult = new PlacedResult();
 		
 		List<GameTile> placedTiles = getGameTiles(boardTiles);
 		List<PlayedTile> playedTiles = game.getPlayedTiles();
@@ -699,24 +702,33 @@ public class GameService {
         
         List<PlacedWord> invalidWords = new ArrayList<PlacedWord>();
 
+		ApplicationContext appContext = (ApplicationContext)context.getApplicationContext();
+        
         for (PlacedWord word : words)
         {
             totalPoints += word.getTotalPoints();
-            if (wordService.isWordValid(word.getWord().toLowerCase()) == false)
+            if (appContext.getWordService().isWordValid(word.getWord().toLowerCase()) == false)
             {
+            	Logger.d(TAG, "checkPlayRules invalid word=" + word.getWord());
                 invalidWords.add(word);
             }
         }
 
         Check.Require(invalidWords.size() == 0, getInvalidWordsMessage(context, invalidWords));
 
-        return totalPoints;
+ 
+        placedResult.setTotalPoints(totalPoints);
+        placedResult.setPlacedTiles(placedTiles);
+        
+        return placedResult;
         
 	}
 	
 	private static String getInvalidWordsMessage(Context context, List<PlacedWord> words){
-	
+ 
 		switch (words.size()){
+		case 0:
+			return "";
 		case 1:
 			return String.format(context.getString(R.string.game_play_1_invalid_word), words.get(0).getWord());
 		case 2:
@@ -745,11 +757,7 @@ public class GameService {
 			return String.format(context.getString(R.string.game_play_10_invalid_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
 					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
 					words.get(9).getWord());
-
-
 		}
-		
-
 	}
 	
 	private static boolean isMoveInValidStartPosition(TileLayout layout, Game game, List<GameTile> placedTiles){

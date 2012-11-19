@@ -2,9 +2,12 @@ package com.riotapps.word;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -13,6 +16,8 @@ import org.json.JSONObject;
 
 import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -129,44 +134,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gamesurface);
-		//setContentView(new GameSurfaceView2(this));
-		
-		//gravatar size = max size...default images
-		//https://graph.facebook.com/hunter.eskew/picture?return_ssl_resources=1
-	//	String gravatar = "http://graph.facebook.com/donna.guyton/picture?r=1&type=square"; //"http://www.gravatar.com/avatar/" + Utils.md5("hunter.eskew@gmail.com");
-		
-	//	imageLoader = new ImageFetcher(this, 100, 100);
-	//	imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
-	// 	this.surfaceView = (SurfaceView)findViewById(R.id.gameSurface);
-		
-	 	//this.surfaceView = new GameSurfaceView(this);
-	 	
-	 //	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);
-	 //	this.scoreboard.setVisibility(android.view.View.GONE);
-	 	//this.bottom = (View)findViewById(R.id.bottomControlsPlaceholder);
-	 	//this.bottom.//se
-		
-		//Logger.d(TAG, "oncreate");
-		
-		// SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
-	     //this.contextUserId = settings.getString(Constants.USER_PREFS_USER_ID, "");  
+ 
 	    this.player = PlayerService.getPlayerFromLocal(); 
 		this.tvNumPoints = (TextView)findViewById(R.id.tvNumPoints);
-	   
-	     //check for turn number, if not a match, clearGameState
-	     
-	     
-	 //    Log.w(TAG, "contextUserID=" + this.contextUserId);
-		
+ 
 		 Display display = getWindowManager().getDefaultDisplay(); 
 	     this.windowHeight = display.getHeight();  // deprecated
 	     
-	     
-	 //    Log.w(TAG, "long press " + android.view.ViewConfiguration.getLongPressTimeout() + 
-	  //  		 " dbltap " + android.view.ViewConfiguration.getDoubleTapTimeout() + 
-	 //   		  " tap  " + android.view.ViewConfiguration.getTapTimeout());
-	     
-	     
+ 
 	  	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);
 	  	this.scoreboardHeight = this.scoreboard.getHeight();
 	 //	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
@@ -260,6 +235,38 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 
 		 public handleButtonSwitchRunnable(int activeButton){
 		 		this.activeButton = activeButton;
+		 	}
+		 
+		 
+		    public void run() {
+		    	switch (this.activeButton){
+			    	case 1:
+			    		bRecall.setVisibility(View.GONE);
+					 	bShuffle.setVisibility(View.VISIBLE);
+			    		break;
+			    	case 2:
+			    		bRecall.setVisibility(View.VISIBLE);
+					 	bShuffle.setVisibility(View.GONE);
+			    		break;
+		    	}
+		    }
+	  }
+	 
+	 public void setPointsView(int points){
+		 context.runOnUiThread(new handlePointsViewRunnable(points));
+	 }
+	 
+	 private class handlePointsViewRunnable implements Runnable {
+		 private int activeButton; //1 = shuffle, 2 = recall 	
+		 
+		 public handlePointsViewRunnable(int points){
+		 		if (points == 0){
+		 			tvNumPoints.setVisibility(View.INVISIBLE);
+		 		}
+		 		else {
+		 			tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_num_points),points));
+		 			tvNumPoints.setVisibility(View.VISIBLE);
+		 		}
 		 	}
 		 
 		 

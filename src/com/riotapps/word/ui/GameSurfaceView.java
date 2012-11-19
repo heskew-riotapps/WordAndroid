@@ -299,6 +299,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			//	  // Apply to new dimension
 			 	  me.setLayoutParams( lp );
 			 	  me.setInitialRecallShuffleState();
+				  me.resetPointsView();
 			 	   me.readyToDraw = true;
 		        }
 
@@ -759,6 +760,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         					 }
         					 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
         					 GameStateService.setGameState(this.context, this.parent.getGameState());
+        					 this.resetPointsView();
     						 
     						 //let's make sure the board zooms (if it's not already in that state, upon drop)
     						 if (this.isZoomed){
@@ -1003,6 +1005,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 this.clearDropTargetTrayTile(); 
 			 this.clearDraggingTile();
 			 this.clearTargetTile();
+			 this.resetPointsView();
 			 //draggingTrayTile = null;
 			 return;
 		 }
@@ -1021,17 +1024,17 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 
 		 //multiplying by direction will send the loop into the proper direction
 		 j = j * direction;
-		 Logger.d(TAG, "handleDropOnTray j=" + j);
+		// Logger.d(TAG, "handleDropOnTray j=" + j);
 	    int i = this.getDropTargetTrayTile().getId(); //+ (1 * direction);
 	    
-		 Logger.d(TAG, "handleDropOnTray dropTargetTile.getId()=" + this.getDropTargetTrayTile().getId() + " i=" + i);
+		// Logger.d(TAG, "handleDropOnTray dropTargetTile.getId()=" + this.getDropTargetTrayTile().getId() + " i=" + i);
 	    boolean loopRun = true;
 	    int escapeValue = 0;
 	    while (loopRun == true) {
-	    	Logger.d(TAG, "handleDropOnTray currentLetter=" +  this.trayTiles.get(i).getCurrentLetter() + " id=" +  i);
+	    //	Logger.d(TAG, "handleDropOnTray currentLetter=" +  this.trayTiles.get(i).getCurrentLetter() + " id=" +  i);
 	        String letter = this.trayTiles.get(i).getCurrentLetter();
 	        this.trayTiles.get(i).setCurrentLetter(loopLetter);
-	        Logger.d(TAG, "handleDropOnTray currentLetter=" +  this.trayTiles.get(i).getCurrentLetter() + " id=" +  i);
+	      //  Logger.d(TAG, "handleDropOnTray currentLetter=" +  this.trayTiles.get(i).getCurrentLetter() + " id=" +  i);
 	        loopLetter = letter;
 
 	        //stop at first formerly empty tile 
@@ -1045,10 +1048,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.clearDropTargetTrayTile(); 
 		this.clearDraggingTile();
 		this.clearTargetTile();
+		this.resetPointsView();
+		
 		 //draggingTrayTile = null;
 		return;
 	   
 	 }
+	 
+	 private void resetPointsView(){
+		 try{
+				PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
+				this.parent.setPointsView(placedResult.getTotalPoints());
+			}
+			catch (DesignByContractException e){
+				this.parent.setPointsView(0);
+			}
+	 }
+	 
+	 
 	 
 	 //private GameTile findTapTargetTile(int xPosition, int yPosition){
 	 private int findTapTargetTile(int xPosition, int yPosition){
@@ -1928,6 +1945,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 		this.recallLettersRedraw = true;
 		this.readyToDraw = true;
+		this.resetPointsView();
 
 	}
 	
@@ -1955,7 +1973,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	public void onPlayClick(){
 		try{
-			GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
+			PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
+		
+			this.parent.setPointsView(placedResult.getTotalPoints());
+			
+			//loop through placed words and show confirmation messages 
 		}
 		catch (DesignByContractException e){
 			this.parent.openAlertDialog("testing", e.getMessage());
