@@ -24,9 +24,9 @@ public class Logger {
 	
 	public static void d(String tag, String msg, Exception e){
 		//is logging on?
-		//if (BuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			Log.d((tag==null?"UNKNOWN_TAG":tag), (msg==null?"unknown message":msg));
-		//}
+		}
 	}
 
 	public static void e(String tag, String msg){

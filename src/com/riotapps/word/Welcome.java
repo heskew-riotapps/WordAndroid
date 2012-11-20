@@ -132,7 +132,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 
 
 	private void handleFacebookMeRequest(){
-    	//Logger.e(TAG, "handleFacebookMeRequest");
+    	Logger.e(TAG, "handleFacebookMeRequest facebook.getAccessToken()=" + facebook.getAccessToken());
    	 	SharedPreferences.Editor editor = settings.edit();
         editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
         editor.putLong(Constants.FB_TOKEN_EXPIRES, facebook.getAccessExpires());
