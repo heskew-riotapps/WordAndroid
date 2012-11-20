@@ -12,7 +12,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+ 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
@@ -22,8 +22,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+//import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -70,7 +72,9 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         txtFB = (TextView) findViewById(R.id.byFacebook);
         txtFB.setOnClickListener(this);
         txtNative = (TextView) findViewById(R.id.byEmail);
-        txtNative.setOnClickListener(this);    
+        txtNative.setOnClickListener(this);   
+        
+        
       //  handler = new Handler() {
        //     public void handleMessage(Message msg) {
        //         // process incoming messages here
@@ -247,40 +251,65 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
          */
         if(!facebook.isSessionValid()) {
         	Logger.w(TAG, "facebook.authorize about to be called");
-    	 facebook.authorize(this, new String[] { Constants.FACEBOOK_PERMISSIONS },
-	    	  new DialogListener() {
-	             @Override
-	             public void onComplete(Bundle values) {
-	            	// Logger.e(TAG, "facebook.authorize..onComplete:");
-	            	// getFriends();
-	            	 Logger.w(TAG, "handleFacebookMeRequest about to be called");
-	            	 handleFacebookMeRequest();
-      
-	             }
-
-	             @Override
-	             public void onFacebookError(FacebookError e) {
-	            	 DialogManager.SetupAlert(context, context.getString(R.string.facebook), e.getLocalizedMessage());
-	            	 Logger.e(TAG,"facebook.authorize..onFacebookError=" + e.getLocalizedMessage());
-	            	 //DialogManager.SetupAlert(context, "fbDialogListener", dialogMessage)
-	            	 
-	             }
-
-	             @Override
-	             public void onError(DialogError e) {
-	            	 Logger.e(TAG,"facebook.authorize..DialogError=" + e.getLocalizedMessage());
-	            	 DialogManager.SetupAlert(context, context.getString(R.string.facebook), e.getLocalizedMessage());
-	             }
-	             @Override
-	             public void onCancel() {
-	            	 Logger.e(TAG,"facebook.authorize..onCancel called");
-	            	 
-	             }
-	         });
+        	
+        	// Looper.getMainLooper().prepare();
+        	// new fbWork().execute(facebook);
+        	// Looper.loop();
+        	
+        	facebook.authorize(context, new String[] { Constants.FACEBOOK_PERMISSIONS },
+			    	  new PostAuthorizeDialogListener() );
+        	
+        //	Thread t = new Thread(new Runnable() {
+        //	             public void run() {
+        //	            	 
+        //	           	 
+		 //   	 facebook.authorize(context, new String[] { Constants.FACEBOOK_PERMISSIONS },
+		//	    	  new PostAuthorizeDialogListener() );
+        //	    }
+        //	});
+        //	Looper.prepare(); 
+        //	t.start();
+        //	Looper.loop();
+        
+             
+     
+   
         }
         else{
+
         	 mAsyncRunner.request("me", new fbMeRequestListener());
         	//handleFacebookMeRequest();
+        }
+    }
+   
+    public class PostAuthorizeDialogListener implements DialogListener 
+    {
+    	@Override
+        public void onComplete(Bundle values) {
+       	// Logger.e(TAG, "facebook.authorize..onComplete:");
+       	// getFriends();
+       	 Logger.w(TAG, "handleFacebookMeRequest about to be called");
+       	 handleFacebookMeRequest();
+
+        }
+
+        @Override
+        public void onFacebookError(FacebookError e) {
+       	 DialogManager.SetupAlert(context, context.getString(R.string.facebook), e.getLocalizedMessage());
+       	 Logger.e(TAG,"facebook.authorize..onFacebookError=" + e.getLocalizedMessage());
+       	 //DialogManager.SetupAlert(context, "fbDialogListener", dialogMessage)
+       	 
+        }
+
+        @Override
+        public void onError(DialogError e) {
+       	 Logger.e(TAG,"facebook.authorize..DialogError=" + e.getLocalizedMessage());
+       	 DialogManager.SetupAlert(context, context.getString(R.string.facebook), e.getLocalizedMessage());
+        }
+        @Override
+        public void onCancel() {
+       	 Logger.e(TAG,"facebook.authorize..onCancel called");
+       	 
         }
     }
     

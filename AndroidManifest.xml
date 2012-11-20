@@ -6,6 +6,7 @@
 
     <!-- Google cloud messaging required version 8 or above. -->
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8" />
+ 
     
     <uses-permission android:name="android.permission.INTERNET" ></uses-permission> 
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> 

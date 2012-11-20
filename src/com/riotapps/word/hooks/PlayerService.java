@@ -225,7 +225,7 @@ public class PlayerService {
 	    editor.commit(); 
 	    
 	    String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
-	    Logger.w(TAG, "saveFacebookFriendsFromJSONResponse friendsLocal=" + friendsLocal.length());
+	   // Logger.w(TAG, "saveFacebookFriendsFromJSONResponse friendsLocal=" + friendsLocal.length());
 	}
 	
 	public static String setupFindPlayersByFB(Context ctx) throws DesignByContractException{
