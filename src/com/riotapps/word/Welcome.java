@@ -105,7 +105,34 @@ public class Welcome  extends FacebookActivity implements View.OnClickListener{
         
     }
 
-    
+ //   @Override
+ //   public void onStart() {
+ //       super.onStart();
+ //       Logger.d(TAG, "onStart called");
+ //    //   Session.getActiveSession().addCallback(statusCallback);
+ //   }
+
+//    @Override
+ //   public void onStop() {
+ //       super.onStop();
+ //       Logger.d(TAG, "onStop called");
+ //    //   Session.getActiveSession().removeCallback(statusCallback);
+ //   }
+
+ //   @Override
+ //   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+ //       super.onActivityResult(requestCode, resultCode, data);
+ //       Logger.d(TAG, "onActivityResult called");
+ //     //  Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+ //   }
+
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+ //       super.onSaveInstanceState(outState);
+ //       Logger.d(TAG, "onSaveInstanceState called");
+  //   //   Session session = Session.getActiveSession();
+  //   //   Session.saveSession(session, outState);
+  //  }
     
     @Override 
     public void onClick(View v) {
@@ -158,12 +185,12 @@ public class Welcome  extends FacebookActivity implements View.OnClickListener{
      }
     
     
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        facebook.authorizeCallback(requestCode, resultCode, data);
-    }
+  //  @Override
+  //  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  //      super.onActivityResult(requestCode, resultCode, data);
+//
+ //       facebook.authorizeCallback(requestCode, resultCode, data);
+ //   }
     
     @Override
     public void onResume() {    
@@ -278,7 +305,7 @@ public class Welcome  extends FacebookActivity implements View.OnClickListener{
 		    public void run() {
 		    	//Logger.w(TAG, "handleFacebookMeResponse response=" + response);
 		    	//Logger.w(TAG,"fbFriendsRequestListener.onComplete.JSONException=" + response);
-				JSONObject json;
+				//JSONObject json;
 				try {
 					if (users.size() > 0){
 						PlayerService.saveFacebookFriendsFromJSONResponse(context, users);
@@ -431,6 +458,8 @@ public class Welcome  extends FacebookActivity implements View.OnClickListener{
 //
  //   }
     private void fetchFriends(){
+    	Logger.d(TAG, "fetchFriends called");
+    	
     	Session session = Session.getActiveSession();
     	Request request = Request.newMyFriendsRequest(session, new Request.GraphUserListCallback() {
           // callback after Graph API response with user object
@@ -510,7 +539,7 @@ public class Welcome  extends FacebookActivity implements View.OnClickListener{
 		protected void onPostExecute(ServerResponse serverResponseObject) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(serverResponseObject);
-			//Logger.e(TAG,"NetworkTask onPostExecute ");
+			 Logger.d(TAG,"NetworkTask onPostExecute ");
 			this.handleResponse(serverResponseObject);
 
 		}
@@ -539,8 +568,10 @@ public class Welcome  extends FacebookActivity implements View.OnClickListener{
 		             case 200:  
 		             case 201: {   
 		            	 	//update local player context
+		            	 Logger.d(TAG, "handleResponse about to call PlayerService.handleCreatePlayerResponse");
 		            		player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
-		            	 
+		            		
+		            		Logger.d(TAG, "handleResponse about to call fetchFriends");
 		            		//go get user's friends 
 		            		 fetchFriends();
 		            		 
