@@ -119,20 +119,25 @@ public class Welcome  extends FacebookActivity implements View.OnClickListener{
  //    //   Session.getActiveSession().removeCallback(statusCallback);
  //   }
 
- //   @Override
- //   public void onActivityResult(int requestCode, int resultCode, Intent data) {
- //       super.onActivityResult(requestCode, resultCode, data);
- //       Logger.d(TAG, "onActivityResult called");
- //     //  Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
- //   }
-
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
- //       super.onSaveInstanceState(outState);
- //       Logger.d(TAG, "onSaveInstanceState called");
-  //   //   Session session = Session.getActiveSession();
-  //   //   Session.saveSession(session, outState);
-  //  }
+    @Override
+   protected void onSaveInstanceState(Bundle outState) {
+         super.onSaveInstanceState(outState);
+         Logger.d(TAG, "onSaveInstanceState called");
+         Session session = Session.getActiveSession();
+         if (session != null){
+        	 Session.saveSession(session, outState);
+         }
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Logger.d(TAG, "onActivityResult called");
+        Session session = Session.getActiveSession();
+        if (session != null){
+              Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+        }
+    }
     
     @Override 
     public void onClick(View v) {
@@ -195,7 +200,7 @@ public class Welcome  extends FacebookActivity implements View.OnClickListener{
     @Override
     public void onResume() {    
         super.onResume();
-        facebook.extendAccessTokenIfNeeded(this, null);
+       // facebook.extendAccessTokenIfNeeded(this, null);
     }
     
     

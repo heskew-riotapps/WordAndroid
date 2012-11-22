@@ -1336,7 +1336,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 Logger.d(TAG, "onDraw this.isZoomed == true");
 				 //a tray tile has been tapped down
 				 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN && 
-						 this.getCurrentTrayTile().isDragging() || this.getDraggingTile() != null){
+						 ((this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()) || this.getDraggingTile() != null)){
 					 //board stays the same
 					 this.drawBoardOnMove(canvas, 0, 0);
 					 Logger.d(TAG, "onDraw a tray tile has been tapped down");

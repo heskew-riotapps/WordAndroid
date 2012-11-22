@@ -60,13 +60,6 @@
 		android:clickable="true"
         />	
     </RelativeLayout>
-    
-	<com.facebook.LoginButton
-            android:id="@+id/login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp" 
-            android:text="@string/join_via_facebook" />
+ 
     </LinearLayout>
 </RelativeLayout>
