@@ -31,7 +31,7 @@
 	 <ImageView 
 	   	android:layout_width="13dp"
    		android:layout_height="13dp"
-	    android:id="@+id/ivBadge"	
+	    android:id="@+id/ivPlayerBadge"	
 	    android:layout_below="@id/tvPlayerName"
 	    android:layout_toRightOf="@id/ivPlayer"    
 	 /> 
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="2.0dip"
         android:layout_below="@id/tvPlayerName"
-        android:layout_toRightOf="@id/ivBadge"/>
+        android:layout_toRightOf="@id/ivPlayerBadge"/>
      <com.riotapps.word.ui.ScoreboardFontTextView
         style="@style/TextStyle"
         android:textSize="11dp"

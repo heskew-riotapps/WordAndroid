@@ -96,7 +96,7 @@ public class ImageFetcher extends ImageResizer {
      * @return The downloaded and resized bitmap
      */
     private Bitmap processBitmap(String data) {
-        Logger.d(TAG, "processBitmap - " + data);
+      //  Logger.d(TAG, "processBitmap - " + data);
  
         // Download a bitmap, write it to a file
         final File f = downloadBitmap(mContext, data);
@@ -131,7 +131,7 @@ public class ImageFetcher extends ImageResizer {
         final DiskLruCache cache =
                 DiskLruCache.openCache(context, cacheDir, HTTP_CACHE_SIZE);
 
-        Logger.d(TAG, "downloadBitmap - cacheDir=" + cacheDir.getName());
+     //   Logger.d(TAG, "downloadBitmap - cacheDir=" + cacheDir.getName());
         final File cacheFile = new File(cache.createFilePath(urlString));
 
         if (cache.containsKey(urlString)) {
@@ -139,7 +139,7 @@ public class ImageFetcher extends ImageResizer {
             return cacheFile;
         }
 
-        Logger.d(TAG, "downloadBitmap - downloading - " + urlString);
+     //   Logger.d(TAG, "downloadBitmap - downloading - " + urlString);
 
         Utils.disableConnectionReuseIfNecessary();
         HttpURLConnection urlConnection = null;

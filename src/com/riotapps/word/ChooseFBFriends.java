@@ -72,8 +72,10 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
         
        // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
 
+        Logger.d(TAG, "ChooseFBFriends onCreate called");
+        
         this.imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
-       this.imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
+        this.imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
         
         player = PlayerService.getPlayerFromLocal();
     	PlayerService.loadPlayerInHeader(this);
@@ -296,12 +298,17 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 		    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
 		    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
 		    	   
+		    		
 		    	   if (friend.isRegisteredPlayer()){
 		    		   int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + friend.getBadgeDrawable(), null, null);
-		   				ImageView ivBadge = (ImageView)findViewById(R.id.ivBadge);	 
+		    		   
+			    		ImageView ivBadge = (ImageView)rowView.findViewById(R.id.ivPlayerBadge);
+
+		   				Logger.d(TAG, "FBFriendArrayAdapter friend drawable=" + friend.getName() + " " + friend.getBadgeDrawable() + " badge=" + badgeId + " " + (ivBadge == null));
+		   				
 			   			ivBadge.setImageResource(badgeId);
 			   			
-			   			TextView tvPlayerWins = (TextView)findViewById(R.id.tvPlayerWins);
+			   			TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
 						tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
 						tvInvitationWillBeSent.setVisibility(View.GONE);
 		    	   }

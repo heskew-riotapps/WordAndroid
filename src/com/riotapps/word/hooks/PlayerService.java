@@ -1,35 +1,22 @@
 package com.riotapps.word.hooks;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.riotapps.word.FindPlayer;
 import com.riotapps.word.R;
  
 import com.riotapps.word.utils.ApplicationContext;
@@ -37,27 +24,20 @@ import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
-import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
-import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
 import com.riotapps.word.utils.Validations;
-import com.facebook.GraphUser;
+import com.facebook.model.GraphUser;
 import com.facebook.android.FacebookError;
-import com.facebook.android.Util;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
  
-////make this class statisc
+////make this class static
 public class PlayerService {
 	private static final String TAG = PlayerService.class.getSimpleName();
 
@@ -234,6 +214,7 @@ public class PlayerService {
 		List<FBFriend> fbFriends = new ArrayList<FBFriend>();
 		
 		for(GraphUser user : users){
+			Logger.d(TAG, "saveFacebookFriendsFromJSONResponse user=" + user.getId() + " " + user.getName());
 			FBFriend fbFriend = new FBFriend();
 
 			fbFriend.setId(user.getId());
@@ -563,10 +544,13 @@ public class PlayerService {
  
         FBFriends friends = gson.fromJson(friendsLocal, FBFriends.class);
         
-  //   Logger.d(TAG, "setupFindPlayersByFB friends=" + friends.getFriends().size());
+        Logger.d(TAG, "findRegisteredFBFriendsResponse friends=" + friends.getFriends().size());
      
  //loop through friends with inner loop that tries to match friend with registered player coming back from server
      	for(FBFriend fb : friends.getFriends()){
+     		
+     		Logger.d(TAG, "findRegisteredFBFriendsResponse fb=" + fb.getName() + " numWins=" + fb.getNumWins());
+     		
      		for (Player player : players){
      			if (fb.getId().equals(player.getFB())){
      				fb.setPlayerId(player.getId());

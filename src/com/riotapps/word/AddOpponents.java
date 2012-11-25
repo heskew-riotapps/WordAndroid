@@ -9,6 +9,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.facebook.FacebookActivity;
+import com.facebook.LoggingBehaviors;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.Settings;
+import com.facebook.Session.StatusCallback;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -16,6 +23,10 @@ import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.Facebook.DialogListener;
+ 
+import com.facebook.FacebookException;
+import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -30,6 +41,8 @@ import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
+
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -46,17 +59,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class AddOpponents extends FragmentActivity implements View.OnClickListener{
+public class AddOpponents extends FacebookActivity implements View.OnClickListener{
 	
 	private static final String TAG = AddOpponents.class.getSimpleName();
 	TextView tvStartByNickname;
 	Player player;
 	AddOpponents context = this;
 	Game game;
-	Facebook facebook = new Facebook(Constants.FACEBOOK_API_ID);
-	AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
+ 
 	private SharedPreferences settings;
-	
+	private Session session;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,18 +77,14 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
         
        // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
 
-        
+        Logger.d(TAG, "AddOpponents onCreate called");
         player = PlayerService.getPlayerFromLocal();
     	PlayerService.loadPlayerInHeader(this);
    
     	Intent i = getIntent();
     	this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
     	settings = this.getSharedPreferences(Constants.USER_PREFS, MODE_PRIVATE); //getPreferences(MO
-    	
-    	
-      //  Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
-	  //  t.show();
-    	  
+ 
     	Button bStartGame = (Button)findViewById(R.id.bStartGame); 
     	Button bCancelGame = (Button)findViewById(R.id.bCancelGame); 
     	TextView tvTitle = (TextView)findViewById(R.id.tvTitle);
@@ -198,7 +206,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	//1. determine if any new facebook players have been added to this game
     	//2. if so, call fb's apprequest dialog to send apprequest informing new players of 
     	//   their invitation
-    	//3. if the app request dialog is canceled, assume the game will be canceled since their will 
+    	//3. if the app request dialog is canceled, assume the game will be canceled since there will 
     	//   generally be no way for new fb player to be informed of their invitation to play (outside of word-of-mouth_
     	//4. during the apprequest dialog process, if the fb session token has to be renewed and a different fb user
     	//   other than the content player fb user is authorized by fb, kill local cache, log user out and 
@@ -298,61 +306,40 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
    // 	 this.context.startActivity(intent);
    // }
     
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        this.session.onActivityResult(this, requestCode, resultCode, data);
+    }
+    
+    private Session createSession() {
+        return new Session.Builder(this).setApplicationId(this.getString(R.string.app_id)).build();
+    }
     
     //if player is invited non-registered facebook friends, use facebook app requests to inform those friends.
     //it's the only way to inform them since we don't have their email address
     private void handleFacebookInvitationAppRequests() {
-        String access_token = settings.getString(Constants.FB_TOKEN, null);
-        long expires = settings.getLong(Constants.FB_TOKEN_EXPIRES, 0);
+    	 this.session = createSession();
+    	 Settings.addLoggingBehavior(LoggingBehaviors.INCLUDE_ACCESS_TOKENS);
         
-        Logger.d(TAG, "handleFacebookInvitationAppRequests access_token=" + access_token + " expires" + expires);
-        if(access_token != null) {
-            facebook.setAccessToken(access_token);
-        }
-        if(expires != 0) {
-            facebook.setAccessExpires(expires);
-        }
-        
-        /*
-         * Only call authorize if the access_token has expired.
-         */
-        if(!facebook.isSessionValid()) {
-        	 Logger.d(TAG, "handleFacebookInvitationAppRequests isSessionValid=false");
-    	 facebook.authorize(this, new String[] { Constants.FACEBOOK_PERMISSIONS }, new DialogListener() {
-	             @Override
-	             public void onComplete(Bundle values) {
-	            	 Logger.d(TAG, "facebook.authorize..onComplete:");
-	            	// getFriends();
-	            	 startFacebookAppRequestCallChain();
-      
-	             }
-
-	             @Override
-	             public void onFacebookError(FacebookError error) {
-	            	 
-	            	 Logger.d(TAG,"onFacebookError=" + error.getLocalizedMessage());
-	            	 //DialogManager.SetupAlert(context, "fbDialogListener", dialogMessage)
-	            	 
-	             }
-
-	             @Override
-	             public void onError(DialogError e) {
-	            	 Logger.d(TAG,"DialogError=" + e.getLocalizedMessage());
-	             }
-	             @Override
-	             public void onCancel() {
-	            	 
-	            	 
-	             }
-	         });
-        }
-        else{
-        	handleFacebookAppRequest();
-        }
- 
+    	 if (this.session.isOpened()) {
+    		 handleFacebookAppRequest();
+         } else {
+             StatusCallback callback = new StatusCallback() {
+                 public void call(Session session, SessionState state, Exception exception) {
+                     if (state.isOpened()) {
+                    	 handleFacebookAppRequest();
+                     } else if (exception != null) {
+                    	 DialogManager.SetupAlert(context, context.getString(R.string.sorry), exception.getMessage());
+                         AddOpponents.this.session = createSession();
+                     }
+                 }
+             };
+             this.session.openForRead(new Session.OpenRequest(this).setCallback(callback));
+         }
     }
     
-    private void handleFacebookAppRequest(){
+    
+    
+ /*   private void handleFacebookAppRequest(){
     	
     	Logger.d(TAG, "handleFacebookAppRequest this.game.getInvitedFBPlayersString()=" + this.game.getUnregisteredFBPlayersString());
     	Bundle params = new Bundle();
@@ -362,7 +349,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 	    facebook.dialog(context, "apprequests", params, new fbAppRequestsListener());
 
     }
-    
+   
     private void startFacebookAppRequestCallChain(){
     	Logger.w(TAG, "handleFacebookMeRequest");
    	 	SharedPreferences.Editor editor = settings.edit();
@@ -374,43 +361,43 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
         mAsyncRunner.request("me", new fbMeRequestListener());
     	
     }
-    
-    private class fbAppRequestsListener implements DialogListener {
+    */
+  //  private class fbAppRequestsListener implements DialogListener {
+//
+//		@Override
+//		public void onComplete(Bundle values) {
+//			// TODO Auto-generated method stub
+//			Logger.d(TAG, "fbAppRequestsListener.onComplete");
+//			context.startGame();
+//		}
 
-		@Override
-		public void onComplete(Bundle values) {
-			// TODO Auto-generated method stub
-			Logger.d(TAG, "fbAppRequestsListener.onComplete");
-			context.startGame();
-		}
+//		@Override
+//		public void onFacebookError(FacebookError e) {
+//			// TODO Auto-generated method stub
+//			DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());
+//			Logger.e(TAG, "fbAppRequestsListener onFacebookError=" + e.getLocalizedMessage());			
+//		}
 
-		@Override
-		public void onFacebookError(FacebookError e) {
-			// TODO Auto-generated method stub
-			DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());
-			Logger.e(TAG, "fbAppRequestsListener onFacebookError=" + e.getLocalizedMessage());			
-		}
-
-		@Override
-		public void onError(DialogError e) {
-			Logger.e(TAG, "fbAppRequestsListener onError=" + e.getLocalizedMessage());
-			DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());
+//		@Override
+//		public void onError(DialogError e) {
+//			Logger.e(TAG, "fbAppRequestsListener onError=" + e.getLocalizedMessage());
+//			DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());
 			
-		}
+//		}
 
-		@Override
-		public void onCancel() {
-			// TODO Auto-generated method stub
-			
-			/////call custom dialog here to allow player to make the decision if the player cancels the apprequest
-			
-			context.handleAppRequestCancel();
+//		@Override
+//		public void onCancel() {
+//			// TODO Auto-generated method stub
+//			
+//			/////call custom dialog here to allow player to make the decision if the player cancels the apprequest
+//			
+//			context.handleAppRequestCancel();
 			//DialogManager.SetupAlert(context, context.getString(R.string.sorry), )
-		}
+//		}
 
-    }
+ //   }
     
-    private class fbMeRequestListener implements RequestListener {
+/*    private class fbMeRequestListener implements RequestListener {
 
     	@Override
     	public void onComplete(String response, Object state) {
@@ -448,7 +435,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	}
 
     }
-    
+   
     private class handleFacebookMeResponseRunnable implements Runnable {
 		 private String response;	
 		 
@@ -499,6 +486,39 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 				}
 		    }
 		  }
+    
+   */  
+    private void handleFacebookAppRequest() {
+        Bundle params = new Bundle();
+	    params.putString("message", this.getString(R.string.add_opponents_fb_dialog_message));
+	    params.putString("to", this.game.getUnregisteredFBPlayersString());
+        WebDialog requestsDialog = (
+            new WebDialog.RequestsDialogBuilder(this,
+                Session.getActiveSession(),
+                params))
+                .setOnCompleteListener(new OnCompleteListener() {
+
+                    @Override
+                    public void onComplete(Bundle values,
+                        FacebookException error) {
+                        final String requestId = values.getString("request");
+                        if (requestId != null) {
+                        	startGame();
+                           // Toast.makeText(getActivity().getApplicationContext(), 
+                           //     "Request sent",  
+                           //     Toast.LENGTH_SHORT).show();
+                        } else {
+                           // Toast.makeText(getActivity().getApplicationContext(), 
+                           //     "Request cancelled", 
+                           //     Toast.LENGTH_SHORT).show();
+                            handleAppRequestCancel();
+                        }
+                    }
+
+                })
+                .build();
+        requestsDialog.show();
+    }
     
 private class NetworkTask extends AsyncNetworkRequest{
 		
