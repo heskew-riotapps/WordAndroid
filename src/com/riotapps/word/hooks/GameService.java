@@ -1,7 +1,5 @@
 package com.riotapps.word.hooks;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -14,34 +12,25 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.riotapps.word.R;
 import com.riotapps.word.utils.ApplicationContext;
-import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.Utils;
-import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.ui.GameTileComparator;
-import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.ui.PlacedResult;
 import com.riotapps.word.ui.PlacedWord;
 import com.riotapps.word.ui.RowCol;
-import com.riotapps.word.utils.IOHelper;
-import com.riotapps.word.utils.Enums.*;
 import com.riotapps.word.utils.NetworkConnectivity;
-import com.riotapps.word.utils.Validations;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
  
@@ -141,6 +130,33 @@ public class GameService {
 		return gson.toJson(game);
 	}
 	
+	public static String setupGameTurn(Context ctx, Game game, PlacedResult placedResult) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupGameTurn");
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportGameTurn turn = new TransportGameTurn();
+		turn.setToken(player.getAuthToken());
+		turn.setGameId(game.getId());
+		turn.setTurn(game.getTurn());
+		
+		for (GameTile tile : placedResult.getPlacedTiles()){
+			turn.addToTiles(tile.getPlacedLetter(), tile.getId());
+		}
+
+		for (PlacedWord word : placedResult.getPlacedWords()){
+			turn.addToWords(word.getWord());
+		}
+		
+		return gson.toJson(turn);
+	}
+	
 	public static String setupGetGame(Context ctx, String gameId) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGetGame");
@@ -218,98 +234,15 @@ public class GameService {
 	    editor.commit(); 
 	}
 	
-//	public static void HandleCreateGameResponse(final Context ctx, InputStream iStream){
- //       try {
- //           
- //       	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
- 	        
-// 	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
-// 	        
-// 	        Type type = new TypeToken<Player>() {}.getType();
-// 	        Player player = gson.fromJson(reader, type);
-// 	        
-// 	        ///save player info to shared preferences
-// 	        //userId and auth_token ...email and password should have been stored before this call
-// 	       SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
-// 	       SharedPreferences.Editor editor = settings.edit();
-// 	       editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
-// 	       editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
-// 	      editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
-// 	       editor.commit();  
-// 	        
-// 	       Intent goToMainLanding = new Intent(ctx, com.riotapps.word.MainLanding.class);
-//	       ctx.startActivity(goToMainLanding);
-// 	       //Intent goToGamesLanding = new Intent(ctx, com.riotapps.word.GamesLanding.class);
-//		   //ctx.startActivity(goToGamesLanding);
- //	       //redirect to game landing page
-// 	       
-// 	       //Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  
-// 	       // t.show(); 
- //           
-  //       } 
- //        catch (Exception e) {
-  ///          //getRequest.abort();
-  //          Log.w("HandleCreateGameResponse", "Error for HandleCreateGameResponse= ", e);
-  //          
- //           Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
- //           t.show(); 
-  //       }
-	 
-//	}
-	
-//	public static void HandleGetGameResponse(final Context ctx, InputStream iStream, Class<?> goToClass)
-//	{
- //       try {
-  //          
- //       	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
- //	        
- //	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
- //	        
- //	        Type type = new TypeToken<Game>() {}.getType();
- //	        Game game = gson.fromJson(reader, type);
- //	       
- //	        //save game data to  	        
- //	       // String s = IOHelper.streamToString(iStream);
- //	        
- //	        //save game data to 
- //	        
- //	        ///save player info to shared preferences
- //	        //userId and auth_token ...email and password should have been stored before this call
- //	       // SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
- //	       // SharedPreferences.Editor editor = settings.edit();
- //	       // editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
- //	       // editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
- //	       // editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
- //	       // editor.commit();  
-//	 	        
-// 	        Intent intent = new Intent(ctx, goToClass);
-// 	      //  intent.putExtra("gameId", game.getId());
-// 	      //	intent.putExtra("game", s);
-// 	      	intent.putExtra(Constants.EXTRA_GAME, game);
-// 	        ctx.startActivity(intent);
-// 	      	
- //	       
- //	      	
- //	       //redirect to game landing page
- //	       
- //	       //Toast t = Toast.makeText(ctx, response.getAuthToken(), Toast.LENGTH_LONG);  
- //	       // t.show(); 
-  //           
-   //      } 
-  //       catch (Exception e) {
-   //         //getRequest.abort();
-  //          //Log.w(getClass().getSimpleName(), "Error for HandleCreatePlayerResponse= ", e);
-  //          
-   ///         DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleGetGameResponse", e.getMessage(), 0);
-  //         // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
-  //         // t.show(); 
-   //      }
-	 
-//	}
+
 	public static Player handleCancelGameResponse(final Context ctx, InputStream iStream){
 		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
 	}
 
+	public static Game handleGamePlayResponse(final Context ctx, InputStream iStream){
+		return handleGameResponse(ctx, iStream); 
+	}
+	
 	public static Game handleCreateGameResponse(final Context ctx, InputStream iStream){
 		return handleGameResponse(ctx, iStream); 
 	}
@@ -692,9 +625,9 @@ public class GameService {
 	 	
         String temp = "";
         
-        for(PlacedWord word : words){
-        	temp = temp + word.getWord() + "\n";
-        }
+  //      for(PlacedWord word : words){
+  //      	temp = temp + word.getWord() + "\n";
+  //      }
         
    //     Check.Require(1 == 2, temp);
         
@@ -719,6 +652,7 @@ public class GameService {
  
         placedResult.setTotalPoints(totalPoints);
         placedResult.setPlacedTiles(placedTiles);
+        placedResult.setPlacedWords(words);
         
         return placedResult;
         
@@ -1048,4 +982,159 @@ public class GameService {
       }
 
 	 
+  	public static String getPlacedWordsMessage(Context context, List<PlacedWord> words){
+  		 
+		switch (words.size()){
+		case 0:
+			return "";
+		case 1:
+			return String.format(context.getString(R.string.game_play_1_word), words.get(0).getWord());
+		case 2:
+			return String.format(context.getString(R.string.game_play_2_words), words.get(0).getWord(), words.get(1).getWord());
+		case 3:
+			return String.format(context.getString(R.string.game_play_3_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord());
+		case 4:
+			return String.format(context.getString(R.string.game_play_4_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord());
+		case 5:
+			return String.format(context.getString(R.string.game_play_5_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord());
+		case 6:
+			return String.format(context.getString(R.string.game_play_6_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord());
+		case 7:
+			return String.format(context.getString(R.string.game_play_7_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord());
+		case 8:
+			return String.format(context.getString(R.string.game_play_8_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord());
+		case 9:
+			return String.format(context.getString(R.string.game_play_9_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord());
+		case 10:
+			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
+					words.get(9).getWord());
+		case 11:
+			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
+					words.get(9).getWord(), words.get(10).getWord());
+		case 12:
+			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
+					words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord());
+		case 13:
+			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
+					words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord(), words.get(12).getWord());
+		case 14:
+			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
+					words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord(), words.get(12).getWord(), words.get(13).getWord());
+		case 15:
+			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
+					words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord(), words.get(12).getWord(), words.get(13).getWord(), 
+					words.get(14).getWord());
+		default:
+			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
+					words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord(), words.get(12).getWord(), words.get(13).getWord(),
+					words.get(14).getWord(), words.get(15).getWord());
+		}
+	}
+  	
+  	private static void moveActiveGameYourTurnToOpponentsTurn(Game game){
+  		Player player = PlayerService.getPlayerFromLocal();
+  		
+  		for(Game o : player.getActiveGamesYourTurn()){
+  			
+  		}
+  		
+  		
+  		
+  		Gson gson = new Gson(); //wrap json return into a single call that takes a type
+	        
+          //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
+	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+	        
+	        Type type = new TypeToken<Player>() {}.getType();
+	        Player player = gson.fromJson(reader, type);
+	        
+	        ///save player info to shared preferences
+	        //userId and auth_token ...email and password should have been stored before this call
+	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	        SharedPreferences.Editor editor = settings.edit();
+	        
+	   
+	       // Logger.w(TAG, "handlePlayerResponse auth=" + player.getAuthToken() + " " + gson.toJson(player));
+	        Date completedDate = new Date(settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE));
+	        
+	        if (player.getCompletedGames().size() > 0) {
+	        	//reset the rolling latest completion date to last completed game's date. this makes the response from the server as small as possible
+	        	for (Game game : player.getCompletedGames()) {
+	        		if (completedDate.before(game.getCompletionDate())){
+	        			completedDate = game.getCompletionDate();
+	        		}
+	            }
+	        }
+	        
+	        //manage the local completed games list, only keep 10 max in the list. roll off older games.
+	        //do this before the player is stored locally
+	        Player storedPlayer = getPlayerFromLocal();
+	        if (storedPlayer != null){
+	        	if (storedPlayer.getCompletedGames().size() + player.getCompletedGames().size() > Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE){
+	        		//more than x games are found in combined list. remove earliest to get the list down to x number
+	        		List<Game> combinedGames = storedPlayer.getCompletedGames();
+	        		for (Game game : player.getCompletedGames()) {
+	        			combinedGames.add(game);
+		            }
+	        		
+	        		Collections.sort(combinedGames);
+	        		
+	        		combinedGames.subList(Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE + 1, combinedGames.size()).clear();
+	        		player.setCompletedGames(combinedGames);
+	        	}
+	        }
+	        
+	        //now set activegames by turn
+			//also set activeGamesYourTurn and OpponentTurn
+	        List<Game> yourTurn = new ArrayList<Game>();
+	        List<Game> opponentTurn = new ArrayList<Game>();
+			for (Game game : player.getActiveGames()) {
+				Boolean isYourTurn = false;
+				for (PlayerGame pg : game.getPlayerGames()){
+					if (pg.getPlayer().getId() == player.getId() && pg.isTurn()){
+						yourTurn.add(game);
+						isYourTurn = true;
+						break;
+					}
+				}
+				if (!isYourTurn){
+					opponentTurn.add(game);
+				}
+	        }
+			player.setActiveGamesOpponentTurn(opponentTurn);
+			player.setActiveGamesYourTurn(yourTurn);
+			
+			//no need to duplicate the data that is in activeGamesYourTurn and activeGamesOpponentTurn
+			//so let's clear this out
+			player.getActiveGames().clear();
+			
+			//Logger.w(TAG, "handlePlayerResponse num active and opponent=" + player.getActiveGamesYourTurn().size() + " " + player.getActiveGamesOpponentTurn().size());
+
+			long now =  Utils.convertNanosecondsToMilliseconds(System.nanoTime());
+			
+			editor.putLong(Constants.USER_PREFS_PLAYER_CHECK_TIME, now);
+	        editor.putString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, completedDate.toGMTString());
+	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
+	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
+	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+	        editor.commit();  
+	        
+	        //Logger.w(TAG, "player=" + gson.toJson(player));
+	        return player;
+
+	}
+  	
 }

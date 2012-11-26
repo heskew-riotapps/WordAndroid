@@ -32,6 +32,7 @@ import com.riotapps.word.ui.GameState;
 import com.riotapps.word.ui.GameStateService;
 import com.riotapps.word.ui.GameSurfaceView;
 import com.riotapps.word.ui.GameTile;
+import com.riotapps.word.ui.PlacedResult;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
@@ -595,6 +596,25 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			}
 	    }
 	    
+	    public void handleGamePlayOnClick(PlacedResult placedResult){
+	    	//stop thread first
+	    	
+	    	DialogManager.SetupAlert(context, "played", "clicked");
+ 	    	this.gameSurfaceView.onStop();
+	    	try { 
+				String json = GameService.setupGameTurn(context, this.game, placedResult);
+				
+				//kick off thread to cancel game on server
+				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.PLAY);
+				runningTask.execute(Constants.REST_GAME_PLAY);
+
+			} catch (DesignByContractException e) {
+				 
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+			}
+			 
+	    }
+	    
 	    private class NetworkTask extends AsyncNetworkRequest{
 			
 	    	GameSurface context;
@@ -669,8 +689,20 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 		
 	    		            	 		break;
 	    		            	 	case PLAY:
-	    		            	 		
-	    		            	 		break;
+    		            	 			//update game list for active games for last played action
+    		            	 			
+    		            	 			//refresh player's game list with response from server
+    		            	 			
+	    		            	 		//refresh game board
+	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
+    		            	 			GameService.updateLastGameListCheckTime(this.context);
+    		            	 			
+    		            	 			GameService.putGameToLocal(context, game); 
+    		            	 			
+    		            	 			//refresh game board
+    		            	 			
+    		            	 			
+    		            	 		break;;
 	    		            	 	case SKIP:
 	    		            	 		
 	    		            	 		break;

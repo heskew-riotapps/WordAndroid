@@ -92,6 +92,7 @@
  	<string name="start_game_by_nickname">find opponent by nickname</string>
  	<string name="start_game_by_random">add a random opponent</string>
  	<string name="progress_loading">loading&#8230;</string>
+ 	<string name="progress_sending">sending&#8230;</string>
  	<string name="progress_saving">saving&#8230;</string>
  	<string name="progress_searching">searching&#8230;</string>
  	<string name="progress_connecting">connecting&#8230;</string>
@@ -390,5 +391,22 @@
    		<string name="game_play_8_invalid_words">%1$, %2$, %3$, %4$, %5$, %6$, %7$ and %8$ are not in our dictionary.</string>
     	<string name="game_play_9_invalid_words">%1$, %2$, %3$, %4$, %5$, %6$, %7$, %8$ and %9$ are not in our dictionary.</string>
    		<string name="game_play_10_invalid_words">%1$, %2$, %3$, %4$, %5$, %6$, %7$, %8$, %9$ and %10$ are not in our dictionary. Wow.  That\'s a boatload of invalid words.</string>
-    										
+    	<string name="welcome_facebook_login_issue">Facebook login is having an issue.</string>	
+    	<string name="game_play_title">about to play</string>
+    	<string name="game_play_1_word">%s\n\nAre you sure?</string>
+  		<string name="game_play_2_words">%1$\n%2$\n\nAre you sure?</string>
+  		<string name="game_play_3_words">%1$\n%2$\n%3$\n\nAre you sure?</string>
+  		<string name="game_play_4_words">%1$\n%2$\n%3$\n%4$\n\nAre you sure?</string>
+  		<string name="game_play_5_words">%1$\n%2$\n%3$\n%4$\n%5$\n\nAre you sure?</string>
+  		<string name="game_play_6_words">%1$\n%2$v%3$\n%4$\n%5$\n%6$\n\nAre you sure?</string>
+   		<string name="game_play_7_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n\nAre you sure?</string>
+   		<string name="game_play_8_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n\nAre you sure?</string>
+    	<string name="game_play_9_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n%9$\n\nAre you sure?</string>
+   		<string name="game_play_10_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n%9$\n%10$\n\nAre you sure?</string>
+   		<string name="game_play_11_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n%9$\n%10$\n%11$\n\nAre you sure?</string>
+   		<string name="game_play_12_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n%9$\n%10$\n%11$\n%12$\n\nAre you sure?</string>
+   		<string name="game_play_13_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n%9$\n%10$\n%11$\n%12$\n%13$\n\nAre you sure?</string>
+   		<string name="game_play_14_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n%9$\n%10$\n%11$\n%12$\n%13$\n%14$\n\nAre you sure?</string>
+   		<string name="game_play_15_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n%9$\n%10$\n%11$\n%12$\n%13$\n%14$\n%15$\n\nAre you sure?</string>
+   		<string name="game_play_16_words">%1$\n%2$\n%3$\n%4$\n%5$\n%6$\n%7$\n%8$\n%9$\n%10$\n%11$\n%12$\n%13$\n%14$\n%15$\n%16$\n\nAre you sure?</string>   												
 </resources>

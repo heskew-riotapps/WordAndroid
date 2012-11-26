@@ -444,6 +444,9 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
             }
         else{
         	Logger.d(TAG, "SessionStatusCallback session is closed");
+        	
+        	DialogManager.SetupAlert(context, context.getString(R.string.sorry), context.getString(R.string.welcome_facebook_login_issue));
+        
         	/* if (!session.isOpened() && !session.isClosed()) {
 	        	 Logger.d(TAG, "handleInitialCallback connectToFacebook session is not open and not closed");
 	        	 Logger.d(TAG, "handleInitialCallback connectToFacebook openForRead2 about to be called");

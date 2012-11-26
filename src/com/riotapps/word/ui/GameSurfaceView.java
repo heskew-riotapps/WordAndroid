@@ -1978,6 +1978,23 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			this.parent.setPointsView(placedResult.getTotalPoints());
 			
 			//loop through placed words and show confirmation messages 
+			//placedResult.get
+			final CustomDialog dialog = new CustomDialog(context, 
+	    			context.getString(R.string.game_play_title), 
+	    			GameService.getPlacedWordsMessage(context, placedResult.getPlacedWords()),
+	    			context.getString(R.string.yes),
+	    			context.getString(R.string.no));
+	    	
+	    	dialog.setOnOKClickListener(new View.OnClickListener() {
+		 		@Override
+				public void onClick(View v) {
+		 			dialog.dismiss(); 
+		 			parent.handleGamePlayOnClick();
+		 		
+		 		}
+			});
+
+	    	dialog.show();	
 		}
 		catch (DesignByContractException e){
 			this.parent.openAlertDialog("testing", e.getMessage());

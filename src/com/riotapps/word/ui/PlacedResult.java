@@ -5,6 +5,7 @@ import java.util.List;
 
 public class PlacedResult {
 
+	private List<PlacedWord> placedWords = new ArrayList<PlacedWord>();
 	private List<GameTile> placedTiles = new ArrayList<GameTile>();
 	private int totalPoints = 0;
 	
@@ -19,6 +20,12 @@ public class PlacedResult {
 	}
 	public void setTotalPoints(int totalPoints) {
 		this.totalPoints = totalPoints;
+	}
+	public List<PlacedWord> getPlacedWords() {
+		return placedWords;
+	}
+	public void setPlacedWords(List<PlacedWord> placedWords) {
+		this.placedWords = placedWords;
 	}
 	
 	

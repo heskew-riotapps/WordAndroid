@@ -88,8 +88,8 @@ public class Constants {
 	/**=============================================
 	 * the web
 	 *==============================================*/  
-	public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";    
-	//public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";     
+	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";    
+	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";     
 	public static final String FACEBOOK_API_ID = "314938401925933"; 
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
@@ -104,6 +104,7 @@ public class Constants {
 	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get.json";
 	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_all_by_fb";
 	public static final String REST_CANCEL_GAME = REST_URL_SITE + "games/cancel";
+	public static final String REST_GAME_PLAY = REST_URL_SITE + "games/play";
 	
 	/**=============================================
 	 * rails

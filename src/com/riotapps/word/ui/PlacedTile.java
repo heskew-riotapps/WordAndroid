@@ -3,14 +3,14 @@ package com.riotapps.word.ui;
 public class PlacedTile extends GameTile {
 	
 	
-	private boolean isConnected = false;
+	private boolean isConnected__ = false;
 
 	public boolean isConnected() {
-		return isConnected;
+		return isConnected__;
 	}
 
 	public void setConnected(boolean isConnected) {
-		this.isConnected = isConnected;
+		this.isConnected__ = isConnected;
 	}
 	
 	

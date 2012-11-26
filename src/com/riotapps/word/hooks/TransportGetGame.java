@@ -1,10 +1,12 @@
 package com.riotapps.word.hooks;
 
-import java.util.Date;
+ 
 
 import com.google.gson.annotations.SerializedName;
 
 public class TransportGetGame {
+	
+	
 	@SerializedName("a_t")
 	private String token;
 	
