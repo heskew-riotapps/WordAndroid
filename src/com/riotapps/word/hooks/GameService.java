@@ -240,7 +240,14 @@ public class GameService {
 	}
 
 	public static Game handleGamePlayResponse(final Context ctx, InputStream iStream){
-		return handleGameResponse(ctx, iStream); 
+		Game game = handleGameResponse(ctx, iStream); 
+		if (game.getStatus() == 1){ //if game is still active
+			//update local storage game lists
+			GameService.moveActiveGameYourTurnToOpponentsTurn(ctx, game);
+			GameService.updateLastGameListCheckTime(ctx);
+ 			GameService.putGameToLocal(ctx, game);
+		}
+		return game;
 	}
 	
 	public static Game handleCreateGameResponse(final Context ctx, InputStream iStream){
@@ -1044,97 +1051,30 @@ public class GameService {
 		}
 	}
   	
-  	private static void moveActiveGameYourTurnToOpponentsTurn(Game game){
+  	private static void moveActiveGameYourTurnToOpponentsTurn(Context ctx, Game game){
+  		//in this scenario, player has just played a turn and game is not over, and we and updating the local game lists
+  		//by removing the game from the player's turn list and moving it to opponent's turn list
+  		
   		Player player = PlayerService.getPlayerFromLocal();
   		
-  		for(Game o : player.getActiveGamesYourTurn()){
-  			
+  		int numActiveGames = player.getActiveGamesYourTurn().size();
+  		for(int i = 0; i < numActiveGames; i++){
+  			if (game.getId() == player.getActiveGamesYourTurn().get(i).getId()){
+  				player.getActiveGamesYourTurn().remove(i);
+  				break;
+  			}
   		}
-  		
-  		
-  		
-  		Gson gson = new Gson(); //wrap json return into a single call that takes a type
-	        
-          //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
-	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
-	        
-	        Type type = new TypeToken<Player>() {}.getType();
-	        Player player = gson.fromJson(reader, type);
-	        
-	        ///save player info to shared preferences
-	        //userId and auth_token ...email and password should have been stored before this call
-	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
-	        SharedPreferences.Editor editor = settings.edit();
-	        
-	   
-	       // Logger.w(TAG, "handlePlayerResponse auth=" + player.getAuthToken() + " " + gson.toJson(player));
-	        Date completedDate = new Date(settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE));
-	        
-	        if (player.getCompletedGames().size() > 0) {
-	        	//reset the rolling latest completion date to last completed game's date. this makes the response from the server as small as possible
-	        	for (Game game : player.getCompletedGames()) {
-	        		if (completedDate.before(game.getCompletionDate())){
-	        			completedDate = game.getCompletionDate();
-	        		}
-	            }
-	        }
-	        
-	        //manage the local completed games list, only keep 10 max in the list. roll off older games.
-	        //do this before the player is stored locally
-	        Player storedPlayer = getPlayerFromLocal();
-	        if (storedPlayer != null){
-	        	if (storedPlayer.getCompletedGames().size() + player.getCompletedGames().size() > Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE){
-	        		//more than x games are found in combined list. remove earliest to get the list down to x number
-	        		List<Game> combinedGames = storedPlayer.getCompletedGames();
-	        		for (Game game : player.getCompletedGames()) {
-	        			combinedGames.add(game);
-		            }
-	        		
-	        		Collections.sort(combinedGames);
-	        		
-	        		combinedGames.subList(Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE + 1, combinedGames.size()).clear();
-	        		player.setCompletedGames(combinedGames);
-	        	}
-	        }
-	        
-	        //now set activegames by turn
-			//also set activeGamesYourTurn and OpponentTurn
-	        List<Game> yourTurn = new ArrayList<Game>();
-	        List<Game> opponentTurn = new ArrayList<Game>();
-			for (Game game : player.getActiveGames()) {
-				Boolean isYourTurn = false;
-				for (PlayerGame pg : game.getPlayerGames()){
-					if (pg.getPlayer().getId() == player.getId() && pg.isTurn()){
-						yourTurn.add(game);
-						isYourTurn = true;
-						break;
-					}
-				}
-				if (!isYourTurn){
-					opponentTurn.add(game);
-				}
-	        }
-			player.setActiveGamesOpponentTurn(opponentTurn);
-			player.setActiveGamesYourTurn(yourTurn);
-			
-			//no need to duplicate the data that is in activeGamesYourTurn and activeGamesOpponentTurn
-			//so let's clear this out
-			player.getActiveGames().clear();
-			
-			//Logger.w(TAG, "handlePlayerResponse num active and opponent=" + player.getActiveGamesYourTurn().size() + " " + player.getActiveGamesOpponentTurn().size());
 
-			long now =  Utils.convertNanosecondsToMilliseconds(System.nanoTime());
-			
-			editor.putLong(Constants.USER_PREFS_PLAYER_CHECK_TIME, now);
-	        editor.putString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, completedDate.toGMTString());
-	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
-	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
-	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
-	        editor.commit();  
-	        
-	        //Logger.w(TAG, "player=" + gson.toJson(player));
-	        return player;
+  		player.getActiveGamesOpponentTurn().add(0, game);
 
+  		Gson gson = new Gson();  
+	        
+        //update player to shared preferences
+	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+ 
+	    editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+	    editor.commit();  
 	}
-  	
+
 }

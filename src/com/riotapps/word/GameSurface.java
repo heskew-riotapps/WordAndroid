@@ -173,11 +173,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		//Logger.d(TAG, "scoreboard about to be loaded");
 	 	//this.loadScoreboard();
 	 	
-		this.contextPlayerGame = GameService.loadScoreboard(this, this.game, this.player);
-	 	
-	 	this.fillGameState();
-	 	
-	 	this.setupButtons();
+		this.setupGame();
 	 	
 	 	
 	 //	this.gameSurfaceView.setGame(game);
@@ -195,6 +191,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
          
  //        return iv;
 		//this._surfaceView = new GameSurfaceView(this); 
+	}
+	
+	private void setupGame(){
+		this.contextPlayerGame = GameService.loadScoreboard(this, this.game, this.player);
+	 	
+	 	this.fillGameState();
+	 	
+	 	this.setupButtons();
 	}
 	
 	 public Handler updateHandler = new Handler(){
@@ -237,7 +241,6 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 public handleButtonSwitchRunnable(int activeButton){
 		 		this.activeButton = activeButton;
 		 	}
-		 
 		 
 		    public void run() {
 		    	switch (this.activeButton){
@@ -425,7 +428,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 }
 	 
 	    
-	 public class UpdateThread implements Runnable {
+/*	 public class UpdateThread______ implements Runnable {
 	    	 
 	        @Override
 	        public void run() {
@@ -436,7 +439,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 
 	    }
 
-	    
+	 */   
 //	public RelativeLayout getScoreboard() {
 //		return scoreboard;
 //	}
@@ -448,7 +451,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		Log.w(TAG, "onDestroy called");
+		Log.d(TAG, "onDestroy called");
 		
 		this.gameSurfaceView.onDestroy();
 		super.onDestroy();
@@ -457,7 +460,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
-		Log.w(TAG, "onStop called");
+		Log.d(TAG, "onStop called");
 		this.gameSurfaceView.onStop();
 		super.onStop();
 		
@@ -467,7 +470,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		Log.w(TAG, "onPause called");
+		Log.d(TAG, "onPause called");
 		super.onPause();
 		if (this.runningTask != null){
     		this.runningTask.cancel(true);
@@ -479,7 +482,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		Log.w(TAG, "onResume called");
+		Log.d(TAG, "onResume called");
 		super.onResume();
 		this.gameSurfaceView.onResume();
 	}
@@ -695,14 +698,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		            	 			
 	    		            	 		//refresh game board
 	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
-    		            	 			GameService.updateLastGameListCheckTime(this.context);
+	    		            	 		
+    		            	 			//refresh game board and buttons
+    		            	 			setupGame();
+    		            	 			gameSurfaceView.resetGame();
     		            	 			
-    		            	 			GameService.putGameToLocal(context, game); 
-    		            	 			
-    		            	 			//refresh game board
-    		            	 			
-    		            	 			
-    		            	 		break;;
+    		            	 			break;
 	    		            	 	case SKIP:
 	    		            	 		
 	    		            	 		break;

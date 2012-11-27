@@ -73,9 +73,10 @@ public class TransportGameTurn {
 		this.points = points;
 	}
 
-	public void addToWords(String word) {
+	public void addToWords(String word, int points) {
 		Word o = new Word();
 		o.setWord(word);
+		o.setPoints(points);
 		this.words.add(o);
 	}
 
@@ -91,12 +92,23 @@ public class TransportGameTurn {
 		@SerializedName("w")
 		private String word;
 
+		@SerializedName("p")
+		private int points;
+
 		public String getWord() {
 			return word;
 		}
 
 		public void setWord(String word) {
 			this.word = word;
+		}
+
+		public int getPoints() {
+			return points;
+		}
+
+		public void setPoints(int points) {
+			this.points = points;
 		}
 			
 	}
@@ -116,7 +128,7 @@ public class TransportGameTurn {
 			this.position = position;
 		}
 
-		public int getLetter() {
+		public String getLetter() {
 			return letter;
 		}
 

@@ -287,8 +287,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		        public void run() {
 
 		   		me.SetDerivedValues();
-		   	    me.LoadTiles();
-		   	    me.LoadTray();
+		   	   // me.LoadTiles();
+		   	   // me.LoadTray();
 		   	    me.LoadExtras();
 		   	    Log.w(TAG, "run called");
 		   	    
@@ -296,16 +296,23 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		  
 		   	     LayoutParams lp = me.getLayoutParams();
 			 	  lp.height = me.height;
+			 	  me.loadGame();
 			//	  // Apply to new dimension
 			 	  me.setLayoutParams( lp );
-			 	  me.setInitialRecallShuffleState();
-				  me.resetPointsView();
-			 	   me.readyToDraw = true;
+			 //	  me.setInitialRecallShuffleState();
+			//	  me.resetPointsView();
+			 	  me.readyToDraw = true;
 		        }
 
 		     });
 	}
 
+	public void loadGame(){
+		this.LoadTiles();
+	   	this.LoadTray();
+	    this.setInitialRecallShuffleState();
+	    this.resetPointsView();
+	}
 
 	
 	private void SetDerivedValues(){
@@ -1971,9 +1978,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		}
 	}
 	
+	public void resetGame(){
+		this.loadGame();
+		this.readyToDraw = true;
+	}
+	
 	public void onPlayClick(){
 		try{
-			PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
+			final PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
 		
 			this.parent.setPointsView(placedResult.getTotalPoints());
 			
@@ -1989,8 +2001,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 		@Override
 				public void onClick(View v) {
 		 			dialog.dismiss(); 
-		 			parent.handleGamePlayOnClick();
-		 		
+		 			parent.handleGamePlayOnClick(placedResult);
 		 		}
 			});
 
