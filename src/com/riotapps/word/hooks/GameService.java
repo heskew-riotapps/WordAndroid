@@ -151,7 +151,7 @@ public class GameService {
 		}
 
 		for (PlacedWord word : placedResult.getPlacedWords()){
-			turn.addToWords(word.getWord());
+			turn.addToWords(word.getWord(), word.getPoints());
 		}
 		
 		return gson.toJson(turn);

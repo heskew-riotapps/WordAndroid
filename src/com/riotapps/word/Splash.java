@@ -244,7 +244,7 @@ public class Splash  extends FragmentActivity {
 	            		 try {
 	            			 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
 						} catch (InterruptedException e) {
-							Logger.w(TAG, "Thread.sleep " + e.getMessage());
+							Logger.w(TAG, "Thread.sleep timeDiff=" + timeDiff + " " + e.getMessage());
 							e.printStackTrace();
 						}
 	            	 }

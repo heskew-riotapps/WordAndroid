@@ -607,9 +607,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	try { 
 				String json = GameService.setupGameTurn(context, this.game, placedResult);
 				
+				Logger.d(TAG, "handleGamePlayOnClick json=" + json);
 				//kick off thread to cancel game on server
 				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.PLAY);
-				runningTask.execute(Constants.REST_GAME_PLAY);
+				//runningTask.execute(Constants.REST_GAME_PLAY);
 
 			} catch (DesignByContractException e) {
 				 

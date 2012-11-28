@@ -230,7 +230,7 @@ public class PlayerGame implements Parcelable{
 		out.writeParcelable(player, flags);
 //		Logger.d(TAG, "parcel out playerId=" + this.player.getId());
 		out.writeInt(this.score);
-		out.writeLong(this.lastTurnDate == null ? 0 : this.lastTurnDate.getTime());
+	//	out.writeLong(this.lastTurnDate == null ? 0 : this.lastTurnDate.getTime());
 		out.writeLong(this.lastAlertDate == null ? 0 : this.lastAlertDate.getTime());
 		out.writeLong(this.lastReminderDate == null ? 0 : this.lastReminderDate.getTime());
 		out.writeLong(this.lastChatterReceivedDate == null ? 0 : this.lastChatterReceivedDate.getTime());
@@ -240,9 +240,9 @@ public class PlayerGame implements Parcelable{
 		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0)); 
 		out.writeInt(this.playerOrder);
  		out.writeList(this.trayLetters);
- 		out.writeInt(this.lastTurn);
- 		out.writeInt(this.lastTurnAction);
- 		out.writeInt(this.lastTurnPoints);
+ 	//	out.writeInt(this.lastTurn);
+ 	//	out.writeInt(this.lastTurnAction);
+ 	//	out.writeInt(this.lastTurnPoints);
  		out.writeInt(this.trayVersion);
  		
 	}
@@ -265,8 +265,8 @@ public class PlayerGame implements Parcelable{
 	 	this.player = in.readParcelable(Player.class.getClassLoader());
 	// 	Logger.d(TAG, "parcel in playerId=" + this.playerId);
 	 	this.score = in.readInt();
-	 	this.lastTurnDate = new Date();
-	 	this.lastTurnDate.setTime(in.readLong());
+	// 	this.lastTurnDate = new Date();
+	// 	this.lastTurnDate.setTime(in.readLong());
 		this.lastAlertDate = new Date();
 	 	this.lastAlertDate.setTime(in.readLong()); 	
 	 	this.lastReminderDate = new Date();
@@ -280,9 +280,9 @@ public class PlayerGame implements Parcelable{
 	    this.playerOrder = in.readInt();
 	    this.trayLetters = new ArrayList<String>();
 	    in.readStringList(this.trayLetters);
-	    this.lastTurn = in.readInt();
-	    this.lastTurnAction = in.readInt();
-	    this.lastTurnPoints = in.readInt();
+//	    this.lastTurn = in.readInt();
+//	    this.lastTurnAction = in.readInt();
+//	    this.lastTurnPoints = in.readInt();
 	    this.trayVersion = in.readInt();
 	  //  Logger.d(TAG, "parcel in playerOrder=" + this.playerOrder);
 	
