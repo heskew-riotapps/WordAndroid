@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.riotapps.word.hooks.Game;
+import com.riotapps.word.hooks.PlayedTile;
 import com.riotapps.word.utils.Logger;
 
 public class GameState {
@@ -19,6 +20,7 @@ public class GameState {
 	private int turn = 0;
 	private int trayVersion = 1;
 	private List<GameStateLocation> locations = new ArrayList<GameStateLocation>();
+	private List<PlayedTile> playedTiles = new ArrayList<PlayedTile>(); 
 	
 	//placetiles to remember board state
 	
@@ -42,7 +44,20 @@ public class GameState {
 		this.locations = locations;
 	}
 	
-	
+	public PlayedTile getPlayedTileByPosition(int position){
+		for (PlayedTile tile : this.playedTiles){
+			if (tile.getBoardPosition() == position){
+				return tile;
+			}
+		}
+		return null;
+	}
+	public List<PlayedTile> getPlayedTiles() {
+		return playedTiles;
+	}
+	public void setPlayedTiles(List<PlayedTile> playedTiles) {
+		this.playedTiles = playedTiles;
+	}
 	public int getTrayVersion() {
 		return trayVersion;
 	}

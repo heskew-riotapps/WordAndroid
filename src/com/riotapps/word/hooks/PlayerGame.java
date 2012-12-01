@@ -34,6 +34,7 @@ public class PlayerGame implements Parcelable{
 	
 	private Player player; 
 	
+	@SerializedName("sc")
 	private int score = 0;
 	
 	@SerializedName("l_t")

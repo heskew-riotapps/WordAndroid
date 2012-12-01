@@ -23,6 +23,7 @@ import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
+import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.GameTile;
@@ -145,6 +146,7 @@ public class GameService {
 		turn.setToken(player.getAuthToken());
 		turn.setGameId(game.getId());
 		turn.setTurn(game.getTurn());
+		turn.setPoints(placedResult.getTotalPoints());
 		
 		for (GameTile tile : placedResult.getPlacedTiles()){
 			turn.addToTiles(tile.getPlacedLetter(), tile.getId());
@@ -261,6 +263,7 @@ public class GameService {
 	private static Game handleGameResponse(final Context ctx, InputStream iStream){
 		 Gson gson = new Gson(); //wrap json return into a single call that takes a type
     	 
+		// Logger.w(TAG, "handleGameResponse incoming json=" + IOHelper.streamToString(iStream));
    	  //Logger.d(TAG, "handleCreateGameResponse");
         
          Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
@@ -269,8 +272,9 @@ public class GameService {
          Game game = gson.fromJson(reader, type);
         
        // Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
-	         
-         PlayerService.updateAuthToken(ctx, game.getAuthToken());
+	       
+         //lets not do this for now
+         //PlayerService.updateAuthToken(ctx, game.getAuthToken());
          
          //should this be saved locally??????
          //perhaps save it locally if it's the context player's turn, since the only thing that can

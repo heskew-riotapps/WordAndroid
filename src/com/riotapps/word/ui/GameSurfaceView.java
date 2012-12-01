@@ -7,6 +7,7 @@ import java.util.List;
 import com.riotapps.word.GameSurface;
 import com.riotapps.word.R;
 import com.riotapps.word.hooks.AlphabetService;
+import com.riotapps.word.hooks.PlayedTile;
 import com.riotapps.word.hooks.WordService;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
@@ -211,7 +212,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	private boolean recallLettersRedraw = false;
 	private Bitmap bgPlacedTileFull;
 	private Bitmap bgPlacedTileZoomed;
- 
+	private Bitmap bgPlayedTileFull;
+	private Bitmap bgPlayedTileZoomed;
+	private Bitmap bgLastPlayedTileFull;
+	private Bitmap bgLastPlayedTileZoomed;
+	
 	public boolean isReadyToDraw() {
 		return readyToDraw;
 	}
@@ -362,7 +367,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 Bitmap bgPlacedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_placed_bg);
 		 this.bgPlacedTileFull = Bitmap.createScaledBitmap(bgPlacedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 		 this.bgPlacedTileZoomed = Bitmap.createScaledBitmap(bgPlacedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		
+
+		 Bitmap bgLastPlayedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_last_played_bg);
+		 this.bgLastPlayedTileFull = Bitmap.createScaledBitmap(bgLastPlayedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bgLastPlayedTileZoomed = Bitmap.createScaledBitmap(bgLastPlayedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+
+		 Bitmap bgPlayedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_played_bg);
+		 this.bgPlayedTileFull = Bitmap.createScaledBitmap(bgPlayedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bgPlayedTileZoomed = Bitmap.createScaledBitmap(bgPlayedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
 		 this.trayAreaRect.setTop(this.trayTop - TRAY_VERTICAL_MARGIN - TRAY_TOP_BORDER_HEIGHT);
 	     this.trayAreaRect.setBottom(this.trayTop + this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2));
 	     this.trayAreaRect.setLeft(0);
@@ -1762,12 +1775,20 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	private void drawZoomedBoardGuts(Canvas canvas, GameTile tile){
 	 	// canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
      //	Logger.d(TAG, "drawZoomedBoardGuts tile.getDisplayLetter()=" + tile.getDisplayLetter());
-	 	 if (tile.getDisplayLetter().length() > 0){
+		// if (tile.getDisplayLetter().length() > 0){
+
+		if (tile.getPlacedLetter().length() > 0){
     		 canvas.drawBitmap(this.bgPlacedTileZoomed,tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
      
-    		 this.drawLetter(canvas, tile.getDisplayLetter(), this.zoomedTileWidth, tile.getxPositionZoomed(), tile.getyPositionZoomed());
+    		 this.drawLetter(canvas, tile.getPlacedLetter(), this.zoomedTileWidth, tile.getxPositionZoomed(), tile.getyPositionZoomed(), false);
     		 //Logger.d(TAG, "drawZoomedBoardGuts tile.getDisplayLetter()=" + tile.getDisplayLetter());
     	 } 
+		else if (tile.getOriginalLetter().length() > 0){
+   		 canvas.drawBitmap(tile.isLastPlayed() ? this.bgLastPlayedTileZoomed : this.bgPlayedTileZoomed,tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
+   	     
+   		 this.drawLetter(canvas, tile.getOriginalLetter(), this.zoomedTileWidth, tile.getxPositionZoomed(), tile.getyPositionZoomed(), tile.isLastPlayed());
+   		 //Logger.d(TAG, "drawZoomedBoardGuts tile.getDisplayLetter()=" + tile.getDisplayLetter());
+   	 	}
 	 	 //original text represents bonus text
     	 else if (tile.getOriginalText().length() > 0){
     		 canvas.drawBitmap(tile.getOriginalBitmapZoomed(),tile.getxPositionZoomed(), tile.getyPositionZoomed(), null);
@@ -2153,41 +2174,54 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 tile.setyPositionCenter(tile.getyPosition() + (this.fullViewTileWidth / 2));
 				 
 				 //check game object for already played letter
-				 //check defaultLayout for bonus tiles etc
-				 switch (TileLayoutService.getDefaultTile(tile.getId(), this.defaultLayout)) {
-				 case FourLetter:
-					 tile.setOriginalBitmap(bg4LScaled); //this will change as default bonus and played tiles are incorporated
-					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg4LZoomed); }
-					 tile.setOriginalText(this.context.getString(R.string.tile_4L));
-					 break;
-				 case ThreeWord:
-					 tile.setOriginalBitmap(bg3WScaled); //this will change as default bonus and played tiles are incorporated
-					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg3WZoomed); }
-					 tile.setOriginalText(this.context.getString(R.string.tile_3W));
-					 break;
-				 case ThreeLetter:
-					 tile.setOriginalBitmap(bg3LScaled); //this will change as default bonus and played tiles are incorporated
-					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg3LZoomed); }
-					 tile.setOriginalText(this.context.getString(R.string.tile_3L));
-					 break;
-				 case TwoWord:
-					 tile.setOriginalBitmap(bg2WScaled); //this will change as default bonus and played tiles are incorporated
-					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg2WZoomed); }
-					 tile.setOriginalText(this.context.getString(R.string.tile_2W));
-					 break;
-				 case TwoLetter:
-					 tile.setOriginalBitmap(bg2LScaled); //this will change as default bonus and played tiles are incorporated
-					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg2LZoomed); }
-					 tile.setOriginalText(this.context.getString(R.string.tile_2L));
-					 break;
-				 case Starter:
-					 tile.setOriginalBitmap(bgStarterScaled); //this will change as default bonus and played tiles are incorporated
-					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgStarterZoomed); }
-					 break;
-				 case None:
+				 PlayedTile playedTile = this.parent.getGameState().getPlayedTileByPosition(tile.getId());
+				 if (playedTile != null){
 					 tile.setOriginalBitmap(bgBaseScaled); //this will change as default bonus and played tiles are incorporated
 					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgBaseZoomed); }
-					 break;
+	
+					 tile.setOriginalLetter(playedTile.getLetter());
+					 //was this tile placed in the previous turn???
+					 if (this.parent.getGame().getTurn() - 1 == playedTile.getTurn()){
+						 tile.setLastPlayed(true);
+					 }
+				 }
+				 else {
+					 //check defaultLayout for bonus tiles etc
+					 switch (TileLayoutService.getDefaultTile(tile.getId(), this.defaultLayout)) {
+					 case FourLetter:
+						 tile.setOriginalBitmap(bg4LScaled); //this will change as default bonus and played tiles are incorporated
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg4LZoomed); }
+						 tile.setOriginalText(this.context.getString(R.string.tile_4L));
+						 break;
+					 case ThreeWord:
+						 tile.setOriginalBitmap(bg3WScaled); //this will change as default bonus and played tiles are incorporated
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg3WZoomed); }
+						 tile.setOriginalText(this.context.getString(R.string.tile_3W));
+						 break;
+					 case ThreeLetter:
+						 tile.setOriginalBitmap(bg3LScaled); //this will change as default bonus and played tiles are incorporated
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg3LZoomed); }
+						 tile.setOriginalText(this.context.getString(R.string.tile_3L));
+						 break;
+					 case TwoWord:
+						 tile.setOriginalBitmap(bg2WScaled); //this will change as default bonus and played tiles are incorporated
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg2WZoomed); }
+						 tile.setOriginalText(this.context.getString(R.string.tile_2W));
+						 break;
+					 case TwoLetter:
+						 tile.setOriginalBitmap(bg2LScaled); //this will change as default bonus and played tiles are incorporated
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg2LZoomed); }
+						 tile.setOriginalText(this.context.getString(R.string.tile_2L));
+						 break;
+					 case Starter:
+						 tile.setOriginalBitmap(bgStarterScaled); //this will change as default bonus and played tiles are incorporated
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgStarterZoomed); }
+						 break;
+					 case None:
+						 tile.setOriginalBitmap(bgBaseScaled); //this will change as default bonus and played tiles are incorporated
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgBaseZoomed); }
+						 break;
+					 }
 				 }
 				 
 				 if (this.parent.getGameState().getBoardLetter(tile.getId()).length() > 0){
@@ -2290,10 +2324,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         for (GameTile tile : this.tiles) { 
 	    	 
 	    	 
-        	 if (tile.getDisplayLetter().length() > 0){
+        	 if (tile.getPlacedLetter().length() > 0){
 	    		 canvas.drawBitmap(this.bgPlacedTileFull,tile.getxPosition(), tile.getyPosition(), null);
 	     
-	    		 this.drawLetter(canvas, tile.getDisplayLetter(), this.fullViewTileWidth, tile.getxPosition(), tile.getyPosition());
+	    		 this.drawLetter(canvas, tile.getPlacedLetter(), this.fullViewTileWidth, tile.getxPosition(), tile.getyPosition(), false);
+	    	
+	    	 }
+        	 else if (tile.getOriginalLetter().length() > 0){
+	    		 canvas.drawBitmap(tile.isLastPlayed() ? this.bgLastPlayedTileFull : this.bgPlayedTileFull,tile.getxPosition(), tile.getyPosition(), null);
+	     
+	    		 this.drawLetter(canvas, tile.getOriginalLetter(), this.fullViewTileWidth, tile.getxPosition(), tile.getyPosition(), tile.isLastPlayed());
 	    	
 	    	 } 
         	 else if (tile.getOriginalText().length() > 0){
@@ -2326,10 +2366,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     canvas.drawText(text, textLeft, textTop, p);
 	 }
 	 
-	 private void drawLetter(Canvas canvas, String letter, int tileWidth, int xPosition, int yPosition){
+	 private void drawLetter(Canvas canvas, String letter, int tileWidth, int xPosition, int yPosition, boolean isLastPlayed){
 		 	int midPoint = Math.round(tileWidth / 2);
 		  Paint pLetter = new Paint();
-	     	 pLetter.setColor(Color.DKGRAY);
+	     	 pLetter.setColor(isLastPlayed ? Color.WHITE : Color.BLACK); //(Color.DKGRAY);
 	     	 pLetter.setTextSize(Math.round(tileWidth * .78));
 	     	 pLetter.setAntiAlias(true); 
 	     	 pLetter.setTypeface(this.letterTypeface);

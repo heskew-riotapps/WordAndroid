@@ -204,6 +204,20 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 		super.onPause();
 	}
 
+    private class handleDialogRunnable implements Runnable{
+    	private String title;
+    	private String message;
+    	
+    	public handleDialogRunnable(String title, String message){
+    		this.title = title;
+    		this.message = message;
+    	}
+    	public void run(){
+    		DialogManager.SetupAlert(context, title, message);
+    	}
+    	
+    }
+    
     
 	 private class handleFacebookMeResponseRunnable implements Runnable {
 		 private Response response;	
@@ -445,8 +459,9 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         else{
         	Logger.d(TAG, "SessionStatusCallback session is closed");
         	
-        	DialogManager.SetupAlert(context, context.getString(R.string.sorry), context.getString(R.string.welcome_facebook_login_issue));
-        
+        	
+        	context.runOnUiThread(new handleDialogRunnable(context.getString(R.string.sorry), context.getString(R.string.welcome_facebook_login_issue)));
+        	 
         	/* if (!session.isOpened() && !session.isClosed()) {
 	        	 Logger.d(TAG, "handleInitialCallback connectToFacebook session is not open and not closed");
 	        	 Logger.d(TAG, "handleInitialCallback connectToFacebook openForRead2 about to be called");

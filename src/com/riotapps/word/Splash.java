@@ -60,6 +60,8 @@ public class Splash  extends FragmentActivity {
 		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, 0);
 	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
 	       
+	    Logger.d(TAG, "handlePreProcessing called.");
+	    
 	    if (storedToken.length() > 0){
 	    	String json = "";
 			try {
@@ -167,6 +169,7 @@ public class Splash  extends FragmentActivity {
 				String jsonPost) {
 			super(ctx, requestType, "", jsonPost);
 			this.context = ctx;
+		    Logger.d(TAG, "NetworkTask called.");
 		 
 		}
 
@@ -240,7 +243,7 @@ public class Splash  extends FragmentActivity {
 	            	 
 	            	 //default time in which to leave splash up
 	            	 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime);
-	            	 if (timeDiff > Constants.SPLASH_ACTIVITY_TIMEOUT){
+	            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
 	            		 try {
 	            			 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
 						} catch (InterruptedException e) {

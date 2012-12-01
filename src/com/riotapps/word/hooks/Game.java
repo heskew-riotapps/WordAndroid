@@ -34,10 +34,10 @@ public class Game implements Parcelable, Comparable<Game> {
 	@SerializedName("played_tiles")
 	private List<PlayedTile> playedTiles = new ArrayList<PlayedTile>();
 	
-	@SerializedName("l_t_action")
+	@SerializedName("l_t_a")
 	private int lastTurnAction;
 	
-	@SerializedName("l_t_player_id")
+	@SerializedName("l_t_p")
 	private String lastTurnPlayerId;
 	
 	@SerializedName("l_t_d")
@@ -310,6 +310,7 @@ public class Game implements Parcelable, Comparable<Game> {
 	// LastTurn lastTurn = this.getLastTurn(contextPlayerId);
 		
 	//return "p";
+		Logger.d(TAG, "getLastActionText lastAction=" + this.lastTurnAction + " " + this.getLastAction().toString());
 		
 		switch (this.getLastAction()){
 			case ONE_LETTER_SWAPPED:

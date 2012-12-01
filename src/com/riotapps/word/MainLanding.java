@@ -137,6 +137,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	LinearLayout llOpponentsTurn = (LinearLayout)findViewById(R.id.llOpponentsTurn);
       	LinearLayout llYourTurnWrapper = (LinearLayout)findViewById(R.id.llYourTurnWrapper);
     	LinearLayout llOpponentsTurnWrapper = (LinearLayout)findViewById(R.id.llOpponentsTurnWrapper);
+    	TextView tvWaiting = (TextView)findViewById(R.id.tvWaiting);
     	
     	//clear out view
     	llYourTurn.removeAllViews();
@@ -148,6 +149,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	
     	int i = 1;
     	if (this.player.getActiveGamesYourTurn().size() > 0){
+    		tvWaiting.setVisibility(View.GONE);
+    		
 	        for (Game g : this.player.getActiveGamesYourTurn()){
 	        	 llYourTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesYourTurn().size() == i));
 	        	 i += 1;
@@ -155,7 +158,12 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	        llYourTurnWrapper.setVisibility(View.VISIBLE);
     	}
     	else {
-    		llYourTurnWrapper.setVisibility(View.GONE);
+    		if (this.player.getActiveGamesOpponentTurn().size() > 0){
+    			llYourTurn.setVisibility(View.GONE);
+    		}
+    		else{
+        		llYourTurnWrapper.setVisibility(View.GONE);
+    		}
     	}
 
     	i = 1;

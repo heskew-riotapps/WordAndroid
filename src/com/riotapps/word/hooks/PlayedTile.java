@@ -11,8 +11,11 @@ public class PlayedTile {
 	@SerializedName("p")
 	private int boardPosition; 
 
-	@SerializedName("l")
-	private int letter;
+	@SerializedName("l_")
+	private String letter;
+	
+	@SerializedName("t_")
+	private int turn;
 
 	public int getBoardPosition() {
 		return boardPosition;
@@ -22,15 +25,20 @@ public class PlayedTile {
 		this.boardPosition = boardPosition;
 	}
 
-	public int getLetter() {
+	public String getLetter() {
 		return letter;
 	}
 
-	public void setLetter(int letter) {
+	public void setLetter(String letter) {
 		this.letter = letter;
 	}
 
-	 
-	
+	public int getTurn() {
+		return turn;
+	}
+
+	public void setTurn(int turn) {
+		this.turn = turn;
+	}
 
 }

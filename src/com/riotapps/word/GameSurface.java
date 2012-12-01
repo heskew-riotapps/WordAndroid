@@ -2,36 +2,21 @@ package com.riotapps.word;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.facebook.android.FacebookError;
-import com.facebook.android.Util;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
-import com.riotapps.word.hooks.TrayTile;
-import com.riotapps.word.hooks.Error.ErrorType;
 import com.riotapps.word.ui.CustomDialog;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameAction.GameActionType;
 import com.riotapps.word.ui.GameState;
 import com.riotapps.word.ui.GameStateService;
 import com.riotapps.word.ui.GameSurfaceView;
-import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.ui.PlacedResult;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
@@ -41,10 +26,8 @@ import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,12 +36,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -148,17 +128,21 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 //	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
 	// 	imageLoader.loadImage(gravatar, ivPlayer); //default image
 	    
-	 	Bundle extras = getIntent().getExtras(); 
-	 	if(extras !=null)
-	 	{
-	 		String value = extras.getString("gameId");
-	 	}
+	 //	Bundle extras = getIntent().getExtras(); 
+	 //	if(extras !=null)
+	// 	{
+	// 		String value = extras.getString("gameId");
+	// 	}
 	 	 
 	 	//Logger.d(TAG, "Game about to be fetched from extra");
 	 	Intent i = getIntent();
 	 	String gameId = i.getStringExtra(Constants.EXTRA_GAME_ID);
 	 	//this.game = (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
 	 	this.game = GameService.getGameFromLocal(gameId); //(Game) i.getParcelableExtra(Constants.EXTRA_GAME);
+	 	
+
+  		Gson gson = new Gson();  
+	    Logger.d(TAG, "game json=" + gson.toJson(game));
 	 	
 	 	//temp
 	 	//this.game = getTempGame();
@@ -410,6 +394,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			 this.gameState = GameStateService.clearGameState(context, this.game.getId());
 		 }
 		 
+		 //load played tiles into game state
+		 this.gameState.setPlayedTiles(this.game.getPlayedTiles());
+		 
+		 //locations are used to keep track of the tray tiles as they are placed on the board or tray
 		 if (this.gameState.getLocations().size() == 0){
 
  //reset the game tiles based on the locally saved state (as long as the tray tiles have not been updated on the server)
@@ -610,7 +598,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				Logger.d(TAG, "handleGamePlayOnClick json=" + json);
 				//kick off thread to cancel game on server
 				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.PLAY);
-				//runningTask.execute(Constants.REST_GAME_PLAY);
+				runningTask.execute(Constants.REST_GAME_PLAY);
 
 			} catch (DesignByContractException e) {
 				 
