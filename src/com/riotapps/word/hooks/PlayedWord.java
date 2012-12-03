@@ -17,7 +17,7 @@ public class PlayedWord implements Parcelable{
 	private String word = "";
 	
 	@SerializedName("t")
-	private int turnNum = 0;
+	private int turn = 0;
 
 	@SerializedName("p_s")
 	private int pointsScored = 0;
@@ -38,12 +38,12 @@ public class PlayedWord implements Parcelable{
 		this.word = word;
 	}
 
-	public int getTurnNum() {
-		return turnNum;
+	public int getTurn(){
+		return turn;
 	}
 
-	public void setTurnNum(int turnNum) {
-		this.turnNum = turnNum;
+	public void setTurn(int turnNum) {
+		this.turn = turnNum;
 	}
 
 	public int getPointsScored() {
@@ -81,7 +81,7 @@ public class PlayedWord implements Parcelable{
 
 		out.writeString(this.playerId);
 		out.writeString(this.word); 
-		out.writeInt(this.turnNum);
+		out.writeInt(this.turn);
 		out.writeInt(this.pointsScored);
 		out.writeLong(this.playedDate == null ? 0 : this.playedDate.getTime());
 
@@ -101,7 +101,7 @@ public class PlayedWord implements Parcelable{
 		
 		this.playerId = in.readString();
 		this.word = in.readString();
-		this.turnNum = in.readInt();
+		this.turn = in.readInt();
 		this.pointsScored = in.readInt();
 		this.playedDate = new Date();
 		this.playedDate.setTime(in.readLong());

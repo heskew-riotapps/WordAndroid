@@ -333,6 +333,11 @@ public class GameService {
 		 //#1 will be in top right and #2 will be in bottom right
 		 //if there are only 3 players, the bottom right will always be empty
 		 //if there are only 2 players the right column will be hidden 
+		
+		//Gson gson = new Gson();
+		
+		//Logger.d(TAG, "loadScoreboard game=" + gson.toJson(game));
+		
 		PlayerGame contextPlayerGame = new PlayerGame();
 		
 		 int contextPlayerIndex = -1;
@@ -500,7 +505,12 @@ public class GameService {
 		 tvContextPlayerScore.setText(Integer.toString(game.getPlayerGames().get(contextPlayerIndex).getScore()));
 		 int contextPlayerBadgeId = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(contextPlayerIndex).getPlayer().getBadgeDrawable(), null, null);
 		 ivContextPlayerBadge.setImageResource(contextPlayerBadgeId);
-		 if (game.getPlayerGames().get(contextPlayerIndex).isTurn() == false){ivContextPlayerTurn.setVisibility(View.INVISIBLE);}
+		 if (game.getPlayerGames().get(contextPlayerIndex).isTurn() == false){
+			 ivContextPlayerTurn.setVisibility(View.INVISIBLE);
+		 }
+		 else{
+			 ivContextPlayerTurn.setVisibility(View.VISIBLE);
+		 }
 
 		 //position 2
 		 String player2 = game.getPlayerGames().get(playerIndex2).getPlayer().getName();
@@ -509,7 +519,12 @@ public class GameService {
 		 tvPlayerScore2.setText(Integer.toString(game.getPlayerGames().get(playerIndex2).getScore()));
 		 int playerBadgeId2 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(playerIndex2).getPlayer().getBadgeDrawable(), null, null);
 		 ivPlayerBadge2.setImageResource(playerBadgeId2);
-		 if (game.getPlayerGames().get(playerIndex2).isTurn() == false){ivPlayerTurn2.setVisibility(View.INVISIBLE);}
+		 if (game.getPlayerGames().get(playerIndex2).isTurn() == false){
+			 ivPlayerTurn2.setVisibility(View.INVISIBLE);	 
+		 }
+		 else{
+			 ivPlayerTurn2.setVisibility(View.VISIBLE);
+		 }
 
 		 //if neither context player and player 2 are currently taking their turn, 
 		 //collapse the turn image column on the left
@@ -534,7 +549,12 @@ public class GameService {
 			 tvPlayerScore3.setText(Integer.toString(game.getPlayerGames().get(playerIndex3).getScore()));
 			 int playerBadgeId3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(playerIndex3).getPlayer().getBadgeDrawable(), null, null);
 			 ivPlayerBadge3.setImageResource(playerBadgeId3);
-			 if (game.getPlayerGames().get(playerIndex3).isTurn() == false){ivPlayerTurn3.setVisibility(View.INVISIBLE);}
+			 if (game.getPlayerGames().get(playerIndex3).isTurn() == false){
+				 ivPlayerTurn3.setVisibility(View.INVISIBLE);
+			 }
+			 else{
+				 ivPlayerTurn3.setVisibility(View.VISIBLE);
+			 }
 
 		 }
 		 else if (playerGameCount == 2)
@@ -559,7 +579,12 @@ public class GameService {
 			 tvPlayerScore3.setText(Integer.toString(game.getPlayerGames().get(playerIndex3).getScore()));
 			 int playerBadgeId3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(playerIndex3).getPlayer().getBadgeDrawable(), null, null);
 			 ivPlayerBadge3.setImageResource(playerBadgeId3);
-			 if (game.getPlayerGames().get(playerIndex3).isTurn() == false){ivPlayerTurn3.setVisibility(View.INVISIBLE);}
+			 if (game.getPlayerGames().get(playerIndex3).isTurn() == false){
+				 ivPlayerTurn3.setVisibility(View.INVISIBLE);
+			 }
+			 else{
+				 ivPlayerTurn3.setVisibility(View.VISIBLE);
+			 }
 
 			 //position 4
 			 String player4 = game.getPlayerGames().get(playerIndex4).getPlayer().getName();
@@ -568,7 +593,12 @@ public class GameService {
 			 tvPlayerScore4.setText(Integer.toString(game.getPlayerGames().get(playerIndex4).getScore()));
 			 int playerBadgeId4 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(playerIndex4).getPlayer().getBadgeDrawable(), null, null);
 			 ivPlayerBadge4.setImageResource(playerBadgeId4);
-			 if (game.getPlayerGames().get(playerIndex4).isTurn() == false){ivPlayerTurn4.setVisibility(View.INVISIBLE);}
+			 if (game.getPlayerGames().get(playerIndex4).isTurn() == false){
+				 ivPlayerTurn4.setVisibility(View.INVISIBLE);
+			 }
+			 else{
+				 ivPlayerTurn4.setVisibility(View.VISIBLE);
+			 }
 		 }
 		 
 		 TextView tvLettersLeft = (TextView)context.findViewById(R.id.tvLettersLeft);
@@ -631,10 +661,23 @@ public class GameService {
 	 	
         Check.Require(isMoveFreeOfGaps(axis, playedSet, placedSet), context.getString(R.string.game_play_invalid_gaps));
         
+
+        Check.Require(game.getTurn() == 1 || isWordConnectedToPlayedWords(placedTiles, playedTiles), context.getString(R.string.game_play_invalid_gaps_placed_words));
+ 
         //determine the words that have been played
         List<PlacedWord> words = getWords(layout, axis, placedTiles, playedTiles, alphabetService, context);
 	 	
-        String temp = "";
+        //make sure that at least one placedTiles is connected to played tiles
+        Boolean isConnected = false;
+        for(GameTile tile : placedTiles){
+        	Logger.d(TAG, "checkPlayRules placedLetter" + tile.getPlacedLetter() + " " + tile.isConnected());
+        	if (tile.isConnected()){
+        		isConnected = true;
+        	}
+        }
+        
+       // Check.Require(isConnected, context.getString(R.string.game_play_invalid_gaps));
+        //String temp = "";
         
   //      for(PlacedWord word : words){
   //      	temp = temp + word.getWord() + "\n";
@@ -660,7 +703,11 @@ public class GameService {
 
         Check.Require(invalidWords.size() == 0, getInvalidWordsMessage(context, invalidWords));
 
- 
+        //check for a smasher...its worth 40 bonus points
+        if (placedTiles.size() == 7){
+        	totalPoints += Constants.SMASHER_BONUS_POINTS;
+        }
+        
         placedResult.setTotalPoints(totalPoints);
         placedResult.setPlacedTiles(placedTiles);
         placedResult.setPlacedWords(words);
@@ -745,6 +792,35 @@ public class GameService {
  
     }
 	
+	private static boolean isWordConnectedToPlayedWords(List<GameTile> placedTiles, List<PlayedTile> playedTiles){
+		  //if this letter is an incoming placed letter, mark is as connected
+        //to the rest of the letters.  At the end, this will allow us to
+        //determine if any incoming letters are on the same axis but separated 
+        //from the main word by space(s)
+        //"overlayed" counts as "connected"
+		for (GameTile tile : placedTiles){
+			if (tile.getOriginalLetter().length() > 0){ return true;}
+			
+			int above = TileLayoutService.getTileIdAbove(tile.getId());
+            int below = TileLayoutService.getTileIdBelow(tile.getId());
+            int left = TileLayoutService.getTileIdToTheLeft(tile.getId());
+            int right = TileLayoutService.getTileIdToTheRight(tile.getId());
+            
+            boolean isPlayedTileAbove = above == 255 ? false : (containsPlayedTileId(playedTiles, above) ? true : false);
+            boolean isPlayedTileBelow = below == 255 ? false : (containsPlayedTileId(playedTiles, below) ? true : false);
+            boolean isPlayedTileToTheLeft = left == 255 ? false : (containsPlayedTileId(playedTiles, left) ? true : false);
+            boolean isPlayedTileToTheRight = right == 255 ? false : (containsPlayedTileId(playedTiles, right) ? true : false);
+
+            
+            if ( isPlayedTileAbove || isPlayedTileBelow || isPlayedTileToTheLeft || isPlayedTileToTheRight )
+            {
+            	return true;
+            }
+			
+		}
+		return false;
+	}
+	
 	private static String getPlacedAxis(List<GameTile> placedTiles)
       {
           int row = 0;
@@ -827,15 +903,16 @@ public class GameService {
 
         //it's possible to have a word that is only one letter long now
         //if the word is played vertically and the top placed letter has no letter to either side, this will be the case
-        if (word.getWord().length() > 1)
-        {// are all placed tiles are connected.
-            for (GameTile tile : placedTiles)
-            {
-                Check.Require(tile.isConnected() == true, context.getString(R.string.game_play_invalid_gaps_placed_words));
-            }
-            
-           // Check.Require(word.getWord().length() > 1, context.getString(R.string.game_play_word_too_short));
-        }
+     //   if (word.getWord().length() > 1)
+     //   {// are all placed tiles connected.
+     //       for (GameTile tile : placedTiles)
+     //       {
+     //       	Logger.d(TAG, "getWords placedLetter" + tile.getPlacedLetter() + " " + tile.isConnected());
+     //           Check.Require(tile.isConnected() == true, context.getString(R.string.game_play_invalid_gaps_placed_words));
+     //       }
+     //       
+     //      // Check.Require(word.getWord().length() > 1, context.getString(R.string.game_play_word_too_short));
+     //   }
 
         
         //add word to the word  list
@@ -957,10 +1034,28 @@ public class GameService {
                 //to the rest of the letters.  At the end, this will allow us to
                 //determine if any incoming letters are on the same axis but separated 
                 //from the main word by space(s)
-                if (containsGameTileId(placedTiles, tilePosition) == true)
-                {
-                	getGameTile(placedTiles, tilePosition).setConnected(true);
-                }
+                //"overlayed" counts as "connected"
+    //            if (containsGameTileId(placedTiles, tilePosition) && getGameTile(placedTiles, tilePosition).getOriginalLetter().length() > 0){
+    //            	getGameTile(placedTiles, tilePosition).setConnected(true);
+    //            }
+    //            else{
+	//                int above = TileLayoutService.getTileIdAbove(tilePosition);
+	//                int below = TileLayoutService.getTileIdBelow(tilePosition);
+	//                int left = TileLayoutService.getTileIdToTheLeft(tilePosition);
+	//                int right = TileLayoutService.getTileIdToTheRight(tilePosition);
+	//                
+	//                boolean isPlayedTileAbove = above == 255 ? false : (containsPlayedTileId(playedTiles, above) ? true : false);
+	//                boolean isPlayedTileBelow = below == 255 ? false : (containsPlayedTileId(playedTiles, below) ? true : false);
+	//                boolean isPlayedTileToTheLeft = left == 255 ? false : (containsPlayedTileId(playedTiles, left) ? true : false);
+	//                boolean isPlayedTileToTheRight = right == 255 ? false : (containsPlayedTileId(playedTiles, right) ? true : false);
+	//  
+	//                
+	//                if ( isPlayedTileAbove || isPlayedTileBelow || isPlayedTileToTheLeft || isPlayedTileToTheRight )
+	//             //   if (containsGameTileId(placedTiles, tilePosition) == true)
+	//                {
+	//                	getGameTile(placedTiles, tilePosition).setConnected(true);
+	//                }
+    //            }
             }
           }
 
@@ -1021,23 +1116,24 @@ public class GameService {
 					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord());
 		case 9:
 			return String.format(context.getString(R.string.game_play_9_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
-					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord());
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(),
+					words.get(8).getWord());
 		case 10:
 			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
-					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
-					words.get(9).getWord());
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), 
+					words.get(8).getWord(),	words.get(9).getWord());
 		case 11:
 			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
-					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
-					words.get(9).getWord(), words.get(10).getWord());
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(),
+					words.get(8).getWord(), words.get(9).getWord(), words.get(10).getWord());
 		case 12:
 			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
-					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
-					words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord());
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), 
+					words.get(8).getWord(), words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord());
 		case 13:
 			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
-					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
-					words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord(), words.get(12).getWord());
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), 
+					words.get(8).getWord(), words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord(), words.get(12).getWord());
 		case 14:
 			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
 					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
@@ -1049,9 +1145,9 @@ public class GameService {
 					words.get(14).getWord());
 		default:
 			return String.format(context.getString(R.string.game_play_10_words), words.get(0).getWord(), words.get(1).getWord(), words.get(2).getWord(),
-					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), words.get(8).getWord(),
-					words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord(), words.get(12).getWord(), words.get(13).getWord(),
-					words.get(14).getWord(), words.get(15).getWord());
+					words.get(3).getWord(), words.get(4).getWord(), words.get(5).getWord(), words.get(6).getWord(), words.get(7).getWord(), 
+					words.get(8).getWord(), words.get(9).getWord(), words.get(10).getWord(), words.get(11).getWord(), words.get(12).getWord(), 
+					words.get(13).getWord(), words.get(14).getWord(), words.get(15).getWord());
 		}
 	}
   	
@@ -1063,7 +1159,7 @@ public class GameService {
   		
   		int numActiveGames = player.getActiveGamesYourTurn().size();
   		for(int i = 0; i < numActiveGames; i++){
-  			if (game.getId() == player.getActiveGamesYourTurn().get(i).getId()){
+  			if (game.getId().equals(player.getActiveGamesYourTurn().get(i).getId())){
   				player.getActiveGamesYourTurn().remove(i);
   				break;
   			}

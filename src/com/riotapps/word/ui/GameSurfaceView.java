@@ -150,7 +150,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int targetTileId = -1;
     private int currentTrayTileId = -1;
     private int dropTargetTrayTileId = -1;
+    private boolean isBoardTileDragging(){
+    	return this.getDraggingTile() != null;
+    } 
     
+    private boolean isTrayTileDragging(){
+    	if (this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()){
+    		return true;
+    	}
+    	return false;
+    }
     private GameTile getDraggingTile(){
     	if (this.draggingTileId > -1){
     		return this.tiles.get(this.draggingTileId);
@@ -209,6 +218,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	private Bitmap bgTrayBaseScaled;
 	private Bitmap bgTrayBaseDragging; 
 	private boolean shuffleRedraw = false;
+	private boolean afterPlayRedraw = false;
 	private boolean recallLettersRedraw = false;
 	private Bitmap bgPlacedTileFull;
 	private Bitmap bgPlacedTileZoomed;
@@ -216,6 +226,22 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	private Bitmap bgPlayedTileZoomed;
 	private Bitmap bgLastPlayedTileFull;
 	private Bitmap bgLastPlayedTileZoomed;
+	
+	private Bitmap bgBaseScaled;
+	private Bitmap bgBaseZoomed;
+	private Bitmap bg4LScaled;
+	private Bitmap bg4LZoomed;
+	private Bitmap bg3LScaled;
+	private Bitmap bg3LZoomed;
+	private Bitmap bg3WScaled;
+	private Bitmap bg3WZoomed;
+	private Bitmap bg2LScaled;
+	private Bitmap bg2LZoomed; 
+	private Bitmap bg2WScaled;
+	private Bitmap bg2WZoomed;	
+	private Bitmap bgStarterScaled;
+	private Bitmap bgStarterZoomed;
+	
 	
 	public boolean isReadyToDraw() {
 		return readyToDraw;
@@ -313,6 +339,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 
 	public void loadGame(){
+		Logger.d(TAG,"loadGame game turn=" + this.parent.getGame().getTurn());
+		
 		this.LoadTiles();
 	   	this.LoadTray();
 	    this.setInitialRecallShuffleState();
@@ -390,6 +418,34 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.boardAreaRect.setBottom(this.trayAreaRect.getTop() - 1);
 	     this.boardAreaRect.setLeft(0);
 	     this.boardAreaRect.setRight(this.fullWidth);
+	     
+		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
+		 this.bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bgBaseZoomed = Bitmap.createScaledBitmap(bgBase, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
+		 this.bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bg4LZoomed = Bitmap.createScaledBitmap(bg4L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg3L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3l_bg);
+		 this.bg3LScaled = Bitmap.createScaledBitmap(bg3L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bg3LZoomed = Bitmap.createScaledBitmap(bg3L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg3W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3w_bg);
+		 this.bg3WScaled = Bitmap.createScaledBitmap(bg3W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bg3WZoomed = Bitmap.createScaledBitmap(bg3W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg2L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2l_bg);
+		 this.bg2LScaled = Bitmap.createScaledBitmap(bg2L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bg2LZoomed = Bitmap.createScaledBitmap(bg2L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 
+		 Bitmap bg2W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2w_bg);
+		 this.bg2WScaled = Bitmap.createScaledBitmap(bg2W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bg2WZoomed = Bitmap.createScaledBitmap(bg2W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		
+		 Bitmap bgStarter = BitmapFactory.decodeResource(getResources(), R.drawable.tile_starter_bg);
+		 this.bgStarterScaled = Bitmap.createScaledBitmap(bgStarter, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 this.bgStarterZoomed = Bitmap.createScaledBitmap(bgStarter, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 		
 		//Toast t = Toast.makeText(context, "Hello " +  this.height + " " + this.fullWidth + " " + getMeasuredHeight() , Toast.LENGTH_LONG);   
 	    //t.show();
@@ -464,14 +520,6 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	private void startThread(){
 		
-	//	if (!mGameIsRunning) {
-	 //       thread.start();
-	 //       mGameIsRunning = true;
-	 //   } else {
-	//        thread.onResume();
-	//    }
-		
-		 
 		Log.w(TAG, "startThread called is thread alive " + this.gameThread.isAlive() + " isThreadRunning: " + this.isThreadRunning); 
 		if (!this.isThreadRunning){ //() !=Thread.State.RUNNABLE) { 
 			//if (!this.gameThread.isAlive()){
@@ -483,6 +531,17 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	//	else {
 	//		this.gameThread.onResume();
 	//	}
+	}
+	
+	public void stopThreadLoop(){
+	   
+		this.readyToDraw = false;
+		// this.gameThread.setRunning(false);
+	}
+	
+	public void startThreadLoop(){
+	    this.gameThread.setRunning(true);
+	    this.gameThread.run();
 	}
 	
 	private void stopThread(){
@@ -1291,7 +1350,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 
 		long currentTouchTime = System.nanoTime();
 		
-		if (!this.shuffleRedraw & !this.recallLettersRedraw){
+		if (!this.shuffleRedraw & !this.recallLettersRedraw  & !this.afterPlayRedraw){
 			//  if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
 			 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN && 
 					 (this.getCurrentTrayTile() != null && !this.getCurrentTrayTile().isDragging())){ 
@@ -1356,22 +1415,23 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 Logger.d(TAG, "onDraw this.isZoomed == true");
 				 //a tray tile has been tapped down
 				 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN && 
-						 ((this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()) || this.getDraggingTile() != null)){
+						 ((this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()) || this.isBoardTileDragging())){
 					 //board stays the same
 					 this.drawBoardOnMove(canvas, 0, 0);
 					 Logger.d(TAG, "onDraw a tray tile has been tapped down");
 				 }
-				 else if (this.shuffleRedraw || this.recallLettersRedraw){
+				 else if (this.shuffleRedraw || this.recallLettersRedraw || this.afterPlayRedraw){
 					 this.drawBoardOnMove(canvas, 0, 0);
 					 this.shuffleRedraw = false;
 					 this.recallLettersRedraw = false;
+					 this.afterPlayRedraw = false;
 				 }
 				 else if (this.isMomentum){
 					 Log.w(TAG,"onDraw drawMomentumScroll about to be called");
 					 this.drawMomentumScroll(canvas);
 				 }
 				 else if(this.currentTouchMotion == MotionEvent.ACTION_MOVE &&
-						 this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging() ){
+						 this.isTrayTileDragging() || this.isBoardTileDragging()  ){
 					 //do not move the board, a tile is being dragged 
 					 this.drawBoardOnMove(canvas, 0, 0);
 				 }
@@ -1415,9 +1475,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    
 		    this.drawDraggingTile(canvas);
 		    
-		    if (this.shuffleRedraw || this.recallLettersRedraw){
+		    if (this.shuffleRedraw || this.recallLettersRedraw || this.afterPlayRedraw){
 		    	this.shuffleRedraw = false;
 		    	this.recallLettersRedraw = false;
+		    	this.afterPlayRedraw = false;
 		    	this.readyToDraw = false;
 		    }
 		    
@@ -1509,7 +1570,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	 
      	 Paint pLetter = new Paint();
-     	 pLetter.setColor(Color.DKGRAY);
+     	 pLetter.setColor(Color.parseColor(this.parent.getString(R.color.game_board_dragging_tile_letter)));
      	 pLetter.setTextSize(Math.round(this.draggingTileSize * .78));
      	 pLetter.setAntiAlias(true); 
      	 pLetter.setTypeface(this.letterTypeface);
@@ -1527,7 +1588,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     canvas.drawText(letter, textLeft, textTop, pLetter);
 	     
 	     Paint pValue = new Paint();
-	     pValue.setColor(Color.BLACK);
+	     pValue.setColor(Color.parseColor(this.parent.getString(R.color.game_board_dragging_tile_value)));
 	     pValue.setTextSize(Math.round(this.draggingTileSize * .20f));
 	     pValue.setAntiAlias(true);
 	     
@@ -1822,7 +1883,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		//3366dd
 		
 		Paint pGap = new Paint(); 
-		pGap.setColor(Color.parseColor("#eec591"));  //grab color from drawable
+		pGap.setColor(Color.parseColor(this.parent.getString(R.color.game_board_full_view_upper_gap_bg)));  
 	    
 		pGap.setAntiAlias(true);
 	  //   p.setTypeface(this.bonusTypeface);
@@ -1835,7 +1896,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     canvas.drawRect(boundsGap, pGap);
 	     
 	     Paint p = new Paint();
-     	 p.setColor(Color.WHITE);
+     	 p.setColor(Color.parseColor(this.parent.getString(R.color.game_board_full_view_upper_gap_text)));
      	 //p.setTextAlign(Paint.Align.LEFT);
      	 p.setTextSize(Math.round(this.topGapHeight * .4));
 	     p.setAntiAlias(true);
@@ -1858,13 +1919,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 
 	private void drawLowerGap(Canvas canvas){
-		//3366dd
-		
 		Paint pGap = new Paint(); 
-		pGap.setColor(Color.parseColor("#eec591"));  //grab color from drawable
+		pGap.setColor(Color.parseColor(this.parent.getString(R.color.game_board_full_view_upper_gap_bg)));
 	    
 		pGap.setAntiAlias(true);
-	  //   p.setTypeface(this.bonusTypeface);
 	     Rect boundsGap = new Rect();
 	     boundsGap.left = 0;
 	     boundsGap.right = this.fullWidth;
@@ -1872,22 +1930,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     boundsGap.bottom = this.trayTop - 1;
 		
 	     canvas.drawRect(boundsGap, pGap);
-	    // canvas.drawText("Junior", textLeft, 10, p);	     
 	     canvas.drawBitmap(this.logo, this.midpoint - (Math.round(this.logo.getWidth() / 2)), this.topGapHeight + this.fullWidth + Math.round(this.bottomGapHeight / 2) - Math.round(this.logo.getHeight() / 2) , null); ///do not use 10,,,figure out math
-	     
-	     
-	//     Paint pBorder = new Paint(); 
-	//		pBorder.setColor(Color.parseColor("#eec591"));  //grab color from drawable
-	//	    
-	//	    pBorder.setAntiAlias(true);
-	//	     Rect boundsBorder = new Rect();
-	//	     boundsBorder.left = 0;
-	//	     boundsBorder.right = this.fullWidth;
-	//	     boundsBorder.top = this.topGapHeight  - LOWER_GAP_TOP_BORDER_HEIGHT;
-	//	     boundsBorder.bottom = this.topGapHeight;
-		    
-	//	     canvas.drawRect(boundsBorder, pBorder);
-	     
+
 	///draw  thanks for playing if game is over '''to the right
 		    
 	}
@@ -1898,7 +1942,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		Logger.d(TAG, "drawTray");
 		
 		Paint pBorder = new Paint(); 
-		pBorder.setColor(Color.parseColor("#eec591"));
+		pBorder.setColor(Color.parseColor(this.parent.getString(R.color.game_board_tray_border)));
 	    
 	    pBorder.setAntiAlias(true);
 	  //   p.setTypeface(this.bonusTypeface);
@@ -1918,7 +1962,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 //if (!tile.isDragging() && tile.getCurrentLetter().length() > 0){
 			 if (tile.getCurrentLetter().length() > 0){
 		     	 Paint pLetter = new Paint();
-		     	 pLetter.setColor(Color.DKGRAY);
+		     	 pLetter.setColor(Color.parseColor(this.parent.getString(R.color.game_board_tray_tile_letter)));
 		     	 pLetter.setTextSize(Math.round(this.trayTileSize * .78));
 		     	 pLetter.setAntiAlias(true); 
 		     	 pLetter.setTypeface(this.letterTypeface);
@@ -1936,7 +1980,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			     canvas.drawText(tile.getCurrentLetter(), textLeft, textTop, pLetter);
 			     
 			     Paint pValue = new Paint();
-			     pValue.setColor(Color.BLACK);
+			     pValue.setColor(Color.parseColor(this.parent.getString(R.color.game_board_tray_tile_value)));
 			     pValue.setTextSize(Math.round(this.trayTileSize * .25f));
 			     pValue.setAntiAlias(true);
 			     
@@ -1999,9 +2043,29 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		}
 	}
 	
-	public void resetGame(){
-		this.loadGame();
+	public void resetGameAfterPlay(){
+		//loop through game tiles, changing placed letter to original letter
+		//doing it this way keeps the previous drag locations set properly
+		for (GameTile tile : this.tiles){
+			 //reset all last played flags
+            tile.setLastPlayed(false);
+
+			if (tile.getPlacedLetter().length() > 0){
+				 tile.setOriginalBitmap(this.bgBaseScaled); //this will change as default bonus and played tiles are incorporated
+				 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(this.bgBaseZoomed); }
+				 
+				 tile.setOriginalLetter(tile.getPlacedLetter());
+				 tile.setPlacedLetter("");
+				 tile.setLastPlayed(true);
+			}
+		}
+		
+	   	this.LoadTray();
+	    this.setInitialRecallShuffleState();
+	    this.resetPointsView();
+	    this.afterPlayRedraw = true;
 		this.readyToDraw = true;
+		//this.startThreadLoop();;
 	}
 	
 	public void onPlayClick(){
@@ -2029,7 +2093,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    	dialog.show();	
 		}
 		catch (DesignByContractException e){
-			this.parent.openAlertDialog("testing", e.getMessage());
+			this.parent.openAlertDialog(this.parent.getString(R.string.sorry), e.getMessage());
 		}
 	}
 	
@@ -2066,7 +2130,6 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.LoadTray();
 		this.shuffleRedraw = true;
 		this.readyToDraw = true;
-		
 		
 	}
 	
@@ -2109,6 +2172,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 tile.setOriginalBitmap(this.bgTrayBaseScaled);
 			 //tile.setOriginalBitmapDragging(this.bgTrayBaseDragging);
 
+			 Logger.d(TAG, "LoadTray this.parent.getGameState().getTrayLetter(y)=" + this.parent.getGameState().getTrayLetter(y));
+			 
 			 //this will come from state object if it exists for this turn, this is temp
 			 tile.setOriginalLetter(this.parent.getGameState().getTrayLetter(y)); //getTrayTiles().get(y).getLetter());
 			 
@@ -2118,7 +2183,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	 private void LoadTiles() {		  
 		 
-		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
+	/* bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
 		 Bitmap bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 		 Bitmap bgBaseZoomed = Bitmap.createScaledBitmap(bgBase, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 		 
@@ -2150,7 +2215,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	//	 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
 	//	 Bitmap bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 	//	 Bitmap bg4LZoomed = Bitmap.createScaledBitmap(bg4L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 
+		 */
 		 //for each row load each column 15x15
 		 //row = y
 	     //column = x
@@ -2354,7 +2419,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 private void drawBonusText(Canvas canvas, String text, int tileWidth, int xPosition, int yPosition){
 		 int midPoint = Math.round(tileWidth / 2);
 		 Paint p = new Paint(); 
-    	 p.setColor(Color.WHITE);
+    	 p.setColor(Color.parseColor(this.parent.getString(R.color.game_board_bonus_text)));
 	     p.setTextSize(Math.round(tileWidth * .6));
 	     p.setAntiAlias(true);
 	     p.setTypeface(this.bonusTypeface);
@@ -2369,7 +2434,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 private void drawLetter(Canvas canvas, String letter, int tileWidth, int xPosition, int yPosition, boolean isLastPlayed){
 		 	int midPoint = Math.round(tileWidth / 2);
 		  Paint pLetter = new Paint();
-	     	 pLetter.setColor(isLastPlayed ? Color.WHITE : Color.BLACK); //(Color.DKGRAY);
+	     	 pLetter.setColor(Color.parseColor(isLastPlayed ? this.parent.getString(R.color.game_board_board_last_played_tile_letter) : this.parent.getString(R.color.game_board_board_tile_letter))); //(Color.DKGRAY);
 	     	 pLetter.setTextSize(Math.round(tileWidth * .78));
 	     	 pLetter.setAntiAlias(true); 
 	     	 pLetter.setTypeface(this.letterTypeface);
@@ -2387,7 +2452,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		     canvas.drawText(letter, textLeft, textTop, pLetter);
 		     
 		     Paint pValue = new Paint();
-		     pValue.setColor(Color.BLACK);
+		      pValue.setColor(Color.parseColor(isLastPlayed ? this.parent.getString(R.color.game_board_board_last_played_tile_value) : this.parent.getString(R.color.game_board_board_tile_value)));;
 		     pValue.setTextSize(Math.round(tileWidth * .25f));
 		     pValue.setAntiAlias(true);
 		     

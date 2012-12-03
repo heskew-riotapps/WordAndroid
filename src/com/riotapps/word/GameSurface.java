@@ -28,6 +28,7 @@ import com.riotapps.word.utils.Enums.RequestType;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -178,11 +179,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	}
 	
 	private void setupGame(){
+		Logger.d(TAG,"setupGame game turn=" + this.game.getTurn());
 		this.contextPlayerGame = GameService.loadScoreboard(this, this.game, this.player);
 	 	
 	 	this.fillGameState();
 	 	
 	 	this.setupButtons();
+	 	
+	 	
 	}
 	
 	 public Handler updateHandler = new Handler(){
@@ -277,6 +281,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		this.bPlay = (Button) findViewById(R.id.bPlay);
 		this.bShuffle = (Button) findViewById(R.id.bShuffle);
 		Button bChat = (Button) findViewById(R.id.bChat);
+		Button bSwap = (Button) findViewById(R.id.bSwap);
 		Button bPlayedWords = (Button) findViewById(R.id.bPlayedWords);
 		Button bCancel = (Button) findViewById(R.id.bCancel);
 		Button bResign = (Button) findViewById(R.id.bResign);
@@ -287,15 +292,32 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	this.bRecall.setOnClickListener(this);
 	 	this.bPlay.setOnClickListener(this);
 	 	
+	 	String btnTextColor = this.game.isContextPlayerTurn(this.player) ? this.getString(R.color.button_text_color_on) : this.getString(R.color.button_text_color_off);
+	 	
+	 	this.bPlay.setTextColor(Color.parseColor(btnTextColor));
+	 	bCancel.setTextColor(Color.parseColor(btnTextColor));
+	 	bDecline.setTextColor(Color.parseColor(btnTextColor));
+	 	bResign.setTextColor(Color.parseColor(btnTextColor));
+	 	bSwap.setTextColor(Color.parseColor(btnTextColor));
+	 	
+	 	bRecall.setVisibility(View.GONE);
+	 	bShuffle.setVisibility(View.VISIBLE);
+	 	
+	 	bPlay.setClickable(this.game.isContextPlayerTurn(this.player));
+	 	bSwap.setClickable(this.game.isContextPlayerTurn(this.player));
+	 	bResign.setClickable(this.game.isContextPlayerTurn(this.player));
+
+	 	
 	 	//by default recall button will be hidden, it will be switched with shuffle button when a letter is dropped on the board
 	 	this.bRecall.setVisibility(View.GONE); 
+	 	
 	 	
 	 	//set cancel button area mode:
 	 	//if it's the first play of the game by starting player, it should be "CANCEL" mode
 	 	//if it's the first play of the game by a non-starting player, it should be in "DECLINE" mode
 	 	//if it's not the first play of the game, it should be in "RESIGN" mode
 	 	
-	 	//the starting player get one chance (one turn) to cancel
+	 	//the starting player gets one chance (one turn) to cancel
 	 	if (this.game.getTurn() == 1 && this.game.isContextPlayerStarter(this.player)){
 	 		bCancel.setOnClickListener(this);	
 	 		bResign.setVisibility(View.GONE);
@@ -315,11 +337,13 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			bCancel.setVisibility(View.GONE);	
 		 		bResign.setOnClickListener(this);
 		 		bDecline.setVisibility(View.GONE);
+		 		bResign.setVisibility(View.VISIBLE);
+		 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
 	 		}
 	 	}
 	 	else if (this.game.getNumActiveOpponents() == 2){
 	 		if (this.game.getTurn() < 3 && this.game.getContextPlayerOrder(this.player) < 3){
-	 			//in a three player game, the invited players gets one chance to decline
+	 			//in a three player game, the invited players get one chance to decline
 	 			//in this case we are checking for the second player in order
 	 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
 	 			//makes the first move
@@ -340,6 +364,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			//else we are past each opponents first turn, therefore show the resign button 
 	 			bCancel.setVisibility(View.GONE);	
 		 		bResign.setOnClickListener(this);
+		 		bResign.setVisibility(View.VISIBLE);
+		 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
 		 		bDecline.setVisibility(View.GONE);
 	 		}
 	 	}
@@ -376,6 +402,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			bCancel.setVisibility(View.GONE);	
 		 		bResign.setOnClickListener(this);
 		 		bDecline.setVisibility(View.GONE);
+		 		bResign.setVisibility(View.VISIBLE);
+		 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
 	 		}
  		
 	 	}
@@ -394,6 +422,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			 this.gameState = GameStateService.clearGameState(context, this.game.getId());
 		 }
 		 
+		// this.gameState.setTrayVersion(this.game.getContextPlayerTrayVersion(this.player));
+		 
 		 //load played tiles into game state
 		 this.gameState.setPlayedTiles(this.game.getPlayedTiles());
 		 
@@ -403,11 +433,13 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
  //reset the game tiles based on the locally saved state (as long as the tray tiles have not been updated on the server)
 			 this.gameState.setTrayVersion(this.game.getContextPlayerTrayVersion(this.player));
 			 
+			 int numTrayTiles = this.contextPlayerGame.getTrayLetters().size();
+			 
 			 for(int x = 0; x < 7; x++){
 				// TrayTile trayTile = new TrayTile();
 				// trayTile.setIndex(x);
 				// trayTile.setLetter(this.contextPlayerGame.getTrayLetters().size() > x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
-				 this.gameState.addTrayLocation(x, this.contextPlayerGame.getTrayLetters().size() > x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
+				 this.gameState.addTrayLocation(x, numTrayTiles > x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
 				// this.gameState.getLocations().get(x).setTrayLocation(x);
 				// this.gameState.getLocations().get(x).setLetter(this.contextPlayerGame.getTrayLetters().size() > x ? this.contextPlayerGame.getTrayLetters().get(x) : "");
 			 }
@@ -590,8 +622,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    public void handleGamePlayOnClick(PlacedResult placedResult){
 	    	//stop thread first
 	    	
-	    	DialogManager.SetupAlert(context, "played", "clicked");
- 	    	this.gameSurfaceView.onStop();
+	    	//DialogManager.SetupAlert(context, "played", "clicked");
+ 	    	this.gameSurfaceView.stopThreadLoop();
 	    	try { 
 				String json = GameService.setupGameTurn(context, this.game, placedResult);
 				
@@ -688,9 +720,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 		//refresh game board
 	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
 	    		            	 		
+	    		            	 		Gson gson = new Gson();
+	    		            	 		Logger.d(TAG, "handleResponse game=" + gson.toJson(game));
+	    		            	 		
     		            	 			//refresh game board and buttons
     		            	 			setupGame();
-    		            	 			gameSurfaceView.resetGame();
+    		            	 			gameSurfaceView.resetGameAfterPlay();
     		            	 			
     		            	 			break;
 	    		            	 	case SKIP:
@@ -703,6 +738,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 }
 	    		             
 	    		             }//end of case 200 & 201 
+	    		             break;
 	    		             case 401:
 	    			             //case Status code == 422
 	    			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_unauthorized));  

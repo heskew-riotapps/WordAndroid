@@ -37,7 +37,7 @@ public class PlayerGame implements Parcelable{
 	@SerializedName("sc")
 	private int score = 0;
 	
-	@SerializedName("l_t")
+/*	@SerializedName("l_t")
 	private int lastTurn;
 
 	@SerializedName("l_t_a")
@@ -48,10 +48,10 @@ public class PlayerGame implements Parcelable{
 	
 	@SerializedName("l_t_d")
 	private Date lastTurnDate;
-	
+*/		
 	@SerializedName("l_a_d")
 	private Date lastAlertDate;
-	
+
 	@SerializedName("l_r_d")
 	private Date lastReminderDate;
 	
@@ -102,7 +102,7 @@ public class PlayerGame implements Parcelable{
 	public void setScore(int score) {
 		this.score = score;
 	}
-
+/*
 	public Date getLastTurnDate() {
 		return lastTurnDate;
 	}
@@ -118,7 +118,7 @@ public class PlayerGame implements Parcelable{
 	public void setLastAlertDate(Date lastAlertDate) {
 		this.lastAlertDate = lastAlertDate;
 	}
-
+*/
 	public Date getLastReminderDate() {
 		return lastReminderDate;
 	}
@@ -185,7 +185,7 @@ public class PlayerGame implements Parcelable{
 		this.playerOrder = playerOrder;
 	}
 	
-
+/*
 	public int getLastTurn() {
 		return lastTurn;
 	}
@@ -209,7 +209,7 @@ public class PlayerGame implements Parcelable{
 	public void setLastTurnPoints(int lastTurnPoints) {
 		this.lastTurnPoints = lastTurnPoints;
 	}
-
+*/
 	public int getTrayVersion() {
 		return trayVersion;
 	}
@@ -288,7 +288,7 @@ public class PlayerGame implements Parcelable{
 	  //  Logger.d(TAG, "parcel in playerOrder=" + this.playerOrder);
 	
 	}
-	
+/*	
 	public enum LastAction{
 		NO_TRANSLATION(0),
 		ONE_LETTER_SWAPPED(1),
@@ -334,5 +334,5 @@ public class PlayerGame implements Parcelable{
 		return LastAction.lookup(this.lastTurnAction);
 	}
 	
-	
+	*/
 }

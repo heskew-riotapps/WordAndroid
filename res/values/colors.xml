@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <drawable name="pressed_color">#D3D3D3</drawable> <!--custom color for pressed state -->
-    <drawable name="normal_color">#fff5ee</drawable>  
-    <drawable name="form_background_color">#fff5ee</drawable> 
-    <drawable name="tab_pressed_color">#fbc200</drawable> 
-    <drawable name="tab_background_color">#3366dd</drawable> 
-    <drawable name="tab_off_color">#CFCFCF</drawable>
+	<color name="button_text_color_on">#fff5ee</color>
+	<color name="button_text_color_off">#9f1010</color>
+	<color name="game_board_full_view_upper_gap_bg">#eec591</color>
+	<color name="game_board_full_view_upper_gap_text">#ffffff</color>
+	<color name="game_board_full_view_lower_gap_bg">#eec591</color>
+	<color name="game_board_tray_border">#eec591</color>
+	<color name="game_board_tray_tile_letter">#080808</color>
+	<color name="game_board_tray_tile_value">#000000</color>
+	<color name="game_board_board_tile_letter">#080808</color>
+	<color name="game_board_board_tile_value">#000000</color>
+	<color name="game_board_board_last_played_tile_letter">#ffffff</color>
+	<color name="game_board_board_last_played_tile_value">#000000</color>
+	<color name="game_board_dragging_tile_letter">#080808</color>
+	<color name="game_board_dragging_tile_value">#000000</color>
+	<color name="game_board_bonus_text">#ffffff</color>
+	
+    <color name="pressed_color">#D3D3D3</color> <!--custom color for pressed state -->
+    <color name="normal_color">#fff5ee</color>  
+    <color name="form_background_color">#fff5ee</color> 
+    <color name="tab_pressed_color">#fbc200</color> 
+    <color name="tab_background_color">#3366dd</color> 
+    <color name="tab_off_color">#CFCFCF</color>
     <drawable name="content_area_font_color">#1874CD</drawable>
     <drawable name="content_area_background_color">#fff5ee</drawable>
     <drawable name="content_area_background_selected_color">#D3D3D3</drawable>
@@ -23,7 +38,7 @@
     <drawable name="sub_text_color">#1874CD</drawable>
     <drawable name="progress_background_color">#3366dd</drawable>
     <drawable name="button_text_color">#fff5ee</drawable>
-	<drawable name="player_image_border_color">#000000</drawable>
-	<drawable name="player_image_background_color">#d2bfa6</drawable>
-	<drawable name="game_surface_fill_color">#eec591</drawable>
+	<color name="player_image_border_color">#000000</color>
+	<color name="player_image_background_color">#d2bfa6</color>
+	<color name="game_surface_fill_color">#eec591</color>
 </resources>

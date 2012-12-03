@@ -122,7 +122,7 @@
 	    android:id="@+id/bottomBorder"
 	    android:layout_width="fill_parent"
 	    android:layout_height="2dp"
-	    android:background="@drawable/game_surface_fill_color" 
+	    android:background="@color/game_surface_fill_color" 
 	       android:layout_below="@id/scoreboard"
 	    />
 </RelativeLayout>

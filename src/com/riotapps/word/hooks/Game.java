@@ -11,7 +11,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.riotapps.word.R;
-import com.riotapps.word.hooks.PlayerGame.LastAction;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.Utils;
 
@@ -38,17 +37,21 @@ public class Game implements Parcelable, Comparable<Game> {
 	private int lastTurnAction;
 	
 	@SerializedName("l_t_p")
+	private String lastTurnPoints;
+	
+	@SerializedName("l_t_pl")
 	private String lastTurnPlayerId;
 	
 	@SerializedName("l_t_d")
 	private Date lastTurnDate;
 	
 	private Player _lastTurnPlayer;
+	private PlayerGame _contextPlayerGame;
 	
 	private Player getLastTurnPlayer(){
 		if (this._lastTurnPlayer == null) {
 			for (PlayerGame pg : this.getPlayerGames()){
-				if (pg.getPlayer().getId() == this.lastTurnPlayerId){
+				if (pg.getPlayer().getId().equals(this.lastTurnPlayerId)){
 					this._lastTurnPlayer = pg.getPlayer();
 				}
 			}
@@ -56,10 +59,29 @@ public class Game implements Parcelable, Comparable<Game> {
 		return this._lastTurnPlayer;
 	}
 	
+	private PlayerGame getContextPlayerGame(String contextPlayerId){
+		if (this._contextPlayerGame == null) {
+			for (PlayerGame pg : this.getPlayerGames()){
+				if (pg.getPlayer().getId().equals(contextPlayerId)){
+					this._contextPlayerGame = pg;
+				}
+			}
+		}
+		return this._contextPlayerGame;
+	}
+	
 //	@SerializedName("last_action_alert_text")
 	//do not serialize
  //	private String lastActionText = "";
 	
+	public String getLastTurnPoints() {
+		return lastTurnPoints;
+	}
+
+	public void setLastTurnPoints(String lastTurnPoints) {
+		this.lastTurnPoints = lastTurnPoints;
+	}
+
 	@SerializedName("left")
 	private int numLettersLeft = 0;
 	
@@ -92,6 +114,18 @@ public class Game implements Parcelable, Comparable<Game> {
 	public List<PlayedWord> getPlayedWords() {
 		return playedWords;
 	}
+	
+	public List<PlayedWord> getLastPlayedWords() {
+		List<PlayedWord> words = new ArrayList<PlayedWord>();
+		
+		for(PlayedWord word : this.playedWords){
+			Logger.d(TAG, "getLastPlayedWords word=" + word.getWord());
+			if (word.getTurn() == (this.getTurn() - 1)){
+				words.add(word);
+			}
+		}
+		return words;
+	}
 
 	public void setPlayedWords(List<PlayedWord> playedWords) {
 		this.playedWords = playedWords;
@@ -101,8 +135,6 @@ public class Game implements Parcelable, Comparable<Game> {
 		return playerGames;
 	}
 
-	
-	
 	public List<PlayedTile> getPlayedTiles() {
 		return playedTiles;
 	}
@@ -131,30 +163,60 @@ public class Game implements Parcelable, Comparable<Game> {
 	}
 	
 	public boolean isContextPlayerStarter(Player contextPlayer){ 
-		for (PlayerGame pg : this.getPlayerGames()){ 
-         	if (pg.getPlayerOrder() == 1 && pg.getPlayer().getId().equals(contextPlayer.getId())){
-         		return true;
-         	}
+		if (this.getContextPlayerGame(contextPlayer.getId()).getPlayerOrder() == 1) {
+			return true;
 		}
+		//for (PlayerGame pg : this.getPlayerGames()){ 
+        // 	if (pg.getPlayerOrder() == 1 && pg.getPlayer().getId().equals(contextPlayer.getId())){
+        // 		return true;
+        // 	}
+		//}
 		return false;
 	}
 	
-	public int getContextPlayerOrder(Player contextPlayer){ 
-		for (PlayerGame pg : this.getPlayerGames()){ 
-         	if (pg.getPlayer().getId().equals(contextPlayer.getId())){
-         		return pg.getPlayerOrder();
-         	}
+	public int getContextPlayerOrder(Player contextPlayer){
+		try{
+			return this.getContextPlayerGame(contextPlayer.getId()).getPlayerOrder();
 		}
-		return 0;
+		catch (Exception e){
+			return 0;
+		}
+//		for (PlayerGame pg : this.getPlayerGames()){ 
+ //        	if (pg.getPlayer().getId().equals(contextPlayer.getId())){
+ //        		return pg.getPlayerOrder();
+ //        	}
+//		}
+//		return 0;
+	}
+	
+	public boolean isContextPlayerTurn(Player contextPlayer){
+		try{
+			return this.getContextPlayerGame(contextPlayer.getId()).isTurn();
+		}
+		catch (Exception e){
+			return false;
+		}
+//		for (PlayerGame pg : this.getPlayerGames()){ 
+ //        	if (pg.getPlayer().getId().equals(contextPlayer.getId())){
+ //        		return pg.getPlayerOrder();
+ //        	}
+//		}
+//		return 0;
 	}
 	
 	public int getContextPlayerTrayVersion(Player contextPlayer){ 
-		for (PlayerGame pg : this.getPlayerGames()){ 
-         	if (pg.getPlayer().getId().equals(contextPlayer.getId())){
-         		return pg.getTrayVersion();
-         	}
+		try{
+			return this.getContextPlayerGame(contextPlayer.getId()).getTrayVersion();
 		}
-		return 1;
+		catch (Exception e){
+			return 1;
+		}
+//		for (PlayerGame pg : this.getPlayerGames()){ 
+ //        	if (pg.getPlayer().getId().equals(contextPlayer.getId())){
+ //        		return pg.getTrayVersion();
+  //       	}
+//		}
+//		return 1;
 	}
 	
 	
@@ -310,15 +372,19 @@ public class Game implements Parcelable, Comparable<Game> {
 	// LastTurn lastTurn = this.getLastTurn(contextPlayerId);
 		
 	//return "p";
-		Logger.d(TAG, "getLastActionText lastAction=" + this.lastTurnAction + " " + this.getLastAction().toString());
+		boolean isContext = this.isContextPlayerPerformedLastTurn(contextPlayerId);
+		String opponentName = this.getLastTurnPlayer().getAbbreviatedName();
+
+		Logger.d(TAG, "getLastActionText lastAction=" + this.lastTurnAction + " " + this.getLastAction().toString() + " isContext=" + isContext);
+
 		
 		switch (this.getLastAction()){
 			case ONE_LETTER_SWAPPED:
-				if (this.isContextPlayerPerformedLastTurn(contextPlayerId)){
+				if (isContext){
 					return context.getString(R.string.game_last_action_swapped_1_context);
 				}
 				else{
-					return String.format(context.getString(R.string.game_last_action_swapped_1), this.getLastTurnPlayer().getAbbreviatedName());				
+					return String.format(context.getString(R.string.game_last_action_swapped_1), opponentName);				
 				}
 			
 			case TWO_LETTERS_SWAPPED:	
@@ -327,34 +393,120 @@ public class Game implements Parcelable, Comparable<Game> {
 			case FIVE_LETTERS_SWAPPED:
 			case SIX_LETTERS_SWAPPED:
 			case SEVEN_LETTERS_SWAPPED:
-					if (this.isContextPlayerPerformedLastTurn(contextPlayerId)){
+					if (isContext){
 						return String.format(context.getString(R.string.game_last_action_swapped_context), this.getLastTurnAction());
 					}
 					else{
-						return String.format(context.getString(R.string.game_last_action_swapped), this.getLastTurnPlayer().getAbbreviatedName(), this.getLastTurnAction());				
+						return String.format(context.getString(R.string.game_last_action_swapped), opponentName, this.getLastTurnAction());				
 					}
 			case STARTED_GAME:
-				if (this.isContextPlayerPerformedLastTurn(contextPlayerId)){
+				if (isContext){
 					return context.getString(R.string.game_last_action_started_context);
 				}
 				else{
-					return String.format(context.getString(R.string.game_last_action_started), this.getLastTurnPlayer().getAbbreviatedName());				
+					return String.format(context.getString(R.string.game_last_action_started), opponentName);				
 				}
 				
 			case WORDS_PLAYED:
-				return "loops through words";
-			
+				
+				List<PlayedWord> words = this.getLastPlayedWords();
+				int numWordsPlayed = words.size();
+		
+				switch (numWordsPlayed){
+				case 1:
+					if (isContext){
+						return String.format(context.getString(R.string.game_last_action_word_played_context), this.getLastTurnPoints(), words.get(0).getWord());
+					}
+					else {
+						return String.format(context.getString(R.string.game_last_action_word_played), this.getLastTurnPoints(), opponentName, words.get(0).getWord());						
+					}
+				case 2:
+					if (isContext){
+						return String.format(context.getString(R.string.game_last_action_2_words_played_context), this.getLastTurnPoints(), 
+								words.get(0).getWord(), words.get(1).getWord());
+					}
+					else {
+						return String.format(context.getString(R.string.game_last_action_2_words_played), this.getLastTurnPoints(), opponentName, 
+								words.get(0).getWord(), words.get(1).getWord());						
+					}
+				case 3:
+					if (isContext){
+						return String.format(context.getString(R.string.game_last_action_3_words_played_context), this.getLastTurnPoints(), 
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord());
+					}
+					else {
+						return String.format(context.getString(R.string.game_last_action_3_words_played), this.getLastTurnPoints(), opponentName, 
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord());						
+					}
+				case 4:
+					if (isContext){
+						return String.format(context.getString(R.string.game_last_action_4_words_played_context), this.getLastTurnPoints(), 
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord(), words.get(3).getWord());
+					}
+					else {
+						return String.format(context.getString(R.string.game_last_action_4_words_played), this.getLastTurnPoints(), opponentName, 
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord(), words.get(3).getWord());						
+					}
+				case 5:
+					if (isContext){
+						return String.format(context.getString(R.string.game_last_action_5_words_played_context), this.getLastTurnPoints(),  
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord(), words.get(3).getWord(),
+								words.get(4).getWord());
+					}
+					else {
+						return String.format(context.getString(R.string.game_last_action_5_words_played), this.getLastTurnPoints(), opponentName, 
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord(), words.get(3).getWord(),
+								words.get(4).getWord());						
+					}
+				case 6:
+					if (isContext){
+						return String.format(context.getString(R.string.game_last_action_6_words_played_context), this.getLastTurnPoints(),  
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord(), words.get(3).getWord(),
+								words.get(4).getWord(), words.get(5).getWord());
+					}
+					else {
+						return String.format(context.getString(R.string.game_last_action_6_words_played), this.getLastTurnPoints(), opponentName, 
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord(), words.get(3).getWord(),
+								words.get(4).getWord(), words.get(5).getWord());						
+					}
+				default:
+					if (isContext){
+						return String.format(context.getString(R.string.game_last_action_more_than_6_words_played_context), this.getLastTurnPoints(),
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord(), words.get(3).getWord(),
+								words.get(4).getWord(), words.get(5).getWord(), (numWordsPlayed - 6));
+					}
+					else {
+						return String.format(context.getString(R.string.game_last_action_more_than_6_words_played), this.getLastTurnPoints(), opponentName, 
+								words.get(0).getWord(), words.get(1).getWord(),
+								words.get(2).getWord(), words.get(3).getWord(),
+								words.get(4).getWord(), words.get(5).getWord(), (numWordsPlayed - 6));						
+					}
+				}
 			case TURN_SKIPPED:
-				if (this.isContextPlayerPerformedLastTurn(contextPlayerId)){
+				if (isContext){
 					return context.getString(R.string.game_last_action_skipped_context);
 				}
 				else{
-					return String.format(context.getString(R.string.game_last_action_skipped), this.getLastTurnPlayer().getAbbreviatedName());				
+					return String.format(context.getString(R.string.game_last_action_skipped), opponentName);				
 				}		
 			
 			case RESIGNED:
-				return "resigned"; 
-				
+				if (isContext){
+					return context.getString(R.string.game_last_action_resigned_context);
+				}
+				else{
+					return String.format(context.getString(R.string.game_last_action_resigned), opponentName);				
+				}		
+			
 			case CANCELLED:
 				return "cancelled"; ///probably not associated with game action, more of a pg status
 				
@@ -367,7 +519,8 @@ public class Game implements Parcelable, Comparable<Game> {
 	
 	
 	private boolean isContextPlayerPerformedLastTurn(String contextPlayerId){
-		return this.lastTurnPlayerId == contextPlayerId;
+		Logger.d(TAG, "isContextPlayerPerformedLastTurn  this.lastTurnPlayerId=" +  this.lastTurnPlayerId + " contextPlayerId= " + contextPlayerId );
+		return this.lastTurnPlayerId.equals(contextPlayerId);
 	}
 	
 	public String getLastActionTextForList(Context context, String contextPlayerId){
@@ -376,14 +529,16 @@ public class Game implements Parcelable, Comparable<Game> {
 	// return "p";
 		Logger.d(TAG, "getLastActionTextForList lastTurn.getTurnDate()=" + this.getLastTurnDate());
 		String timeSince = Utils.getTimeSinceString(context, this.getLastTurnDate());
+		boolean isContext = this.isContextPlayerPerformedLastTurn(contextPlayerId);
+		String opponentName = this.getLastTurnPlayer().getAbbreviatedName();
 			
 			switch (this.getLastAction()){
 				case ONE_LETTER_SWAPPED:
-					if (this.isContextPlayerPerformedLastTurn(contextPlayerId)){
+					if (isContext){
 						return String.format(context.getString(R.string.game_last_action_list_swapped_1_context), timeSince);
 					}
 					else{
-						return String.format(context.getString(R.string.game_last_action_list_swapped_1), this.getLastTurnPlayer().getAbbreviatedName());				
+						return String.format(context.getString(R.string.game_last_action_list_swapped_1), opponentName);				
 					}
 				
 				case TWO_LETTERS_SWAPPED:	
@@ -392,25 +547,108 @@ public class Game implements Parcelable, Comparable<Game> {
 				case FIVE_LETTERS_SWAPPED:
 				case SIX_LETTERS_SWAPPED:
 				case SEVEN_LETTERS_SWAPPED:
-						if (this.isContextPlayerPerformedLastTurn(contextPlayerId)){
+						if (isContext){
 							return String.format(context.getString(R.string.game_last_action_list_swapped_context), timeSince, this.getLastAction());
 						}
 						else{
-							return String.format(context.getString(R.string.game_last_action_list_swapped), timeSince, this.getLastTurnPlayer().getAbbreviatedName(), this.getLastAction());				
+							return String.format(context.getString(R.string.game_last_action_list_swapped), timeSince, opponentName, this.getLastAction());				
 						}
 				case STARTED_GAME:
-					if (this.isContextPlayerPerformedLastTurn(contextPlayerId)){
+					if (isContext){
 						return String.format(context.getString(R.string.game_last_action_list_started_context), timeSince);
 					}
 					else{
-						return String.format(context.getString(R.string.game_last_action_list_started), timeSince, this.getLastTurnPlayer().getAbbreviatedName());				
+						return String.format(context.getString(R.string.game_last_action_list_started), timeSince, opponentName);				
 					}
 					
 				case WORDS_PLAYED:
-					return "loops through words";
-				
+					
+					List<PlayedWord> words = this.getLastPlayedWords();
+					int numWordsPlayed = words.size();
+
+					
+					switch (numWordsPlayed){
+					case 1:
+						if (isContext){
+							return String.format(context.getString(R.string.game_last_action_list_word_played_context), timeSince, words.get(0).getWord());
+						}
+						else {
+							return String.format(context.getString(R.string.game_last_action_list_word_played), timeSince, opponentName, words.get(0).getWord());						
+						}
+					case 2:
+						if (isContext){
+							return String.format(context.getString(R.string.game_last_action_list_2_words_played_context), timeSince, 
+									words.get(0).getWord(), words.get(1).getWord());
+						}
+						else {
+							return String.format(context.getString(R.string.game_last_action_list_2_words_played), timeSince, opponentName, 
+									words.get(0).getWord(), words.get(1).getWord());						
+						}
+					case 3:
+						if (isContext){
+							return String.format(context.getString(R.string.game_last_action_list_3_words_played_context), timeSince, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord());
+						}
+						else {
+							return String.format(context.getString(R.string.game_last_action_list_3_words_played), timeSince, opponentName, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord());						
+						}
+					case 4:
+						if (isContext){
+							return String.format(context.getString(R.string.game_last_action_list_4_words_played_context), timeSince, 
+									this.getLastPlayedWords().get(0).getWord(), this.getLastPlayedWords().get(1).getWord(),
+									this.getLastPlayedWords().get(2).getWord(), this.getLastPlayedWords().get(3).getWord());
+						}
+						else {
+							return String.format(context.getString(R.string.game_last_action_list_4_words_played), timeSince, opponentName, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord(), words.get(3).getWord());						
+						}
+					case 5:
+						if (isContext){
+							return String.format(context.getString(R.string.game_last_action_list_5_words_played_context), timeSince, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord(), words.get(3).getWord(),
+									words.get(4).getWord());
+						}
+						else {
+							return String.format(context.getString(R.string.game_last_action_list_5_words_played), timeSince, opponentName, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord(), words.get(3).getWord(),
+									words.get(4).getWord());						
+						}
+					case 6:
+						if (isContext){
+							return String.format(context.getString(R.string.game_last_action_list_6_words_played_context), timeSince, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord(), words.get(3).getWord(),
+									words.get(4).getWord(), words.get(5).getWord());
+						}
+						else {
+							return String.format(context.getString(R.string.game_last_action_list_6_words_played), timeSince, opponentName, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord(), words.get(3).getWord(),
+									words.get(4).getWord(), words.get(5).getWord());						
+						}
+					default:
+						if (isContext){
+							return String.format(context.getString(R.string.game_last_action_list_6_words_played_context), timeSince, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord(), words.get(3).getWord(),
+									words.get(4).getWord(), words.get(5).getWord(), (numWordsPlayed - 6));
+						}
+						else {
+							return String.format(context.getString(R.string.game_last_action_list_6_words_played), timeSince, opponentName, 
+									words.get(0).getWord(), words.get(1).getWord(),
+									words.get(2).getWord(), words.get(3).getWord(),
+									words.get(4).getWord(), words.get(5).getWord(), (numWordsPlayed - 6));						
+						}
+					}
+	
 				case TURN_SKIPPED:
-					if (this.isContextPlayerPerformedLastTurn(contextPlayerId)){
+					if (isContext){
 						return String.format(context.getString(R.string.game_last_action_list_skipped_context), timeSince);
 					}
 					else{

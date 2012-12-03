@@ -172,7 +172,7 @@ public class WordService {
 			this.words_m = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_m), this.type); 
 			return;
 		}
-		if (letter.equals("n") && this.words_b == null){ 
+		if (letter.equals("n") && this.words_n == null){ 
 			this.words_n = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_n), this.type);
 			return;
 		}

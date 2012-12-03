@@ -7,7 +7,7 @@ android:drawable="@drawable/btn_red_matte" />
 <item
 android:state_window_focused="false"
 android:state_enabled="false"
-android:drawable="@drawable/btn_red_matte" />
+android:drawable="@drawable/btn_down" />
 <item
 android:state_pressed="true"
 android:drawable="@drawable/btn_down" />
