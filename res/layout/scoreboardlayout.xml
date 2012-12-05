@@ -102,7 +102,7 @@
 	     	<com.riotapps.word.ui.ScoreboardFontTextView
 	            android:id="@+id/tvLettersLeft"
 	            android:text="98 letters left"
-	            android:textColor="@drawable/scoreboard_text_color"
+	            android:textColor="@color/scoreboard_text_color"
 	            android:textSize="10dp"
 	            
 	            android:gravity="right"
@@ -110,7 +110,7 @@
 	         />
 	     	<com.riotapps.word.ui.ScoreboardFontTextView
 	            android:id="@+id/tvNumPoints"
-	            android:textColor="@drawable/scoreboard_text_color"
+	            android:textColor="@color/scoreboard_text_color"
 	            android:textSize="10dp"
 	            android:layout_below="@id/tvLettersLeft"
 	             

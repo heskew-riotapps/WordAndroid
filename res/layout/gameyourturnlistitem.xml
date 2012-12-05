@@ -140,7 +140,7 @@
  			      android:id="@+id/vBottomBorder"
 				android:layout_width="fill_parent"
 				android:layout_height="1dp"
-				android:background="@drawable/form_border_color"
+				android:background="@color/form_border_color"
 				 android:layout_below="@id/rlGame"
 			 
  			     />

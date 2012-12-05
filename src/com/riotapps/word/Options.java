@@ -37,6 +37,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 		TextView tvFBAccountSettings;
 		TextView tvQuickRules;
 		TextView tvFullRules;
+		TextView tvGravatar;
 		Button bLogout;
 		
 		final FragmentActivity context = this;
@@ -51,12 +52,15 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	        
 	        tvFBAccountSettings = (TextView) findViewById(R.id.tvFBAccountSettings);
 	        tvAccountSettings = (TextView) findViewById(R.id.tvAccountSettings);
+	        tvGravatar = (TextView) findViewById(R.id.tvGravatar);
 	        if (player.isFacebookUser()){
 	        	tvAccountSettings.setVisibility(View.GONE);
+	        	tvGravatar.setVisibility(View.GONE);
 	        	tvFBAccountSettings.setOnClickListener(this);
 	        }
 	        else {
 	        	tvAccountSettings.setOnClickListener(this);
+	        	tvGravatar.setOnClickListener(this);
 	        	tvFBAccountSettings.setVisibility(View.GONE);
 	        }
 	        tvQuickRules = (TextView) findViewById(R.id.tvQuickRules);
@@ -94,6 +98,10 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	       		break;
 	        case R.id.tvFBAccountSettings:  
 	        	intent = new Intent(this, FBAccountSettings.class);
+				startActivity(intent);
+				break;
+	        case R.id.tvGravatar:  
+	        	intent = new Intent(this, Gravatar.class);
 				startActivity(intent);
 				break;
 

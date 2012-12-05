@@ -2,6 +2,8 @@ package com.riotapps.word;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
@@ -26,6 +28,8 @@ import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -37,7 +41,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,6 +59,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 NetworkTask runningTask = null;
 	 Button bRecall;
 	 Button bPlay;
+	 Button bSkip;
 	 Button bShuffle;
 	
 	 //View bottom;
@@ -142,8 +149,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	this.game = GameService.getGameFromLocal(gameId); //(Game) i.getParcelableExtra(Constants.EXTRA_GAME);
 	 	
 
-  		Gson gson = new Gson();  
-	    Logger.d(TAG, "game json=" + gson.toJson(game));
+  		//Gson gson = new Gson();  
+	    //Logger.d(TAG, "game json=" + gson.toJson(game));
 	 	
 	 	//temp
 	 	//this.game = getTempGame();
@@ -185,8 +192,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	this.fillGameState();
 	 	
 	 	this.setupButtons();
-	 	
-	 	
+
 	}
 	
 	 public Handler updateHandler = new Handler(){
@@ -205,18 +211,21 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 public void switchToRecall(){
 		//by default recall button will be hidden, it will be switched with shuffle button when a letter is dropped on the board
 		 context.runOnUiThread(new handleButtonSwitchRunnable(2));
-		 //	this.bRecall.setVisibility(View.VISIBLE);
-		 //	this.bShuffle.setVisibility(View.GONE);
 	 }
 
 	 public void switchToShuffle(){
 		 context.runOnUiThread(new handleButtonSwitchRunnable(1));
-		 
-		 
-			//this.bRecall.setVisibility(View.GONE);
-		 	//this.bShuffle.setVisibility(View.VISIBLE);
 	 }
 	 
+	 public void switchToPlay(){
+			//by default play button will be hidden, it will be switched with skip button when a letter is dropped on the board
+			 context.runOnUiThread(new handleButtonSwitchRunnable(3));
+		 }
+
+	public void switchToSkip(){
+			 context.runOnUiThread(new handleButtonSwitchRunnable(4));
+		 }
+		 
 	 
 	 public void openAlertDialog(String title, String message){
 		 DialogManager.SetupAlert(this.context, title, message);
@@ -240,6 +249,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			    		bRecall.setVisibility(View.VISIBLE);
 					 	bShuffle.setVisibility(View.GONE);
 			    		break;
+			    	case 3:
+			    		bPlay.setVisibility(View.VISIBLE);
+					 	bSkip.setVisibility(View.GONE);
+			    		break;
+			    	case 4:
+			    		bPlay.setVisibility(View.GONE);
+			    		bSkip.setVisibility(View.VISIBLE);
+			    		break;
 		    	}
 		    }
 	  }
@@ -249,21 +266,22 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 }
 	 
 	 private class handlePointsViewRunnable implements Runnable {
-		 private int activeButton; //1 = shuffle, 2 = recall 	
+		 private int points; //1 = shuffle, 2 = recall 	
 		 
 		 public handlePointsViewRunnable(int points){
-		 		if (points == 0){
+		 	this.points = points;
+		 	}
+		 
+		 
+		    public void run() {
+		    	if (points == 0){
 		 			tvNumPoints.setVisibility(View.INVISIBLE);
 		 		}
 		 		else {
 		 			tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_num_points),points));
 		 			tvNumPoints.setVisibility(View.VISIBLE);
 		 		}
-		 	}
-		 
-		 
-		    public void run() {
-		    	switch (this.activeButton){
+		    /*	switch (this.activeButton){
 			    	case 1:
 			    		bRecall.setVisibility(View.GONE);
 					 	bShuffle.setVisibility(View.VISIBLE);
@@ -273,12 +291,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 					 	bShuffle.setVisibility(View.GONE);
 			    		break;
 		    	}
+		    	*/
 		    }
 	  }
 	 
 	 private void setupButtons(){
 		this.bRecall = (Button) findViewById(R.id.bRecall);
 		this.bPlay = (Button) findViewById(R.id.bPlay);
+		this.bSkip = (Button) findViewById(R.id.bSkip);
 		this.bShuffle = (Button) findViewById(R.id.bShuffle);
 		Button bChat = (Button) findViewById(R.id.bChat);
 		Button bSwap = (Button) findViewById(R.id.bSwap);
@@ -288,6 +308,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		Button bDecline = (Button) findViewById(R.id.bDecline);
 	 	this.bShuffle.setOnClickListener(this);
 	 	bChat.setOnClickListener(this);
+	 
+	 	this.bSkip.setOnClickListener(this);
 	 	bPlayedWords.setOnClickListener(this);
 	 	this.bRecall.setOnClickListener(this);
 	 	this.bPlay.setOnClickListener(this);
@@ -295,6 +317,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	String btnTextColor = this.game.isContextPlayerTurn(this.player) ? this.getString(R.color.button_text_color_on) : this.getString(R.color.button_text_color_off);
 	 	
 	 	this.bPlay.setTextColor(Color.parseColor(btnTextColor));
+	 	this.bSkip.setTextColor(Color.parseColor(btnTextColor));
 	 	bCancel.setTextColor(Color.parseColor(btnTextColor));
 	 	bDecline.setTextColor(Color.parseColor(btnTextColor));
 	 	bResign.setTextColor(Color.parseColor(btnTextColor));
@@ -303,8 +326,19 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	bRecall.setVisibility(View.GONE);
 	 	bShuffle.setVisibility(View.VISIBLE);
 	 	
+	 	bPlay.setVisibility(View.GONE);
+	 	bSkip.setVisibility(View.VISIBLE);
+	 	
 	 	bPlay.setClickable(this.game.isContextPlayerTurn(this.player));
-	 	bSwap.setClickable(this.game.isContextPlayerTurn(this.player));
+	 	
+	 	Logger.d(TAG, "getNumLettersLeft=" + this.game.getNumLettersLeft());
+	 	
+	 //	if (this.game.getNumLettersLeft() > 0){
+	 		bSwap.setOnClickListener(this);
+	 		bSwap.setClickable(this.game.isContextPlayerTurn(this.player));
+	// 	}
+	 	
+	 	bSkip.setClickable(this.game.isContextPlayerTurn(this.player));
 	 	bResign.setClickable(this.game.isContextPlayerTurn(this.player));
 
 	 	
@@ -580,6 +614,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		        case R.id.bPlay:
 		        	this.gameSurfaceView.onPlayClick();
 					break;
+		       case R.id.bSkip:
+		        	this.gameSurfaceView.onPlayClick();
+					break;
+		       case R.id.bSwap:
+		        	this.onSwapClick();
+					break;
 	    	}
 	 }
 	
@@ -639,6 +679,42 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			 
 	    }
 	    
+	    public void handleGameSkipOnClick(){
+	    	//stop thread first
+	    	
+	    	//DialogManager.SetupAlert(context, "played", "clicked");
+ 	    	this.gameSurfaceView.stopThreadLoop();
+	    	try { 
+				String json = GameService.setupGameSkip(context, this.game);
+				
+				Logger.d(TAG, "handleGameSkipOnClick json=" + json);
+				//kick off thread to cancel game on server
+				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.SKIP);
+				runningTask.execute(Constants.REST_GAME_SKIP);
+
+			} catch (DesignByContractException e) {
+				 
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+			}
+			 
+	    }
+	    
+	    private void onSwapClick(){
+	    	
+	    	final SwapDialog dialog = new SwapDialog(context, this.contextPlayerGame.getTrayLetters());
+	    	 
+	    /*	dialog.setOnOKClickListener(new View.OnClickListener() {
+		 		@Override
+				public void onClick(View v) {
+		 			dialog.dismiss(); 
+		 			handleGameSwapOnClick();
+		 		}
+			});
+			*/ 
+	    	dialog.show();
+	    	
+	    }
+	    
 	    private class NetworkTask extends AsyncNetworkRequest{
 			
 	    	GameSurface context;
@@ -683,6 +759,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		         int statusCode = response.getStatusLine().getStatusCode();  
 	    		         
 	    		         Log.i(GameSurface.TAG, "StatusCode: " + statusCode);
+	    		         Gson gson = new Gson();
 
 	    		         switch(statusCode){  
 	    		             case 200:  
@@ -720,7 +797,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 		//refresh game board
 	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
 	    		            	 		
-	    		            	 		Gson gson = new Gson();
+	    		            	 		
 	    		            	 		Logger.d(TAG, "handleResponse game=" + gson.toJson(game));
 	    		            	 		
     		            	 			//refresh game board and buttons
@@ -730,7 +807,20 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		            	 			break;
 	    		            	 	case SKIP:
 	    		            	 		
-	    		            	 		break;
+	    		            	 		//update game list for active games for last played action
+    		            	 			
+    		            	 			//refresh player's game list with response from server
+    		            	 			
+	    		            	 		//refresh game board
+	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
+	    		            	
+	    		            	 		Logger.d(TAG, "handleResponse SKIP game=" + gson.toJson(game));
+	    		            	 		
+    		            	 			//refresh game board and buttons
+    		            	 			setupGame();
+    		            	 			gameSurfaceView.resetGameAfterPlay();
+    		            	 			
+    		            	 			break;
 	    		            	 	case SWAP:
 	    		            		 
 	    		            	 		break;
@@ -768,4 +858,66 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	     
 	    	}
 	    
+	    private class SwapDialog {
+	    	private Dialog dialog;
+	    	private Button bOK;
+	    	private Button bCancel;
+	    	private List<String> swapped = new ArrayList<String>();
+	    	private boolean letter_0 = false;
+	    	private boolean letter_1 = false;
+	    	private boolean letter_2 = false;
+	    	private boolean letter_3 = false;
+	    	private boolean letter_4 = false;
+	    	private boolean letter_5 = false;
+	    	private boolean letter_6 = false;
+	    	//private Context context;
+	    	//private Boolean onCancelFinishActivity;
+	    	
+	     
+	    	public SwapDialog(Context context, List<String> letters) {
+	    	    final Context ctx = context;
+
+	    		this.dialog = new Dialog(ctx, R.style.DialogStyle);
+	    		this.dialog.setContentView(R.layout.swapdialog);
+	    		
+	    		 //loop through letters, filling the views
+
+	    		bOK = (Button) dialog.findViewById(R.id.bOK);
+	    		bCancel = (Button) dialog.findViewById(R.id.bCancel);
+
+	    		
+	    		bCancel.setOnClickListener(new View.OnClickListener() {
+	    			@Override
+	    			public void onClick(View v) {
+	    				dialog.dismiss();
+	    			}
+	    		});
+
+	    		ImageView close = (ImageView) dialog.findViewById(R.id.img_close);
+	    		//if button is clicked, close the custom dialog
+	    		close.setOnClickListener(new View.OnClickListener() {
+	    	 		@Override
+	    			public void onClick(View v) {
+	    				dialog.dismiss();
+	    			}
+	    		});
+	    	}
+	    	
+	    	public void show(){
+	    		this.dialog.show();	
+	    	}
+	    	
+	    	public void dismiss(){
+	    		this.dialog.dismiss();	
+	    	}
+	    	
+	    	public void setOnOKClickListener(OnClickListener onClick){
+	    		this.bOK.setOnClickListener(onClick);
+	    	}
+
+	    	public void handleOKClick(){
+	    		
+	    	}
+	    	
+	    }
 }

@@ -2,7 +2,7 @@
 <resources>
 <style
     name="ScoreboardPlayerStyle" >
-   	<item name="android:textColor">@drawable/scoreboard_text_color</item>
+   	<item name="android:textColor">@color/scoreboard_text_color</item>
 	<item name="android:textSize">10dp</item>
 	<item name="android:layout_gravity">center_vertical</item>
 	<item name="android:layout_marginRight">2dp</item>

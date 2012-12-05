@@ -62,7 +62,7 @@
 		      
 		        android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:textColor="@drawable/button_text_color"
+				android:textColor="@color/button_text_color"
 	 
 				android:paddingBottom="5dp"
 				android:paddingLeft="16dp"
@@ -102,7 +102,7 @@
 		      
 		        android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:textColor="@drawable/button_text_color"
+				android:textColor="@color/button_text_color"
 	 
 				android:paddingBottom="5dp"
 				android:paddingLeft="16dp"

@@ -343,7 +343,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 		this.LoadTiles();
 	   	this.LoadTray();
-	    this.setInitialRecallShuffleState();
+	    this.setInitialButtonStates();
 	    this.resetPointsView();
 	}
 
@@ -1484,7 +1484,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    
 		    //on a drop event (action_up) check to determine if shuffle and recall buttons need to be switched
 		    if (this.currentTouchMotion == MotionEvent.ACTION_UP){
-		    	this.setRecallShuffleState();
+		    	this.setButtonStates();
 		    }
 		 } 
 	 }
@@ -2021,25 +2021,28 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	}
 	
-	private void setRecallShuffleState(){
+	private void setButtonStates(){
 		//if a letter drops on the board, hide the shuffle button and display recall button
 		//
 		//first check says "if the recall button is showing yet the try is not not full after an ACTION_UP event, switch to recall
 		if (this.isButtonStateInShuffle && !this.isTrayFull()){
 			this.parent.switchToRecall();
+			this.parent.switchToPlay();
 			this.isButtonStateInShuffle = false;
 		}
 		else if (!this.isButtonStateInShuffle && this.isTrayFull()){
 			this.parent.switchToShuffle();
+			this.parent.switchToSkip();
 			this.isButtonStateInShuffle = true;
 		}
 	}
 	
-	private void setInitialRecallShuffleState(){
+	private void setInitialButtonStates(){
 		//gameSurface class will default the button to shuffle.
 		//we just need to change it here if the tray is not full
 		if (!this.isTrayFull()){
 			this.parent.switchToRecall();
+			this.parent.switchToPlay();
 		}
 	}
 	
@@ -2061,7 +2064,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		}
 		
 	   	this.LoadTray();
-	    this.setInitialRecallShuffleState();
+	    this.setInitialButtonStates();
 	    this.resetPointsView();
 	    this.afterPlayRedraw = true;
 		this.readyToDraw = true;
@@ -2074,23 +2077,43 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 			this.parent.setPointsView(placedResult.getTotalPoints());
 			
-			//loop through placed words and show confirmation messages 
-			//placedResult.get
-			final CustomDialog dialog = new CustomDialog(context, 
-	    			context.getString(R.string.game_play_title), 
-	    			GameService.getPlacedWordsMessage(context, placedResult.getPlacedWords()),
-	    			context.getString(R.string.yes),
-	    			context.getString(R.string.no));
-	    	
-	    	dialog.setOnOKClickListener(new View.OnClickListener() {
-		 		@Override
-				public void onClick(View v) {
-		 			dialog.dismiss(); 
-		 			parent.handleGamePlayOnClick(placedResult);
-		 		}
-			});
+			if (placedResult.getPlacedTiles().size() == 0){
+				//user is skipping this turn
+				final CustomDialog dialog = new CustomDialog(context, 
+		    			context.getString(R.string.game_play_skip_title), 
+		    			context.getString(R.string.game_play_skip_confirmation_text),
+		    			context.getString(R.string.yes),
+		    			context.getString(R.string.no));
+		    	
+		    	dialog.setOnOKClickListener(new View.OnClickListener() {
+			 		@Override
+					public void onClick(View v) {
+			 			dialog.dismiss(); 
+			 			parent.handleGameSkipOnClick();
+			 		}
+				});
+	
+		    	dialog.show();
 
-	    	dialog.show();	
+			}
+			else{
+				//loop through placed words and show confirmation messages 
+				final CustomDialog dialog = new CustomDialog(context, 
+		    			context.getString(R.string.game_play_title), 
+		    			GameService.getPlacedWordsMessage(context, placedResult.getPlacedWords()),
+		    			context.getString(R.string.yes),
+		    			context.getString(R.string.no));
+		    	
+		    	dialog.setOnOKClickListener(new View.OnClickListener() {
+			 		@Override
+					public void onClick(View v) {
+			 			dialog.dismiss(); 
+			 			parent.handleGamePlayOnClick(placedResult);
+			 		}
+				});
+	
+		    	dialog.show();
+			}
 		}
 		catch (DesignByContractException e){
 			this.parent.openAlertDialog(this.parent.getString(R.string.sorry), e.getMessage());

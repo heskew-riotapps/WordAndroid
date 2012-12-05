@@ -72,6 +72,13 @@
         android:layout_weight="1.0"
         android:text="@string/gameboard_play_button_text"
     />
+	<com.riotapps.word.ui.ScoreboardButton 
+  	    style="@style/GameBoardButtonStyle"
+  	    android:id="@+id/bSkip"
+        android:layout_width="0dp" 
+        android:layout_weight="1.0"
+        android:text="@string/gameboard_skip_button_text"
+    />
     <com.riotapps.word.ui.ScoreboardButton 
         style="@style/GameBoardButtonStyle"
         android:id="@+id/bCancel"

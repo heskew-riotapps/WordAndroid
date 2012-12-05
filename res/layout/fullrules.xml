@@ -362,7 +362,7 @@
  		<RelativeLayout
  		    android:layout_width="fill_parent"
  		    android:layout_height="wrap_content"
- 		    android:background="@drawable/content_area_background_color"
+ 		    android:background="@color/content_area_background_color"
  		 >
     	<RelativeLayout
     		android:layout_width="wrap_content"

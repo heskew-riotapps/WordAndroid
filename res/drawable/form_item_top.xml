@@ -3,7 +3,7 @@
 	android:shape="rectangle" 
 	android:padding="10dp"
 	 >
-    <solid android:color="@drawable/form_border_color"/>
+    <solid android:color="@color/form_border_color"/>
     <!-- i have no idea why bottom radiuses these have to be backwards (bug in emulator)-->
     <corners 
         android:radius="2dp"

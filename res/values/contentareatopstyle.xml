@@ -2,7 +2,7 @@
 <resources>
 <style
     name="ContentAreaTopStyle" >
-   	<item name="android:textColor">@drawable/sub_text_color</item>
+   	<item name="android:textColor">@color/sub_text_color</item>
  	<item name="android:layout_height">10dp</item>
  	<item name="android:layout_width">fill_parent</item>
 </style>

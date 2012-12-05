@@ -23,6 +23,7 @@
 	<string name="settings">settings</string>
 	<string name="account_settings">account settings</string>
 	<string name="fb_account_settings">manage your nickname</string>
+	<string name="options_profile_image">your profile image</string>
 	<string name="options">options</string>
 	<string name="logout">logout</string>
 	<string name="rules">game rules</string>
@@ -298,6 +299,8 @@
  	<string name="gameboard_cancel_button_text">cancel</string>
  	<string name="gameboard_played_words_button_text">played\nwords</string>
  	<string name="gameboard_swap_button_text">swap</string>
+ 	<string name="gameboard_swap_dialog_button_text">swap letters</string>
+ 	<string name="gameboard_swap_dialog_title_text">tap the letter(s) to swap</string>
  	<string name="find_player">enter your opponent\'s nickname:</string>
  	<string name="find_player_button_text">find opponent</string>
  	<string name="find_player_results_button_text">add this opponent to game</string>
@@ -427,6 +430,8 @@
    		<string name="game_play_10_invalid_words">%1$s, %2$s, %3$s, %4$s, %5$s, %6$s, %7$s, %8$s, %9$s and %10$s are not in our dictionary. Wow.  That\'s a boatload of invalid words.</string>
     	<string name="welcome_facebook_login_issue">Facebook login is having an issue.</string>	
     	<string name="game_play_title">about to play</string>
+    	<string name="game_play_skip_title">about to skip a turn</string>
+    	<string name="game_play_skip_confirmation_text">are you sure?</string>
     	<string name="game_play_1_word">%s\n\nAre you sure?</string>
   		<string name="game_play_2_words">%1$s\n%2$s\n\nAre you sure?</string>
   		<string name="game_play_3_words">%1$s\n%2$s\n%3$s\n\nAre you sure?</string>

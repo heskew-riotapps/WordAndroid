@@ -105,6 +105,7 @@ public class Constants {
 	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_all_by_fb";
 	public static final String REST_CANCEL_GAME = REST_URL_SITE + "games/cancel";
 	public static final String REST_GAME_PLAY = REST_URL_SITE + "games/play";
+	public static final String REST_GAME_SKIP = REST_URL_SITE + "games/skip";
 	
 	/**=============================================
 	 * rails

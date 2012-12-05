@@ -47,6 +47,11 @@
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/TextLineItemCenteredStyle"
+        android:text="@string/options_profile_image" 
+        android:id="@+id/tvGravatar"
+        />
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/TextLineItemCenteredStyle"
         android:text="@string/fb_account_settings" 
         android:id="@+id/tvFBAccountSettings"
         />

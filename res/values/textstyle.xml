@@ -2,7 +2,7 @@
 <resources>
 <style
     name="TextStyle" >
-   	<item name="android:textColor">@drawable/content_font_color</item>
+   	<item name="android:textColor">@color/content_font_color</item>
    	<item name="android:textSize">16dp</item>
    	<item name="android:textStyle">bold</item>
     

@@ -159,6 +159,26 @@ public class GameService {
 		return gson.toJson(turn);
 	}
 	
+	public static String setupGameSkip(Context ctx, Game game) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupGameSkip");
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportGameSkip turn = new TransportGameSkip();
+		turn.setToken(player.getAuthToken());
+		turn.setGameId(game.getId());
+		turn.setTurn(game.getTurn());
+		 
+		return gson.toJson(turn);
+	}
+	
+	
 	public static String setupGetGame(Context ctx, String gameId) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGetGame");
@@ -620,6 +640,12 @@ public class GameService {
 		PlacedResult placedResult = new PlacedResult();
 		
 		List<GameTile> placedTiles = getGameTiles(boardTiles);
+		
+		//check to see if user is skipping, if so just return empty placedResult
+		if (placedTiles.size() == 0){
+			return placedResult;
+		}
+		
 		List<PlayedTile> playedTiles = game.getPlayedTiles();
 		
 		//let's get these collections in the tileId order for certain
