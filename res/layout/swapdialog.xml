@@ -41,41 +41,147 @@
         android:paddingRight="3dp"
         android:paddingTop="3dp"
 		/>
-     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:layout_below="@id/alert_title"       
-     >
-    <LinearLayout 
+ 
+    <RelativeLayout 
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/alert_title"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:id="@+id/rlLetters"
     >
      <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"        
+        android:layout_height="wrap_content" 
+        android:id="@+id/rlLetter1"   
+        android:layout_marginLeft="5dp"     
      >
-         <ImageView
-             android:layout_width="50dp"
-             android:layout_height="50dp"
-             android:background="@drawable/tray_tile_bg"
-             android:id="@+id/ivLetter1"
+         <com.riotapps.word.ui.ScoreboardFontTextView 
+              android:layout_width="42dp"
+             android:layout_height="42dp"
+              android:background="@drawable/tray_tile_bg"
+              android:id="@+id/tvLetter1"
+             android:text="D"
+             android:textSize="36dp"
+            android:gravity="center"
              />
-         <TextView 
-             android:text="T"
-             android:textSize="40dp"
-             android:layout_marginTop="-40dp"
-             android:layout_marginLeft="20dp"
-             android:layout_below="@id/ivLetter1"
+     </RelativeLayout>
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"  
+        android:id="@+id/rlLetter2" 
+        android:layout_toRightOf="@id/rlLetter1"   
+        android:layout_marginLeft="2dp"
+     >
+         <com.riotapps.word.ui.ScoreboardFontTextView 
+              android:layout_width="42dp"
+             android:layout_height="42dp"
+              android:background="@drawable/tray_tile_bg"
+              android:id="@+id/tvLetter2"
+             android:text="S"
+             android:textSize="36dp"
+            android:gravity="center"
              />
          
-     </RelativeLayout>   
-    </LinearLayout>
+     </RelativeLayout>
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"  
+        android:id="@+id/rlLetter3" 
+        android:layout_toRightOf="@id/rlLetter2"   
+        android:layout_marginLeft="2dp"
+     >
+         <com.riotapps.word.ui.ScoreboardFontTextView 
+              android:layout_width="42dp"
+             android:layout_height="42dp"
+              android:background="@drawable/tray_tile_bg"
+              android:id="@+id/tvLetter3"
+             android:text="S"
+             android:textSize="36dp"
+            android:gravity="center"
+             />
+         
+     </RelativeLayout>  
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"  
+        android:id="@+id/rlLetter4" 
+        android:layout_toRightOf="@id/rlLetter3"   
+        android:layout_marginLeft="2dp"
+     >
+         <com.riotapps.word.ui.ScoreboardFontTextView 
+              android:layout_width="42dp"
+             android:layout_height="42dp"
+              android:background="@drawable/tray_tile_bg"
+              android:id="@+id/tvLetter4"
+             android:text="F"
+             android:textSize="36dp"
+             android:gravity="center"
+             />
+         
+     </RelativeLayout> 
+         <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"  
+        android:id="@+id/rlLetter5" 
+        android:layout_toRightOf="@id/rlLetter4"   
+        android:layout_marginLeft="2dp"
+     >
+         <com.riotapps.word.ui.ScoreboardFontTextView 
+              android:layout_width="42dp"
+             android:layout_height="42dp"
+              android:background="@drawable/tray_tile_bg"
+              android:id="@+id/tvLetter5"
+             android:text="P"
+             android:textSize="36dp"
+             android:gravity="center"
+             />
+         
+     </RelativeLayout>
+           <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"  
+        android:id="@+id/rlLetter6" 
+        android:layout_toRightOf="@id/rlLetter5"   
+        android:layout_marginLeft="2dp"
+     >
+         <com.riotapps.word.ui.ScoreboardFontTextView 
+              android:layout_width="42dp"
+             android:layout_height="42dp"
+              android:background="@drawable/tray_tile_bg"
+              android:id="@+id/tvLetter6"
+             android:text="P"
+             android:textSize="36dp"
+             android:gravity="center"
+             />
+         
+     </RelativeLayout>        
+         
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"  
+        android:id="@+id/rlLetter7" 
+        android:layout_toRightOf="@id/rlLetter6"   
+        android:layout_marginLeft="2dp"
+     >
+         <com.riotapps.word.ui.ScoreboardFontTextView 
+              android:layout_width="42dp"
+             android:layout_height="42dp"
+              android:background="@drawable/tray_tile_bg"
+              android:id="@+id/tvLetter7"
+             android:text="P"
+             android:textSize="36dp"
+             android:gravity="center"
+             />
+         
+     </RelativeLayout>        
+           
     </RelativeLayout>
+   
      <RelativeLayout  
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@id/alert_text"
+    android:layout_below="@id/rlLetters"
     >
 	    <LinearLayout
 	        style="@style/FormButtonAreaStyle"

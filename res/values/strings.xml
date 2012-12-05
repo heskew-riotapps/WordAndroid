@@ -301,6 +301,7 @@
  	<string name="gameboard_swap_button_text">swap</string>
  	<string name="gameboard_swap_dialog_button_text">swap letters</string>
  	<string name="gameboard_swap_dialog_title_text">tap the letter(s) to swap</string>
+ 	<string name="gameboard_swap_dialog_please_choose_text">please choose the letters to swap or tap cancel</string>
  	<string name="find_player">enter your opponent\'s nickname:</string>
  	<string name="find_player_button_text">find opponent</string>
  	<string name="find_player_results_button_text">add this opponent to game</string>

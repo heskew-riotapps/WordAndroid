@@ -858,18 +858,25 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	     
 	    	}
 	    
-	    private class SwapDialog {
+	    private class SwapDialog  implements View.OnClickListener{ 
 	    	private Dialog dialog;
 	    	private Button bOK;
 	    	private Button bCancel;
 	    	private List<String> swapped = new ArrayList<String>();
-	    	private boolean letter_0 = false;
 	    	private boolean letter_1 = false;
 	    	private boolean letter_2 = false;
 	    	private boolean letter_3 = false;
 	    	private boolean letter_4 = false;
 	    	private boolean letter_5 = false;
 	    	private boolean letter_6 = false;
+	    	private boolean letter_7 = false;
+	    	private TextView tvLetter1;
+	    	private TextView tvLetter2;
+	    	private TextView tvLetter3;
+	    	private TextView tvLetter4;
+	    	private TextView tvLetter5;
+	    	private TextView tvLetter6;
+	    	private TextView tvLetter7;
 	    	//private Context context;
 	    	//private Boolean onCancelFinishActivity;
 	    	
@@ -883,8 +890,33 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		 //loop through letters, filling the views
 
 	    		bOK = (Button) dialog.findViewById(R.id.bOK);
+	    		bOK.setOnClickListener(this);
 	    		bCancel = (Button) dialog.findViewById(R.id.bCancel);
+	    		tvLetter1 = (TextView) dialog.findViewById(R.id.tvLetter1);
+	    		tvLetter2 = (TextView) dialog.findViewById(R.id.tvLetter2);
+	    		tvLetter3 = (TextView) dialog.findViewById(R.id.tvLetter3);
+	    		tvLetter4 = (TextView) dialog.findViewById(R.id.tvLetter4);
+	    		tvLetter5 = (TextView) dialog.findViewById(R.id.tvLetter5);
+	    		tvLetter6 = (TextView) dialog.findViewById(R.id.tvLetter6);
+	    		tvLetter7 = (TextView) dialog.findViewById(R.id.tvLetter7);
 
+	    		tvLetter1.setText(letters.get(0));
+	    		tvLetter2.setText(letters.get(1));
+	    		tvLetter3.setText(letters.get(2));
+	    		tvLetter4.setText(letters.get(3));
+	    		tvLetter5.setText(letters.get(4));
+	    		tvLetter6.setText(letters.get(5));
+	    		tvLetter7.setText(letters.get(6));
+	    		
+	    		tvLetter1.setOnClickListener(this);
+	    		tvLetter2.setOnClickListener(this);
+	    		tvLetter3.setOnClickListener(this);
+	    		tvLetter4.setOnClickListener(this);
+	    		tvLetter5.setOnClickListener(this);
+	    		tvLetter6.setOnClickListener(this);
+	    		tvLetter7.setOnClickListener(this);
+
+	    		
 	    		
 	    		bCancel.setOnClickListener(new View.OnClickListener() {
 	    			@Override
@@ -916,8 +948,89 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	}
 
 	    	public void handleOKClick(){
+	    		//if no swapped letters were picked, inform user
+	    		if (!letter_1 && !letter_2 && !letter_3 && !letter_4 && !letter_5 && !letter_6 && !letter_7){
+	    			DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.gameboard_swap_dialog_please_choose_text), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+	    		}
+	    		//call handler in main class, passing the swapped letters
+	    		else{
+	    			
+	    		}
+	    		
 	    		
 	    	}
+
+			@Override
+			public void onClick(View v) {
+				switch(v.getId()){  
+				case R.id.bOK:
+					this.handleOKClick();
+					break;
+				case R.id.tvLetter1:
+					if (!letter_1){
+						tvLetter1.setBackgroundResource(R.drawable.tray_tile_swap_bg);
+					}
+					else{
+						tvLetter1.setBackgroundResource(R.drawable.tray_tile_bg);
+					}
+					letter_1 = !letter_1;
+					break;
+				case R.id.tvLetter2:
+					if (!letter_2){
+						tvLetter2.setBackgroundResource(R.drawable.tray_tile_swap_bg);
+					}
+					else{
+						tvLetter2.setBackgroundResource(R.drawable.tray_tile_bg);
+					}
+					letter_2 = !letter_2;
+					break;
+				case R.id.tvLetter3:
+					if (!letter_3){
+						tvLetter3.setBackgroundResource(R.drawable.tray_tile_swap_bg);
+					}
+					else{
+						tvLetter3.setBackgroundResource(R.drawable.tray_tile_bg);
+					}
+					letter_3 = !letter_3;
+					break;
+				case R.id.tvLetter4:
+					if (!letter_4){
+						tvLetter4.setBackgroundResource(R.drawable.tray_tile_swap_bg);
+					}
+					else{
+						tvLetter4.setBackgroundResource(R.drawable.tray_tile_bg);
+					}
+					letter_4 = !letter_4;
+					break;
+				case R.id.tvLetter5:
+					if (!letter_5){
+						tvLetter5.setBackgroundResource(R.drawable.tray_tile_swap_bg);
+					}
+					else{
+						tvLetter5.setBackgroundResource(R.drawable.tray_tile_bg);
+					}
+					letter_5 = !letter_5;
+					break;
+				case R.id.tvLetter6:
+					if (!letter_6){
+						tvLetter6.setBackgroundResource(R.drawable.tray_tile_swap_bg);
+					}
+					else{
+						tvLetter6.setBackgroundResource(R.drawable.tray_tile_bg);
+					}
+					letter_6 = !letter_6;
+					break;
+				case R.id.tvLetter7:
+					if (!letter_7){
+						tvLetter7.setBackgroundResource(R.drawable.tray_tile_swap_bg);
+					}
+					else{
+						tvLetter7.setBackgroundResource(R.drawable.tray_tile_bg);
+					}
+					letter_7 = !letter_7;
+					break;
+				}
+			}
 	    	
 	    }
 }
