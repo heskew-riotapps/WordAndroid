@@ -8,18 +8,23 @@ import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import com.google.gson.Gson;
+import com.riotapps.word.hooks.AlphabetService;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
+import com.riotapps.word.hooks.WordService;
 import com.riotapps.word.ui.CustomDialog;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameAction.GameActionType;
 import com.riotapps.word.ui.GameState;
 import com.riotapps.word.ui.GameStateService;
 import com.riotapps.word.ui.GameSurfaceView;
+import com.riotapps.word.ui.GameThread;
 import com.riotapps.word.ui.PlacedResult;
+import com.riotapps.word.ui.WordLoaderThread;
+import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
@@ -72,10 +77,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	private int scoreboardHeight;
 	private Game game;
 	private GameState gameState;
+	private AlphabetService alphabetService;
+//	private WordService wordService;
  
 	private Player player;
 	private TextView tvNumPoints;
 	private PlayerGame contextPlayerGame;
+	
+	private WordLoaderThread wordLoaderThread = null;
  
 
 	public Game getGame() {
@@ -156,7 +165,13 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	//this.game = getTempGame();
 
 		this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
-		this.gameSurfaceView.construct(this);
+		this.alphabetService = new AlphabetService(context);
+		//this.wordService = new WordService(context);
+		
+		ApplicationContext appContext = (ApplicationContext)this.getApplicationContext();
+		//appContext.getWordService()
+		
+		this.gameSurfaceView.construct(this, this.alphabetService, appContext.getWordService());
 		this.gameSurfaceView.setParent(this);
 		
 	
@@ -167,6 +182,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	
 		this.setupGame();
 	 	
+		
+		this.wordLoaderThread = new WordLoaderThread(appContext.getWordService(), this.game, this.player.getId());
 	 	
 	 //	this.gameSurfaceView.setGame(game);
 	 	//retrieve game from server
@@ -508,6 +525,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		Log.d(TAG, "onDestroy called");
 		
 		this.gameSurfaceView.onDestroy();
+		
+		if (this.wordLoaderThread != null){
+			this.wordLoaderThread.interrupt();
+			this.wordLoaderThread = null;
+		}
+		
 		super.onDestroy();
 	}
 
@@ -516,6 +539,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onStop called");
 		this.gameSurfaceView.onStop();
+		if (this.wordLoaderThread != null){
+			this.wordLoaderThread.interrupt();
+			this.wordLoaderThread = null;
+		}
+		
+		
 		super.onStop();
 		
 		
@@ -530,6 +559,11 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		this.runningTask.cancel(true);
     	}
 		this.gameSurfaceView.onPause();
+		
+		if (this.wordLoaderThread != null){
+			this.wordLoaderThread.interrupt();
+			this.wordLoaderThread = null;
+		}
 		
 	}
 
@@ -604,6 +638,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		        	intent = new Intent(this, GameHistory.class);
 		        	intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
 					startActivity(intent);
+					this.finish();
 					break;
 		        case R.id.bCancel:  
 		        	this.handleCancel();
@@ -715,6 +750,26 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	
 	    }
 	    
+	    public void handleGameSwapOnClick(List<String> swappedLetters){
+	    	//stop thread first
+	    	
+	    	//DialogManager.SetupAlert(context, "played", "clicked");
+ 	    	this.gameSurfaceView.stopThreadLoop();
+	    	try { 
+				String json = GameService.setupGameSwap(context, this.game, swappedLetters);
+				
+				Logger.d(TAG, "handleGameSkipOnClick json=" + json);
+				//kick off thread to cancel game on server
+				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.SWAP);
+				runningTask.execute(Constants.REST_GAME_SWAP);
+
+			} catch (DesignByContractException e) {
+				 
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+			}
+			 
+	    }
+	    
 	    private class NetworkTask extends AsyncNetworkRequest{
 			
 	    	GameSurface context;
@@ -822,7 +877,20 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		            	 			
     		            	 			break;
 	    		            	 	case SWAP:
-	    		            		 
+	    		            	 		
+	    		            	 		//update game list for active games for last played action
+    		            	 			
+    		            	 			//refresh player's game list with response from server
+    		            	 			
+	    		            	 		//refresh game board
+	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
+	    		            	
+	    		            	 		Logger.d(TAG, "handleResponse SWAP game=" + gson.toJson(game));
+	    		            	 		
+    		            	 			//refresh game board and buttons
+    		            	 			setupGame();
+    		            	 			gameSurfaceView.resetGameAfterPlay();
+
 	    		            	 		break;
 	    		            	 
 	    		            	 }
@@ -863,6 +931,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	private Button bOK;
 	    	private Button bCancel;
 	    	private List<String> swapped = new ArrayList<String>();
+	    	private List<String> letters = new ArrayList<String>();
 	    	private boolean letter_1 = false;
 	    	private boolean letter_2 = false;
 	    	private boolean letter_3 = false;
@@ -884,6 +953,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	public SwapDialog(Context context, List<String> letters) {
 	    	    final Context ctx = context;
 
+	    	    this.letters = letters;
 	    		this.dialog = new Dialog(ctx, R.style.DialogStyle);
 	    		this.dialog.setContentView(R.layout.swapdialog);
 	    		
@@ -899,6 +969,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		tvLetter5 = (TextView) dialog.findViewById(R.id.tvLetter5);
 	    		tvLetter6 = (TextView) dialog.findViewById(R.id.tvLetter6);
 	    		tvLetter7 = (TextView) dialog.findViewById(R.id.tvLetter7);
+	   	
+	    		TextView tvValue1 = (TextView) dialog.findViewById(R.id.tvValue1);
+	    		TextView tvValue2 = (TextView) dialog.findViewById(R.id.tvValue2);
+	    		TextView tvValue3 = (TextView) dialog.findViewById(R.id.tvValue3);
+	    		TextView tvValue4 = (TextView) dialog.findViewById(R.id.tvValue4);
+	    		TextView tvValue5 = (TextView) dialog.findViewById(R.id.tvValue5);
+	    		TextView tvValue6 = (TextView) dialog.findViewById(R.id.tvValue6);
+	    		TextView tvValue7 = (TextView) dialog.findViewById(R.id.tvValue7);
 
 	    		tvLetter1.setText(letters.get(0));
 	    		tvLetter2.setText(letters.get(1));
@@ -907,6 +985,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		tvLetter5.setText(letters.get(4));
 	    		tvLetter6.setText(letters.get(5));
 	    		tvLetter7.setText(letters.get(6));
+	    		
+	    		tvValue1.setText(Integer.toString(alphabetService.getLetterValue(letters.get(0))));
+	    		tvValue2.setText(Integer.toString(alphabetService.getLetterValue(letters.get(1))));
+	    		tvValue3.setText(Integer.toString(alphabetService.getLetterValue(letters.get(2))));
+	    		tvValue4.setText(Integer.toString(alphabetService.getLetterValue(letters.get(3))));
+	    		tvValue5.setText(Integer.toString(alphabetService.getLetterValue(letters.get(4))));
+	    		tvValue6.setText(Integer.toString(alphabetService.getLetterValue(letters.get(5))));
+	    		tvValue7.setText(Integer.toString(alphabetService.getLetterValue(letters.get(6))));
 	    		
 	    		tvLetter1.setOnClickListener(this);
 	    		tvLetter2.setOnClickListener(this);
@@ -942,10 +1028,6 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	public void dismiss(){
 	    		this.dialog.dismiss();	
 	    	}
-	    	
-	    	public void setOnOKClickListener(OnClickListener onClick){
-	    		this.bOK.setOnClickListener(onClick);
-	    	}
 
 	    	public void handleOKClick(){
 	    		//if no swapped letters were picked, inform user
@@ -954,10 +1036,17 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		}
 	    		//call handler in main class, passing the swapped letters
 	    		else{
+	    			if (letter_1) {this.swapped.add(this.letters.get(0));}
+	    			if (letter_2) {this.swapped.add(this.letters.get(1));}
+	    			if (letter_3) {this.swapped.add(this.letters.get(2));}
+	    			if (letter_4) {this.swapped.add(this.letters.get(3));}
+	    			if (letter_5) {this.swapped.add(this.letters.get(4));}
+	    			if (letter_6) {this.swapped.add(this.letters.get(5));}
+	    			if (letter_7) {this.swapped.add(this.letters.get(6));}
 	    			
+	    			this.dismiss();
+	    			handleGameSwapOnClick(this.swapped);
 	    		}
-	    		
-	    		
 	    	}
 
 			@Override

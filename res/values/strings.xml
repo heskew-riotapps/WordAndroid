@@ -416,6 +416,7 @@
   		<string name="game_play_confirm_skip">You didn\'t place any letters. Are you sure you want to skip this turn?</string>
   		<string name="game_play_too_few_letters">Please form a word at least 2 letters long.</string>
   		<string name="game_play_invalid_start_position">To get started, at least one letter must be placed on a smiley.</string>
+  		<string name="game_play_invalid_overlay">You can only overlay previously played letters with a different letter.</string>
   		<string name="game_play_invalid_axis">Please be sure to place letters in a single axis with no gaps between letters.</string>
   		<string name="game_play_invalid_gaps">Sorry, there cannot be any gaps between letters.</string>
   		<string name="game_play_invalid_gaps_placed_words">All placed letters must be connected together or to a previously played letter.</string>
@@ -449,4 +450,8 @@
    		<string name="game_play_14_words">%1$s\n%2$s\n%3$s\n%4$s\n%5$s\n%6$s\n%7$s\n%8$s\n%9$s\n%10$s\n%11$s\n%12$s\n%13$s\n%14$s\n\nAre you sure?</string>
    		<string name="game_play_15_words">%1$s\n%2$s\n%3$s\n%4$s\n%5$s\n%6$s\n%7$s\n%8$s\n%9$s\n%10$s\n%11$s\n%12$s\n%13$s\n%14$s\n%15$s\n\nAre you sure?</string>
    		<string name="game_play_16_words">%1$s\n%2$s\n%3$s\n%4$s\n%5$s\n%6$s\n%7$s\n%8$s\n%9$s\n%10$s\n%11$s\n%12$s\n%13$s\n%14$s\n%15$s\n%16$s\n\nAre you sure?</string>   												
+
+		<string name="game_history_turn_info">played by %1$s in turn %2$s for %3$s points</string>
+		<string name="game_history_title">played words</string>
+		<string name="unknown_player_name">unknown</string>
 </resources>

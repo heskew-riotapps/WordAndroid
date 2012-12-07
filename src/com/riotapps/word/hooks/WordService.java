@@ -118,7 +118,7 @@ public class WordService {
 		this.loadList("z");
 	}
 	
-	private void loadList(String letter){
+	public void loadList(String letter){
 
 		if (letter.equals("a") && this.words_a == null){ 
 			this.words_a = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_a), this.type);

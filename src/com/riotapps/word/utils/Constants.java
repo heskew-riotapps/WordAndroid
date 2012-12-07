@@ -106,6 +106,7 @@ public class Constants {
 	public static final String REST_CANCEL_GAME = REST_URL_SITE + "games/cancel";
 	public static final String REST_GAME_PLAY = REST_URL_SITE + "games/play";
 	public static final String REST_GAME_SKIP = REST_URL_SITE + "games/skip";
+	public static final String REST_GAME_SWAP = REST_URL_SITE + "games/swap";
 	
 	/**=============================================
 	 * rails

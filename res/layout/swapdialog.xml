@@ -43,7 +43,7 @@
 		/>
  
     <RelativeLayout 
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/alert_title"
         android:paddingTop="5dp"
@@ -51,7 +51,7 @@
         android:id="@+id/rlLetters"
     >
      <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="42dp"
         android:layout_height="wrap_content" 
         android:id="@+id/rlLetter1"   
         android:layout_marginLeft="5dp"     
@@ -61,13 +61,23 @@
              android:layout_height="42dp"
               android:background="@drawable/tray_tile_bg"
               android:id="@+id/tvLetter1"
-             android:text="D"
-             android:textSize="36dp"
+             android:textSize="32dp"
             android:gravity="center"
+            android:paddingRight="4dp"
+             />
+          <TextView 
+ 			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"  
+        	android:id="@+id/tvValue1" 
+        	android:textSize="10dp"
+        	android:layout_alignTop="@id/rlLetter1"   
+        	android:layout_marginRight="1dp"
+        	android:layout_marginTop=".5dp"
+            android:layout_alignParentRight="true" 
              />
      </RelativeLayout>
       <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="42dp"
         android:layout_height="wrap_content"  
         android:id="@+id/rlLetter2" 
         android:layout_toRightOf="@id/rlLetter1"   
@@ -78,14 +88,23 @@
              android:layout_height="42dp"
               android:background="@drawable/tray_tile_bg"
               android:id="@+id/tvLetter2"
-             android:text="S"
-             android:textSize="36dp"
+             android:textSize="32dp"
             android:gravity="center"
+            android:paddingRight="4dp"
              />
-         
+          <TextView 
+ 			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"  
+        	android:id="@+id/tvValue2" 
+        	android:textSize="10dp"
+        	android:layout_alignTop="@id/rlLetter2"   
+        	android:layout_marginRight="1dp"
+        	android:layout_marginTop=".5dp"
+            android:layout_alignParentRight="true" 
+             />
      </RelativeLayout>
       <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="42dp"
         android:layout_height="wrap_content"  
         android:id="@+id/rlLetter3" 
         android:layout_toRightOf="@id/rlLetter2"   
@@ -96,14 +115,23 @@
              android:layout_height="42dp"
               android:background="@drawable/tray_tile_bg"
               android:id="@+id/tvLetter3"
-             android:text="S"
-             android:textSize="36dp"
+             android:textSize="32dp"
             android:gravity="center"
+            android:paddingRight="4dp"
              />
-         
+          <TextView 
+ 			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"  
+        	android:id="@+id/tvValue3" 
+        	android:textSize="10dp"
+        	android:layout_alignTop="@id/rlLetter3"   
+        	android:layout_marginRight="1dp"
+        	android:layout_marginTop=".5dp"
+            android:layout_alignParentRight="true" 
+             />
      </RelativeLayout>  
       <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="42dp"
         android:layout_height="wrap_content"  
         android:id="@+id/rlLetter4" 
         android:layout_toRightOf="@id/rlLetter3"   
@@ -114,14 +142,23 @@
              android:layout_height="42dp"
               android:background="@drawable/tray_tile_bg"
               android:id="@+id/tvLetter4"
-             android:text="F"
-             android:textSize="36dp"
+             android:textSize="32dp"
              android:gravity="center"
+             android:paddingRight="4dp"
              />
-         
+          <TextView 
+ 			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"  
+        	android:id="@+id/tvValue4" 
+        	android:textSize="10dp"
+        	android:layout_alignTop="@id/rlLetter4"   
+        	android:layout_marginRight="1dp"
+        	android:layout_marginTop=".5dp"
+            android:layout_alignParentRight="true" 
+             />
      </RelativeLayout> 
          <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="42dp"
         android:layout_height="wrap_content"  
         android:id="@+id/rlLetter5" 
         android:layout_toRightOf="@id/rlLetter4"   
@@ -132,14 +169,23 @@
              android:layout_height="42dp"
               android:background="@drawable/tray_tile_bg"
               android:id="@+id/tvLetter5"
-             android:text="P"
-             android:textSize="36dp"
+             android:textSize="32dp"
              android:gravity="center"
+             android:paddingRight="4dp"
              />
-         
+          <TextView 
+ 			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"  
+        	android:id="@+id/tvValue5" 
+        	android:textSize="10dp"
+        	android:layout_alignTop="@id/rlLetter5"   
+        	android:layout_marginRight="1dp"
+        	android:layout_marginTop=".5dp"
+            android:layout_alignParentRight="true" 
+             />
      </RelativeLayout>
            <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="42dp"
         android:layout_height="wrap_content"  
         android:id="@+id/rlLetter6" 
         android:layout_toRightOf="@id/rlLetter5"   
@@ -150,15 +196,24 @@
              android:layout_height="42dp"
               android:background="@drawable/tray_tile_bg"
               android:id="@+id/tvLetter6"
-             android:text="P"
-             android:textSize="36dp"
+             android:textSize="32dp"
              android:gravity="center"
+             android:paddingRight="4dp"
              />
-         
+         <TextView 
+ 			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"  
+        	android:id="@+id/tvValue6" 
+        	android:textSize="10dp"
+        	android:layout_alignTop="@id/rlLetter6"   
+        	android:layout_marginRight="1dp"
+        	android:layout_marginTop=".5dp"
+            android:layout_alignParentRight="true" 
+             />
      </RelativeLayout>        
          
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="42dp"
         android:layout_height="wrap_content"  
         android:id="@+id/rlLetter7" 
         android:layout_toRightOf="@id/rlLetter6"   
@@ -169,9 +224,19 @@
              android:layout_height="42dp"
               android:background="@drawable/tray_tile_bg"
               android:id="@+id/tvLetter7"
-             android:text="P"
-             android:textSize="36dp"
+             android:textSize="32dp"
              android:gravity="center"
+             android:paddingRight="4dp"
+             />
+         <TextView 
+ 			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"  
+        	android:id="@+id/tvValue7" 
+        	android:textSize="10dp"
+        	android:layout_alignTop="@id/rlLetter7"   
+        	android:layout_marginRight="1dp"
+        	android:layout_marginTop=".5dp"
+            android:layout_alignParentRight="true" 
              />
          
      </RelativeLayout>        

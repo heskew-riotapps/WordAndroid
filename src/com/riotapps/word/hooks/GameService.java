@@ -178,6 +178,26 @@ public class GameService {
 		return gson.toJson(turn);
 	}
 	
+	public static String setupGameSwap(Context ctx, Game game, List<String> swappedLetters) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupGameSkip");
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportGameSwap turn = new TransportGameSwap();
+		turn.setToken(player.getAuthToken());
+		turn.setGameId(game.getId());
+		turn.setTurn(game.getTurn());
+		turn.setSwappedLetters(swappedLetters);
+		 
+		return gson.toJson(turn);
+	}
+	
 	
 	public static String setupGetGame(Context ctx, String gameId) throws DesignByContractException{
 		 
@@ -645,6 +665,12 @@ public class GameService {
 		if (placedTiles.size() == 0){
 			return placedResult;
 		}
+		
+		//check to determine that overlays did not happen on same letter
+		for (GameTile tile : placedTiles){
+			Check.Require(tile.getOriginalLetter() != tile.getPlacedLetter(),  context.getString(R.string.game_play_invalid_overlay));
+		}
+		
 		
 		List<PlayedTile> playedTiles = game.getPlayedTiles();
 		

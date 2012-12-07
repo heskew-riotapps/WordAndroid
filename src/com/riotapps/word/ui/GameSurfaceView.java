@@ -283,15 +283,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		// TODO Auto-generated constructor stub
 	}
 
-	public void construct(Context context) {
+	public void construct(Context context, AlphabetService alphabetService, WordService wordService ) {
 		Log.w(TAG, "construct called");
 		
 		this.context = context;
 		this.layoutService = new TileLayoutService();
 		this.defaultLayout = layoutService.GetDefaultLayout(context);
 		
-		this.alphabetService = new AlphabetService(context);
-		this.wordService = new WordService(context);
+		this.alphabetService = alphabetService; //new AlphabetService(context);
+		this.wordService = wordService;
 		//
 		  this.setZOrderOnTop(true);
 		 this.holder = getHolder();

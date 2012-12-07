@@ -70,11 +70,16 @@ public class PlayerService {
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+	 	nickname = nickname.trim();
+	 	email = email.trim();
+	 	password = password.trim();
+	 	
 	 	//check funky characters in nickname [a-zA-Z0-9\-#\.\(\)\/%&\s]
 		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
 		Check.Require(nickname.length() > 0, ctx.getString(R.string.validation_nickname_required));
 		Check.Require(password.length() > 0, ctx.getString(R.string.validation_password_required));
-		Check.Require(password.length() >= 6, ctx.getString(R.string.validation_password_too_short));
+		Check.Require(password.length() >= 4, ctx.getString(R.string.validation_password_too_short));
 		Check.Require(Validations.validateEmail(email.trim()) == true, ctx.getString(R.string.validation_email_invalid));
 		Check.Require(Validations.validateNickname(nickname.trim()) == true, ctx.getString(R.string.validation_nickname_invalid));
 		

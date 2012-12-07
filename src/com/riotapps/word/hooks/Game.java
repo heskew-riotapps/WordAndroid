@@ -59,7 +59,7 @@ public class Game implements Parcelable, Comparable<Game> {
 		return this._lastTurnPlayer;
 	}
 	
-	private PlayerGame getContextPlayerGame(String contextPlayerId){
+	public PlayerGame getContextPlayerGame(String contextPlayerId){
 		if (this._contextPlayerGame == null) {
 			for (PlayerGame pg : this.getPlayerGames()){
 				if (pg.getPlayer().getId().equals(contextPlayerId)){
@@ -68,6 +68,19 @@ public class Game implements Parcelable, Comparable<Game> {
 			}
 		}
 		return this._contextPlayerGame;
+	}
+	
+	public Player getPlayerById(String playerId){
+		Player player = null;
+	 
+		for (PlayerGame pg : this.getPlayerGames()){
+			if (pg.getPlayer().getId().equals(playerId)){
+				player = pg.getPlayer();
+				break;
+			}
+		}
+ 
+		return player;
 	}
 	
 //	@SerializedName("last_action_alert_text")
@@ -548,11 +561,11 @@ public class Game implements Parcelable, Comparable<Game> {
 				case SIX_LETTERS_SWAPPED:
 				case SEVEN_LETTERS_SWAPPED:
 						if (isContext){
-							return String.format(context.getString(R.string.game_last_action_list_swapped_context), timeSince, this.getLastAction());
+							return String.format(context.getString(R.string.game_last_action_list_swapped_context), timeSince, this.getLastTurnAction());
 						}
 						else{
-							return String.format(context.getString(R.string.game_last_action_list_swapped), timeSince, opponentName, this.getLastAction());				
-						}
+							return String.format(context.getString(R.string.game_last_action_list_swapped), timeSince, opponentName, this.getLastTurnAction());				
+						} 
 				case STARTED_GAME:
 					if (isContext){
 						return String.format(context.getString(R.string.game_last_action_list_started_context), timeSince);
@@ -664,9 +677,6 @@ public class Game implements Parcelable, Comparable<Game> {
 				default:
 					return context.getString(R.string.game_last_action_undetermined);
 			}
-
-
-			
 				
 	}
 		

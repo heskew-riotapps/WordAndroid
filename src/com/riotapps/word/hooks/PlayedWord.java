@@ -19,7 +19,7 @@ public class PlayedWord implements Parcelable{
 	@SerializedName("t")
 	private int turn = 0;
 
-	@SerializedName("p_s")
+	@SerializedName("p")
 	private int pointsScored = 0;
 	
 	@SerializedName("p_d")
