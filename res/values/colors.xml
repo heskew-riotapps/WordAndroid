@@ -16,6 +16,12 @@
 	<color name="game_board_dragging_tile_value">#000000</color>
 	<color name="game_board_bonus_text">#ffffff</color>
 	
+	<color name="chat_player1_background">#FFFFBD</color>
+	<color name="chat_player2_background">#EDDFFB</color>
+	<color name="chat_player4_background">#CAFFD8</color>
+	<color name="chat_player3_background">#D9F3FF</color>
+	<color name="chat_border">#C9DECB</color>
+ 
     <color name="pressed_color">#D3D3D3</color> <!--custom color for pressed state -->
     <color name="normal_color">#fff5ee</color>  
     <color name="form_background_color">#fff5ee</color> 

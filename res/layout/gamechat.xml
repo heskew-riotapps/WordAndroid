@@ -1,28 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LayoutStyle" >
-	<include android:id="@+id/topAreaLayout" layout="@layout/scoreboardlayout" />
-
-	<ListView >
-	    
-	    
-	</ListView>
-
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    android:padding="2dp"
-	    >
-	    <EditText 
-	        android:id="@+id/etText"
-	        android:layout_width="200dp"
-	        />
-	    <Button
-	       android:id="@+id/bSave"
-	       android:text="@string/send"
-	        
-	    />
-
-	</RelativeLayout>
-</RelativeLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutStyle" 
+    android:orientation="vertical">
+<include android:id="@+id/topAreaLayout" layout="@layout/scoreboardlayout" />
+<LinearLayout 
+           style="@style/LayoutFormStyle"
+           android:layout_height="fill_parent"
+           > 
+		 <LinearLayout
+				style="@style/FormBackgroundStyle"
+				android:layout_marginTop="5dp"
+				 android:layout_marginBottom="5dp"
+				 android:orientation="vertical"
+				 android:layout_width="fill_parent"
+				 android:layout_height="fill_parent"
+			>
+			<com.riotapps.word.ui.MainFontTextView
+		        style="@style/ContentAreaTextTopStyle"
+		        />
+		    
+	 			<RelativeLayout
+	 			    android:layout_height="fill_parent"
+	 			    android:layout_width="fill_parent"
+	 			    style="@style/ContentAreaTextBottomStyle"
+	 			    android:drawablePadding="0dp"
+	 			    android:paddingLeft="0dp"
+					android:paddingRight="0dp"
+					android:paddingBottom="0dp"
+					android:id="@+id/rlFill"
+	 			>    
+		    	<ListView
+		     
+		    	    android:fadingEdge="none"
+		    	    android:id="@+id/lvChat"
+		    	    android:layout_below="@id/header"
+		    	    android:transcriptMode="alwaysScroll" 
+		    	  
+		    	    />
+			    <RelativeLayout
+			        style="@style/FormButtonAreaStyle"
+			        
+			        android:layout_alignParentBottom="true"
+			        
+			       	android:layout_width="fill_parent"
+			 	  android:paddingTop="8dp"
+			        android:layout_height="45dp"
+			      
+			      >
+ 			    <EditText
+			        android:id="@+id/etText"
+			        android:lines="1"
+			         
+			        android:layout_width="220dp"
+		 		  android:textSize="14dp"
+			        android:gravity="center_vertical"
+			          android:layout_alignParentLeft="true"
+			         
+			   />     
+				<com.riotapps.word.utils.TypefaceButton 
+			  	    style="@style/ButtonStyle"
+			  	    android:id="@+id/bSave"
+			        android:layout_width="60dp" 
+			        android:text="@string/send"
+			        android:gravity="center"
+			        android:layout_marginLeft="5dp"
+			 		android:layout_toRightOf="@id/etText"
+			 		android:layout_marginTop="0dp"
+			 	 
+ 			    />
+    
+    			</RelativeLayout>
+		     </RelativeLayout>
+				 
+		    </LinearLayout>
+	</LinearLayout>   
+</LinearLayout>

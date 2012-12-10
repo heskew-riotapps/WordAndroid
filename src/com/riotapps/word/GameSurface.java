@@ -638,7 +638,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		        	intent = new Intent(this, GameHistory.class);
 		        	intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
 					startActivity(intent);
-					this.finish();
+				 
 					break;
 		        case R.id.bCancel:  
 		        	this.handleCancel();

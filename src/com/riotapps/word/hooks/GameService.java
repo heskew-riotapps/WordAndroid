@@ -178,6 +178,27 @@ public class GameService {
 		return gson.toJson(turn);
 	}
 	
+	public static String setupGameChat(Context ctx, Game game, String text) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupGameChat");
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	Check.Require(text != null && text.length() > 0, ctx.getString(R.string.message_chat_text_empty));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportGameChat chat = new TransportGameChat();
+		chat.setToken(player.getAuthToken());
+		chat.setGameId(game.getId());
+		chat.setText(text);
+		 
+		return gson.toJson(chat);
+	}
+	
+	
 	public static String setupGameSwap(Context ctx, Game game, List<String> swappedLetters) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGameSkip");
@@ -289,6 +310,12 @@ public class GameService {
 			GameService.updateLastGameListCheckTime(ctx);
  			GameService.putGameToLocal(ctx, game);
 		}
+		return game;
+	}
+	
+	public static Game handleGameChatResponse(final Context ctx, InputStream iStream){
+		Game game = handleGameResponse(ctx, iStream); 
+		
 		return game;
 	}
 	
@@ -668,6 +695,7 @@ public class GameService {
 		
 		//check to determine that overlays did not happen on same letter
 		for (GameTile tile : placedTiles){
+			Logger.d(TAG, "tile original=" + tile.getOriginalLetter() + " placed=" + tile.getPlacedLetter());
 			Check.Require(tile.getOriginalLetter() != tile.getPlacedLetter(),  context.getString(R.string.game_play_invalid_overlay));
 		}
 		

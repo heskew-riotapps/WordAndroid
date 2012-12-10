@@ -27,6 +27,9 @@ public class Game implements Parcelable, Comparable<Game> {
 	@SerializedName("played_words")
 	private List<PlayedWord> playedWords = new ArrayList<PlayedWord>();
 	
+	@SerializedName("chats")
+	private List<Chat> chats = new ArrayList<Chat>();
+	
 	@SerializedName("player_games")
 	private List<PlayerGame> playerGames = new ArrayList<PlayerGame>();
 	
@@ -48,6 +51,16 @@ public class Game implements Parcelable, Comparable<Game> {
 	private Player _lastTurnPlayer;
 	private PlayerGame _contextPlayerGame;
 	
+	
+	
+	public List<Chat> getChats() {
+		return chats;
+	}
+
+	public void setChats(List<Chat> chats) {
+		this.chats = chats;
+	}
+
 	private Player getLastTurnPlayer(){
 		if (this._lastTurnPlayer == null) {
 			for (PlayerGame pg : this.getPlayerGames()){
@@ -551,7 +564,7 @@ public class Game implements Parcelable, Comparable<Game> {
 						return String.format(context.getString(R.string.game_last_action_list_swapped_1_context), timeSince);
 					}
 					else{
-						return String.format(context.getString(R.string.game_last_action_list_swapped_1), opponentName);				
+						return String.format(context.getString(R.string.game_last_action_list_swapped_1), timeSince, opponentName);				
 					}
 				
 				case TWO_LETTERS_SWAPPED:	

@@ -454,4 +454,5 @@
 		<string name="game_history_turn_info">played by %1$s in turn %2$s for %3$s points</string>
 		<string name="game_history_title">played words</string>
 		<string name="unknown_player_name">unknown</string>
+		<string name="message_chat_text_empty">Please enter the text.</string>
 </resources>

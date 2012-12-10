@@ -36,13 +36,17 @@
 	 			<LinearLayout
 	 			    android:layout_height="fill_parent"
 	 			    android:layout_width="fill_parent"
-	 			      style="@style/ContentAreaTextBottomStyle"
+	 			    style="@style/ContentAreaTextBottomStyle"
+	 			    android:drawablePadding="0dp"
+	 			    android:paddingLeft="0dp"
+					android:paddingRight="0dp"
 	 			>    
 		    	<ListView
 		     
 		    	    android:fadingEdge="none"
 		    	    android:id="@+id/lvWords"
 		    	    android:layout_below="@id/header"
+		    	  
 		    	    />
 		     </LinearLayout>
 				 

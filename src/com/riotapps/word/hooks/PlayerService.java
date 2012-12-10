@@ -733,9 +733,9 @@ public class PlayerService {
          } 
          catch (Exception e) {
             //getRequest.abort();
-            Logger.w("PlayerService", "Error for HandleCreatePlayerResponse= ", e);
+            Logger.w("PlayerService", "Error for HandleCreatePlayerResponse= " + e.getMessage());
             
-            DialogManager.SetupAlert(ApplicationContext.getAppContext(), "HandleCreatePlayerResponse", e.getMessage(), 0);
+            DialogManager.SetupAlert(ctx, "HandleCreatePlayerResponse", e.getMessage(), 0);
            // Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);  //change this to real error handling
            // t.show(); 
          }
