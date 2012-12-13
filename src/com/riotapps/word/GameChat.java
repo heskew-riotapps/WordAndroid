@@ -94,6 +94,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	   	  private final GameChat context;
 	   	  private final Chat[] values;
 	   	  private String prevPlayerId = "";
+	   	  private int prevSequentialCount = 0;
 	   	  LayoutInflater inflater;
 	   	//  public ArrayList<Integer> selectedIds = new ArrayList<Integer>();
 
@@ -121,24 +122,22 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 
 	    		   
 	    		   
-		    	   if (this.prevPlayerId != chat.getPlayerId()){
-		    		
-		    		   Logger.d(TAG, "adapter prevPlayerId=" + this.prevPlayerId + " chat=" + chat.getPlayerId());
-		    		   
+		    	   if (this.prevPlayerId != chat.getPlayerId() || (this.prevPlayerId != chat.getPlayerId() && this.prevSequentialCount >= 4) ){
+		    		   this.prevSequentialCount = 0;
 		    		   Player player = context.game.getPlayerById(chat.getPlayerId());
 		    	   
 		    		   imageLoader.loadImage(player.getImageUrl(), ivPlayer);
 		    		   ivPlayer.setVisibility(View.VISIBLE);
 		    	   }
-		    	   else{
-		    		   Logger.d(TAG, "adapter2 prevPlayerId=" + this.prevPlayerId + " chat=" + chat.getPlayerId());
-			    		 
+		    	   else{ 
 		    		   ivPlayer.setVisibility(View.INVISIBLE);
+		    		   this.prevSequentialCount += 1;
 		    	   }
 		    	   
 		    	   tvChat.setText(chat.getText());
 		    	   
 		    	   this.prevPlayerId = chat.getPlayerId(); 
+		    	   
 		 
 		    	//   Logger.d(TAG, "adapter position=" + position + " count=" + this.wordCount); 
 		    	//   LinearLayout llBottomBorder = (LinearLayout)rowView.findViewById(R.id.llBottomBorder);
@@ -177,7 +176,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
     	
 		try { 
 			if ( this.etText.getText().toString().length() > 0) {
-			
+		
 				String json = GameService.setupGameChat(context, this.game, etText.getText().toString());
 				
 				//kick off thread to cancel game on server
@@ -250,6 +249,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		            	 		game = GameService.handleGameChatResponse(context, iStream);
 		            	 		
 		            	 		//refresh the list
+		            			etText.setText("");
 		            	 		loadList();
 		            	 		
 		            	 		break;

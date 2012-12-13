@@ -30,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.TransportAuthToken;
+import com.riotapps.word.services.WordLoaderService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameSurfaceView;
 import com.riotapps.word.utils.*;
@@ -52,7 +53,12 @@ public class Splash  extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-  
+      
+        Logger.d(TAG, "onCreate started");
+        
+       // Intent i = new Intent(this, WordLoaderService.class);
+       // this.startService(new Intent(this, WordLoaderService.class));
+      
         this.handlePreProcessing();
      }
     
@@ -78,7 +84,6 @@ public class Splash  extends FragmentActivity {
 	    	 Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token");
 	    	new CheckConnectivityTask().execute("");
 	     
-
 	    }
     }
 

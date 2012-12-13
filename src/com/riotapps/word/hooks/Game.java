@@ -145,7 +145,7 @@ public class Game implements Parcelable, Comparable<Game> {
 		List<PlayedWord> words = new ArrayList<PlayedWord>();
 		
 		for(PlayedWord word : this.playedWords){
-			Logger.d(TAG, "getLastPlayedWords word=" + word.getWord());
+			//Logger.d(TAG, "getLastPlayedWords word=" + word.getWord());
 			if (word.getTurn() == (this.getTurn() - 1)){
 				words.add(word);
 			}
@@ -401,7 +401,7 @@ public class Game implements Parcelable, Comparable<Game> {
 		boolean isContext = this.isContextPlayerPerformedLastTurn(contextPlayerId);
 		String opponentName = this.getLastTurnPlayer().getAbbreviatedName();
 
-		Logger.d(TAG, "getLastActionText lastAction=" + this.lastTurnAction + " " + this.getLastAction().toString() + " isContext=" + isContext);
+		//Logger.d(TAG, "getLastActionText lastAction=" + this.lastTurnAction + " " + this.getLastAction().toString() + " isContext=" + isContext);
 
 		
 		switch (this.getLastAction()){
@@ -545,7 +545,7 @@ public class Game implements Parcelable, Comparable<Game> {
 	
 	
 	private boolean isContextPlayerPerformedLastTurn(String contextPlayerId){
-		Logger.d(TAG, "isContextPlayerPerformedLastTurn  this.lastTurnPlayerId=" +  this.lastTurnPlayerId + " contextPlayerId= " + contextPlayerId );
+		//Logger.d(TAG, "isContextPlayerPerformedLastTurn  this.lastTurnPlayerId=" +  this.lastTurnPlayerId + " contextPlayerId= " + contextPlayerId );
 		return this.lastTurnPlayerId.equals(contextPlayerId);
 	}
 	
@@ -553,7 +553,7 @@ public class Game implements Parcelable, Comparable<Game> {
 	//	LastTurn lastTurn = this.getLastTurn(contextPlayerId);
 		
 	// return "p";
-		Logger.d(TAG, "getLastActionTextForList lastTurn.getTurnDate()=" + this.getLastTurnDate());
+		//Logger.d(TAG, "getLastActionTextForList lastTurn.getTurnDate()=" + this.getLastTurnDate());
 		String timeSince = Utils.getTimeSinceString(context, this.getLastTurnDate());
 		boolean isContext = this.isContextPlayerPerformedLastTurn(contextPlayerId);
 		String opponentName = this.getLastTurnPlayer().getAbbreviatedName();
@@ -747,9 +747,9 @@ public class Game implements Parcelable, Comparable<Game> {
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-//		Logger.d(TAG, "parcel out");
+ 
 		out.writeString(this.id);
-	//	Logger.d(TAG, "parcel out id=" + this.id);
+ 
 		out.writeList(this.playedWords);
 		out.writeList(this.playerGames);
 		out.writeInt(this.numLettersLeft);
@@ -758,7 +758,7 @@ public class Game implements Parcelable, Comparable<Game> {
 		out.writeLong(this.createDate == null ? 0 : this.createDate.getTime());
 		out.writeLong(this.completionDate == null ? 0 : this.completionDate.getTime());
 		out.writeInt(this.status);
-	//	Logger.d(TAG, "parcel out status=" + this.status);
+ 
 	}
 
 	public static final Parcelable.Creator<Game> CREATOR
@@ -773,23 +773,19 @@ public class Game implements Parcelable, Comparable<Game> {
 	};
 	
 	 private Game(Parcel in) {
-		// Logger.d(TAG, "parcel in");
+	 
          this.id = in.readString();
          in.readList(this.playedWords,PlayedWord.class.getClassLoader());
          in.readList(this.playerGames,PlayerGame.class.getClassLoader());
-      //   Logger.d(TAG, "parcel in this.playerGames.size()" + this.playerGames.size());
+ 
          this.numLettersLeft = in.readInt();
-
-      //   Logger.d(TAG, "parcel in numLettersLeft=" + numLettersLeft);
-       //  this.createDate = in.readSerializable(); 
-
+ 
          this.createDate = new Date(in.readLong());
-         
-      // Logger.d(TAG, "parcel in createDate=" + createDate.toString());
+ 
          this.completionDate = new Date(in.readLong());
-      //   Logger.d(TAG, "parcel in completionDate=" + completionDate.toString());
+      
          this.status = in.readInt();
-      //   Logger.d(TAG, "parcel in status=" + status);
+      
        	 
      }
 

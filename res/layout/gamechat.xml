@@ -15,27 +15,32 @@
 				 android:layout_width="fill_parent"
 				 android:layout_height="fill_parent"
 			>
-			<com.riotapps.word.ui.MainFontTextView
-		        style="@style/ContentAreaTextTopStyle"
-		        />
+	 
 		    
 	 			<RelativeLayout
 	 			    android:layout_height="fill_parent"
 	 			    android:layout_width="fill_parent"
-	 			    style="@style/ContentAreaTextBottomStyle"
-	 			    android:drawablePadding="0dp"
+	 			 
+	 			     android:paddingTop="10dp"
 	 			    android:paddingLeft="0dp"
 					android:paddingRight="0dp"
 					android:paddingBottom="0dp"
 					android:id="@+id/rlFill"
+					android:background="@drawable/content_area"
+					
+  
+  
 	 			>    
 		    	<ListView
 		     
 		    	    android:fadingEdge="none"
 		    	    android:id="@+id/lvChat"
-		    	    android:layout_below="@id/header"
+		    	    android:layout_below="@id/topAreaLayout"
 		    	    android:transcriptMode="alwaysScroll" 
-		    	  
+					android:layout_width="fill_parent"		    	  
+					android:layout_height="fill_parent"
+					android:dividerHeight="-1dp"
+				 
 		    	    />
 			    <RelativeLayout
 			        style="@style/FormButtonAreaStyle"
@@ -50,7 +55,8 @@
  			    <EditText
 			        android:id="@+id/etText"
 			        android:lines="1"
-			         
+			         android:paddingTop="3dp"
+			       android:paddingLeft="2dp"
 			        android:layout_width="220dp"
 		 		  android:textSize="14dp"
 			        android:gravity="center_vertical"

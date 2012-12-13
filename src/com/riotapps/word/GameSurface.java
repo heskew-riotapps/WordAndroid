@@ -183,7 +183,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		this.setupGame();
 	 	
 		
-		this.wordLoaderThread = new WordLoaderThread(appContext.getWordService(), this.game, this.player.getId());
+		///this.wordLoaderThread = new WordLoaderThread(appContext.getWordService(), this.game, this.player.getId());
 	 	
 	 //	this.gameSurfaceView.setGame(game);
 	 	//retrieve game from server
@@ -526,10 +526,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		
 		this.gameSurfaceView.onDestroy();
 		
-		if (this.wordLoaderThread != null){
-			this.wordLoaderThread.interrupt();
-			this.wordLoaderThread = null;
-		}
+	//	if (this.wordLoaderThread != null){
+	//		this.wordLoaderThread.interrupt();
+	//		this.wordLoaderThread = null;
+	//	}
 		
 		super.onDestroy();
 	}
@@ -539,10 +539,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onStop called");
 		this.gameSurfaceView.onStop();
-		if (this.wordLoaderThread != null){
-			this.wordLoaderThread.interrupt();
-			this.wordLoaderThread = null;
-		}
+	//	if (this.wordLoaderThread != null){
+	//		this.wordLoaderThread.interrupt();
+	//		this.wordLoaderThread = null;
+	//	}
 		
 		
 		super.onStop();
@@ -560,10 +560,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     	}
 		this.gameSurfaceView.onPause();
 		
-		if (this.wordLoaderThread != null){
-			this.wordLoaderThread.interrupt();
-			this.wordLoaderThread = null;
-		}
+	//	if (this.wordLoaderThread != null){
+	//		this.wordLoaderThread.interrupt();
+	//		this.wordLoaderThread = null;
+	//	}
 		
 	}
 

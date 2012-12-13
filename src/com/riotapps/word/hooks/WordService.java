@@ -1,5 +1,8 @@
 package com.riotapps.word.hooks;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,7 @@ import com.riotapps.word.utils.Logger;
 public class WordService {
 	private static final String TAG = WordService.class.getSimpleName();
 	
+	boolean isLoaded = false;
 	SortedSet<String> words_a = null;
 	SortedSet<String> words_b = null;
 	SortedSet<String> words_c = null;
@@ -90,6 +94,8 @@ public class WordService {
 	}
 	
 	public void loadAll(){
+		
+		if (this.isLoaded){return;}
 		this.loadList("a");
 		this.loadList("b");
 		this.loadList("c");
@@ -116,112 +122,140 @@ public class WordService {
 		this.loadList("x");
 		this.loadList("y");
 		this.loadList("z");
+		this.isLoaded = true;
 	}
 	
 	public void loadList(String letter){
 
-		if (letter.equals("a") && this.words_a == null){ 
-			this.words_a = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_a), this.type);
+		if (letter.equals("a") && this.words_a == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_a = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_a)), this.type);//FileUtils.ReadRawTextFile(context, R.raw.words_a), this.type);
+		 
 			return;
 		}
 		if (letter.equals("b") && this.words_b == null){ 
-			this.words_b = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_b), this.type);
+			Logger.d(TAG, "letter=" + letter);
+			this.words_b = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_b)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_b), this.type);
 			return;
 		}
-		if (letter.equals("c") && this.words_c == null){ 
-			this.words_c = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_c), this.type); 
+		if (letter.equals("c") && this.words_c == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_c = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_c)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_c), this.type); 
 			return;
 		}
-		if (letter.equals("d") && this.words_d == null){ 
-			this.words_d = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_d), this.type); 
+		if (letter.equals("d") && this.words_d == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_d = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_d)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_d), this.type); 
 			return;
 		}
-		if (letter.equals("e") && this.words_e == null){ 
-			this.words_e = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_e), this.type); 
+		if (letter.equals("e") && this.words_e == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_e = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_e)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_e), this.type); 
 			return;
 		}
-		if (letter.equals("f") && this.words_f == null){ 
-			this.words_f = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_f), this.type);  
+		if (letter.equals("f") && this.words_f == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_f = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_f)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_f), this.type);  
 			return;
 		}
 		if (letter.equals("g") && this.words_g == null){ 
-			this.words_g = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_g), this.type); 
+			Logger.d(TAG, "letter=" + letter);
+			this.words_g = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_g)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_g), this.type); 
 			return;
 		}
-		if (letter.equals("h") && this.words_h == null){ 
-			this.words_h = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_h), this.type);  
+		if (letter.equals("h") && this.words_h == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_h = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_h)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_h), this.type);  
 			return;
 		}
-		if (letter.equals("i") && this.words_i == null){ 
-			this.words_i = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_i), this.type); 
+		if (letter.equals("i") && this.words_i == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_i = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_i)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_i), this.type); 
 			return;
 		}
-		if (letter.equals("j") && this.words_j == null){ 
-			this.words_j = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_j), this.type);  
+		if (letter.equals("j") && this.words_j == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_j = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_j)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_j), this.type);  
 			return;
 		}
 		if (letter.equals("k") && this.words_k == null){ 
-			this.words_k = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_k), this.type);  
+			Logger.d(TAG, "letter=" + letter);
+			this.words_k = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_k)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_k), this.type);  
 			return;
 		}
 		if (letter.equals("l") && this.words_l == null){ 
-			this.words_l = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_l), this.type);
+			Logger.d(TAG, "letter=" + letter);
+			this.words_l = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_l)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_l), this.type);
 			return;
 		}
-		if (letter.equals("m") && this.words_m == null){ 
-			this.words_m = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_m), this.type); 
+		if (letter.equals("m") && this.words_m == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_m = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_m)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_m), this.type); 
 			return;
 		}
-		if (letter.equals("n") && this.words_n == null){ 
-			this.words_n = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_n), this.type);
+		if (letter.equals("n") && this.words_n == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_n = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_n)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_n), this.type);
 			return;
 		}
-		if (letter.equals("o") && this.words_o == null){ 
-			this.words_o = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_o), this.type);
+		if (letter.equals("o") && this.words_o == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_o = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_o)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_o), this.type);
 			return;
 		}
-		if (letter.equals("p") && this.words_p == null){ 
-			this.words_p = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_p), this.type);
+		if (letter.equals("p") && this.words_p == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_p = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_p)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_p), this.type);
 			return;
 		}
-		if (letter.equals("q") && this.words_q == null){ 
-			this.words_q = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_q), this.type);  
+		if (letter.equals("q") && this.words_q == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_q = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_q)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_q), this.type);  
 			return;
 		}
-		if (letter.equals("r") && this.words_r == null){ 
-			this.words_r = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_r), this.type); 
+		if (letter.equals("r") && this.words_r == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_r = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_r)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_r), this.type); 
 			return;
 		}
-		if (letter.equals("s") && this.words_s == null){ 
-			this.words_s = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_s), this.type);
+		if (letter.equals("s") && this.words_s == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_s = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_s)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_s), this.type);
 			return;
 		}
-		if (letter.equals("t") && this.words_t == null){ 
-			this.words_t = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_t), this.type); 
+		if (letter.equals("t") && this.words_t == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_t = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_t)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_t), this.type); 
 			return;
 		}
 		if (letter.equals("u") && this.words_u == null){ 
-			this.words_u = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_u), this.type); 
+			Logger.d(TAG, "letter=" + letter);
+			this.words_u = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_u)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_u), this.type); 
 			return;
 		}
-		if (letter.equals("v") && this.words_v == null){ 
-			this.words_v = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_v), this.type); 
+		if (letter.equals("v") && this.words_v == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_v = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_v)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_v), this.type); 
 			return;
 		}
-		if (letter.equals("w") && this.words_w == null){ 
-			this.words_w = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_w), this.type);
+		if (letter.equals("w") && this.words_w == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_w = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_w)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_w), this.type);
 			return;
 		}
-		if (letter.equals("x") && this.words_x == null){ 
-			this.words_x = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_x), this.type); 
+		if (letter.equals("x") && this.words_x == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_x = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_x)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_x), this.type); 
 			return;
 		}
-		if (letter.equals("y") && this.words_y == null){ 
-			this.words_y = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_y), this.type); 
+		if (letter.equals("y") && this.words_y == null){
+			Logger.d(TAG, "letter=" + letter);
+			this.words_y = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_y)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_y), this.type); 
 			return;
 		}
 		if (letter.equals("z") && this.words_z == null){ 
-			this.words_z = new Gson().fromJson(FileUtils.ReadRawTextFile(context, R.raw.words_z), this.type); 
+			Logger.d(TAG, "letter=" + letter);
+			this.words_z = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_z)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_z), this.type); 
 			return;
 		}
 	 

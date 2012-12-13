@@ -199,7 +199,7 @@ public class Utils {
 		long diffHours = (long)diff/3600000;
 		long diffDays = (long)diff/86400000;
 		
-		Logger.d(TAG, "getTimeSinceString System.currentTimeMillis()=" + System.currentTimeMillis() + " diff=" + diff + "  targetDate.getTime()=" +  targetDate.getTime() + " diffSeconds=" + diffSeconds);
+		//Logger.d(TAG, "getTimeSinceString System.currentTimeMillis()=" + System.currentTimeMillis() + " diff=" + diff + "  targetDate.getTime()=" +  targetDate.getTime() + " diffSeconds=" + diffSeconds);
 	
 		
 		String timeSince = "";
