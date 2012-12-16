@@ -114,7 +114,7 @@
   	    android:id="@+id/bSave"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
-        android:text="@string/save"
+        android:text="@string/connect"
     />
     
     </LinearLayout>

@@ -18,6 +18,8 @@ public class TrayTile {
 	private boolean dragging = false;
 	private int xPositionCenter = 0;
 	private int yPositionCenter = 0;
+	private int xPositionPreDrag = 0;
+	private int yPositionPreDrag = 0;
  
 	
 	public int getId() {
@@ -99,10 +101,17 @@ public class TrayTile {
 		
 	}
 
+	public boolean hasTileBeenMoved(){
+		return this.xPositionPreDrag != this.xPosition || this.yPositionPreDrag != this.yPosition;
+	}
+	
+	
 	public void setUpForDrag(){
 		this.dragging = true;
 		this.draggingLetter = this.currentLetter;
 		this.currentLetter = "";
+		this.xPositionPreDrag = this.xPosition;
+		this.yPositionPreDrag = this.yPosition;
 	}
 	
 	public void removeDrag(){

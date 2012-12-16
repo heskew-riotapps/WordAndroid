@@ -182,7 +182,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	
 		this.setupGame();
 	 	
-		
+		this.checkGameStatus();
 		///this.wordLoaderThread = new WordLoaderThread(appContext.getWordService(), this.game, this.player.getId());
 	 	
 	 //	this.gameSurfaceView.setGame(game);
@@ -311,6 +311,17 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		    	*/
 		    }
 	  }
+	 
+	 private void checkGameStatus(){
+		 if (this.game.getStatus() == 3){
+			 //completed
+			 //first check to see if this score has already been alerted (from local storage)
+
+			 String message = this.game.getWinnerAlertText(this, this.contextPlayerGame);
+			 
+			 DialogManager.SetupAlert(this, this.getString(R.string.game_alert_game_over_title), message, Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+		 }
+	 }
 	 
 	 private void setupButtons(){
 		this.bRecall = (Button) findViewById(R.id.bRecall);

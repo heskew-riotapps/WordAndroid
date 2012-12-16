@@ -68,6 +68,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int fullHeight;
     private int fullViewTileWidth;
     //private int trayAreaTop = 0;
+    
+    private boolean trayTileTapped = false;
     private boolean trayTileDropped = false;
     private boolean trayTileDropTarget = false;
     private boolean isButtonStateInShuffle = true;  //this is the default value because board starts in shuffle state
@@ -160,6 +162,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     	}
     	return false;
     }
+    
+    private boolean isTrayTileDraggingButNotMovedYet(){
+    	if (this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()){
+    		return !this.getCurrentTrayTile().hasTileBeenMoved();
+    	}
+    	return false;
+    }
+    
     private GameTile getDraggingTile(){
     	if (this.draggingTileId > -1){
     		return this.tiles.get(this.draggingTileId);
@@ -740,9 +750,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
                 		 Logger.d(TAG, "onTouchEvent not moving");
 
+                		 //let's check here to see if a tray tile was tapped but not moved at all.
+                		 //if we don't check for this scenario, the tray tile stays in pre-drag state and does not 
+                		 //get set back into its original position after the finger is lifted
+                		 if (this.isTrayTileDraggingButNotMovedYet()){
+                			 this.getCurrentTrayTile().removeDrag();
+                			 this.clearCurrentTrayTile();
+                			 this.trayTileTapped = true;
+                			 this.readyToDraw = true;
+                		 }
             			 //check for a single tap
             			 //and make sure to ignore double tap events
-            			 if((this.tapCheck - this.dblTapCheck) >= (DOUBLE_TAP_DURATION_IN_NANOSECONDS - SINGLE_TAP_DURATION_IN_NANOSECONDS) || this.dblTapCheck == 0){
+                		 else if((this.tapCheck - this.dblTapCheck) >= (DOUBLE_TAP_DURATION_IN_NANOSECONDS - SINGLE_TAP_DURATION_IN_NANOSECONDS) || this.dblTapCheck == 0){
             				 
                     		 Logger.d(TAG, "onTouchEvent not a double tap");
 
@@ -839,7 +858,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         					 }
         					 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
         					 GameStateService.setGameState(this.context, this.parent.getGameState());
-        					 this.resetPointsView();
+        					// this.resetPointsView();
     						 
     						 //let's make sure the board zooms (if it's not already in that state, upon drop)
     						 if (this.isZoomed){
@@ -851,8 +870,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     						 }
     						 
     						 Logger.d(TAG, "ACTION_UP this.alreadyInZoomedState=" + this.alreadyInZoomedState);
-    						 this.readyToDraw = true;
     						 this.trayTileDropped = true;
+    						 this.readyToDraw = true;
+    						 
+    						 this.resetPointsView();
+    						 
     					 }
         				 else
         				 {
@@ -1033,6 +1055,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
          }
 
 	 }
+	 
+	 
 	 
 	 private void handleDropOnTray(){
 		 
@@ -1350,7 +1374,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 
 		long currentTouchTime = System.nanoTime();
 		
-		if (!this.shuffleRedraw & !this.recallLettersRedraw  & !this.afterPlayRedraw){
+		if (!this.shuffleRedraw && !this.recallLettersRedraw  && !this.afterPlayRedraw && !this.trayTileTapped ){
 			//  if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
 			 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN && 
 					 (this.getCurrentTrayTile() != null && !this.getCurrentTrayTile().isDragging())){ 
@@ -1420,11 +1444,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 this.drawBoardOnMove(canvas, 0, 0);
 					 Logger.d(TAG, "onDraw a tray tile has been tapped down");
 				 }
-				 else if (this.shuffleRedraw || this.recallLettersRedraw || this.afterPlayRedraw){
+				 else if (this.shuffleRedraw || this.recallLettersRedraw || this.afterPlayRedraw || this.trayTileTapped){
+					 //these actions just mean the board should be redrawn as is
 					 this.drawBoardOnMove(canvas, 0, 0);
 					 this.shuffleRedraw = false;
 					 this.recallLettersRedraw = false;
 					 this.afterPlayRedraw = false;
+					 this.trayTileTapped = false;
 				 }
 				 else if (this.isMomentum){
 					 Log.w(TAG,"onDraw drawMomentumScroll about to be called");
@@ -1475,11 +1501,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    
 		    this.drawDraggingTile(canvas);
 		    
-		    if (this.shuffleRedraw || this.recallLettersRedraw || this.afterPlayRedraw){
+		    if (this.shuffleRedraw || this.recallLettersRedraw || this.afterPlayRedraw || this.trayTileTapped){
 		    	this.shuffleRedraw = false;
 		    	this.recallLettersRedraw = false;
 		    	this.afterPlayRedraw = false;
+		    	this.trayTileTapped = false;
 		    	this.readyToDraw = false;
+		    	
 		    }
 		    
 		    //on a drop event (action_up) check to determine if shuffle and recall buttons need to be switched
@@ -2065,9 +2093,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 	   	this.LoadTray();
 	    this.setInitialButtonStates();
-	    this.resetPointsView();
+	   
 	    this.afterPlayRedraw = true;
 		this.readyToDraw = true;
+		
+		 this.resetPointsView();
 		//this.startThreadLoop();;
 	}
 	
@@ -2205,40 +2235,6 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 	
 	 private void LoadTiles() {		  
-		 
-	/* bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
-		 Bitmap bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 Bitmap bgBaseZoomed = Bitmap.createScaledBitmap(bgBase, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 
-		 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
-		 Bitmap bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 Bitmap bg4LZoomed = Bitmap.createScaledBitmap(bg4L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 
-		 Bitmap bg3L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3l_bg);
-		 Bitmap bg3LScaled = Bitmap.createScaledBitmap(bg3L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 Bitmap bg3LZoomed = Bitmap.createScaledBitmap(bg3L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 
-		 Bitmap bg3W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3w_bg);
-		 Bitmap bg3WScaled = Bitmap.createScaledBitmap(bg3W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 Bitmap bg3WZoomed = Bitmap.createScaledBitmap(bg3W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 
-		 Bitmap bg2L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2l_bg);
-		 Bitmap bg2LScaled = Bitmap.createScaledBitmap(bg2L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 Bitmap bg2LZoomed = Bitmap.createScaledBitmap(bg2L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 
-		 Bitmap bg2W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2w_bg);
-		 Bitmap bg2WScaled = Bitmap.createScaledBitmap(bg2W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 Bitmap bg2WZoomed = Bitmap.createScaledBitmap(bg2W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		
-		 Bitmap bgStarter = BitmapFactory.decodeResource(getResources(), R.drawable.tile_starter_bg);
-		 Bitmap bgStarterScaled = Bitmap.createScaledBitmap(bgStarter, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 Bitmap bgStarterZoomed = Bitmap.createScaledBitmap(bgStarter, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 
-		 //starter
-	//	 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
-	//	 Bitmap bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-	//	 Bitmap bg4LZoomed = Bitmap.createScaledBitmap(bg4L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 */
 		 //for each row load each column 15x15
 		 //row = y
 	     //column = x

@@ -17,6 +17,7 @@
 	<string name="password">password</string>
 	<string name="change_password">change your password</string>
 	<string name="save">save</string>
+	<string name="connect">connect</string>
 	<string name="send">send</string>
 	<string name="back">back</string>
 	<string name="badges">badges</string>
@@ -455,4 +456,27 @@
 		<string name="game_history_title">played words</string>
 		<string name="unknown_player_name">unknown</string>
 		<string name="message_chat_text_empty">Please enter the text.</string>
+		
+		<string name="game_alert_game_over_title">game over</string>
+		<string name="game_alert_game_over_2_player_context">you won!\n%1$s - %2$s</string>
+		<string name="game_alert_game_over_2_player">%3$s won!\n%1$s - %2$s</string>
+		<string name="game_alert_game_over_2_player_draw">it\'s a draw!\n%1$s - %2$s</string>
+		<string name="game_alert_game_over_multi_player_context">you won!</string>
+		<string name="game_alert_game_over_multi_player">%1$s won!</string>
+		<string name="game_alert_game_over_multi_player_draw">it\'s a draw!</string>
+ 
+		<string name="game_list_game_over_2_player_context">you won %2$s - %3$s %1$s</string>
+		<string name="game_list_game_over_2_player">%4$s won %2$s - %3$s %1$s</string>
+		<string name="game_list_game_over_2_player_draw">a %2$s - %3$s draw was declared %1$s</string>
+		<string name="game_list_game_over_multi_player_context">you won %1$s</string>
+		<string name="game_list_game_over_multi_player">%2$s won %1$s</string>
+		<string name="game_list_game_over_multi_player_draw">%2$s - %3$s %1$s</string>
+		
+		<string name="game_surface_game_over_2_player_context">you won %1$s - %2$s</string>
+		<string name="game_surface_game_over_2_player">%3$s won %1$s - %2$s</string>
+		<string name="game_surface_game_over_2_player_draw">a %1$s - %2$s draw was declared</string>
+		<string name="game_surface_game_over_multi_player_context">you won</string>
+		<string name="game_surface_game_over_multi_player">%1$s won</string>
+		<string name="game_surface_game_over_multi_player_draw">%1$s - %2$s</string>
+		
 </resources>

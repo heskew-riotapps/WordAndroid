@@ -451,6 +451,7 @@ public class PlayerService {
 	        if (player.getCompletedGames().size() > 0) {
 	        	//reset the rolling latest completion date to last completed game's date. this makes the response from the server as small as possible
 	        	for (Game game : player.getCompletedGames()) {
+	        		game.setShowCompletionAlert(true);
 	        		if (completedDate.before(game.getCompletionDate())){
 	        			completedDate = game.getCompletionDate();
 	        		}
@@ -467,6 +468,7 @@ public class PlayerService {
 	        		for (Game game : player.getCompletedGames()) {
 	        			combinedGames.add(game);
 		            }
+	        		
 	        		
 	        		Collections.sort(combinedGames);
 	        		

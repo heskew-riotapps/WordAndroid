@@ -37,6 +37,9 @@ public class PlayerGame implements Parcelable{
 	@SerializedName("sc")
 	private int score = 0;
 	
+	@SerializedName("st")
+	private int status = 0;
+	
 /*	@SerializedName("l_t")
 	private int lastTurn;
 
@@ -64,10 +67,7 @@ public class PlayerGame implements Parcelable{
 	@SerializedName("i_t")
 	private boolean isTurn = false;
 	
-	@SerializedName("i_w")
-	private boolean isWinner = false;
-	
-	@SerializedName("a_e_g")
+  	@SerializedName("a_e_g")
 	private boolean hasBeenAlertedToEndOfGame = false;
 	
 	@SerializedName("o")
@@ -102,7 +102,19 @@ public class PlayerGame implements Parcelable{
 	public void setScore(int score) {
 		this.score = score;
 	}
-/*
+	
+	
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	/*
+ 
 	public Date getLastTurnDate() {
 		return lastTurnDate;
 	}
@@ -152,13 +164,14 @@ public class PlayerGame implements Parcelable{
 	}
 
 	public boolean isWinner() {
-		return isWinner;
+		return this.status == 4;
+	}
+	
+	public boolean isDraw() {
+		return this.status == 6;
 	}
 
-	public void setWinner(boolean isWinner) {
-		this.isWinner = isWinner;
-	}
-
+ 
 	public boolean isHasBeenAlertedToEndOfGame() {
 		return hasBeenAlertedToEndOfGame;
 	}
@@ -237,7 +250,7 @@ public class PlayerGame implements Parcelable{
 		out.writeLong(this.lastChatterReceivedDate == null ? 0 : this.lastChatterReceivedDate.getTime());
 		out.writeInt(this.winNum);
 		out.writeByte((byte) (this.isTurn ? 1 : 0));
-		out.writeByte((byte) (this.isWinner ? 1 : 0));
+	 
 		out.writeByte((byte) (this.hasBeenAlertedToEndOfGame ? 1 : 0)); 
 		out.writeInt(this.playerOrder);
  		out.writeList(this.trayLetters);
@@ -276,7 +289,7 @@ public class PlayerGame implements Parcelable{
 	 	this.lastChatterReceivedDate.setTime(in.readLong()); 
 	  	this.winNum = in.readInt();
 	  	this.isTurn = in.readByte() == 1;
-	 	this.isWinner  = in.readByte() == 1;
+	 
 	    this.hasBeenAlertedToEndOfGame  = in.readByte() == 1;
 	    this.playerOrder = in.readInt();
 	    this.trayLetters = new ArrayList<String>();

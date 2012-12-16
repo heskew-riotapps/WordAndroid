@@ -315,6 +315,8 @@ public class GameService {
 	
 	public static Game handleGameChatResponse(final Context ctx, InputStream iStream){
 		Game game = handleGameResponse(ctx, iStream); 
+		GameService.updateLastGameListCheckTime(ctx);
+		GameService.putGameToLocal(ctx, game);
 		
 		return game;
 	}
@@ -696,7 +698,7 @@ public class GameService {
 		//check to determine that overlays did not happen on same letter
 		for (GameTile tile : placedTiles){
 			Logger.d(TAG, "tile original=" + tile.getOriginalLetter() + " placed=" + tile.getPlacedLetter());
-			Check.Require(tile.getOriginalLetter() != tile.getPlacedLetter(),  context.getString(R.string.game_play_invalid_overlay));
+			Check.Require(!tile.getOriginalLetter().equals(tile.getPlacedLetter()),  context.getString(R.string.game_play_invalid_overlay));
 		}
 		
 		
