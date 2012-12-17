@@ -27,16 +27,28 @@
 					android:paddingBottom="0dp"
 					android:id="@+id/rlFill"
 					android:background="@drawable/content_area"
-					
-  
-  
-	 			>    
+	 			>
+	 			<ScrollView
+	 			    android:id="@+id/scrChat"
+	 			    android:layout_width="fill_parent"
+    				android:layout_height="fill_parent" 
+    				android:fadingEdge="none" 
+    				android:layout_marginBottom="45dp" >
+	 			<LinearLayout
+	 			    android:id="@+id/llChat" 
+	 				android:layout_width="fill_parent"		    	  
+					android:layout_height="fill_parent"
+	 				android:orientation="vertical"
+	 				android:paddingBottom="10dp"
+	 				android:layout_marginBottom="45dp"
+	 			/>
+	 			</ScrollView>"
 		    	<ListView
-		     
+		     	
 		    	    android:fadingEdge="none"
 		    	    android:id="@+id/lvChat"
 		    	    android:layout_below="@id/topAreaLayout"
-		    	    android:transcriptMode="alwaysScroll" 
+		    	  
 					android:layout_width="fill_parent"		    	  
 					android:layout_height="fill_parent"
 					android:dividerHeight="-1dp"

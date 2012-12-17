@@ -82,7 +82,7 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 				String password = tPassword.getText().toString();
 				tPassword.setText("");
 				
-				String json = PlayerService.setupConnectViaEmail(this, tEmail.getText().toString(), tNickname.getText().toString(), tPassword.getText().toString());
+				String json = PlayerService.setupConnectViaEmail(this, tEmail.getText().toString(), tNickname.getText().toString(), password);
 				
 				//kick off thread
 				new NetworkTask(this, RequestType.POST, getString(R.string.progress_connecting), json).execute(Constants.REST_CREATE_PLAYER_URL);

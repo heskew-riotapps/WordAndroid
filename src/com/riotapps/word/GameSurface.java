@@ -374,6 +374,11 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	this.bRecall.setVisibility(View.GONE); 
 	 	
 	 	
+	 	Logger.d(TAG, "setupButtons this.game.getNumActiveOpponents()=" + this.game.getNumActiveOpponents());
+	 	Logger.d(TAG, "setupButtons this.game.getTurn()=" + this.game.getTurn());
+	 	Logger.d(TAG, "setupButtons this.game.isContextPlayerStarter()=" + this.game.isContextPlayerStarter(this.player));
+
+	 	
 	 	//set cancel button area mode:
 	 	//if it's the first play of the game by starting player, it should be "CANCEL" mode
 	 	//if it's the first play of the game by a non-starting player, it should be in "DECLINE" mode
@@ -393,6 +398,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			bCancel.setVisibility(View.GONE);	
 		 		bResign.setVisibility(View.GONE);
 		 		bDecline.setOnClickListener(this);
+		 		bDecline.setVisibility(View.VISIBLE);
 	 		}
 	 		else{
 	 			//else we are past each opponents first turn, therefore show the resign button 
@@ -666,6 +672,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		       case R.id.bSwap:
 		        	this.onSwapClick();
 					break;
+		        case R.id.bDecline:  
+		        	this.handleDecline();
+					break;
 	    	}
 	 }
 	
@@ -689,6 +698,24 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	dialog.show();	
 	    }
 	    
+	    private void handleDecline(){
+	    	final CustomDialog dialog = new CustomDialog(this, 
+	    			this.getString(R.string.game_surface_decline_game_confirmation_title), 
+	    			this.getString(R.string.game_surface_decline_game_confirmation_text),
+	    			this.getString(R.string.yes),
+	    			this.getString(R.string.no));
+	    	
+	    	dialog.setOnOKClickListener(new View.OnClickListener() {
+		 		@Override
+				public void onClick(View v) {
+		 			dialog.dismiss(); 
+		 			handleGameDeclineOnClick();
+		 		
+		 		}
+			});
+
+	    	dialog.show();	
+	    }
 	    
 	    private void handleGameCancelOnClick(){
 	    	//stop thread first
@@ -698,7 +725,22 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				
 				//kick off thread to cancel game on server
 				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_cancelling), GameActionType.CANCEL_GAME);
-				runningTask.execute(Constants.REST_CANCEL_GAME);
+				runningTask.execute(Constants.REST_GAME_CANCEL);
+			} catch (DesignByContractException e) {
+				 
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+			}
+	    }
+	    
+	    private void handleGameDeclineOnClick(){
+	    	//stop thread first
+	    	this.gameSurfaceView.onStop();
+	    	try { 
+				String json = GameService.setupDeclineGame(context, this.game.getId());
+				
+				//kick off thread to cancel game on server
+				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.DECLINE_GAME);
+				runningTask.execute(Constants.REST_GAME_DECLINE);
 			} catch (DesignByContractException e) {
 				 
 				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
@@ -827,6 +869,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		         Log.i(GameSurface.TAG, "StatusCode: " + statusCode);
 	    		         Gson gson = new Gson();
 
+	    		         Player player = null;
+	    		         
 	    		         switch(statusCode){  
 	    		             case 200:  
 	    		             case 201: {
@@ -837,7 +881,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 			GameService.removeGameFromLocal(context, context.game);
 	    		            	 			
 	    		            	 			//refresh player's game list with response from server
-	    		            	 			Player player = GameService.handleCancelGameResponse(context, iStream);
+	    		            	 			player = GameService.handleCancelGameResponse(context, iStream);
 	    		            	 			GameService.updateLastGameListCheckTime(this.context);
 	    		            	 			
 	    		            	 			if (player.getTotalNumLocalGames() == 0){
@@ -850,7 +894,21 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 			
 	    		            	 		break;
 	    		            	 	case DECLINE_GAME:
-	    		            	 		
+	    		            	 		//remove game from local storage
+    		            	 			GameService.removeGameFromLocal(context, context.game);
+    		            	 			
+    		            	 			//refresh player's game list with response from server
+    		            	 			player = GameService.handleDeclineGameResponse(context, iStream);
+    		            	 			GameService.updateLastGameListCheckTime(this.context);
+    		            	 			
+    		            	 			if (player.getTotalNumLocalGames() == 0){
+    		            	 				context.handleBack(com.riotapps.word.StartGame.class);	    		            	 					
+    		            	 			}
+    		            	 			else{
+    		            	 				//send player back to main landing 
+    		            	 				context.handleBack(com.riotapps.word.MainLanding.class);
+    		            	 			}
+
 	    		            	 		break;
 	    		            	 	case RESIGN:
 	    		            	 		

@@ -124,7 +124,25 @@ public class GameService {
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
-		TransportGetGame game = new TransportGetGame();
+		TransportCancelGame game = new TransportCancelGame();
+		game.setToken(player.getAuthToken());
+		game.setGameId(gameId);
+		
+		return gson.toJson(game);
+	}
+	
+	public static String setupDeclineGame(Context ctx, String gameId) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupDeclineGame");
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportDeclineGame game = new TransportDeclineGame();
 		game.setToken(player.getAuthToken());
 		game.setGameId(gameId);
 		
@@ -299,6 +317,10 @@ public class GameService {
 	
 
 	public static Player handleCancelGameResponse(final Context ctx, InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
+	}
+	
+	public static Player handleDeclineGameResponse(final Context ctx, InputStream iStream){
 		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
 	}
 

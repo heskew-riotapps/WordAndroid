@@ -38,7 +38,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class GameChat extends FragmentActivity implements  View.OnClickListener{
@@ -53,6 +55,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	private String chatPlayer2Id = "";
 	private String chatPlayer3Id = "";
 	private String chatPlayer4Id = "";
+	//private ChatArrayAdapter adapter = null;
 	
 	ListView lvChat;
 	
@@ -78,7 +81,26 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	 	this.imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
 	    this.imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
 	 	
-	 	this.loadList();
+	 	this.loadLayout();
+	}
+	
+	private void loadLayout(){
+		ScrollView scrChat = (ScrollView) findViewById(R.id.scrChat);
+		LinearLayout llChat = (LinearLayout) findViewById(R.id.llChat);
+		llChat.removeAllViews();
+		
+		if (this.game.getChats().size() > 0){
+  
+	        for (Chat c : this.game.getChats()){
+	        	llChat.addView(getChatView(c));
+			}
+	        llChat.setVisibility(View.VISIBLE);
+    	}
+		else{
+			llChat.setVisibility(View.INVISIBLE);
+		}
+		
+		scrChat.fullScroll(View.FOCUS_DOWN);
 	}
 	
 	
@@ -87,10 +109,12 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		//Collections.reverse(this.game.getChats());
  
 		ChatArrayAdapter adapter = new ChatArrayAdapter(this, this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
+		adapter.hasStableIds();
 
-		this.lvChat = (ListView) findViewById(R.id.lvChat);
-		this.lvChat.setAdapter(adapter); 
-		adapter.resetControls();
+		
+		lvChat = (ListView) findViewById(R.id.lvChat);
+		lvChat.setAdapter(adapter); 
+		 
 		
 		lvChat.post(new Runnable(){
 			  public void run() {
@@ -101,9 +125,89 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	 
 	}
 	
+	private void reloadList(){
+	//	this.lvChat = null;
+	//	this.adapter = null;
+		
+		this.loadList();
+		
+	//	this.adapter.reloadList( this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
+	//	this.lvChat.invalidateViews();
+		//this.adapter.clear();
+		//this.adapter.addAll(this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
+		
+		//this.adapter.setList( this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
+		//this.adapter.reloadList( this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
+		//this.adapter.notifyDataSetChanged();
+		/*
+		lvChat.post(new Runnable(){
+			  public void run() {
+				  lvChat.setSelection(lvChat.getCount() - 1);
+			  }});
+			  
+			  */
+	}
+	
+	public View getChatView(Chat chat) {
+		View view = LayoutInflater.from(this).inflate(R.layout.gamechatitem, null);
+		  
+		
+		  if (chatPlayer1Id == ""){
+    		  chatPlayer1Id = chat.getPlayerId(); 
+    	  }
+    	  else if (chatPlayer2Id == ""){
+    		  chatPlayer2Id = chat.getPlayerId(); 
+    	  }
+    	  else if (chatPlayer3Id == ""){
+    		  chatPlayer3Id = chat.getPlayerId(); 
+    	  }
+    	  else {
+    		  chatPlayer4Id = chat.getPlayerId(); 
+    	  }
+    	  
+    	   TextView tvChat = (TextView) view.findViewById(R.id.tvChat);
+    	   
+    	   if (chat.getPlayerId() == chatPlayer1Id){
+    		   tvChat.setBackgroundResource(R.drawable.chat_player1_background);
+    	   }
+    	   else if (chat.getPlayerId() == chatPlayer2Id){
+    		   tvChat.setBackgroundResource(R.drawable.chat_player2_background);
+    	   }
+    	   else if (chat.getPlayerId() == chatPlayer3Id){
+    		   tvChat.setBackgroundResource(R.drawable.chat_player3_background);
+    	   }
+    	   else {
+    		   tvChat.setBackgroundResource(R.drawable.chat_player4_background);
+    	   }
+ 
+
+		   ImageView ivPlayer = (ImageView)view.findViewById(R.id.ivPlayer);
+		   imageLoader.loadImage(player.getImageUrl(), ivPlayer);
+		   
+		/*   
+		   Logger.d(TAG, "ChatArrayAdapter prevPlayerId=" + prevPlayerId + " prevSequentialCount=" + prevSequentialCount);
+    	   if (this.prevPlayerId != chat.getPlayerId() || (this.prevPlayerId == chat.getPlayerId() && this.prevSequentialCount >= 4) ){
+    		   this.prevSequentialCount = 0;
+    		   Player player = context.game.getPlayerById(chat.getPlayerId());
+    	   
+    		   imageLoader.loadImage(player.getImageUrl(), ivPlayer);
+    		   ivPlayer.setVisibility(View.VISIBLE);
+    	   }
+    	   else{ 
+    		   ivPlayer.setVisibility(View.INVISIBLE);
+    		   this.prevSequentialCount += 1;
+    	   }
+    	   
+    	    */
+    	   tvChat.setText(chat.getText());
+    	   
+    	   return view;
+		
+	}
+	
 	private class ChatArrayAdapter extends ArrayAdapter<Chat> {
 	   	  private final GameChat context;
-	   	  private final Chat[] values;
+	   	  private Chat[] values;
 	   	  private String prevPlayerId = "";
 	   	  private int prevSequentialCount = 0;
 	   	  LayoutInflater inflater;
@@ -112,6 +216,11 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	   	  public void resetControls(){
 	   		  this.prevPlayerId = "";
 	   		  this.prevSequentialCount = 0;
+	   	  }
+	   	  
+	   	  public void reloadList(Chat[] values){
+	   		  this.values = values;
+	   		  this.resetControls();
 	   	  }
 	   	  
 	   	  public ChatArrayAdapter(GameChat context, Chat[] values) {
@@ -126,9 +235,9 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	    	  @Override
 	    	  public View getView(int position, View rowView, ViewGroup parent) {
 	    		 
-	    		  if ( rowView == null ) {
+	    		//  if ( rowView == null ) {
 	    			  rowView = inflater.inflate(R.layout.gamechatitem, parent, false);
-	    		  }
+	    		//  }
 	    		  
 		    	  Chat chat = values[position];
 		    	 
@@ -163,10 +272,9 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		    	   
 
 	    		   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
-
 	    		   imageLoader.loadImage(player.getImageUrl(), ivPlayer);
 	    		   
-	    		   
+	    		/*   
 	    		   Logger.d(TAG, "ChatArrayAdapter prevPlayerId=" + prevPlayerId + " prevSequentialCount=" + prevSequentialCount);
 		    	   if (this.prevPlayerId != chat.getPlayerId() || (this.prevPlayerId == chat.getPlayerId() && this.prevSequentialCount >= 4) ){
 		    		   this.prevSequentialCount = 0;
@@ -180,10 +288,10 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		    		   this.prevSequentialCount += 1;
 		    	   }
 		    	   
-		    	    
+		    	    */
 		    	   tvChat.setText(chat.getText());
 		    	   
-		    	    this.prevPlayerId = chat.getPlayerId(); 
+		    	  //  this.prevPlayerId = chat.getPlayerId(); 
 		    	   
 		 
 		    	//   Logger.d(TAG, "adapter position=" + position + " count=" + this.wordCount); 
@@ -297,7 +405,8 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		            	 		
 		            	 		//refresh the list
 		            			etText.setText("");
-		            	 		loadList();
+		            			
+		            			loadLayout();
 		            	 		
 		            	 		break;
 		            	 		//end of case 200 & 201 
