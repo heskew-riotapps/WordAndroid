@@ -648,7 +648,8 @@ public class Game implements Parcelable, Comparable<Game> {
 	//	LastTurn lastTurn = this.getLastTurn(contextPlayerId);
 		
 	// return "p";
-		//Logger.d(TAG, "getLastActionTextForList lastTurn.getTurnDate()=" + this.getLastTurnDate());
+		Logger.d(TAG, "getLastActionTextForList gameId=" + this.id + " status=" + this.getStatus() + " this.getLastAction()=" + this.getLastAction());
+		
 		String timeSince = Utils.getTimeSinceString(context, this.getLastTurnDate());
 		boolean isContext = this.isContextPlayerPerformedLastTurn(contextPlayerId);
 		String opponentName = this.getLastTurnPlayer().getAbbreviatedName();
@@ -815,7 +816,12 @@ public class Game implements Parcelable, Comparable<Game> {
 						}		
 					
 					case RESIGNED:
-						return "resigned"; 
+						if (isContext){
+							return String.format(context.getString(R.string.game_last_action_list_resigned_context), timeSince);
+						}
+						else{
+							return String.format(context.getString(R.string.game_last_action_list_resigned), timeSince, this.getLastTurnPlayer().getAbbreviatedName());				
+						}	
 						
 					case CANCELLED:
 						return "cancelled"; ///probably not associated with game action, more of a pg status
@@ -842,7 +848,8 @@ public class Game implements Parcelable, Comparable<Game> {
 		WORDS_PLAYED(9),
 		TURN_SKIPPED(10),
 		RESIGNED(11),
-		CANCELLED(12);	
+		CANCELLED(12),
+		DECLINED(13);;	
 		
 		private final int value;
 		private LastAction(int value) {

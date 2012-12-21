@@ -25,7 +25,7 @@ public class NetworkConnectivity {
 	     boolean isWiFiNetworkConnected = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();  
 
 	     //try again in 2 seconds
-	     if (isMobileNetworkConnected || isWiFiNetworkConnected == false){
+	     if (!isMobileNetworkConnected && !isWiFiNetworkConnected){
 	    	 try {
 				Thread.sleep(Constants.NETWORK_CONNECTIVITY_CHECK_DURATION);
 			} catch (InterruptedException e) {

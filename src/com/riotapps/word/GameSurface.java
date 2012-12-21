@@ -675,6 +675,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		        case R.id.bDecline:  
 		        	this.handleDecline();
 					break;
+		        case R.id.bResign:  
+		        	this.handleResign();
+					break;
 	    	}
 	 }
 	
@@ -716,6 +719,25 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
 	    	dialog.show();	
 	    }
+
+	    private void handleResign(){
+	    	final CustomDialog dialog = new CustomDialog(this, 
+	    			this.getString(R.string.game_surface_resign_game_confirmation_title), 
+	    			this.getString(R.string.game_surface_resign_game_confirmation_text),
+	    			this.getString(R.string.yes),
+	    			this.getString(R.string.no));
+	    	
+	    	dialog.setOnOKClickListener(new View.OnClickListener() {
+		 		@Override
+				public void onClick(View v) {
+		 			dialog.dismiss(); 
+		 			handleGameResignOnClick();
+		 		
+		 		}
+			});
+
+	    	dialog.show();	
+	    }
 	    
 	    private void handleGameCancelOnClick(){
 	    	//stop thread first
@@ -741,6 +763,21 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				//kick off thread to cancel game on server
 				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.DECLINE_GAME);
 				runningTask.execute(Constants.REST_GAME_DECLINE);
+			} catch (DesignByContractException e) {
+				 
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+			}
+	    }
+	    
+	    private void handleGameResignOnClick(){
+	    	//stop thread first
+	    	this.gameSurfaceView.onStop();
+	    	try { 
+				String json = GameService.setupResignGame(context, this.game.getId());
+				
+				//kick off thread to cancel game on server
+				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.RESIGN);
+				runningTask.execute(Constants.REST_GAME_RESIGN);
 			} catch (DesignByContractException e) {
 				 
 				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
@@ -911,7 +948,16 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
 	    		            	 		break;
 	    		            	 	case RESIGN:
-	    		            	 		
+	    		            	 		//remove game from local storage
+    		            	 			GameService.removeGameFromLocal(context, context.game);
+    		            	 			
+    		            	 			//refresh player's game list with response from server
+    		            	 			player = GameService.handleResignGameResponse(context, iStream);
+    		            	 			GameService.updateLastGameListCheckTime(this.context);
+    		            	 			
+    		            	 			//send player back to main landing 
+    		            	 			context.handleBack(com.riotapps.word.MainLanding.class);
+    		            	 
 	    		            	 		break;
 	    		            	 	case PLAY:
     		            	 			//update game list for active games for last played action

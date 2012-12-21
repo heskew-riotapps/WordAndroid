@@ -133,8 +133,10 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	private void loadLists(){
  
     	//Logger.d(TAG, "loadLists started");
+		LinearLayout llCompletedGames = (LinearLayout)findViewById(R.id.llCompletedGames);
     	LinearLayout llYourTurn = (LinearLayout)findViewById(R.id.llYourTurn);
     	LinearLayout llOpponentsTurn = (LinearLayout)findViewById(R.id.llOpponentsTurn);
+    	LinearLayout llCompletedGamesWrapper = (LinearLayout)findViewById(R.id.llCompletedGamesWrapper);
       	LinearLayout llYourTurnWrapper = (LinearLayout)findViewById(R.id.llYourTurnWrapper);
     	LinearLayout llOpponentsTurnWrapper = (LinearLayout)findViewById(R.id.llOpponentsTurnWrapper);
     	TextView tvWaiting = (TextView)findViewById(R.id.tvWaiting);
@@ -142,16 +144,20 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	//clear out view
     	llYourTurn.removeAllViews();
     	llOpponentsTurn.removeAllViews();
+    	llCompletedGames.removeAllViews();
 
     	
-   //	Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() size=" + this.player.getActiveGamesYourTurn().size() );
-    //	Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() size=" + this.player.getActiveGamesOpponentTurn().size() );
+  	Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() size=" + this.player.getActiveGamesYourTurn().size() );
+
     	
     	int i = 1;
     	if (this.player.getActiveGamesYourTurn().size() > 0){
     		tvWaiting.setVisibility(View.GONE);
     		
 	        for (Game g : this.player.getActiveGamesYourTurn()){
+	        	Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() game=" +g.getId() );
+
+	        	
 	        	 llYourTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesYourTurn().size() == i));
 	        	 i += 1;
 			}
@@ -166,9 +172,14 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     		}
     	}
 
+        Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() size=" + this.player.getActiveGamesOpponentTurn().size() );
     	i = 1;
     	if (this.player.getActiveGamesOpponentTurn().size() > 0){
+    	
+    		
 	        for (Game g : this.player.getActiveGamesOpponentTurn()){
+	        	Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() game=" + g.getId() );
+	        	
 	        	llOpponentsTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesOpponentTurn().size() == i));
 	        	 i += 1;
 			}
@@ -176,6 +187,22 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	}
     	else {
     		llOpponentsTurnWrapper.setVisibility(View.GONE);
+    	}
+    	
+    	
+        Logger.w(TAG, "loadLists this.player.getCompletedGames() size=" + this.player.getCompletedGames().size() );
+    	i = 1;
+    	if (this.player.getCompletedGames().size() > 0){
+	        for (Game g : this.player.getCompletedGames()){
+	        	Logger.w(TAG, "loadLists this.player.getCompletedGames() game=" + g.getId() );
+	        	
+	        	llCompletedGames.addView(getGameYourTurnView(g, i == 1, this.player.getCompletedGames().size() == i));
+	        	 i += 1;
+			}
+	        llCompletedGamesWrapper.setVisibility(View.VISIBLE);
+    	}
+    	else {
+    		llCompletedGamesWrapper.setVisibility(View.GONE);
     	}
 
     }

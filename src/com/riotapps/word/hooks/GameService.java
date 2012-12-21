@@ -149,6 +149,24 @@ public class GameService {
 		return gson.toJson(game);
 	}
 	
+	public static String setupResignGame(Context ctx, String gameId) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupResignGame");
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportResignGame game = new TransportResignGame();
+		game.setToken(player.getAuthToken());
+		game.setGameId(gameId);
+		
+		return gson.toJson(game);
+	}
+	
 	public static String setupGameTurn(Context ctx, Game game, PlacedResult placedResult) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGameTurn");
@@ -321,6 +339,10 @@ public class GameService {
 	}
 	
 	public static Player handleDeclineGameResponse(final Context ctx, InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
+	}
+	
+	public static Player handleResignGameResponse(final Context ctx, InputStream iStream){
 		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
 	}
 
