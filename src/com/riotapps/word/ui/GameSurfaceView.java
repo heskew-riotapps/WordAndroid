@@ -2097,9 +2097,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    this.afterPlayRedraw = true;
 		this.readyToDraw = true;
 		
-		 this.resetPointsView();
-		//this.startThreadLoop();;
-	}
+		this.parent.setPointsAfterPlayView();
+		// this.resetPointsView();
+		}
 	
 	public void onPlayClick(){
 		try{

@@ -14,14 +14,12 @@ import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
-import com.riotapps.word.hooks.WordService;
 import com.riotapps.word.ui.CustomDialog;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameAction.GameActionType;
 import com.riotapps.word.ui.GameState;
 import com.riotapps.word.ui.GameStateService;
 import com.riotapps.word.ui.GameSurfaceView;
-import com.riotapps.word.ui.GameThread;
 import com.riotapps.word.ui.PlacedResult;
 import com.riotapps.word.ui.WordLoaderThread;
 import com.riotapps.word.utils.ApplicationContext;
@@ -36,7 +34,6 @@ import com.riotapps.word.utils.Enums.RequestType;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,7 +43,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -68,7 +64,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 Button bShuffle;
 	
 	 //View bottom;
-	
+	private int currentPoints = 0;
 	public static final int MSG_SCOREBOARD_VISIBILITY = 1;
 	public static final int MSG_POINTS_SCORED = 2;
 	public static final int SCOREBOARD_HEIGHT = 30;
@@ -279,25 +275,46 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	  }
 	 
 	 public void setPointsView(int points){
-		 context.runOnUiThread(new handlePointsViewRunnable(points));
+		 this.currentPoints = points;
+		 context.runOnUiThread(new handlePointsViewRunnable(points, 1));
+	 }
+	 
+	 public void setPointsAfterPlayView(){
+		 context.runOnUiThread(new handlePointsViewRunnable(this.currentPoints, 2));
 	 }
 	 
 	 private class handlePointsViewRunnable implements Runnable {
-		 private int points; //1 = shuffle, 2 = recall 	
+		 private int points;   	
+		 private int type; //1 = normal, 2 = afterPlay  	
 		 
-		 public handlePointsViewRunnable(int points){
+		 public handlePointsViewRunnable(int points, int type){
 		 	this.points = points;
+		 	this.type = type;
 		 	}
 		 
 		 
 		    public void run() {
-		    	if (points == 0){
-		 			tvNumPoints.setVisibility(View.INVISIBLE);
-		 		}
-		 		else {
-		 			tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_num_points),points));
-		 			tvNumPoints.setVisibility(View.VISIBLE);
-		 		}
+		    	if (this.type == 1){
+			    	if (points == 0){
+			 			tvNumPoints.setVisibility(View.INVISIBLE);
+			 		}
+			 		else {
+			 			tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_num_points),points));
+			 			tvNumPoints.setVisibility(View.VISIBLE);
+			 			tvNumPoints.setTextColor(Color.parseColor(context.getString(R.color.scoreboard_text_color)));
+			 		}
+		    	}
+		    	else { //last played points returned after a play 
+		    		if (points == 0){
+			 			tvNumPoints.setVisibility(View.INVISIBLE);
+			 		}
+			 		else {
+			 			tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_num_points_scored),points));
+			 			tvNumPoints.setVisibility(View.VISIBLE);
+			 			tvNumPoints.setTextColor(Color.parseColor(context.getString(R.color.scoreboard_text_last_played_color)));
+			 		}
+		    		
+		    	}
 		    /*	switch (this.activeButton){
 			    	case 1:
 			    		bRecall.setVisibility(View.GONE);
@@ -324,6 +341,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 }
 	 
 	 private void setupButtons(){
+		Button bRematch = (Button) findViewById(R.id.bRematch);
 		this.bRecall = (Button) findViewById(R.id.bRecall);
 		this.bPlay = (Button) findViewById(R.id.bPlay);
 		this.bSkip = (Button) findViewById(R.id.bSkip);
@@ -377,103 +395,125 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	Logger.d(TAG, "setupButtons this.game.getNumActiveOpponents()=" + this.game.getNumActiveOpponents());
 	 	Logger.d(TAG, "setupButtons this.game.getTurn()=" + this.game.getTurn());
 	 	Logger.d(TAG, "setupButtons this.game.isContextPlayerStarter()=" + this.game.isContextPlayerStarter(this.player));
-
+	 	Logger.d(TAG, "setupButtons this.game.getStatus()=" + this.game.getStatus());
+	 	
+	 	
 	 	
 	 	//set cancel button area mode:
 	 	//if it's the first play of the game by starting player, it should be "CANCEL" mode
 	 	//if it's the first play of the game by a non-starting player, it should be in "DECLINE" mode
 	 	//if it's not the first play of the game, it should be in "RESIGN" mode
 	 	
-	 	//the starting player gets one chance (one turn) to cancel
-	 	if (this.game.getTurn() == 1 && this.game.isContextPlayerStarter(this.player)){
-	 		bCancel.setOnClickListener(this);	
+	 	if (this.game.getStatus() == 1) { //active
+	 		bRematch.setVisibility(View.GONE);
+	 		
+		 	//the starting player gets one chance (one turn) to cancel
+		 	if (this.game.getTurn() == 1 && this.game.isContextPlayerStarter(this.player)){
+		 		bCancel.setOnClickListener(this);	
+		 		bResign.setVisibility(View.GONE);
+		 		bDecline.setVisibility(View.GONE);
+		 	}
+		 	else if (this.game.getNumActiveOpponents() == 1){
+		 		if (this.game.getTurn() < 3 && !this.game.isContextPlayerStarter(this.player)){
+		 			//in a two player game, the invited player gets one chance to decline
+		 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
+		 			//makes the first move
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setVisibility(View.GONE);
+			 		bDecline.setOnClickListener(this);
+			 		bDecline.setVisibility(View.VISIBLE);
+		 		}
+		 		else{
+		 			//else we are past each opponents first turn, therefore show the resign button 
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setOnClickListener(this);
+			 		bDecline.setVisibility(View.GONE);
+			 		bResign.setVisibility(View.VISIBLE);
+			 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
+		 		}
+		 	}
+		 	else if (this.game.getNumActiveOpponents() == 2){
+		 		if (this.game.getTurn() < 3 && this.game.getContextPlayerOrder(this.player) < 3){
+		 			//in a three player game, the invited players get one chance to decline
+		 			//in this case we are checking for the second player in order
+		 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
+		 			//makes the first move
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setVisibility(View.GONE);
+			 		bDecline.setOnClickListener(this);
+		 		}
+		 		else if (this.game.getTurn() < 4 && this.game.getContextPlayerOrder(this.player) == 3){
+		 			//in a three player game, the invited players get one chance to decline
+		 			//in this case we are checking for the third player in order
+		 			//we check for turn 1 and 2 (which are not his turns) in case he sees the game before the starting player
+		 			//makes the first move or the second player makes a move
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setVisibility(View.GONE);
+			 		bDecline.setOnClickListener(this);
+		 		}
+		 		else{
+		 			//else we are past each opponents first turn, therefore show the resign button 
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setOnClickListener(this);
+			 		bResign.setVisibility(View.VISIBLE);
+			 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
+			 		bDecline.setVisibility(View.GONE);
+		 		}
+		 	}
+		 	else if (this.game.getNumActiveOpponents() == 3){
+		 		if (this.game.getTurn() < 3 && this.game.getContextPlayerOrder(this.player) < 3){
+		 			//in a four player game, the invited players get one chance to decline
+		 			//in this case we are checking for the second player in order
+		 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
+		 			//makes the first move
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setVisibility(View.GONE);
+			 		bDecline.setOnClickListener(this);
+		 		}
+		 		else if (this.game.getTurn() < 4 && this.game.getContextPlayerOrder(this.player) == 3){
+		 			//in a four player game, the invited players get one chance to decline
+		 			//in this case we are checking for the third player in order
+		 			//we check for turn 1 and 2(which are not his turns) in case he sees the game before the starting player
+		 			//makes the first move or the second player makes a move
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setVisibility(View.GONE);
+			 		bDecline.setOnClickListener(this);
+		 		}
+		 		else if (this.game.getTurn() < 5 && this.game.getContextPlayerOrder(this.player) == 4){
+		 			//in a four player game, the invited players get one chance to decline
+		 			//in this case we are checking for the fourth player in order
+		 			//we check for turn 1, 2, 3 (which are not his turns) in case he sees the game before the starting player
+		 			//makes the first move or the second player makes a move
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setVisibility(View.GONE);
+			 		bDecline.setOnClickListener(this);
+		 		}
+		 		else{
+		 			//else we are past each opponents first turn, therefore show the resign button 
+		 			bCancel.setVisibility(View.GONE);	
+			 		bResign.setOnClickListener(this);
+			 		bDecline.setVisibility(View.GONE);
+			 		bResign.setVisibility(View.VISIBLE);
+			 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
+		 		}
+		 	}
+		 	
+	 	}
+	 	else if(this.game.getStatus() == 3 || this.game.getStatus() == 4){
+	 		bRecall.setVisibility(View.GONE);
+	 		bSwap.setVisibility(View.GONE);
+	 		bSkip.setVisibility(View.GONE);
+	 		bPlay.setVisibility(View.GONE);
 	 		bResign.setVisibility(View.GONE);
 	 		bDecline.setVisibility(View.GONE);
-	 	}
-	 	else if (this.game.getNumActiveOpponents() == 1){
-	 		if (this.game.getTurn() < 3 && !this.game.isContextPlayerStarter(this.player)){
-	 			//in a two player game, the invited player gets one chance to decline
-	 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
-	 			//makes the first move
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setVisibility(View.GONE);
-		 		bDecline.setOnClickListener(this);
-		 		bDecline.setVisibility(View.VISIBLE);
+	 		bCancel.setVisibility(View.GONE);
+	 		bShuffle.setVisibility(View.GONE);
+	 		if (this.game.getPlayedWords().size() == 0){
+	 			bPlayedWords.setVisibility(View.GONE);
 	 		}
-	 		else{
-	 			//else we are past each opponents first turn, therefore show the resign button 
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setOnClickListener(this);
-		 		bDecline.setVisibility(View.GONE);
-		 		bResign.setVisibility(View.VISIBLE);
-		 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
-	 		}
-	 	}
-	 	else if (this.game.getNumActiveOpponents() == 2){
-	 		if (this.game.getTurn() < 3 && this.game.getContextPlayerOrder(this.player) < 3){
-	 			//in a three player game, the invited players get one chance to decline
-	 			//in this case we are checking for the second player in order
-	 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
-	 			//makes the first move
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setVisibility(View.GONE);
-		 		bDecline.setOnClickListener(this);
-	 		}
-	 		else if (this.game.getTurn() < 4 && this.game.getContextPlayerOrder(this.player) == 3){
-	 			//in a three player game, the invited players get one chance to decline
-	 			//in this case we are checking for the third player in order
-	 			//we check for turn 1 and 2 (which are not his turns) in case he sees the game before the starting player
-	 			//makes the first move or the second player makes a move
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setVisibility(View.GONE);
-		 		bDecline.setOnClickListener(this);
-	 		}
-	 		else{
-	 			//else we are past each opponents first turn, therefore show the resign button 
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setOnClickListener(this);
-		 		bResign.setVisibility(View.VISIBLE);
-		 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
-		 		bDecline.setVisibility(View.GONE);
-	 		}
-	 	}
-	 	else if (this.game.getNumActiveOpponents() == 3){
-	 		if (this.game.getTurn() < 3 && this.game.getContextPlayerOrder(this.player) < 3){
-	 			//in a four player game, the invited players get one chance to decline
-	 			//in this case we are checking for the second player in order
-	 			//we check for turn 1 (which is not his turn) in case he sees the game before the starting player
-	 			//makes the first move
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setVisibility(View.GONE);
-		 		bDecline.setOnClickListener(this);
-	 		}
-	 		else if (this.game.getTurn() < 4 && this.game.getContextPlayerOrder(this.player) == 3){
-	 			//in a four player game, the invited players get one chance to decline
-	 			//in this case we are checking for the third player in order
-	 			//we check for turn 1 and 2(which are not his turns) in case he sees the game before the starting player
-	 			//makes the first move or the second player makes a move
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setVisibility(View.GONE);
-		 		bDecline.setOnClickListener(this);
-	 		}
-	 		else if (this.game.getTurn() < 5 && this.game.getContextPlayerOrder(this.player) == 4){
-	 			//in a four player game, the invited players get one chance to decline
-	 			//in this case we are checking for the fourth player in order
-	 			//we check for turn 1, 2, 3 (which are not his turns) in case he sees the game before the starting player
-	 			//makes the first move or the second player makes a move
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setVisibility(View.GONE);
-		 		bDecline.setOnClickListener(this);
-	 		}
-	 		else{
-	 			//else we are past each opponents first turn, therefore show the resign button 
-	 			bCancel.setVisibility(View.GONE);	
-		 		bResign.setOnClickListener(this);
-		 		bDecline.setVisibility(View.GONE);
-		 		bResign.setVisibility(View.VISIBLE);
-		 		bResign.setClickable(this.game.isContextPlayerTurn(this.player));
-	 		}
- 		
+	 		bRematch.setVisibility(View.VISIBLE);
+	 		
+	 		bRematch.setOnClickListener(this);
 	 	}
 	 
 	}
@@ -678,6 +718,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		        case R.id.bResign:  
 		        	this.handleResign();
 					break;
+		        case R.id.bRematch:  
+		        	this.handleRematch();
+					break;
 	    	}
 	 }
 	
@@ -739,6 +782,47 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	dialog.show();	
 	    }
 	    
+	    private void handleRematch(){
+	    	String rematchText = "";
+	    	String opponent1 = "";
+	    	String opponent2 = "";
+	    	String opponent3 = "";
+	    	List<Player> opponents = this.game.getAllOpponents(this.player);
+	    	for (int i = 0; i < opponents.size(); i++){
+	    		if (i == 0){opponent1 = opponents.get(i).getNameWithMaxLength(40);}
+	    		else if (i == 1){opponent2 = opponents.get(i).getNameWithMaxLength(40);}
+	    		else {opponent3 = opponents.get(i).getNameWithMaxLength(40);}
+	    	}
+	    	
+	    	if (opponents.size() == 3){
+	    		rematchText = String.format(this.getString(R.string.game_surface_rematch_with_3), opponent1, opponent2, opponent3);
+	    	}
+	    	else if (opponents.size() == 2){
+	    		rematchText = String.format(this.getString(R.string.game_surface_rematch_with_2), opponent1, opponent2);
+	    	}
+	    	else {//single opponent
+	    		rematchText = String.format(this.getString(R.string.game_surface_rematch_with_1), opponent1);	    		
+	    	}
+	    	
+	    	final CustomDialog dialog = new CustomDialog(this, 
+	    			this.getString(R.string.game_surface_rematch_title), 
+	    			rematchText,
+	    			this.getString(R.string.yes),
+	    			this.getString(R.string.no));
+	    	
+	    	dialog.setOnOKClickListener(new View.OnClickListener() {
+		 		@Override
+				public void onClick(View v) {
+		 			dialog.dismiss(); 
+		 			handleGameRematchOnClick();
+		 		
+		 		}
+			});
+
+	    	dialog.show();	
+	    }
+	    
+	    
 	    private void handleGameCancelOnClick(){
 	    	//stop thread first
 	    	this.gameSurfaceView.onStop();
@@ -783,6 +867,29 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
 			}
 	    }
+	    
+	    private void handleGameRematchOnClick(){
+	    	//stop thread first
+	    	this.gameSurfaceView.onStop();
+	    	try { 
+		    	Game newGame = GameService.createGame(this.context, this.player);
+		    	
+		    	List<Player> opponents = this.game.getAllOpponents(this.player);
+		    	for (Player opponent : opponents){
+		    		newGame =  GameService.addPlayerToGame(this, newGame, opponent);
+		    	}
+
+				String json = GameService.setupStartGame(context, newGame);
+				
+				//kick off thread to start game on server
+				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_starting_game), GameActionType.REMATCH);
+				runningTask.execute(Constants.REST_CREATE_GAME_URL);
+			} catch (DesignByContractException e) {
+				 
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+			}
+	    }
+	    
 	    
 	    public void handleGamePlayOnClick(PlacedResult placedResult){
 	    	//stop thread first
@@ -1007,7 +1114,17 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		            	 			gameSurfaceView.resetGameAfterPlay();
 
 	    		            	 		break;
-	    		            	 
+	    		            	 	case REMATCH:
+	    		            	 		Game newGame = GameService.handleCreateGameResponse(this.context, iStream);
+	    		 
+    		    		            	 GameService.putGameToLocal(this.context, newGame);
+    		    		            	 GameService.clearLastGameListCheckTime(this.context);
+    		    		            	 
+    		    		            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+    		    		            	 intent.putExtra(Constants.EXTRA_GAME_ID, newGame.getId());
+    		    		             
+    		    		      	      	 this.context.startActivity(intent);
+    		    		                 break;  
 	    		            	 }
 	    		             
 	    		             }//end of case 200 & 201 

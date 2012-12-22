@@ -36,6 +36,7 @@
     <color name="form_border_color">#3366dd</color> <!-- previously 330066 -->  
     <color name="button_background_color">#D2B48C</color> 
     <color name="scoreboard_text_color">#000000</color>
+    <color name="scoreboard_text_last_played_color">#FF0000</color>
     <color name="logo_background_color">#eec591</color>
     <color name="logo_area_bottom_background_color">#3366dd</color> 
     <color name="form_header_text_color">#1874CD</color> 

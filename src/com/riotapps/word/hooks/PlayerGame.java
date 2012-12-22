@@ -256,7 +256,7 @@ public class PlayerGame implements Parcelable{
  		out.writeList(this.trayLetters);
  	//	out.writeInt(this.lastTurn);
  	//	out.writeInt(this.lastTurnAction);
- 	//	out.writeInt(this.lastTurnPoints);
+ 	 	out.writeInt(this.status);
  		out.writeInt(this.trayVersion);
  		
 	}
@@ -296,7 +296,7 @@ public class PlayerGame implements Parcelable{
 	    in.readStringList(this.trayLetters);
 //	    this.lastTurn = in.readInt();
 //	    this.lastTurnAction = in.readInt();
-//	    this.lastTurnPoints = in.readInt();
+	    this.status = in.readInt();
 	    this.trayVersion = in.readInt();
 	  //  Logger.d(TAG, "parcel in playerOrder=" + this.playerOrder);
 	

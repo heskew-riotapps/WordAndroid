@@ -148,6 +148,8 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
     public View getView(Player opponent ) {
   		View view = LayoutInflater.from(this).inflate(R.layout.playerlistitem, null);
   
+  		Logger.d(TAG, "getView opponent.name=" + opponent.getName() + " opponent.getNameWithMaxLength(28)=" + opponent.getNameWithMaxLength(28) );
+  		
   	    TextView tvPlayerName = (TextView)view.findViewById(R.id.tvPlayerName);
 	 	tvPlayerName.setText(opponent.getNameWithMaxLength(28));
 

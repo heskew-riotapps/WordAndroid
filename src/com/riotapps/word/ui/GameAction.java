@@ -12,7 +12,8 @@ public class GameAction {
 		RESIGN(3),
 		PLAY(4),
 		SKIP(5),
-		SWAP(6);
+		SWAP(6),
+		REMATCH(7);
 				
 		private final int value;
 		private GameActionType(int value) {

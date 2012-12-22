@@ -429,6 +429,7 @@ public class GameService {
     	PlayerGame pg = new PlayerGame();
     	pg.setPlayerId(player.getId());
     	pg.setPlayer(player);
+    	pg.setStatus(1);
     	pg.setPlayerOrder(game.getPlayerGames().size() + 1);
     	game.getPlayerGames().add(pg);
     	

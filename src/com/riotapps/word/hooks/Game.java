@@ -278,6 +278,18 @@ public class Game implements Parcelable, Comparable<Game> {
 		  return ret;
 	} 
 	
+	public List<Player> getAllOpponents(Player contextPlayer){ 
+		//assume the context player is the first playergame
+		List<Player> ret = new ArrayList<Player>();
+		
+		 for (PlayerGame pg : this.getPlayerGames()){ 
+         	if (!pg.getPlayer().getId().equals(contextPlayer.getId())){
+         		ret.add(pg.getPlayer());
+         	}
+		}
+		  return ret;
+	}
+	
 	public int getNumActiveOpponents(){
 		//refactor to take resigned/declined players out of the count
 		return this.getPlayerGames().size() - 1;
@@ -459,6 +471,9 @@ public class Game implements Parcelable, Comparable<Game> {
 			 }
 			
 		}
+		else if (this.getStatus() == 4) { //declined{
+			return context.getString(R.string.game_last_action_declined);
+		}
 		else{
 			switch (this.getLastAction()){
 				case ONE_LETTER_SWAPPED:
@@ -494,6 +509,7 @@ public class Game implements Parcelable, Comparable<Game> {
 					List<PlayedWord> words = this.getLastPlayedWords();
 					int numWordsPlayed = words.size();
 			
+					//for now limit display to 2
 					switch (numWordsPlayed){
 					case 1:
 						if (isContext){
@@ -502,7 +518,7 @@ public class Game implements Parcelable, Comparable<Game> {
 						else {
 							return String.format(context.getString(R.string.game_last_action_word_played), this.getLastTurnPoints(), opponentName, words.get(0).getWord());						
 						}
-					case 2:
+					default:
 						if (isContext){
 							return String.format(context.getString(R.string.game_last_action_2_words_played_context), this.getLastTurnPoints(), 
 									words.get(0).getWord(), words.get(1).getWord());
@@ -511,7 +527,7 @@ public class Game implements Parcelable, Comparable<Game> {
 							return String.format(context.getString(R.string.game_last_action_2_words_played), this.getLastTurnPoints(), opponentName, 
 									words.get(0).getWord(), words.get(1).getWord());						
 						}
-					case 3:
+					/*case 3:
 						if (isContext){
 							return String.format(context.getString(R.string.game_last_action_3_words_played_context), this.getLastTurnPoints(), 
 									words.get(0).getWord(), words.get(1).getWord(),
@@ -571,7 +587,7 @@ public class Game implements Parcelable, Comparable<Game> {
 									words.get(0).getWord(), words.get(1).getWord(),
 									words.get(2).getWord(), words.get(3).getWord(),
 									words.get(4).getWord(), words.get(5).getWord(), (numWordsPlayed - 6));						
-						}
+						}*/
 					}
 				case TURN_SKIPPED:
 					if (isContext){
@@ -691,6 +707,9 @@ public class Game implements Parcelable, Comparable<Game> {
 	 
 			 }
 		}
+		else if (this.getStatus() == 4) { //declined{
+			return String.format(context.getString(R.string.game_last_action_list_declined), timeSince, opponentName);
+		}
 		else {
 				switch (this.getLastAction()){
 					case ONE_LETTER_SWAPPED:
@@ -726,7 +745,7 @@ public class Game implements Parcelable, Comparable<Game> {
 						List<PlayedWord> words = this.getLastPlayedWords();
 						int numWordsPlayed = words.size();
 	
-						
+						Logger.d(TAG, "words played size =" + words.size());
 						switch (numWordsPlayed){
 						case 1:
 							if (isContext){

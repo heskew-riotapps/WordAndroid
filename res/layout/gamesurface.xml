@@ -100,6 +100,13 @@
         android:layout_weight="1.0"
         android:text="@string/gameboard_resign_button_text"
     />
+   <com.riotapps.word.ui.ScoreboardButton 
+        style="@style/GameBoardButtonStyle"
+        android:id="@+id/bRematch"
+        android:layout_width="0dp"
+        android:layout_weight="1.0"
+        android:text="@string/gameboard_rematch_button_text"
+    />
     </LinearLayout>
    
 </RelativeLayout>

@@ -290,10 +290,12 @@
  	<string name="scoreboard_letters_left">%s letters left</string>
  	<string name="scoreboard_1_letter_left">1 letter left</string>
  	<string name="scoreboard_num_points">%s points</string>
+ 	<string name="scoreboard_num_points_scored">%s points scored</string>
  	<string name="gameboard_recall_button_text">recall</string>
  	<string name="gameboard_shuffle_button_text">shuffle</string>
  	<string name="gameboard_chat_button_text">chat</string>
  	<string name="gameboard_play_button_text">play</string>
+ 	<string name="gameboard_rematch_button_text">rematch</string>
  	<string name="gameboard_resign_button_text">resign</string>
  	<string name="gameboard_decline_button_text">decline</string>
  	<string name="gameboard_skip_button_text">skip</string>
@@ -364,8 +366,9 @@
 	   <string name="hours_ago">%s hours ago</string>
 	   <string name="a_day_ago">a day ago</string>
 	   <string name="days_ago">%s days ago</string>
+	   <string name="game_last_action_list_declined">%2$s declined %1$s</string>
 	   <string name="game_last_action_list_resigned_context">You resigned %s</string>
-	   <string name="game_last_action_list_resigned">%2$s resigned %1$</string>
+	   <string name="game_last_action_list_resigned">%2$s resigned %1$s</string>
 	   <string name="game_last_action_list_started_context">You started this game %s</string>
 	   <string name="game_last_action_list_started">%2$s started this game %1$</string>
 	   <string name="game_last_action_list_undetermined">The last action is undetermined.</string>
@@ -391,6 +394,7 @@
 	   <string name="game_last_action_list_6_words_played_context">You played %2$s, %3$s, %4$s, %5$s, %6$s and %7$s %1$s</string>
 	   <string name="game_last_action_list_more_than_6_words_played_context">You played %2$s, %3$s, %4$s, %5$s, %6$s, %7$s and %8$s more %1$s</string>
 	   
+	    <string name="game_last_action_declined">This game was declined</string>
 	   <string name="game_last_action_word_played">%2$s played %3$s for %1$s points</string>
 	   <string name="game_last_action_2_words_played">%2$s played %3$s and %4$s for %1$s points</string>
 	   <string name="game_last_action_3_words_played">%2$s played %3$s, %4$s and %5$s for %1$s points</string>
@@ -484,5 +488,9 @@
 		<string name="game_surface_game_over_multi_player_context">you won</string>
 		<string name="game_surface_game_over_multi_player">%1$s won</string>
 		<string name="game_surface_game_over_multi_player_draw">%1$s - %2$s</string>
+		<string name="game_surface_rematch_title">start new game?</string>
+		<string name="game_surface_rematch_with_1">rematch with\n%s</string>		
+		<string name="game_surface_rematch_with_2">rematch with\n%1$s\n%2$s</string>
+		<string name="game_surface_rematch_with_3">rematch with\n%1$s\n%2$s\n%3$s</string>
 		
 </resources>
