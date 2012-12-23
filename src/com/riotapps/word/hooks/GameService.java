@@ -74,6 +74,19 @@ public class GameService {
 		editor.commit();
 	}
 	
+	public static boolean checkGameAlertAlreadyShown(Context context, String gameId){
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		if (settings.getBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId), false)) { 
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean(Constants.USER_PREFS_GAME_ALERT_CHECK,true);
+			editor.commit();
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
 	public static void clearLastGameListCheckTime(Context context){
 		
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);

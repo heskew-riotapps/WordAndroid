@@ -88,6 +88,10 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		ScrollView scrChat = (ScrollView) findViewById(R.id.scrChat);
 		LinearLayout llChat = (LinearLayout) findViewById(R.id.llChat);
 		llChat.removeAllViews();
+		this.chatPlayer1Id = "";
+		this.chatPlayer2Id = "";
+		this.chatPlayer3Id = "";
+		this.chatPlayer4Id = "";
 		
 		if (this.game.getChats().size() > 0){
   
@@ -103,6 +107,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		scrChat.fullScroll(View.FOCUS_DOWN);
 	}
 	
+	 
 	
 	private void loadList(){ 
 		
@@ -111,7 +116,10 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		ChatArrayAdapter adapter = new ChatArrayAdapter(this, this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
 		adapter.hasStableIds();
 
-		
+		this.chatPlayer1Id = "";
+		this.chatPlayer2Id = "";
+		this.chatPlayer3Id = "";
+		this.chatPlayer4Id = "";
 		lvChat = (ListView) findViewById(R.id.lvChat);
 		lvChat.setAdapter(adapter); 
 		 
@@ -124,6 +132,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	//	this.lvChat.setStackFromBottom(true);
 	 
 	}
+	 
 	
 	private void reloadList(){
 	//	this.lvChat = null;
@@ -204,7 +213,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
     	   return view;
 		
 	}
-	
+	 
 	private class ChatArrayAdapter extends ArrayAdapter<Chat> {
 	   	  private final GameChat context;
 	   	  private Chat[] values;
@@ -314,7 +323,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		    	   return rowView;
 	    	  } 
 	} 	
-	
+	 
 	
 	@Override
 	public void onClick(View v) {

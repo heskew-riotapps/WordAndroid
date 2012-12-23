@@ -370,7 +370,7 @@
 	   <string name="game_last_action_list_resigned_context">You resigned %s</string>
 	   <string name="game_last_action_list_resigned">%2$s resigned %1$s</string>
 	   <string name="game_last_action_list_started_context">You started this game %s</string>
-	   <string name="game_last_action_list_started">%2$s started this game %1$</string>
+	   <string name="game_last_action_list_started">%2$s started this game %1$s</string>
 	   <string name="game_last_action_list_undetermined">The last action is undetermined.</string>
 	   <string name="game_last_action_list_swapped_1_context">You swapped 1 letter %s</string> 
 	   <string name="game_last_action_list_swapped_1">%2$s swapped 1 letter %1$s</string>

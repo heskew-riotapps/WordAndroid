@@ -61,8 +61,8 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 	int maxAvailable;
 	ImageFetcher imageLoader;
 	ArrayList<Integer> selectedIds = new ArrayList<Integer>();
-	int itemBGColor;
-	int itemBGSelectedColor;
+//	int itemBGColor;
+//	int itemBGSelectedColor;
 	FBFriends friends;
 	
     @Override
@@ -82,8 +82,8 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
    
     	Intent i = getIntent();
     	this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
-    	this.itemBGColor =  getResources().getIdentifier(Constants.DRAWABLE_LOCATION + Constants.CONTENT_AREA_BACKGROUND_COLOR, null, null);
-    	this.itemBGSelectedColor =  getResources().getIdentifier(Constants.DRAWABLE_LOCATION + Constants.CONTENT_AREA_BACKGROUND_SELECTED_COLOR, null, null);
+    	//this.itemBGColor =  getResources().getIdentifier(Constants.DRAWABLE_LOCATION + Constants.CONTENT_AREA_BACKGROUND_COLOR, null, null);
+    	//this.itemBGSelectedColor =  getResources().getIdentifier(Constants.DRAWABLE_LOCATION + Constants.CONTENT_AREA_BACKGROUND_SELECTED_COLOR, null, null);
     	
     	
       //  Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
@@ -215,7 +215,8 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
       		      if(selectedIds.contains(pos)) {
       		           selectedIds.remove(pos);
       		          
-      		           rlItem.setBackgroundResource(itemBGColor);
+      		           rlItem.setBackgroundColor(Color.parseColor(context.getString(R.color.content_area_background_color)));
+      		          // rlItem.setBackgroundResource(itemBGColor);
       		           
       		       }
       		       else {
@@ -224,7 +225,8 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
       		    		   selectedIds.clear();
       		    		   ((FBFriendArrayAdapter)parent.getAdapter()).notifyDataSetChanged();
     		        	   selectedIds.add(pos);
-    		    		   rlItem.setBackgroundResource(itemBGSelectedColor);
+    		        	   rlItem.setBackgroundColor(Color.parseColor(context.getString(R.color.content_area_background_selected_color)));
+    		    		  // rlItem.setBackgroundResource(itemBGSelectedColor);
     		           }
       		    	   else if (maxAvailable == 2 && selectedIds.size() == maxAvailable){
       		    		   FBFriend friendSelected = friends.getFriends().get(pos);
@@ -252,7 +254,8 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
       		    	   }
       		    	   else {
       		    		   selectedIds.add(pos);
-      		    		   rlItem.setBackgroundResource(itemBGSelectedColor);
+      		    		   rlItem.setBackgroundColor(Color.parseColor(context.getString(R.color.content_area_background_selected_color)));
+      		    		 //  rlItem.setBackgroundResource(itemBGSelectedColor);
       		    	   }
       		       }
             }
@@ -285,9 +288,9 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 	    	   // View rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
 	    		  RelativeLayout rlItem = (RelativeLayout) rowView.findViewById(R.id.rlItem);
 	    		  
-	    		 // rlItem.setBackgroundColor(selectedIds.contains(position) ? Color.CYAN : android.R.color.transparent);  
+	    		   rlItem.setBackgroundColor(selectedIds.contains(position) ? Color.parseColor(context.getString(R.color.content_area_background_selected_color)) : Color.parseColor(context.getString(R.color.content_area_background_color)));  
 	    	    
-	    		  rlItem.setBackgroundResource(selectedIds.contains(position) ? itemBGSelectedColor : itemBGColor);
+	    		 // rlItem.setBackgroundResource(selectedIds.contains(position) ? itemBGSelectedColor : itemBGColor);
 	    		  
 		    	  FBFriend friend = values[position];
 		    	 

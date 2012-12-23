@@ -57,6 +57,8 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	TextView txtNative;
 	private SharedPreferences settings;
 	private Bundle savedInstanceState;
+	private boolean fetchFriendsAlreadyCalled = false;
+	private boolean initialCallbackAlreadyCalled = false;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,9 +78,15 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     public void onStart() {
         super.onStart();
         Logger.d(TAG, "onStart called");
-        Session session = Session.getActiveSession();
-        if (session != null){
-        	session.addCallback(statusCallback);
+      //  Session session = Session.getActiveSession();
+      //  if (session != null){
+      //  	session.addCallback(statusCallback);
+      //  }
+        try{
+        	Session.getActiveSession().addCallback(statusCallback);
+        }
+        catch (Exception e){
+        	Logger.d(TAG, "onStart error=" + e.getMessage());
         }
     }
 
@@ -86,9 +94,15 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     public void onStop() {
         super.onStop();
         Logger.d(TAG, "onStop called");
-        Session session = Session.getActiveSession();
-        if (session != null){
-        	session.removeCallback(statusCallback);
+      //  Session session = Session.getActiveSession();
+      //  if (session != null){
+      //  	Session.getActiveSession().removeCallback(statusCallback);
+      //  }
+        try{
+        	Session.getActiveSession().addCallback(statusCallback);
+        }
+        catch (Exception e){
+        	Logger.d(TAG, "onStop error=" + e.getMessage());
         }
     }
 
@@ -96,9 +110,16 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
    protected void onSaveInstanceState(Bundle outState) {
          super.onSaveInstanceState(outState);
          Logger.d(TAG, "onSaveInstanceState called");
-         Session session = Session.getActiveSession();
-         if (session != null){
-        	 Session.saveSession(session, outState);
+     //    Session session = Session.getActiveSession();
+      //   if (session != null){
+      //  	 Session.saveSession(session, outState);
+       //  }
+         try{ 
+        	 Session session = Session.getActiveSession();
+             Session.saveSession(session, outState);
+         }
+         catch(Exception e){
+         	Logger.d(TAG, "onSaveInstanceState error=" + e.getMessage());
          }
     }
     
@@ -106,10 +127,20 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.d(TAG, "onActivityResult called");
-        Session session = Session.getActiveSession();
-        if (session != null){
-              session.onActivityResult(this, requestCode, resultCode, data);
+        //Session session = Session.getActiveSession();
+        try{ 
+        	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
         }
+        catch(Exception e){
+        	Logger.d(TAG, "onActivityResult error=" + e.getMessage());
+        }
+        
+       // if (session != null){
+       // 	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+       // }
+        
+        //super.onActivityResult(requestCode, resultCode, data);
+        //Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
     
     @Override 
@@ -161,6 +192,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	    	
 	         Logger.d("TAG", "session state=" + session.getState().toString());
 	    	
+	         session = Session.getActiveSession();
 	       //  Session session = Session.getActiveSession();
 	         if (session.isOpened()){
 	        	 this.handleInitialCallback();
@@ -305,18 +337,22 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     private void fetchFriends(){
     	Logger.d(TAG, "fetchFriends called");
     	
-    	Session session = Session.getActiveSession();
-    	Request request = Request.newMyFriendsRequest(session, new Request.GraphUserListCallback() {
-          // callback after Graph API response with user object
-          @Override
-          public void onCompleted(List<GraphUser> users, Response response) {
-            if (users != null) {
-            	Logger.e(TAG, "handleFacebookMeResponseRunnable about to be called");
-        		context.runOnUiThread(new handleFacebookFriendsResponseRunnable(users, response));
-            }
-          }
-        });
-        Request.executeBatchAsync(request);
+    	if (!fetchFriendsAlreadyCalled){
+    		fetchFriendsAlreadyCalled = true;
+    		
+	    	Session session = Session.getActiveSession();
+	    	Request request = Request.newMyFriendsRequest(session, new Request.GraphUserListCallback() {
+	          // callback after Graph API response with user object
+	          @Override
+	          public void onCompleted(List<GraphUser> users, Response response) {
+	            if (users != null) {
+	            	Logger.e(TAG, "handleFacebookFriendsResponseRunnable about to be called");
+	        		context.runOnUiThread(new handleFacebookFriendsResponseRunnable(users, response));
+	            }
+	          }
+	        });
+	        Request.executeBatchAsync(request);
+    	}
     }
   
 
@@ -440,38 +476,41 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     
     private void handleInitialCallback(){
     	 Logger.d(TAG, "handleInitialCallback");
-        Session session = Session.getActiveSession();
-            // make request to the /me API
-        if (session.isOpened()) {
-        	 Logger.d(TAG, "SessionStatusCallback Request.newMeRequest about to be called");
-              Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
-                // callback after Graph API response with user object
-                @Override
-                public void onCompleted(GraphUser user, Response response) {
-                  if (user != null) {
-                  	Logger.d(TAG, "handleFacebookMeResponseRunnable about to be called");
-              		context.runOnUiThread(new handleFacebookMeResponseRunnable(user, response));
-                  }
-                }
-              });
-              Request.executeBatchAsync(request); 
-            }
-        else{
-        	Logger.d(TAG, "SessionStatusCallback session is closed");
-        	
-        	
-        	context.runOnUiThread(new handleDialogRunnable(context.getString(R.string.sorry), context.getString(R.string.welcome_facebook_login_issue)));
-        	 
-        	/* if (!session.isOpened() && !session.isClosed()) {
-	        	 Logger.d(TAG, "handleInitialCallback connectToFacebook session is not open and not closed");
-	        	 Logger.d(TAG, "handleInitialCallback connectToFacebook openForRead2 about to be called");
-	        	// session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
-	             session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback).setPermissions(Arrays.asList(Constants.FACEBOOK_PERMISSIONS)));
-	         } else {*/
-	        //	 Logger.d(TAG, "handleInitialCallback connectToFacebook openActiveSession about to be called");
-	        //     Session.openActiveSession(context, true, statusCallback);
-	         //}
-        }
+    	 if (!this.initialCallbackAlreadyCalled){
+    		 this.initialCallbackAlreadyCalled = true;
+	        Session session = Session.getActiveSession();
+	            // make request to the /me API
+	        if (session.isOpened()) {
+	        	 Logger.d(TAG, "SessionStatusCallback Request.newMeRequest about to be called");
+	              Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+	                // callback after Graph API response with user object
+	                @Override
+	                public void onCompleted(GraphUser user, Response response) {
+	                  if (user != null) {
+	                  	Logger.d(TAG, "handleFacebookMeResponseRunnable about to be called");
+	              		context.runOnUiThread(new handleFacebookMeResponseRunnable(user, response));
+	                  }
+	                }
+	              });
+	              Request.executeBatchAsync(request); 
+	            }
+	        else{
+	        	Logger.d(TAG, "SessionStatusCallback session is closed");
+	        	
+	        	
+	        	context.runOnUiThread(new handleDialogRunnable(context.getString(R.string.sorry), context.getString(R.string.welcome_facebook_login_issue)));
+	        	 
+	        	/* if (!session.isOpened() && !session.isClosed()) {
+		        	 Logger.d(TAG, "handleInitialCallback connectToFacebook session is not open and not closed");
+		        	 Logger.d(TAG, "handleInitialCallback connectToFacebook openForRead2 about to be called");
+		        	// session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
+		             session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback).setPermissions(Arrays.asList(Constants.FACEBOOK_PERMISSIONS)));
+		         } else {*/
+		        //	 Logger.d(TAG, "handleInitialCallback connectToFacebook openActiveSession about to be called");
+		        //     Session.openActiveSession(context, true, statusCallback);
+		         //}
+	        }
+    	 }
     }
     
     private class SessionStatusCallback implements Session.StatusCallback {

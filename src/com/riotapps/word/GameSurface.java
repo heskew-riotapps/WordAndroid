@@ -330,13 +330,15 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	  }
 	 
 	 private void checkGameStatus(){
-		 if (this.game.getStatus() == 3){
-			 //completed
-			 //first check to see if this score has already been alerted (from local storage)
-
-			 String message = this.game.getWinnerAlertText(this, this.contextPlayerGame);
+		
+		 //completed
+		 //first check to see if this score has already been alerted (from local storage) 
+		 if (this.game.getStatus() == 3 || this.game.getStatus() == 4){
+			 if (!GameService.checkGameAlertAlreadyShown(this, this.game.getId())) {
+				 String message = this.game.getWinnerAlertText(this, this.contextPlayerGame);
 			 
-			 DialogManager.SetupAlert(this, this.getString(R.string.game_alert_game_over_title), message, Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+				 DialogManager.SetupAlert(this, this.getString(R.string.game_alert_game_over_title), message, Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
+			 }
 		 }
 	 }
 	 
