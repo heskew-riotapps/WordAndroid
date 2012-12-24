@@ -23,11 +23,13 @@ import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.ServerResponse;
+import com.riotapps.word.utils.Utils;
 import com.riotapps.word.utils.Enums.RequestType;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -55,9 +57,12 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	private String chatPlayer2Id = "";
 	private String chatPlayer3Id = "";
 	private String chatPlayer4Id = "";
+	private String prevPlayerId = "";
+	private String prevTimeSince = "";
 	//private ChatArrayAdapter adapter = null;
 	
 	ListView lvChat;
+	ScrollView scrChat;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -82,16 +87,19 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	    this.imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
 	 	
 	 	this.loadLayout();
+	 	this.checkGameStatus();
 	}
 	
 	private void loadLayout(){
-		ScrollView scrChat = (ScrollView) findViewById(R.id.scrChat);
+		scrChat = (ScrollView) findViewById(R.id.scrChat);
 		LinearLayout llChat = (LinearLayout) findViewById(R.id.llChat);
 		llChat.removeAllViews();
 		this.chatPlayer1Id = "";
 		this.chatPlayer2Id = "";
 		this.chatPlayer3Id = "";
 		this.chatPlayer4Id = "";
+		this.prevPlayerId = "";
+		this.prevTimeSince = "";
 		
 		if (this.game.getChats().size() > 0){
   
@@ -104,10 +112,28 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 			llChat.setVisibility(View.INVISIBLE);
 		}
 		
-		scrChat.fullScroll(View.FOCUS_DOWN);
+		scrChat.post(new Runnable(){
+			  public void run() {
+				  scrChat.fullScroll(View.FOCUS_DOWN);
+			  }});
+		//scrChat.fullScroll(View.FOCUS_DOWN);
 	}
 	
-	 
+	 private void checkGameStatus(){
+		 if (this.game.getStatus() == 3 || this.game.getStatus() == 4){
+			 long diff = System.currentTimeMillis() - this.game.getCompletionDate().getTime();
+			 long diffMinutes = (long)diff/60000;
+			 
+			 if (diffMinutes > 30){
+				 EditText etText = (EditText) this.findViewById(R.id.etText);
+				 etText.setEnabled(false);
+				 
+				 Button bSave = (Button) this.findViewById(R.id.bSave);
+				 bSave.setEnabled(false);
+				 bSave.setTextColor(Color.parseColor(this.getString(R.color.button_text_color_off)));
+			 }
+		 }
+	 }
 	
 	private void loadList(){ 
 		
@@ -120,6 +146,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		this.chatPlayer2Id = "";
 		this.chatPlayer3Id = "";
 		this.chatPlayer4Id = "";
+		this.prevPlayerId = "";
 		lvChat = (ListView) findViewById(R.id.lvChat);
 		lvChat.setAdapter(adapter); 
 		 
@@ -175,6 +202,8 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
     	  }
     	  
     	   TextView tvChat = (TextView) view.findViewById(R.id.tvChat);
+    	   TextView tvPlayerName = (TextView) view.findViewById(R.id.tvPlayerName);
+    	   TextView tvChatDate = (TextView) view.findViewById(R.id.tvChatDate);
     	   
     	   if (chat.getPlayerId() == chatPlayer1Id){
     		   tvChat.setBackgroundResource(R.drawable.chat_player1_background);
@@ -189,27 +218,45 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
     		   tvChat.setBackgroundResource(R.drawable.chat_player4_background);
     	   }
  
-
+    	   Player chatPlayer = this.game.getPlayerById(chat.getPlayerId());
 		   ImageView ivPlayer = (ImageView)view.findViewById(R.id.ivPlayer);
-		   imageLoader.loadImage(player.getImageUrl(), ivPlayer);
+	//	   imageLoader.loadImage(chatPlayer.getImageUrl(), ivPlayer);
 		   
-		/*   
-		   Logger.d(TAG, "ChatArrayAdapter prevPlayerId=" + prevPlayerId + " prevSequentialCount=" + prevSequentialCount);
-    	   if (this.prevPlayerId != chat.getPlayerId() || (this.prevPlayerId == chat.getPlayerId() && this.prevSequentialCount >= 4) ){
-    		   this.prevSequentialCount = 0;
-    		   Player player = context.game.getPlayerById(chat.getPlayerId());
+
+    	   tvChat.setText(chat.getText());
+		   String timeSince = Utils.getTimeSinceString(context, chat.getChatDate());
+		   tvPlayerName.setText(chatPlayer.getAbbreviatedName());
+    	   tvChatDate.setText(timeSince);
     	   
-    		   imageLoader.loadImage(player.getImageUrl(), ivPlayer);
+		//   Logger.d(TAG, "ChatArrayAdapter prevPlayerId=" + prevPlayerId + " prevSequentialCount=" + prevSequentialCount);
+    	   if (!this.prevPlayerId.equals(chat.getPlayerId())){// || (this.prevPlayerId == chat.getPlayerId() && this.prevSequentialCount >= 4) ){
+    		 //  this.prevSequentialCount = 0;
+    		   this.prevPlayerId = chat.getPlayerId();
+    		   imageLoader.loadImage(chatPlayer.getImageUrl(), ivPlayer);
     		   ivPlayer.setVisibility(View.VISIBLE);
+    		   
+        	   tvPlayerName.setVisibility(View.VISIBLE);
+        	   tvChatDate.setVisibility(View.VISIBLE);        	   
+    		   
     	   }
     	   else{ 
     		   ivPlayer.setVisibility(View.INVISIBLE);
-    		   this.prevSequentialCount += 1;
+    		   
+    		   //if timeSince is the same as the previous chat item, hide this line.  its just creates clutter by showing it
+    		   if (this.prevTimeSince.equals(timeSince)){
+    			   tvPlayerName.setVisibility(View.GONE);
+    			   tvChatDate.setVisibility(View.GONE);
+    		   }
+    		   else{
+    			   tvPlayerName.setVisibility(View.VISIBLE);
+    			   tvChatDate.setVisibility(View.VISIBLE);    			   
+    		   }
+        	   
     	   }
     	   
-    	    */
-    	   tvChat.setText(chat.getText());
-    	   
+    	   this.prevTimeSince = timeSince;
+		   
+		   
     	   return view;
 		
 	}

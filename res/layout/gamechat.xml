@@ -14,9 +14,7 @@
 				 android:orientation="vertical"
 				 android:layout_width="fill_parent"
 				 android:layout_height="fill_parent"
-			>
-	 
-		    
+			> 
 	 			<RelativeLayout
 	 			    android:layout_height="fill_parent"
 	 			    android:layout_width="fill_parent"
@@ -42,7 +40,7 @@
 	 				android:paddingBottom="10dp"
 	 				android:layout_marginBottom="45dp"
 	 			/>
-	 			</ScrollView>"
+	 			</ScrollView> 
 		    	<ListView
 		     	
 		    	    android:fadingEdge="none"
@@ -56,22 +54,18 @@
 		    	    />
 			    <RelativeLayout
 			        style="@style/FormButtonAreaStyle"
-			        
+			      
 			        android:layout_alignParentBottom="true"
-			        
-			       	android:layout_width="fill_parent"
-			 	  android:paddingTop="8dp"
+			        android:layout_width="fill_parent"
+			 	 
 			        android:layout_height="45dp"
 			      
 			      >
  			    <EditText
 			        android:id="@+id/etText"
-			        android:lines="1"
-			         android:paddingTop="3dp"
-			       android:paddingLeft="2dp"
+			        
 			        android:layout_width="220dp"
-		 		  android:textSize="14dp"
-			        android:gravity="center_vertical"
+		 		  	android:layout_centerVertical="true"
 			          android:layout_alignParentLeft="true"
 			         
 			   />     
@@ -81,9 +75,11 @@
 			        android:layout_width="60dp" 
 			        android:text="@string/send"
 			        android:gravity="center"
+			   
 			        android:layout_marginLeft="5dp"
 			 		android:layout_toRightOf="@id/etText"
 			 		android:layout_marginTop="0dp"
+			 		android:layout_centerVertical="true"
 			 	 
  			    />
     

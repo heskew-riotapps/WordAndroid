@@ -6,7 +6,7 @@ import android.util.Log;
 
 public class Logger {
 	
-	public static final boolean LOG_OK = true; 
+	public static final boolean LOG_OK = false; 
 
 	public static void w(String tag, String msg){
 		if (BuildConfig.DEBUG && LOG_OK) {
