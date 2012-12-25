@@ -7,6 +7,23 @@ import com.google.gson.annotations.SerializedName;
 
 public class Opponent  implements Parcelable{
 	
+
+
+	private Player player; 
+
+	@SerializedName("n_g")
+	private int numGames = 0;  
+
+	@SerializedName("n_w")
+	private int numWins = 0;  
+	
+	@SerializedName("n_l")
+	private int numLosses = 0; 
+	
+	@SerializedName("n_d")
+	private int numDraws = 0;  
+
+	
 	public Player getPlayer() {
 		return player;
 	}
@@ -38,17 +55,14 @@ public class Opponent  implements Parcelable{
 	public void setNumDraws(int numDraws) {
 		this.numDraws = numDraws;
 	}
+	
+	public int getNumGames() {
+		return numGames;
+	}
 
-	private Player player; 
-	
-	@SerializedName("n_w")
-	private int numWins = 0; //num wins
-	
-	@SerializedName("n_l")
-	private int numLosses = 0; //num losses
-	
-	@SerializedName("n_d")
-	private int numDraws = 0; //num draws
+	public void setNumGames(int numGames) {
+		this.numGames = numGames;
+	}
 
 	public int describeContents() {
 		// TODO Auto-generated method stub

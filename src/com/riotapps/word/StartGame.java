@@ -112,7 +112,7 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
 
 			break;
 	    case R.id.tvStartByOpponent:  
-	    	 intent = new Intent(this.context, FindPlayer.class);
+	    	 intent = new Intent(this.context, PreviousOpponents.class);
 		     try {
 					intent.putExtra(Constants.EXTRA_GAME, GameService.createGame(context, player));
 					 this.context.startActivity(intent);

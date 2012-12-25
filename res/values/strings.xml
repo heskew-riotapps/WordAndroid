@@ -410,6 +410,10 @@
 	   <string name="game_last_action_6_words_played_context">You played %2$s, %3$s, %4$s, %5$s, %6$s and %7$s for %1$s points</string> 
 	   <string name="game_last_action_more_than_6_words_played_context">You played %2$s, %3$s, %4$s, %5$s, %6$s, %6$s and %7$s more for %1$s points</string> 
 	   
+ 	 	<string name="choose_previous_opponents_add_button_text">add chosen friends to this game</string>
+	   <string name="choose_previous_opponents_add_button_text">add chosen friend to this game</string>
+	     <string name="choose_previous_opponents_title">your facebook friends</string> 
+	   
 	   <string name="choose_fb_friends_add_button_text">add chosen friends to this game</string>
 	   <string name="choose_fb_friend_add_button_text">add chosen friend to this game</string>
 	     <string name="choose_fb_friends_title">your facebook friends</string> 

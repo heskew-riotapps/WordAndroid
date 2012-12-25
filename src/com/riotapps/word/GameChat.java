@@ -90,6 +90,18 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	 	this.checkGameStatus();
 	}
 	
+	
+	
+	/*
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+	}
+*/
+
+
+
 	private void loadLayout(){
 		scrChat = (ScrollView) findViewById(R.id.scrChat);
 		LinearLayout llChat = (LinearLayout) findViewById(R.id.llChat);

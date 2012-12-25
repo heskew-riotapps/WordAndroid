@@ -1,0 +1,58 @@
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutStyle"
+    android:orientation="vertical" >
+   <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+    <LinearLayout 
+           style="@style/LayoutFormStyle"
+           android:layout_below="@id/topAreaLayout"
+        > 
+     <LinearLayout
+	        	android:layout_marginBottom="5dp"
+	        	android:id="@+id/llButtons"
+	         >
+			<com.riotapps.word.utils.TypefaceButton 
+		  	    style="@style/MainLandingButtonStyle"
+		  	    android:id="@+id/bAdd" 
+		        android:layout_width="0dp" 
+		        android:layout_weight="1.0"
+		        android:text="@string/choose_previous_opponents_add_button_text"
+		    />
+    </LinearLayout>   
+        
+   
+    <RelativeLayout
+		style="@style/FormBackgroundStyle"
+		android:layout_marginTop="5dp"
+		 android:layout_marginBottom="5dp"
+	>
+		<RelativeLayout
+			style="@style/FormHeaderWrapperWithSubtitleStyle"
+			android:id="@+id/header"
+		>
+	    <com.riotapps.word.ui.MainFontTextView
+	        style="@style/FormHeaderAreaTextStyle"
+	       	android:id="@+id/title"
+	       	android:text="@string/choose_previous_opponents_title"
+	    />
+	    <com.riotapps.word.ui.MainFontTextView
+	        style="@style/FormHeaderAreaSubTextStyle"
+	        android:id="@+id/tvSubtitle" 
+	        android:layout_below="@id/title"
+	        />
+	    </RelativeLayout>
+    	<ListView 
+    	    android:id="@+id/lvPreviousOpponents"
+    	    android:layout_below="@id/header"
+    	    android:layout_width="fill_parent"		    	  
+			android:layout_height="fill_parent"
+    	    />
+		<TextView 
+		    android:layout_below="@id/lvPreviousOpponents"
+		    style="@style/ContentAreaTextBottomStyle"
+		    android:layout_height="18dp"
+		    android:layout_width="fill_parent"
+		    />
+    </RelativeLayout>
+   
+     </LinearLayout>
+</RelativeLayout>
