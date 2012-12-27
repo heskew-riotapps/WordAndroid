@@ -105,19 +105,23 @@
   	    android:layout_below="@id/password_label"
 	    />
 	</RelativeLayout>
-	 <LinearLayout
+	 <RelativeLayout
         style="@style/FormButtonAreaStyle"
-        android:layout_below="@+id/inner_form" >
+        android:layout_below="@+id/inner_form"
+		android:paddingBottom="0dp"
+		android:paddingTop="0dp"
+		android:layout_height="45dp"
+         >
 	 
 	<com.riotapps.word.utils.TypefaceButton 
   	    style="@style/ButtonStyle"
   	    android:id="@+id/bSave"
-        android:layout_width="0dp" 
-        android:layout_weight="1.0"
+  	    android:layout_width="260dp"
         android:text="@string/connect"
+        android:layout_centerInParent="true"
     />
     
-    </LinearLayout>
+    </RelativeLayout>
     </RelativeLayout>
     </ScrollView>
     </LinearLayout>

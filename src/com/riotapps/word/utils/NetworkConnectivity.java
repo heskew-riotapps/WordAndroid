@@ -2,6 +2,7 @@ package com.riotapps.word.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 public class NetworkConnectivity {
 
@@ -19,7 +20,31 @@ public class NetworkConnectivity {
 		//put thread sleep in here
 		
 	     ConnectivityManager connec = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);   
+	     
+	     
+	   //  NetworkInfo activeNetworkInfo = connec.getActiveNetworkInfo();
+	    // return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 
+	     
+	     if (connec != null) {
+            NetworkInfo[] info = connec.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                   // Log.w("INTERNET:",String.valueOf(i));
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                    	return true;
+                    }
+                }
+            }
+	     }
+	            
+	     return false;       
+	            
+	            
+	     
+	     
+	     
+	     /*
 	     boolean isMobileNetworkConnected = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();   
 
 	     boolean isWiFiNetworkConnected = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();  
@@ -41,6 +66,7 @@ public class NetworkConnectivity {
 	     }
 	     
 	    return (isMobileNetworkConnected || isWiFiNetworkConnected);  
+	    */
 	   
 	 }//end method checkNetworkConnectivity
 

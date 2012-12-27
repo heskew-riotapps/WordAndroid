@@ -184,7 +184,7 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
 			this.context.startActivity(intent);
 			break;
 	    case R.id.tvStartByOpponent:  
-	    	intent = new Intent(this.context, FindPlayer.class);
+	    	intent = new Intent(this.context, PreviousOpponents.class);
 			intent.putExtra(Constants.EXTRA_GAME, this.game);
 			this.context.startActivity(intent);
 			break;

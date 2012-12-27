@@ -14,15 +14,6 @@ public class Opponent  implements Parcelable{
 	@SerializedName("n_g")
 	private int numGames = 0;  
 
-	@SerializedName("n_w")
-	private int numWins = 0;  
-	
-	@SerializedName("n_l")
-	private int numLosses = 0; 
-	
-	@SerializedName("n_d")
-	private int numDraws = 0;  
-
 	
 	public Player getPlayer() {
 		return player;
@@ -31,31 +22,6 @@ public class Opponent  implements Parcelable{
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-
-	public int getNumWins() {
-		return numWins;
-	}
-
-	public void setNumWins(int numWins) {
-		this.numWins = numWins;
-	}
-
-	public int getNumLosses() {
-		return numLosses;
-	}
-
-	public void setNumLosses(int numLosses) {
-		this.numLosses = numLosses;
-	}
-
-	public int getNumDraws() {
-		return numDraws;
-	}
-
-	public void setNumDraws(int numDraws) {
-		this.numDraws = numDraws;
-	}
-	
 	public int getNumGames() {
 		return numGames;
 	}
@@ -71,9 +37,7 @@ public class Opponent  implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeParcelable(player, flags);
-		out.writeInt(this.numWins);
-		out.writeInt(this.numLosses);
-		out.writeInt(this.numDraws);
+		out.writeInt(this.numGames);
 	}
 	
 	public static final Parcelable.Creator<Opponent> CREATOR
@@ -90,10 +54,8 @@ public class Opponent  implements Parcelable{
 	private Opponent(Parcel in) {
 		// same order as writeToParcel
 		this.player = in.readParcelable(Player.class.getClassLoader());
-		this.numWins = in.readInt();
-		this.numLosses = in.readInt();
-		this.numDraws = in.readInt();
-	}
+		this.numGames = in.readInt();
+		}
 
 	
 	

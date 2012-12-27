@@ -174,7 +174,7 @@ public class Splash  extends FragmentActivity {
 				String jsonPost) {
 			super(ctx, requestType, "", jsonPost);
 			this.context = ctx;
-		    Logger.d(TAG, "NetworkTask called.");
+		    Logger.d(TAG, "NetworkTask called with jsonPost=" + jsonPost);
 		 
 		}
 

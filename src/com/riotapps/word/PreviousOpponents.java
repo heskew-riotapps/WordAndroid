@@ -1,53 +1,31 @@
 package com.riotapps.word;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.conn.ConnectTimeoutException;
-
-import com.riotapps.word.hooks.FBFriend;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Opponent;
 import com.riotapps.word.hooks.Player;
-import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
-import com.riotapps.word.ui.CustomDialog;
 import com.riotapps.word.ui.DialogManager;
-import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
-import com.riotapps.word.utils.ServerResponse;
-import com.riotapps.word.utils.Enums.RequestType;
-import com.riotapps.word.utils.Utils;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -103,6 +81,7 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
     	else {
     		tvSubtitle.setText(this.getString(R.string.choose_opponents_one_more_subtitle));
     		this.maxAvailable = 1;
+    		bAdd.setText(this.getString(R.string.choose_previous_opponent_add_button_text));
     	}
      
     	this.loadList(this.player.getOpponents().toArray(new Opponent[this.player.getOpponents().size()])); 
@@ -161,10 +140,10 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
     private void loadList(Opponent[] opponents){
     	OpponentArrayAdapter adapter = new OpponentArrayAdapter(context, opponents);
     
-    	ListView lvFBFriends = (ListView) findViewById(R.id.lvFBFriends);
-    	lvFBFriends.setAdapter(adapter); 
+    	ListView lvPreviousOpponents = (ListView) findViewById(R.id.lvPreviousOpponents);
+    	lvPreviousOpponents.setAdapter(adapter); 
     	
-    	lvFBFriends.setOnItemClickListener(new OnItemClickListener() {
+    	lvPreviousOpponents.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                     long id) {
@@ -254,7 +233,6 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
 	    		  
 		    	   Opponent opponent = values[position];
 		    	 
-		    	   TextView tvInvitationWillBeSent = (TextView) rowView.findViewById(R.id.tvInvitationWillBeSent);
 		    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
 		    	   tvPlayerName.setText(opponent.getPlayer().getNameWithMaxLength(23));
 		    	   
@@ -271,9 +249,13 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
 		   			ivBadge.setImageResource(badgeId);
 		   			
 		   			TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
-					tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),opponent.getPlayer().getNumWins())); 
-					tvInvitationWillBeSent.setVisibility(View.GONE);
-		    	   
+					if (opponent.getPlayer().getNumWins() == 1){
+						tvPlayerWins.setText(context.getString(R.string.line_item_1_win));
+					}
+					else{
+						tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),opponent.getPlayer().getNumWins())); 
+					}
+					
 		    	   rowView.setTag(opponent.getPlayer().getId());
 		    	   return rowView;
 	    	  }

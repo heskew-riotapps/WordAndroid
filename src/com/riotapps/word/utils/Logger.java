@@ -14,14 +14,14 @@ public class Logger {
 		}
 	}
 	
-	public static void w(String tag, String msg, Exception e){
+	public static void w(String tag, String msg, Exception e){  
 		//is logging on?
-		 if (BuildConfig.DEBUG && LOG_OK) {
+		 if (BuildConfig.DEBUG && LOG_OK) {    
 			Log.w((tag==null?"UNKNOWN_TAG":tag), (msg==null?"unknown message":msg));
 		 }
 	}
 	
-	public static void d(String tag, String msg){
+	public static void d(String tag, String msg){  
 		Logger.d((tag==null?"UNKNOWN_TAG":tag), msg, null);
 	}
 	

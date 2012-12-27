@@ -105,6 +105,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	else {
     		tvSubtitle.setText(this.getString(R.string.choose_opponents_one_more_subtitle));
     		this.maxAvailable = 1;
+    		bAddFBFriends.setText(this.getString(R.string.choose_previous_opponent_add_button_text));
     	}
      
     	this.loadListPrep();
@@ -312,7 +313,13 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 			   			ivBadge.setImageResource(badgeId);
 			   			
 			   			TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
-						tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
+						if (friend.getNumWins() == 1){
+							tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
+						}
+						else{
+							tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
+						}
+						
 						tvInvitationWillBeSent.setVisibility(View.GONE);
 		    	   }
 		    	   else{

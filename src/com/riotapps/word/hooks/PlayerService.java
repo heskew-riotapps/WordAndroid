@@ -400,7 +400,12 @@ public class PlayerService {
 		tvHeaderContextPlayerName.setText(player.getNameWithMaxLength(25));
 		
 		TextView tvHeaderContextPlayerWins = (TextView) context.findViewById(R.id.tvHeaderContextPlayerWins); 
-		tvHeaderContextPlayerWins.setText(String.format(context.getString(R.string.header_num_wins), player.getNumWins()));
+		if (player.getNumWins() == 1){
+			tvHeaderContextPlayerWins.setText(context.getString(R.string.header_1_win));
+		}
+		else { 			
+			tvHeaderContextPlayerWins.setText(String.format(context.getString(R.string.header_num_wins), player.getNumWins()));
+		}
 	}
 	
 	
@@ -608,9 +613,6 @@ public class PlayerService {
 			return Constants.BADGE_10_14;
 		}
 		if (numWins >= 15 && numWins <= 19) {
-			return Constants.BADGE_1_4;
-		}
-		if (numWins >= 1 && numWins <= 4) {
 			return Constants.BADGE_15_19;
 		}
 		if (numWins >= 20 && numWins <= 24) {
@@ -664,7 +666,7 @@ public class PlayerService {
 		if (numWins >= 275 && numWins <= 299) {
 			return Constants.BADGE_275_299;
 		}
-		if (numWins >= 300 && numWins <= 349) {
+		if (numWins >= 300 && numWins <= 349) { 
 			return Constants.BADGE_300_349;
 		}
 		if (numWins >= 350 && numWins <= 399) {
@@ -676,6 +678,10 @@ public class PlayerService {
 		if (numWins >= 450 && numWins <= 499) {
 			return Constants.BADGE_450_499;
 		}
+		if (numWins >= 1000) { // stop here for now
+			return Constants.BADGE_1000_1249;
+		}
+
 		if (numWins >= 500 && numWins <= 599) {
 			return Constants.BADGE_500_599;
 		}

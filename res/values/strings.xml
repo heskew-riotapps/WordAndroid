@@ -40,7 +40,9 @@
 	<string name="second">day</string>
 	<string name="second">days</string>
 	<string name="cancel">cancel</string>
+	<string name="header_1_win">1 win</string>
 	<string name="header_num_wins">%s wins</string>
+	<string name="line_item_1_win">1 win</string>
 	<string name="line_item_num_wins">%s wins</string>
 	<string name="never_share_email">(will never be shared)</string>
 	<string name="msg_no_local_player">WordSmash cannot find the player Id that should be stored on this device.</string>
@@ -273,6 +275,7 @@
  	<string name="badges_900_999">between 900 and 999 wins</string>
  	<string name="badges_1000_1249">between 1000 and 1249 wins</string>
  	<string name="badges_1000_or_more">1000 or more wins</string>
+ 	<string name="badges_500_or_more">500 or more wins</string>
  	<string name="badges_1250_1499">between 1250 and 1499 wins</string>
  	<string name="badges_1500_1749">between 1500 and 1749 wins</string>
  	<string name="badges_1750_1999">between 1750 and 1999 wins</string>
@@ -411,8 +414,8 @@
 	   <string name="game_last_action_more_than_6_words_played_context">You played %2$s, %3$s, %4$s, %5$s, %6$s, %6$s and %7$s more for %1$s points</string> 
 	   
  	 	<string name="choose_previous_opponents_add_button_text">add chosen friends to this game</string>
-	   <string name="choose_previous_opponents_add_button_text">add chosen friend to this game</string>
-	     <string name="choose_previous_opponents_title">your facebook friends</string> 
+	   <string name="choose_previous_opponent_add_button_text">add chosen friend to this game</string>
+	     <string name="choose_previous_opponents_title">your previous opponents</string> 
 	   
 	   <string name="choose_fb_friends_add_button_text">add chosen friends to this game</string>
 	   <string name="choose_fb_friend_add_button_text">add chosen friend to this game</string>

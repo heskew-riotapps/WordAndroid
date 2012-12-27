@@ -11,6 +11,7 @@ import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
+import com.riotapps.word.utils.Logger;
 
 import android.app.Activity;
 import android.content.Context;
@@ -73,6 +74,7 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
             else{
            	 tvFB.setOnClickListener(this);
             }
+            Logger.d(TAG, "onCreate opponents=" + this.player.getOpponents().size());
             
             if (this.player.getOpponents().size() == 0){
            	 tvByOpponent.setVisibility(View.GONE);

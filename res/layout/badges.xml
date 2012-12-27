@@ -4,18 +4,14 @@
     android:orientation="vertical" >
    
    <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
-   <ScrollView   
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent" 
-    	android:fadingEdge="none"
-     
-    	 >
+
     <LinearLayout 
            style="@style/LayoutFormStyle"
           
         > 
 	<LinearLayout
 		style="@style/FormBackgroundStyle"
+		android:layout_marginBottom="5dp"
 	>
 	<RelativeLayout
 		style="@style/FormHeaderWrapperWithSubtitleStyle"
@@ -32,8 +28,14 @@
         android:layout_below="@id/title"
         />
     </RelativeLayout> 
- 
+    <ScrollView   
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" 
+    	android:fadingEdge="none"
+     
+    	 >
     <LinearLayout 
+        style="@style/ContentAreaTextBottomStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
          android:orientation="vertical"
@@ -106,7 +108,7 @@
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_80_89" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_80_89"
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
@@ -147,71 +149,36 @@
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_250_274" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_250_274"
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_275_299" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_275_299"
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_300_349" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_300_349"
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_350_399" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_350_399"
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_400_449" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_400_449"
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_450_499" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_450_499"
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
-        android:text="@string/badges_500_549" 
-		android:drawableLeft="@drawable/badge_0"
-        />
-    <com.riotapps.word.ui.MainFontTextView
-        style="@style/BadgeLineStyle"
-        android:text="@string/badges_550_599" 
-		android:drawableLeft="@drawable/badge_0"
-        />
-    <com.riotapps.word.ui.MainFontTextView
-        style="@style/BadgeLineStyle"
-        android:text="@string/badges_600_649" 
-		android:drawableLeft="@drawable/badge_0"
-        />
-    <com.riotapps.word.ui.MainFontTextView
-        style="@style/BadgeLineStyle"
-        android:text="@string/badges_650_699" 
-		android:drawableLeft="@drawable/badge_0"
-        /> 
-     <com.riotapps.word.ui.MainFontTextView
-        style="@style/BadgeLineStyle"
-        android:text="@string/badges_700_799" 
-		android:drawableLeft="@drawable/badge_0"
-        /> 
-     <com.riotapps.word.ui.MainFontTextView
-        style="@style/BadgeLineStyle"
-        android:text="@string/badges_800_899" 
-		android:drawableLeft="@drawable/badge_0"
-        /> 
-     <com.riotapps.word.ui.MainFontTextView
-        style="@style/BadgeLineStyle"
-        android:text="@string/badges_900_999" 
-		android:drawableLeft="@drawable/badge_0"
-        />
-     <com.riotapps.word.ui.MainFontTextView
-        style="@style/BadgeLineStyle"
-        android:text="@string/badges_1000_or_more" 
+        android:text="@string/badges_500_or_more" 
 		android:drawableLeft="@drawable/badge_0"
         />
      <View 
@@ -220,7 +187,8 @@
         android:layout_width="fill_parent" 
          />
      </LinearLayout>
+     </ScrollView>
      </LinearLayout>
     </LinearLayout>
-   </ScrollView>
+   
 </LinearLayout>

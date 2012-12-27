@@ -583,6 +583,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 @Override
 	 public boolean onTouchEvent(MotionEvent event) {
 		 
+		 //if game is over, do not allow movement
+		 if (this.parent.getGame().getStatus() == 3 || this.parent.getGame().getStatus() == 4 ){
+			 this.readyToDraw = false;
+			 return true;
+		 }
+		 
 		 //getX seems to be unreliable so lets use getRawX and convert to relative
 	 //    int x = (int) event.getRawX();
 	 //    int y = (int) event.getRawY();

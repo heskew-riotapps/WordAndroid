@@ -40,18 +40,22 @@
 	        android:layout_below="@id/title"
 	        />
 	    </RelativeLayout>
+	    <LinearLayout
+    	    	android:layout_below="@id/header"
+ 			    android:layout_height="fill_parent"
+ 			    android:layout_width="fill_parent"
+ 			    style="@style/ContentAreaTextBottomStyle"
+ 			    android:drawablePadding="0dp"
+ 			    android:paddingLeft="0dp"
+				android:paddingRight="0dp"
+ 			>
     	<ListView 
     	    android:id="@+id/lvFBFriends"
     	    android:layout_below="@id/header"
     	    android:layout_width="fill_parent"		    	  
 			android:layout_height="fill_parent"
     	    />
-		<TextView 
-		    android:layout_below="@id/lvFBFriends"
-		    style="@style/ContentAreaTextBottomStyle"
-		    android:layout_height="18dp"
-		    android:layout_width="fill_parent"
-		    />
+		</LinearLayout>
     </RelativeLayout>
    
      </LinearLayout>

@@ -938,6 +938,12 @@ public class GameService {
         //determine if any incoming letters are on the same axis but separated 
         //from the main word by space(s)
         //"overlayed" counts as "connected"
+		
+		//if first moves are skips, then playedTiles will be empty.  this is ok
+		if (playedTiles.size() == 0){
+			return true;
+		}
+		
 		for (GameTile tile : placedTiles){
 			if (tile.getOriginalLetter().length() > 0){ return true;}
 			
