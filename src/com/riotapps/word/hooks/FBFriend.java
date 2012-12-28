@@ -52,7 +52,7 @@ public class FBFriend{
 
 
 	public Boolean isRegisteredPlayer(){
-		return this.playerId.length() > 0;
+		return this.playerId.length() > 0 && this.numWins > -1;
 	}
 	
 	public String getImageUrl(){

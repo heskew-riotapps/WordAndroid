@@ -48,6 +48,15 @@ public class Game implements Parcelable, Comparable<Game> {
 	@SerializedName("l_t_d")
 	private Date lastTurnDate;
 	
+	@SerializedName("ch_d")
+	private Date lastChatDate;
+	
+	@SerializedName("r_v")
+	private List<String> randomVowels;
+
+	@SerializedName("r_c")
+	private List<String> randomConsonants;
+	
 	private boolean showCompletionAlert;
 	
 	
@@ -56,12 +65,38 @@ public class Game implements Parcelable, Comparable<Game> {
 	
 	
 	
+	public List<String> getRandomVowels() {
+		return randomVowels;
+	}
+
+	public void setRandomVowels(List<String> randomVowels) {
+		this.randomVowels = randomVowels;
+	}
+
+	public List<String> getRandomConsonants() {
+		return randomConsonants;
+	}
+
+	public void setRandomConsonants(List<String> randomConsonants) {
+		this.randomConsonants = randomConsonants;
+	}
+
 	public List<Chat> getChats() {
 		return chats;
 	}
 
 	public void setChats(List<Chat> chats) {
 		this.chats = chats;
+	}
+	
+	
+
+	public Date getLastChatDate() {
+		return lastChatDate;
+	}
+
+	public void setLastChatDate(Date lastChatDate) {
+		this.lastChatDate = lastChatDate;
 	}
 
 	private Player getLastTurnPlayer(){
@@ -400,7 +435,9 @@ public class Game implements Parcelable, Comparable<Game> {
 		return invited.length() == 0 ? "" : invited.substring(0,invited.length() - 1); //remove trailing comma
 	}
 	
-	
+	public boolean isCompleted(){
+		return this.status == 3 || this.getStatus() == 4;
+	}
 	
 	public int getLastTurnAction() {
 		return lastTurnAction;

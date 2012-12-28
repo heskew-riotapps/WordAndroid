@@ -224,7 +224,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private Bitmap logo;
     private boolean surfaceCreated = false;
     
-	private Bitmap bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+	private Bitmap bgTray;// = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
 	private Bitmap bgTrayBaseScaled;
 	private Bitmap bgTrayBaseDragging; 
 	private boolean shuffleRedraw = false;
@@ -397,6 +397,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.trayTileMidpoint = Math.round(this.trayTileSize / 2);	
 		this.draggingTileMidpoint = Math.round(this.draggingTileSize / 2);	
 
+		this.bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
 		Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
 		this.bgTrayBaseScaled = Bitmap.createScaledBitmap(bgTrayBase, this.trayTileSize , this.trayTileSize, false);
 		this.bgTrayBaseDragging = Bitmap.createScaledBitmap(bgTrayBase, this.draggingTileSize, this.draggingTileSize, false);
@@ -1165,13 +1166,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 }
 	 
 	 private void resetPointsView(){
-		 try{
-				PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
-				this.parent.setPointsView(placedResult.getTotalPoints());
-			}
-			catch (DesignByContractException e){
-				this.parent.setPointsView(0);
-			}
+		 if (!this.parent.getGame().isCompleted()){
+			 try{
+					PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
+					this.parent.setPointsView(placedResult.getTotalPoints());
+				}
+				catch (DesignByContractException e){
+					this.parent.setPointsView(0);
+				}
+		 }
 	 }
 	 
 	 
@@ -1372,6 +1375,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 
 	 @Override
 	 protected void onDraw(Canvas canvas) {
+		 if (canvas == null){
+			 return;
+		 }
  		// super.onDraw(canvas);
 	 Logger.d(TAG,  "onDraw motion=" + this.currentTouchMotion + " " + " zoom=" + this.isZoomed + " tapCheck=" + this.tapCheck + " osMoving=" +  this.isMoving  + " readyToDraw=" + this.readyToDraw + " prevX=" + this.previousX + " prevY=" + this.previousY
 	 			 + " currX=" + this.currentX + " currY=" + this.currentY);

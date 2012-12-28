@@ -142,8 +142,17 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
             for (Player p : this.game.getOpponents(player)){
             	llPlayers.addView(getView(p));
 			}
+            
+            if (this.game.getUnregisteredFBPlayers().size() > 0){
+            	 if (Session.getActiveSession() == null ||
+                         Session.getActiveSession().isClosed()) {
+                     Session.openActiveSession(this, true);
+                 }
+            }
 
     }
+    
+    
     
     public View getView(Player opponent ) {
   		View view = LayoutInflater.from(this).inflate(R.layout.playerlistitem, null);
@@ -154,7 +163,18 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
 	 	tvPlayerName.setText(opponent.getNameWithMaxLength(28));
 
 		TextView tvPlayerWins = (TextView)view.findViewById(R.id.tvPlayerWins);
-		tvPlayerWins.setText(String.format(this.context.getString(R.string.line_item_num_wins),opponent.getNumWins()));
+		
+		if (opponent.getNumWins() == 1){
+			tvPlayerWins.setText(context.getString(R.string.line_item_invited)); 
+		}
+		else if (opponent.getNumWins() == -1){
+			tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
+		}
+		else{
+			tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),opponent.getNumWins())); 
+		}
+		
+		//tvPlayerWins.setText(String.format(this.context.getString(R.string.line_item_num_wins),opponent.getNumWins()));
 	 	
 	 	ImageFetcher imageLoader = new ImageFetcher(this.context, 34, 34, 0);
 		imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
@@ -309,12 +329,20 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
    // }
     
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        this.session.onActivityResult(this, requestCode, resultCode, data);
+    	if (this.game.getUnregisteredFBPlayers().size() > 0){
+    		 try{ 
+    	        	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+    	        }
+    	        catch(Exception e){
+    	        	Logger.d(TAG, "onActivityResult error=" + e.getMessage());
+    	        }
+    	}
     }
+  
     
-    private Session createSession() {
-        return new Session.Builder(this).setApplicationId(this.getString(R.string.app_id)).build();
-    }
+   // private Session createSession() {
+   //     return new Session.Builder(this).setApplicationId(this.getString(R.string.app_id)).build();
+   // }
     
     //if player is invited non-registered facebook friends, use facebook app requests to inform those friends.
     //it's the only way to inform them since we don't have their email address

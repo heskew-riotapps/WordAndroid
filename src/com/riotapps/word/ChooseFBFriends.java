@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
+import com.facebook.Session;
 import com.riotapps.word.hooks.FBFriend;
 import com.riotapps.word.hooks.FBFriends;
 import com.riotapps.word.hooks.Game;
@@ -108,7 +109,11 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     		bAddFBFriends.setText(this.getString(R.string.choose_previous_opponent_add_button_text));
     	}
      
+  
+    	
     	this.loadListPrep();
+    	
+
     	
         //bAddFBFriends.setOnClickListener(this);
            
@@ -123,7 +128,22 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     }
   
     
-    @Override 
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+    	  super.onActivityResult(requestCode, resultCode, data);
+          Logger.d(TAG, "onActivityResult called");
+          //Session session = Session.getActiveSession();
+          try{ 
+          	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+          }
+          catch(Exception e){
+          	Logger.d(TAG, "onActivityResult error=" + e.getMessage());
+          }
+	}
+
+
+	@Override 
     public void onClick(View v) {
     
     	switch(v.getId()){  
@@ -314,6 +334,9 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 			   			
 			   			TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
 						if (friend.getNumWins() == 1){
+							tvPlayerWins.setText(context.getString(R.string.line_item_invited)); 
+						}
+						else if (friend.getNumWins() == -1){
 							tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
 						}
 						else{
@@ -323,7 +346,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 						tvInvitationWillBeSent.setVisibility(View.GONE);
 		    	   }
 		    	   else{
-		    		 
+		    		   tvInvitationWillBeSent.setVisibility(View.VISIBLE);
 		    	   }
 		    	   
 		    	   rowView.setTag(friend.getId());

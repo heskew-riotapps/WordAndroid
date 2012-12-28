@@ -42,6 +42,7 @@
 	<string name="cancel">cancel</string>
 	<string name="header_1_win">1 win</string>
 	<string name="header_num_wins">%s wins</string>
+	<string name="line_item_invited">invited, but not registered yet</string>
 	<string name="line_item_1_win">1 win</string>
 	<string name="line_item_num_wins">%s wins</string>
 	<string name="never_share_email">(will never be shared)</string>
@@ -290,6 +291,7 @@
  	<string name="tile_3W">3W</string>
  	<string name="tile_2L">2L</string>
  	<string name="tile_2W">2W</string>
+ 	<string name="scoreboard_randoms">(%1$s, %2$s, %3$s, %4$s, %5$s)</string>
  	<string name="scoreboard_letters_left">%s letters left</string>
  	<string name="scoreboard_1_letter_left">1 letter left</string>
  	<string name="scoreboard_num_points">%s points</string>

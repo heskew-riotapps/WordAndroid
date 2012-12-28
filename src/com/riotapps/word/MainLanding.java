@@ -243,6 +243,12 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	TextView tvOpponent_3 = (TextView)view.findViewById(R.id.tvOpponent_3);
 	 	
 	 	TextView tvLastAction = (TextView)view.findViewById(R.id.tvLastAction);
+	 	ImageView ivChatAlert = (ImageView)view.findViewById(R.id.ivChatAlert);
+	 	RelativeLayout llLastAction = (RelativeLayout)view.findViewById(R.id.llLastAction);
+	 	
+	 	if (!GameService.checkGameChatAlert(context, game, false)){
+	 		ivChatAlert.setVisibility(View.GONE);
+	 	}
 	 	
 	 	tvLastAction.setText(game.getLastActionTextForList(context, player.getId()));
 	 
@@ -335,7 +341,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			layoutLastAction.addRule(RelativeLayout.RIGHT_OF, rlAvatars.getId());	
 			layoutLastAction.addRule(RelativeLayout.BELOW, rlPlayer_1.getId());
 			//layoutLastAction.setMargins(left, top, right, bottom); 
-			tvLastAction.setLayoutParams(layoutLastAction);
+			llLastAction.setLayoutParams(layoutLastAction);
 			
 			//RelativeLayout.LayoutParams layoutAvatars = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			//layoutAvatars.setMargins(0, 0, 0, 30);
@@ -354,8 +360,9 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		    ivOpponentBadge_2.setLayoutParams(rlp);
 		    ivOpponentBadge_1.setLayoutParams(rlp);
 		    
-			layoutLastAction.addRule(RelativeLayout.BELOW, rlAvatars.getId());			
-			tvLastAction.setLayoutParams(layoutLastAction);
+			layoutLastAction.addRule(RelativeLayout.BELOW, rlAvatars.getId());	
+			llLastAction.setLayoutParams(layoutLastAction);
+			//tvLastAction.setLayoutParams(layoutLastAction);
 			
 			RelativeLayout.LayoutParams layoutOpponent2  = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			layoutOpponent2.setMargins(0, 4, 0, 0);
@@ -365,8 +372,9 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 
 		}
 		else{
-			layoutLastAction.addRule(RelativeLayout.BELOW, rlAvatars.getId());			
-			tvLastAction.setLayoutParams(layoutLastAction);
+			layoutLastAction.addRule(RelativeLayout.BELOW, rlAvatars.getId());
+			llLastAction.setLayoutParams(layoutLastAction);
+			//tvLastAction.setLayoutParams(layoutLastAction);
 
 		}
 	 	

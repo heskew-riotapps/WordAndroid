@@ -374,7 +374,7 @@
  		    android:paddingLeft="10dp"
  		    android:layout_width="wrap_content"
  		    android:layout_height="wrap_content"
- 		    android:src="@drawable/bonus_3l"
+ 		    android:src="@drawable/bonus_2l"
  		    android:id="@+id/bonus2l_img"
  		    android:layout_centerVertical="true"
  			/>
@@ -423,7 +423,7 @@
  		    android:paddingLeft="10dp"
  		    android:layout_width="wrap_content"
  		    android:layout_height="wrap_content"
- 		    android:src="@drawable/bonus_3l"
+ 		    android:src="@drawable/bonus_4l"
  		    android:id="@+id/bonus4l_img"
  		    android:layout_centerVertical="true"
  			/>
@@ -449,7 +449,7 @@
  		    android:paddingLeft="10dp"
  		    android:layout_width="wrap_content"
  		    android:layout_height="wrap_content"
- 		    android:src="@drawable/bonus_3l"
+ 		    android:src="@drawable/bonus_2w"
  		    android:id="@+id/bonus2w_img"
  		    android:layout_centerVertical="true"
  			/>
@@ -474,7 +474,7 @@
  		    android:paddingLeft="10dp"
  		    android:layout_width="wrap_content"
  		    android:layout_height="wrap_content"
- 		    android:src="@drawable/bonus_3l"
+ 		    android:src="@drawable/bonus_3w"
  		    android:id="@+id/bonus3w_img"
  		    android:layout_centerVertical="true"
  			/>

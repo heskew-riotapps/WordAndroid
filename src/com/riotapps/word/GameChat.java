@@ -59,6 +59,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	private String chatPlayer4Id = "";
 	private String prevPlayerId = "";
 	private String prevTimeSince = "";
+	
 	//private ChatArrayAdapter adapter = null;
 	
 	ListView lvChat;
@@ -199,31 +200,41 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	public View getChatView(Chat chat) {
 		View view = LayoutInflater.from(this).inflate(R.layout.gamechatitem, null);
 		  
-		
-		  if (chatPlayer1Id == ""){
-    		  chatPlayer1Id = chat.getPlayerId(); 
-    	  }
-    	  else if (chatPlayer2Id == ""){
-    		  chatPlayer2Id = chat.getPlayerId(); 
-    	  }
-    	  else if (chatPlayer3Id == ""){
-    		  chatPlayer3Id = chat.getPlayerId(); 
-    	  }
-    	  else {
-    		  chatPlayer4Id = chat.getPlayerId(); 
-    	  }
+		  //is chatPlayerId already assigned? if not assign him the next slot/color
+		  if (!chatPlayer1Id.equals(chat.getPlayerId()) && 
+				  !chatPlayer2Id.equals(chat.getPlayerId()) && 
+				  !chatPlayer3Id.equals(chat.getPlayerId()) && 
+				  !chatPlayer4Id.equals(chat.getPlayerId())){
+			  if (chatPlayer1Id == ""){
+	    		  chatPlayer1Id = chat.getPlayerId(); 
+	    	  }
+	    	  else if (chatPlayer2Id == ""){
+	    		  chatPlayer2Id = chat.getPlayerId(); 
+	    	  }
+	    	  else if (chatPlayer3Id == ""){
+	    		  chatPlayer3Id = chat.getPlayerId(); 
+	    	  }
+	    	  else {
+	    		  chatPlayer4Id = chat.getPlayerId(); 
+	    	  }
+		  }
     	  
+		  Logger.d(TAG, "getChatView chatPlayer1Id=" + chatPlayer1Id);
+		  Logger.d(TAG, "getChatView chatPlayer2Id=" + chatPlayer2Id);
+		  Logger.d(TAG, "getChatView chatPlayer3Id=" + chatPlayer3Id);
+		  Logger.d(TAG, "getChatView chatPlayer4Id=" + chatPlayer4Id);
+		  
     	   TextView tvChat = (TextView) view.findViewById(R.id.tvChat);
     	   TextView tvPlayerName = (TextView) view.findViewById(R.id.tvPlayerName);
     	   TextView tvChatDate = (TextView) view.findViewById(R.id.tvChatDate);
     	   
-    	   if (chat.getPlayerId() == chatPlayer1Id){
+    	   if (chat.getPlayerId().equals(chatPlayer1Id)){
     		   tvChat.setBackgroundResource(R.drawable.chat_player1_background);
     	   }
-    	   else if (chat.getPlayerId() == chatPlayer2Id){
+    	   else if (chat.getPlayerId().equals(chatPlayer2Id)){
     		   tvChat.setBackgroundResource(R.drawable.chat_player2_background);
     	   }
-    	   else if (chat.getPlayerId() == chatPlayer3Id){
+    	   else if (chat.getPlayerId().equals(chatPlayer3Id)){
     		   tvChat.setBackgroundResource(R.drawable.chat_player3_background);
     	   }
     	   else {
@@ -309,18 +320,24 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	    		  
 		    	  Chat chat = values[position];
 		    	 
-		    	  if (chatPlayer1Id == ""){
-		    		  chatPlayer1Id = chat.getPlayerId(); 
-		    	  }
-		    	  else if (chatPlayer2Id == ""){
-		    		  chatPlayer2Id = chat.getPlayerId(); 
-		    	  }
-		    	  else if (chatPlayer3Id == ""){
-		    		  chatPlayer3Id = chat.getPlayerId(); 
-		    	  }
-		    	  else {
-		    		  chatPlayer4Id = chat.getPlayerId(); 
-		    	  }
+		    	  //is chatPlayerId already assigned? if not assign him the next slot/color
+				  if (chatPlayer1Id != chat.getPlayerId() && 
+						  chatPlayer2Id != chat.getPlayerId() && 
+						  chatPlayer3Id != chat.getPlayerId() && 
+						  chatPlayer4Id != chat.getPlayerId()){
+			    	  if (chatPlayer1Id == ""){
+			    		  chatPlayer1Id = chat.getPlayerId(); 
+			    	  }
+			    	  else if (chatPlayer2Id == ""){
+			    		  chatPlayer2Id = chat.getPlayerId(); 
+			    	  }
+			    	  else if (chatPlayer3Id == ""){
+			    		  chatPlayer3Id = chat.getPlayerId(); 
+			    	  }
+			    	  else {
+			    		  chatPlayer4Id = chat.getPlayerId(); 
+			    	  }
+				  }
 		    	  
 		    	   TextView tvChat = (TextView) rowView.findViewById(R.id.tvChat);
 		    	   
@@ -475,6 +492,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		            			etText.setText("");
 		            			
 		            			loadLayout();
+		            			GameService.checkGameChatAlert(context, game, true);
 		            	 		
 		            	 		break;
 		            	 		//end of case 200 & 201 

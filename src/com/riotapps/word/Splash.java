@@ -2,14 +2,9 @@ package com.riotapps.word;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.lang.reflect.Type;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,25 +12,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-
-import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
-import com.riotapps.word.hooks.TransportAuthToken;
-import com.riotapps.word.services.WordLoaderService;
 import com.riotapps.word.ui.DialogManager;
-import com.riotapps.word.ui.GameSurfaceView;
 import com.riotapps.word.utils.*;
 import com.riotapps.word.utils.Enums.RequestType;
-import com.riotapps.word.utils.Enums.ResponseHandlerType;
 
 public class Splash  extends FragmentActivity {
    

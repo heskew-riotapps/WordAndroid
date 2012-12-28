@@ -78,13 +78,34 @@ public class GameService {
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
 		if (settings.getBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId), false)) { 
 			SharedPreferences.Editor editor = settings.edit();
-			editor.putBoolean(Constants.USER_PREFS_GAME_ALERT_CHECK,true);
+			editor.putBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId),true);
 			editor.commit();
 			return false;
 		}
 		else{
 			return true;
 		}
+	}
+	
+	public static boolean checkGameChatAlert(Context context, Game game, boolean update){
+		
+		long gameChatTime = game.getLastChatDate() != null ? game.getLastChatDate().getTime() : 0;
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		long localChatTime = settings.getLong(String.format(Constants.USER_PREFS_GAME_CHAT_CHECK, game.getId()), 0);
+		
+		Logger.d(TAG, "checkGameChatAlert gameChatTime=" + gameChatTime + " localChatTime=" + localChatTime);
+		
+		if (update){
+			
+			Logger.d(TAG, " about to set gameChatTime=" + gameChatTime);
+			SharedPreferences.Editor editor = settings.edit();
+				
+			editor.putLong(String.format(Constants.USER_PREFS_GAME_CHAT_CHECK, game.getId()),gameChatTime);
+			editor.commit();
+		}
+		Logger.d(TAG, "checkGameChatAlert about to return " + (gameChatTime != localChatTime)); 
+			 
+		return gameChatTime != localChatTime;
 	}
 	
 	public static void clearLastGameListCheckTime(Context context){
@@ -735,6 +756,24 @@ public class GameService {
 		 else{
 			 tvLettersLeft.setText(String.format(context.getString(R.string.scoreboard_letters_left), game.getNumLettersLeft()));
 		 }
+		 
+		 //if game is complete, hide all turn markers
+		 if (game.isCompleted()){
+			 ivContextPlayerTurn.setVisibility(View.GONE);	
+			 ivPlayerTurn2.setVisibility(View.GONE);	
+			 ivPlayerTurn3.setVisibility(View.GONE);	
+			 ivPlayerTurn4.setVisibility(View.GONE);	
+			 
+			 TextView tvNumPoints = (TextView)context.findViewById(R.id.tvNumPoints);
+			 tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_randoms), 
+					 game.getRandomConsonants().get(0),
+					 game.getRandomConsonants().get(1),
+					 game.getRandomConsonants().get(2),
+					 game.getRandomVowels().get(0),
+					 game.getRandomVowels().get(1)));
+		 }
+		 
+		 
 		 //this.tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_num_points), "0"));
 		 
 		 return contextPlayerGame;

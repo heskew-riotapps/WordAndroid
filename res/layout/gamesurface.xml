@@ -41,6 +41,7 @@
   	    android:id="@+id/bChat"
         android:layout_width="0dp" 
         android:layout_weight="1.0"
+        android:drawableRight="@drawable/chat_alert"
         android:text="@string/gameboard_chat_button_text"
     />
 

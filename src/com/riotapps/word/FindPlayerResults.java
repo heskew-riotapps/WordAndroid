@@ -42,7 +42,17 @@ public class FindPlayerResults extends FragmentActivity  implements View.OnClick
 		 	tvPlayerName.setText(opponent.getNickname());
 		 	
 			TextView tvPlayerWins = (TextView)findViewById(R.id.tvPlayerWins);
-			tvPlayerWins.setText(String.format(this.getString(R.string.line_item_num_wins),opponent.getNumWins()));
+			//tvPlayerWins.setText(String.format(this.getString(R.string.line_item_num_wins),opponent.getNumWins()));
+			
+			if (opponent.getNumWins() == 1){
+				tvPlayerWins.setText(this.getString(R.string.line_item_invited)); 
+			}
+			else if (opponent.getNumWins() == -1){
+				tvPlayerWins.setText(this.getString(R.string.line_item_1_win)); 
+			}
+			else{
+				tvPlayerWins.setText(String.format(this.getString(R.string.line_item_num_wins),opponent.getNumWins())); 
+			}
 		 	
 		 	ImageFetcher imageLoader = new ImageFetcher(this, 34, 34, 0);
 			imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));

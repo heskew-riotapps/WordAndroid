@@ -28,6 +28,12 @@
         android:layout_below="@id/title"
         />
     </RelativeLayout> 
+     <LinearLayout 
+            style="@style/ContentAreaTextBottomStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+         android:orientation="vertical"
+        >
     <ScrollView   
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent" 
@@ -35,7 +41,6 @@
      
     	 >
     <LinearLayout 
-        style="@style/ContentAreaTextBottomStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
          android:orientation="vertical"
@@ -181,14 +186,13 @@
         android:text="@string/badges_500_or_more" 
 		android:drawableLeft="@drawable/badge_0"
         />
-     <View 
-        android:background="@drawable/content_area_bottom"
-		android:layout_height="15dp"
-        android:layout_width="fill_parent" 
-         />
+     
      </LinearLayout>
+ 
      </ScrollView>
+   </LinearLayout>
      </LinearLayout>
+     
     </LinearLayout>
    
 </LinearLayout>

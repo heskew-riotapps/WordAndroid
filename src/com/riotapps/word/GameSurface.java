@@ -35,6 +35,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -69,6 +70,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	public static final int MSG_POINTS_SCORED = 2;
 	public static final int SCOREBOARD_HEIGHT = 30;
 	public static final int BUTTON_CONTROL_HEIGHT = 48;
+	private boolean buttonsLoaded = false;
 	private int windowHeight;
 	private int scoreboardHeight;
 	private Game game;
@@ -343,6 +345,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 }
 	 
 	 private void setupButtons(){
+		  buttonsLoaded = true;
 		Button bRematch = (Button) findViewById(R.id.bRematch);
 		this.bRecall = (Button) findViewById(R.id.bRecall);
 		this.bPlay = (Button) findViewById(R.id.bPlay);
@@ -400,13 +403,20 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	Logger.d(TAG, "setupButtons this.game.getStatus()=" + this.game.getStatus());
 	 	
 	 	
-	 	
+	 	bChat.setCompoundDrawables(null, null, null, null);
 	 	//set cancel button area mode:
 	 	//if it's the first play of the game by starting player, it should be "CANCEL" mode
 	 	//if it's the first play of the game by a non-starting player, it should be in "DECLINE" mode
 	 	//if it's not the first play of the game, it should be in "RESIGN" mode
 	 	
 	 	if (this.game.getStatus() == 1) { //active
+	 		if (GameService.checkGameChatAlert(context, this.game, true)){
+	 			Drawable chatAlert = context.getResources().getDrawable( R.drawable.chat_alert );
+	 			bChat.setCompoundDrawablesWithIntrinsicBounds(null, null, chatAlert, null);
+	 			
+	 			Logger.d(TAG, "setupButtons checkGameChatAlert=true");
+	 		}
+	 		
 	 		bRematch.setVisibility(View.GONE);
 	 		
 		 	//the starting player gets one chance (one turn) to cancel
@@ -676,6 +686,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		//Log.w(TAG, "onRestart called");
 		super.onRestart();
 		this.gameSurfaceView.onRestart();
+		if (buttonsLoaded){
+			//reset buttons
+			this.setupButtons();
+		}
 		
 
 	}

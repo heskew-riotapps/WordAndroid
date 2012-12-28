@@ -115,15 +115,30 @@
 	        />
 		            
  			</RelativeLayout>
- 			 <com.riotapps.word.ui.MainFontTextView
-	            android:id="@+id/tvLastAction"
-	            style="@style/SubTextStyle"
-	            android:textSize="11dp"
-	            android:layout_marginTop="2dp"
-	          
-	            android:paddingTop="4dp"
-	         
-	        />
+ 			<RelativeLayout
+ 			    android:id="@+id/llLastAction"	
+ 			    android:layout_width="wrap_content"
+			   	android:layout_height="wrap_content"
+ 			    >
+			  <ImageView 
+				   	android:layout_width="wrap_content"
+			   		android:layout_height="wrap_content"
+				    android:id="@+id/ivChatAlert"	
+				    android:background="@drawable/chat_alert"
+				    android:layout_marginTop="2dp"
+				    android:layout_marginRight="2dp"
+		            android:paddingTop="4dp"
+			        android:scaleType="fitXY"    
+				 />
+	 			 <com.riotapps.word.ui.MainFontTextView
+		            android:id="@+id/tvLastAction"
+		            style="@style/SubTextStyle"
+		            android:textSize="11dp"
+		            android:layout_marginTop="2dp"
+		           android:layout_toRightOf="@id/ivChatAlert"
+		            android:paddingTop="4dp"
+		        />
+ 			 </RelativeLayout>
  	 </RelativeLayout>
   
 		<LinearLayout 
