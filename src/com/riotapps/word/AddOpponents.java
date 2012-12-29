@@ -4,14 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.facebook.FacebookActivity;
-import com.facebook.LoggingBehaviors;
+import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
@@ -58,14 +58,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class AddOpponents extends FacebookActivity implements View.OnClickListener{
+public class AddOpponents extends FragmentActivity implements View.OnClickListener{
 	
 	private static final String TAG = AddOpponents.class.getSimpleName();
 	TextView tvStartByNickname;
 	Player player;
 	AddOpponents context = this;
 	Game game;
+	private Bundle savedInstanceState;
  
 	private SharedPreferences settings;
 	private Session session;
@@ -73,6 +75,7 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.savedInstanceState = savedInstanceState;
         setContentView(R.layout.addopponents);
         
        // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
@@ -143,12 +146,12 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
             	llPlayers.addView(getView(p));
 			}
             
-            if (this.game.getUnregisteredFBPlayers().size() > 0){
+           /* if (this.game.getUnregisteredFBPlayers().size() > 0){
             	 if (Session.getActiveSession() == null ||
                          Session.getActiveSession().isClosed()) {
                      Session.openActiveSession(this, true);
                  }
-            }
+            }*/
 
     }
     
@@ -346,10 +349,33 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
     
     //if player is invited non-registered facebook friends, use facebook app requests to inform those friends.
     //it's the only way to inform them since we don't have their email address
-    private void handleFacebookInvitationAppRequests() {
-    	 this.session = createSession();
+ /*   private void handleFacebookInvitationAppRequests() {
+    	// this.session = createSession();
     	 Settings.addLoggingBehavior(LoggingBehaviors.INCLUDE_ACCESS_TOKENS);
         
+         Session session = Session.getActiveSession();
+         if (session == null) {
+             if (this.savedInstanceState != null) {
+            	 Logger.d(TAG, "connectToFacebook restoreSession about to be called");
+
+                 session = Session.restoreSession(this, null, statusCallback, savedInstanceState);
+             }
+             if (session == null) {
+            	 Logger.d(TAG, "connectToFacebook session constructor about to be called");
+
+                 session = new Session(this);
+             }
+        	 Logger.d(TAG, "connectToFacebook SetActiveSession about to be called");
+
+             Session.setActiveSession(session);
+             if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
+            	 
+            	 Logger.d(TAG, "connectToFacebook openForRead about to be called");
+                 session.openForRead(new Session.OpenRequest(context).setCallback(statusCallback).setPermissions(Arrays.asList(Constants.FACEBOOK_PERMISSIONS)));
+             }
+         }
+    	 
+    	 
     	 if (this.session.isOpened()) {
     		 handleFacebookAppRequest();
          } else {
@@ -365,160 +391,53 @@ public class AddOpponents extends FacebookActivity implements View.OnClickListen
              };
              this.session.openForRead(new Session.OpenRequest(this).setCallback(callback));
          }
-    }
-    
-    
-    
- /*   private void handleFacebookAppRequest(){
-    	
-    	Logger.d(TAG, "handleFacebookAppRequest this.game.getInvitedFBPlayersString()=" + this.game.getUnregisteredFBPlayersString());
-    	Bundle params = new Bundle();
-	    params.putString("message", this.getString(R.string.add_opponents_fb_dialog_message));
- 
-	    params.putString("to", this.game.getUnregisteredFBPlayersString());
-	    facebook.dialog(context, "apprequests", params, new fbAppRequestsListener());
+    }*/
+    /*
+    private void sendRequests() {
+        Bundle params = new Bundle();
+        params.putString("message", "Learn how to make your Android apps social");
 
+        WebDialog requestsDialog = (
+            new WebDialog.RequestsDialogBuilder(getActivity(),
+                Session.getActiveSession(),
+                params))
+                .setOnCompleteListener(new OnCompleteListener() {
+
+                    @Override
+                    public void onComplete(Bundle values,
+                        FacebookException error) {
+                        if (error != null) {
+                            if (error instanceof FacebookOperationCanceledException) {
+                                Toast.makeText(getActivity().getApplicationContext(), 
+                                    "Request cancelled", 
+                                    Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(), 
+                                    "Network Error", 
+                                    Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            final String requestId = values.getString("request");
+                            if (requestId != null) {
+                                Toast.makeText(getActivity().getApplicationContext(), 
+                                    "Request sent",  
+                                    Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(), 
+                                    "Request cancelled", 
+                                    Toast.LENGTH_SHORT).show();
+                            }
+                        }   
+                    }
+
+                })
+                .build();
+        requestsDialog.show();
     }
-   
-    private void startFacebookAppRequestCallChain(){
-    	Logger.w(TAG, "handleFacebookMeRequest");
-   	 	SharedPreferences.Editor editor = settings.edit();
-        editor.putString(Constants.FB_TOKEN, facebook.getAccessToken());
-        editor.putLong(Constants.FB_TOKEN_EXPIRES, facebook.getAccessExpires());
-        editor.commit();
-     
-        // get information about the currently logged in user
-        mAsyncRunner.request("me", new fbMeRequestListener());
-    	
-    }
+    
     */
-  //  private class fbAppRequestsListener implements DialogListener {
-//
-//		@Override
-//		public void onComplete(Bundle values) {
-//			// TODO Auto-generated method stub
-//			Logger.d(TAG, "fbAppRequestsListener.onComplete");
-//			context.startGame();
-//		}
-
-//		@Override
-//		public void onFacebookError(FacebookError e) {
-//			// TODO Auto-generated method stub
-//			DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());
-//			Logger.e(TAG, "fbAppRequestsListener onFacebookError=" + e.getLocalizedMessage());			
-//		}
-
-//		@Override
-//		public void onError(DialogError e) {
-//			Logger.e(TAG, "fbAppRequestsListener onError=" + e.getLocalizedMessage());
-//			DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());
-			
-//		}
-
-//		@Override
-//		public void onCancel() {
-//			// TODO Auto-generated method stub
-//			
-//			/////call custom dialog here to allow player to make the decision if the player cancels the apprequest
-//			
-//			context.handleAppRequestCancel();
-			//DialogManager.SetupAlert(context, context.getString(R.string.sorry), )
-//		}
-
- //   }
-    
-/*    private class fbMeRequestListener implements RequestListener {
-
-    	@Override
-    	public void onComplete(String response, Object state) {
-            
-    		// get the logged-in user's friends
-    		//save user to server...
-    		Logger.d(TAG, "fbMeRequestListener.onComplete response=" + response);
-    		
-    		context.runOnUiThread(new handleFacebookMeResponseRunnable(response));
-		
-     	}
-
-    	@Override
-    	public void onIOException(IOException e, Object state) {
-    		// TODO Auto-generated method stub
-
-    	}
-
-    	@Override
-    	public void onFileNotFoundException(FileNotFoundException e, Object state) {
-    		// TODO Auto-generated method stub
-
-    	}
-
-    	@Override
-    	public void onMalformedURLException(MalformedURLException e, Object state) {
-    		// TODO Auto-generated method stub
-
-    	}
-
-    	@Override
-    	public void onFacebookError(FacebookError e, Object state) {
-    		// TODO Auto-generated method stub
-
-    	}
-
-    }
-   
-    private class handleFacebookMeResponseRunnable implements Runnable {
-		 private String response;	
-		 
-		 public handleFacebookMeResponseRunnable(String response){
-		 		this.response = response;
-		 	}
-		 
-		 
-		    public void run() {
-		    	Logger.w(TAG, "handleFacebookMeResponse");
-		    	String fbId; 
-				String fbFirstName; 
-				String fbLastName; 
-				String fbEmail; 
-				try {
-					JSONObject json_fb = Util.parseJson(this.response);
-					fbId = json_fb.getString("id");
-					fbFirstName = json_fb.getString("first_name");
-					fbLastName = json_fb.getString("last_name");
-					fbEmail = json_fb.getString("email");
-					
-					
-					//something is wrong...the currently logged in user is not the proper FB user...
-					//clear all cache and settings and re-route to welcome
-					Player player = PlayerService.getPlayerFromLocal();
-					if (!player.getFB().equals(fbId)){
-						Logger.e(TAG,"handleFacebookMeResponse.FacebookError=fbUser in context is a mismatch with local user");
-						
-						//clear out everything and send user to login
-						PlayerService.clearLocalStorageAndCache(context);
-						
-						Intent intent = new Intent(context, com.riotapps.word.Welcome.class);
-			    	    context.startActivity(intent);
-					
-					}
-					else{
-						context.startGame();
-					
-					}
-					
-				} catch (FacebookError e) {
-					Logger.w(TAG,"handleFacebookMeResponse.FacebookError=" + e.getLocalizedMessage());
-					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
-				} catch (JSONException e) {
-					Logger.w(TAG,"handleFacebookMeResponse.JSONException=" + e.getLocalizedMessage());
-					
-					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getLocalizedMessage());  
-				}
-		    }
-		  }
-    
-   */  
-    private void handleFacebookAppRequest() {
+ 
+    private void handleFacebookInvitationAppRequests() {
         Bundle params = new Bundle();
 	    params.putString("message", this.getString(R.string.add_opponents_fb_dialog_message));
 	    params.putString("to", this.game.getUnregisteredFBPlayersString());

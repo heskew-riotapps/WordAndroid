@@ -8,20 +8,14 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
-import com.facebook.FacebookActivity;
-import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
-import com.facebook.android.*;
- 
- 
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
@@ -36,12 +30,11 @@ import com.riotapps.word.hooks.Error.ErrorType;
 
 import com.facebook.model.GraphUser;
 import com.facebook.FacebookException;
-import com.facebook.LoggingBehaviors;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.Settings;
+import com.facebook.LoggingBehavior;
  
 public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	private static final String TAG = Welcome.class.getSimpleName();
@@ -99,7 +92,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
       //  	Session.getActiveSession().removeCallback(statusCallback);
       //  }
         try{
-        	Session.getActiveSession().addCallback(statusCallback);
+        	Session.getActiveSession().removeCallback(statusCallback);
         }
         catch (Exception e){
         	Logger.d(TAG, "onStop error=" + e.getMessage());
@@ -165,7 +158,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     	//then redirect to landing page
     	
     	try{
-	    	 Settings.addLoggingBehavior(LoggingBehaviors.INCLUDE_ACCESS_TOKENS);
+	    	 com.facebook.Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
 	
 	    	 Logger.d(TAG, "connectToFacebook getActiveSession about to be called");
 	         Session session = Session.getActiveSession();
@@ -192,7 +185,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	    	
 	         Logger.d("TAG", "session state=" + session.getState().toString());
 	    	
-	         session = Session.getActiveSession();
+	       //  session = Session.getActiveSession();
 	       //  Session session = Session.getActiveSession();
 	         if (session.isOpened()){
 	        	 this.handleInitialCallback();
