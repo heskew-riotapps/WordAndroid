@@ -343,6 +343,7 @@ public class GameService {
 	    SharedPreferences.Editor editor = settings.edit();
 	    
 	    game.setLocalStorageDate(System.nanoTime());
+	    game.setLocalStorageLastTurnDate(game.getLastTurnDate().getTime());
 	 //   Logger.w(TAG, "game=" + gson.toJson(game));
 	   
 	    editor.putString(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()), gson.toJson(game));

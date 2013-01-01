@@ -166,7 +166,10 @@ public class Game implements Parcelable, Comparable<Game> {
 	private Date createDate = new Date(0);  
 	
 	@SerializedName("ls_d")
-	private long localStorageDate = System.nanoTime();  
+	private long localStorageDate = 0;// System.nanoTime();  
+	
+	@SerializedName("ls_ltd")
+	private long localStorageLastTurnDate = 0;// System.nanoTime();  
 	
 	@SerializedName("co_d")
 	private Date completionDate = new Date(0); 
@@ -215,6 +218,16 @@ public class Game implements Parcelable, Comparable<Game> {
 
 	public void setPlayedTiles(List<PlayedTile> playedTiles) {
 		this.playedTiles = playedTiles;
+	}
+	
+	
+
+	public long getLocalStorageLastTurnDate() {
+		return localStorageLastTurnDate;
+	}
+
+	public void setLocalStorageLastTurnDate(long localStorageLastTurnDate) {
+		this.localStorageLastTurnDate = localStorageLastTurnDate;
 	}
 
 	public PlayerGame[] getPlayerGameArray(){
@@ -693,8 +706,15 @@ public class Game implements Parcelable, Comparable<Game> {
 	}
 	
 	private boolean isContextPlayerPerformedLastTurn(String contextPlayerId){
-		//Logger.d(TAG, "isContextPlayerPerformedLastTurn  this.lastTurnPlayerId=" +  this.lastTurnPlayerId + " contextPlayerId= " + contextPlayerId );
+		
+		try{
 		return this.lastTurnPlayerId.equals(contextPlayerId);
+		}
+		catch(Exception e){
+			 Logger.d(TAG, "isContextPlayerPerformedLastTurn  this.lastTurnPlayerId=" +  this.lastTurnPlayerId == null ? "null" : this.lastTurnPlayerId  + " contextPlayerId= " + contextPlayerId == null ? "null" : contextPlayerId + " error=" + e.getMessage());
+			
+			return false;
+		}
 	}
 	
 	public String getLastActionTextForList(Context context, String contextPlayerId){

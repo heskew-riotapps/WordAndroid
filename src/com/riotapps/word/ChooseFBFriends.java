@@ -334,10 +334,10 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 			   			
 			   			TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
 						if (friend.getNumWins() == 1){
-							tvPlayerWins.setText(context.getString(R.string.line_item_invited)); 
+							tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
 						}
 						else if (friend.getNumWins() == -1){
-							tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
+							tvPlayerWins.setText(context.getString(R.string.line_item_invited)); 
 						}
 						else{
 							tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 

@@ -390,8 +390,9 @@ containing a value of this type.
         public static final int turn_arrow=0x7f02009c;
         public static final int wordsmash_logo6=0x7f02009d;
         public static final int wordsmash_logo7=0x7f02009e;
-        public static final int wordsmash_logo_small1=0x7f02009f;
-        public static final int yellow_dot3=0x7f0200a0;
+        public static final int wordsmash_logo8=0x7f02009f;
+        public static final int wordsmash_logo_small1=0x7f0200a0;
+        public static final int yellow_dot3=0x7f0200a1;
     }
     public static final class id {
         public static final int alert_ok=0x7f050020;

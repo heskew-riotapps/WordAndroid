@@ -4,7 +4,7 @@
      <ImageView 
        android:id="@+id/logo"
        android:contentDescription="@string/logo"
-       android:src="@drawable/wordsmash_logo6"
+       android:src="@drawable/wordsmash_logo8"
        android:layout_width="250dp"
 	    style="@style/TopLogoNoContextStyle" 
 	  />

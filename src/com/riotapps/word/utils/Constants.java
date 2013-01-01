@@ -34,7 +34,7 @@ public class Constants {
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 20000;
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 4000;
 	public static final int REGISTERED_FB_FRIENDS_CACHE_DURATION = 604800000; //a week of milliseconds
-	public static final int SPLASH_ACTIVITY_TIMEOUT = 3000;
+	public static final int SPLASH_ACTIVITY_TIMEOUT = 1000;
 	public static final int NETWORK_CONNECTIVITY_CHECK_DURATION = 2000;
 	
 	
@@ -90,13 +90,14 @@ public class Constants {
 	/**=============================================
 	 * the web
 	 *==============================================*/  
-	public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";    
+	public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";       
 	//public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";     
 	public static final String FACEBOOK_API_ID = "314938401925933"; 
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
 	public static final String REST_FIND_PLAYER_BY_NICKNAME = REST_URL_SITE + "players/find.json?n_n=%s";
 	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN = REST_URL_SITE + "players/auth_via_token.json";
+	public static final String REST_GET_PLAYER_BY_TOKEN = REST_URL_SITE + "players/get_via_token.json";
 	public static final String REST_PLAYER_LOGOUT = REST_URL_SITE + "players/log_out.json";
 	public static final String REST_PLAYER_CHANGE_PASSWORD = REST_URL_SITE + "players/change_password.json";
 	public static final String REST_PLAYER_UPDATE_ACCOUNT = REST_URL_SITE + "players/update_account.json";

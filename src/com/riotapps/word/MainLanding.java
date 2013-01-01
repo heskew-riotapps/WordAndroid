@@ -104,7 +104,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			try { 
 				String json = PlayerService.setupAuthTokenCheck(this, this.player.getAuthToken());
 				//this will bring back the players games too
-				new NetworkTask(this, RequestType.POST, "", json, false).execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
+				new NetworkTask(this, RequestType.POST, "", json, false).execute(Constants.REST_GET_PLAYER_BY_TOKEN);
 			} catch (DesignByContractException e) {
 				//this should never happen unless there is some tampering
 				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
@@ -427,25 +427,38 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 private void handleGameClick(String gameId){	   
 	   try { 
 		   //this logic needs to be refactored more than likely
-		   Logger.w(TAG, "handleGameClick called");
+		   Logger.d(TAG, "handleGameClick called");
 		   
 		   Game game = GameService.getGameFromLocal(gameId);
 		   
-		   Logger.w(TAG, "handleGameClick gameId param=" + gameId + " stored=" + game.getId());
+		
+		   
+		   Logger.d(TAG, "handleGameClick gameId param=" + gameId + " stored=" + game.getId());
 		   if (game.getId().equals(gameId)){
-			   long localStorageDuration = System.nanoTime() / 1000000 - game.getLocalStorageDateInMilliseconds();
-			   Logger.w(TAG, "handleGameClick game Found localStorageDuration=" + localStorageDuration);
-			   if (localStorageDuration < Constants.LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS){
-			 	//game was found locally and was stored there less than 15 seconds ago, no need to hit the server
-				   Logger.w(TAG, "handleGameClick game Found with local storage duration. bypassing server fetch");
-		            Intent intent = new Intent(context, com.riotapps.word.GameSurface.class);
-		            intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
-		      	    context.startActivity(intent);
-				    
-		      	    return;
+			   long localStorageDuration = (System.nanoTime() / 1000000) - game.getLocalStorageDateInMilliseconds();
+			   
+			   Logger.d(TAG, "handleGameClick called this.player.getLastPlayedDateFromGameList(gameId)=" + this.player.getLastPlayedDateFromGameList(gameId));
+			   Logger.d(TAG, "handleGameClick called  game.getLocalStorageLastTurnDate()=" + game.getLocalStorageLastTurnDate());
+			   Logger.d(TAG, "handleGameClick called  localStorageDuration=" + localStorageDuration);
+			   Logger.d(TAG, "handleGameClick called  game.getLocalStorageDateInMilliseconds()=" + game.getLocalStorageDateInMilliseconds());
+			   Logger.d(TAG, "handleGameClick called  System.nanoTime() / 1000000=" + (System.nanoTime() / 1000000));
+			   
+			   //also compare lastturndate from list and local storage..if list is later, refresh game from server 
+			   if (this.player.getLastPlayedDateFromGameList(gameId) > game.getLocalStorageLastTurnDate()){
+				   Logger.d(TAG, "handleGameClick game Found localStorageDuration=" + localStorageDuration);
+				   if (localStorageDuration < Constants.LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS){
+				 	//game was found locally and was stored there less than 15 seconds ago, no need to hit the server
+					   Logger.d(TAG, "handleGameClick game Found with local storage duration. bypassing server fetch");
+			            Intent intent = new Intent(context, com.riotapps.word.GameSurface.class);
+			            intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
+			      	    context.startActivity(intent);
+					    
+			      	    return;
+				   }
 			   }
 		   }
 			String json = GameService.setupGetGame(this, gameId);
+			 Logger.w(TAG, "handleGameClick game not Found with local storage duration. starting server fetch");
 			//this will bring back the players games too
 			this.runningTask = new NetworkTask(this, RequestType.POST, getString(R.string.progress_loading), json, true);
 			this.runningTask.execute(Constants.REST_GET_GAME_URL);

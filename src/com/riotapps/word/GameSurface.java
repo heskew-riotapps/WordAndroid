@@ -688,6 +688,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		this.gameSurfaceView.onRestart();
 		if (buttonsLoaded){
 			//reset buttons
+			this.game = GameService.getGameFromLocal(game.getId());
 			this.setupButtons();
 		}
 		

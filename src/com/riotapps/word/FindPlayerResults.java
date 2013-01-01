@@ -45,10 +45,10 @@ public class FindPlayerResults extends FragmentActivity  implements View.OnClick
 			//tvPlayerWins.setText(String.format(this.getString(R.string.line_item_num_wins),opponent.getNumWins()));
 			
 			if (opponent.getNumWins() == 1){
-				tvPlayerWins.setText(this.getString(R.string.line_item_invited)); 
+				tvPlayerWins.setText(this.getString(R.string.line_item_1_win)); 
 			}
 			else if (opponent.getNumWins() == -1){
-				tvPlayerWins.setText(this.getString(R.string.line_item_1_win)); 
+				tvPlayerWins.setText(this.getString(R.string.line_item_invited)); 
 			}
 			else{
 				tvPlayerWins.setText(String.format(this.getString(R.string.line_item_num_wins),opponent.getNumWins())); 

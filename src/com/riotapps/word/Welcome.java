@@ -35,14 +35,17 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.LoggingBehavior;
+import com.facebook.Settings;
+import com.facebook.UiLifecycleHelper;
  
 public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	private static final String TAG = Welcome.class.getSimpleName();
 
-	 Session.StatusCallback statusCallback = new SessionStatusCallback();
+	// Session.StatusCallback statusCallback = new SessionStatusCallback();
 	
 	Player player;
     final Welcome context = this;	
+    private UiLifecycleHelper uiHelper;
     
     NetworkTask runningTask = null;
   
@@ -61,72 +64,168 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         
         Logger.d(TAG, "Welcome onCreate called");
         
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
+        
         txtFB = (TextView) findViewById(R.id.byFacebook);
         txtFB.setOnClickListener(this);
         txtNative = (TextView) findViewById(R.id.byEmail);
         txtNative.setOnClickListener(this);   
+        
+   /*     
+        Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+
+        Session session = Session.getActiveSession();
+        if (session == null) {
+            if (savedInstanceState != null) {
+                session = Session.restoreSession(this, null, callback, savedInstanceState);
+            }
+            if (session == null) {
+                session = new Session(this);
+            }
+            Session.setActiveSession(session);
+            if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
+                session.openForRead(new Session.OpenRequest(this).setCallback(callback));
+            }
+        }
+        */
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Logger.d(TAG, "onStart called");
-      //  Session session = Session.getActiveSession();
-      //  if (session != null){
-      //  	session.addCallback(statusCallback);
-      //  }
-        try{
-        	Session.getActiveSession().addCallback(statusCallback);
-        }
-        catch (Exception e){
-        	Logger.d(TAG, "onStart error=" + e.getMessage());
-        }
-    }
+  //  @Override
+  //  public void onStart() {
+  //      super.onStart();
+  //      Logger.d(TAG, "onStart called");
+  //    //  Session session = Session.getActiveSession();
+  //    //  if (session != null){
+  //    //  	session.addCallback(statusCallback);
+  //    //  }
+  //      try{
+  //      	Session.getActiveSession().addCallback(statusCallback);
+  //      }
+  //      catch (Exception e){
+  //      	Logger.d(TAG, "onStart error=" + e.getMessage());
+  //      }
+  //  }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Logger.d(TAG, "onStop called");
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+	   // super.onSessionStateChange(state, exception);
+    	Logger.d(TAG, "onSessionStateChange called - enum=" + state.toString());
+	    if (state.isOpened()) {
+	        // Session open
+	    	Logger.d(TAG, "onSessionStateChange called state.isOpened");
+	    	handleInitialCallback();
+	    } else if (state.isClosed()) {
+	        // Session closed
+	    	Logger.d(TAG, "onSessionStateChange called state.isClosed");
+	    }
+	}
+    
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+
+        public void call(Session session, SessionState state, Exception exception) {
+            Logger.d(TAG, "callback called onSessionStateChange about to be called");
+            onSessionStateChange(session, state, exception);
+        }
+ 	};
+    
+ 	@Override
+ 	public void onResume() {
+ 		if (this.runningTask != null){
+    		this.runningTask.cancel(true);
+    	}
+ 	    super.onResume();
+ 	   Session session = Session.getActiveSession();
+ 	    if (session != null &&
+ 	           (session.isOpened() || session.isClosed()) ) {
+ 	        onSessionStateChange(session, session.getState(), null);
+ 	    }
+ 	    
+        Logger.d(TAG, "onResume called  uiHelper.onResume() about to be called");
+ 	    uiHelper.onResume();
+ 	}   
+
+ 	@Override
+ 	public void onPause() {
+ 	    super.onPause();
+ 	     Logger.d(TAG, "onPause called  uiHelper.onPause() about to be called");
+ 	    uiHelper.onPause();
+ 	}   
+
+ 	@Override
+ 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+ 	    super.onActivityResult(requestCode, resultCode, data);
+ 	   Logger.d(TAG, "onActivityResult called  uiHelper.onActivityResult() about to be called");
+ 	    uiHelper.onActivityResult(requestCode, resultCode, data);
+ 	}   
+
+ 	@Override
+ 	public void onDestroy() {
+ 	//	Session session = Session.getActiveSession();
+ 	//    if (session != null &&
+ 	//           (session.isOpened() || session.isClosed()) ) {
+ 	//        onSessionStateChange(session, session.getState(), null);
+ 	//    }
+ 	//    else{
+ 	    super.onDestroy();
+ 	   Logger.d(TAG, "onDestroy called  uiHelper.onDestroy() about to be called");
+ 	    uiHelper.onDestroy();
+ 	//    }
+ 	}   
+
+ 	@Override
+ 	protected void onSaveInstanceState(Bundle outState) {
+ 	    super.onSaveInstanceState(outState);
+ 	   Logger.d(TAG, "onSaveInstanceState called  uiHelper.onSaveInstanceState() about to be called");
+ 	    uiHelper.onSaveInstanceState(outState);
+ 	}   
+
+ 	
+  //  @Override
+  //  public void onStop() {
+   //     super.onStop();
+    //    Logger.d(TAG, "onStop called");
       //  Session session = Session.getActiveSession();
       //  if (session != null){
       //  	Session.getActiveSession().removeCallback(statusCallback);
       //  }
-        try{
+     //   uiHelper.onStop();
+       /* try{
         	Session.getActiveSession().removeCallback(statusCallback);
         }
         catch (Exception e){
         	Logger.d(TAG, "onStop error=" + e.getMessage());
-        }
-    }
+        }*/
+   // }
 
-    @Override
-   protected void onSaveInstanceState(Bundle outState) {
-         super.onSaveInstanceState(outState);
-         Logger.d(TAG, "onSaveInstanceState called");
+  //  @Override
+  // protected void onSaveInstanceState(Bundle outState) {
+  //       super.onSaveInstanceState(outState);
+  //       Logger.d(TAG, "onSaveInstanceState called");
      //    Session session = Session.getActiveSession();
       //   if (session != null){
       //  	 Session.saveSession(session, outState);
        //  }
-         try{ 
-        	 Session session = Session.getActiveSession();
-             Session.saveSession(session, outState);
-         }
-         catch(Exception e){
-         	Logger.d(TAG, "onSaveInstanceState error=" + e.getMessage());
-         }
-    }
+   //      try{ 
+   //     	 Session session = Session.getActiveSession();
+   //          Session.saveSession(session, outState);
+   //      }
+   //      catch(Exception e){
+   //      	Logger.d(TAG, "onSaveInstanceState error=" + e.getMessage());
+   //      }
+   // }
     
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Logger.d(TAG, "onActivityResult called");
+  //  @Override
+ //   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+ //       super.onActivityResult(requestCode, resultCode, data);
+ //       Logger.d(TAG, "onActivityResult called");
         //Session session = Session.getActiveSession();
-        try{ 
-        	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-        }
-        catch(Exception e){
-        	Logger.d(TAG, "onActivityResult error=" + e.getMessage());
-        }
+  //      try{ 
+  //      	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+   //     }
+   //     catch(Exception e){
+   //     	Logger.d(TAG, "onActivityResult error=" + e.getMessage());
+   //     }
         
        // if (session != null){
        // 	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
@@ -134,7 +233,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         
         //super.onActivityResult(requestCode, resultCode, data);
         //Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-    }
+   // }
     
     @Override 
     public void onClick(View v) {
@@ -156,17 +255,27 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     	//then retrieve friend list from facebook
     	//then save the friend list locally
     	//then redirect to landing page
-    	
     	try{
-	    	 com.facebook.Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+    	/*  Session session = Session.getActiveSession();
+          if (!session.isOpened() && !session.isClosed()) {
+        	  Logger.d(TAG, "connectToFacebook session is not open and not closed");
+	        	 Logger.d(TAG, "connectToFacebook openForRead2 about to be called");
+              session.openForRead(new Session.OpenRequest(this).setCallback(callback).setPermissions(Arrays.asList(Constants.FACEBOOK_PERMISSIONS)));
+          } else {
+        	  Logger.d(TAG, "connectToFacebook openActiveSession about to be called...permissions already set?");
+              Session.openActiveSession(this, true, callback);
+          }
+    	*/
+    	
+	      com.facebook.Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
 	
-	    	 Logger.d(TAG, "connectToFacebook getActiveSession about to be called");
+	  	 Logger.d(TAG, "connectToFacebook getActiveSession about to be called");
 	         Session session = Session.getActiveSession();
 	         if (session == null) {
 	             if (this.savedInstanceState != null) {
 	            	 Logger.d(TAG, "connectToFacebook restoreSession about to be called");
 	
-	                 session = Session.restoreSession(this, null, statusCallback, savedInstanceState);
+	                 session = Session.restoreSession(this, null, callback, savedInstanceState);
 	             }
 	             if (session == null) {
 	            	 Logger.d(TAG, "connectToFacebook session constructor about to be called");
@@ -179,12 +288,12 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	             if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
 	            	 
 	            	 Logger.d(TAG, "connectToFacebook openForRead about to be called");
-	                 session.openForRead(new Session.OpenRequest(context).setCallback(statusCallback).setPermissions(Arrays.asList(Constants.FACEBOOK_PERMISSIONS)));
+	                 session.openForRead(new Session.OpenRequest(context).setCallback(callback).setPermissions(Arrays.asList(Constants.FACEBOOK_PERMISSIONS)));
 	             }
 	         }
-	    	
-	         Logger.d("TAG", "session state=" + session.getState().toString());
-	    	
+	  	
+	         Logger.d(TAG, "session state=" + session.getState().toString());
+	         session = Session.getActiveSession();
 	       //  session = Session.getActiveSession();
 	       //  Session session = Session.getActiveSession();
 	         if (session.isOpened()){
@@ -194,12 +303,13 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	        	 Logger.d(TAG, "connectToFacebook session is not open and not closed");
 	        	 Logger.d(TAG, "connectToFacebook openForRead2 about to be called");
 	        	// session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
-	             session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback).setPermissions(Arrays.asList(Constants.FACEBOOK_PERMISSIONS)));
+	             session.openForRead(new Session.OpenRequest(context).setCallback(callback).setPermissions(Arrays.asList(Constants.FACEBOOK_PERMISSIONS)));
 	         } else {
 	        	 Logger.d(TAG, "connectToFacebook openActiveSession about to be called");
-	             Session.openActiveSession(context, true, statusCallback);
+	             Session.openActiveSession(context, true, callback);
 	         }
-	    	}
+	    	 
+    	}
     	catch (FacebookException fbEx){
     		DialogManager.SetupAlert(context, context.getString(R.string.sorry), fbEx.getMessage());
     	}
@@ -213,21 +323,21 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
  //       facebook.authorizeCallback(requestCode, resultCode, data);
  //   }
     
-    @Override
-    public void onResume() {    
-        super.onResume();
-       // facebook.extendAccessTokenIfNeeded(this, null);
-    }
+  //  @Override
+  //  public void onResume() {    
+  //      super.onResume();
+  //     // facebook.extendAccessTokenIfNeeded(this, null);
+  //  }
     
     
-    @Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-    	if (this.runningTask != null){
-    		this.runningTask.cancel(true);
-    	}
-		super.onPause();
-	}
+  //  @Override
+//	protected void onPause() {
+//		// TODO Auto-generated method stub
+ //   	if (this.runningTask != null){
+ //   		this.runningTask.cancel(true);
+ //   	}
+//		super.onPause();
+//	}
 
     private class handleDialogRunnable implements Runnable{
     	private String title;
@@ -506,12 +616,12 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
     	 }
     }
     
-    private class SessionStatusCallback implements Session.StatusCallback {
-        @Override
-        public void call(Session session, SessionState state, Exception exception) {
-            Logger.d(Welcome.TAG, "statusCallback appId" + session.getApplicationId() );
-           
-            handleInitialCallback();
+ //   private class SessionStatusCallback implements Session.StatusCallback {
+ //       @Override
+ //       public void call(Session session, SessionState state, Exception exception) {
+ //           Logger.d(Welcome.TAG, "statusCallback appId" + session.getApplicationId() );
+ //          
+ //           handleInitialCallback();
  /*           if (exception == null) {
 	            if (session.isOpened()) {
 	            	 handleInitialCallback();
@@ -525,7 +635,7 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
                 //login failed...handle this somehow
             }
             */
-        }
-    }
+  //      }
+  //  }
 }
 

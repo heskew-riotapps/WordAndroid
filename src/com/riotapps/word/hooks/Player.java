@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
 
 import com.riotapps.word.hooks.Error.ErrorType;
 import com.riotapps.word.utils.Constants;
@@ -241,6 +242,32 @@ public class Player implements Parcelable{
 	public List<Game> getActiveGamesOpponentTurn() {
 		return activeGamesOpponentTurn;
 	}
+	
+	public long getLastPlayedDateFromGameList(String gameId){
+		if (this.getActiveGamesYourTurn().size() > 0){
+			for(Game game : this.getActiveGamesYourTurn()){
+				if (game.getId().equals(gameId)){
+					return game.getLastTurnDate().getTime();
+				}
+			}
+		}
+		if (this.getActiveGamesOpponentTurn().size() > 0){
+			for(Game game : this.getActiveGamesOpponentTurn()){
+				if (game.getId().equals(gameId)){
+					return game.getLastTurnDate().getTime();
+				}
+			}
+		}
+		if (this.getCompletedGames().size() > 0){
+			for(Game game : this.getCompletedGames()){
+				if (game.getId().equals(gameId)){
+					return game.getLastTurnDate().getTime();
+				}
+			}
+		}
+		return 0;
+	}
+	
 	
 	public void setActiveGamesOpponentTurn(List<Game> activeGamesOpponentTurn) {
 		this.activeGamesOpponentTurn = activeGamesOpponentTurn;

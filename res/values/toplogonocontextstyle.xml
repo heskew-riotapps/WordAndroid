@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="TopLogoNoContextStyle">
-        <item name="android:src">@drawable/wordsmash_logo7</item>
+        <item name="android:src">@drawable/wordsmash_logo8</item>
 	    <item name="android:layout_width">250dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>

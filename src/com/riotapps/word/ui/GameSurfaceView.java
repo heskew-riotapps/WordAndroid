@@ -2200,7 +2200,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	private void LoadExtras(){
 		int height = Math.round(this.bottomGapHeight * .6F);
-		Bitmap bgLogo = BitmapFactory.decodeResource(getResources(), R.drawable.wordsmash_logo7);
+		Bitmap bgLogo = BitmapFactory.decodeResource(getResources(), R.drawable.wordsmash_logo8);
 	 
 		float factor = height / (float) bgLogo.getHeight();
 		this.logo = Bitmap.createScaledBitmap(bgLogo, (int) (bgLogo.getWidth() * factor), height, false);  
