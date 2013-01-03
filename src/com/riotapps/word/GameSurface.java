@@ -68,8 +68,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	private int currentPoints = 0;
 	public static final int MSG_SCOREBOARD_VISIBILITY = 1;
 	public static final int MSG_POINTS_SCORED = 2;
-	public static final int SCOREBOARD_HEIGHT = 30;
-	public static final int BUTTON_CONTROL_HEIGHT = 48;
+	//public static int SCOREBOARD_HEIGHT = 30;
+	//public static final int BUTTON_CONTROL_HEIGHT = 48;
 	private boolean buttonsLoaded = false;
 	private int windowHeight;
 	private int scoreboardHeight;
@@ -173,7 +173,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		this.gameSurfaceView.setParent(this);
 		
 	
-	 
+		 Logger.d(TAG, "SetDerivedValues  this.getWindowHeight=" +  this.getWindowHeight() );
+		 Logger.d(TAG, "SetDerivedValues  this.gameSurfaceView.height=" +  gameSurfaceView.getHeight() );
 	 	
 		//Logger.d(TAG, "scoreboard about to be loaded");
 	 	//this.loadScoreboard();

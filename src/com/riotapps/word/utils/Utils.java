@@ -182,8 +182,13 @@ public class Utils {
     }
     
     public static int convertDensityPixelsToPixels(Context context, int dp){
-    	return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    	float density = context.getApplicationContext().getResources().getDisplayMetrics().density;
+        return Math.round((float)dp * density);
+    	
+    	//return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
+
+     
     
     public static String getTimeSinceString(Context context,Date targetDate){
     	//date diff in milliseconds

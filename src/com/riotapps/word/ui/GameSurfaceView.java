@@ -16,6 +16,7 @@ import com.riotapps.word.hooks.TileLayoutService;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.Utils;
 
 import android.os.Message;
 import android.util.Log;
@@ -32,6 +33,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -314,8 +316,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 this.letterValueTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_VALUE_FONT); 
 		 this.holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
-
-		 
+		 boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+		 if (isTablet) {
+		      this.isZoomAllowed = false;
+		 }  
 		// this.isDrawn = false;
 		 
 		// this.setScrollContainer(true);
@@ -367,12 +371,39 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.absoluteTop = coordinates[1];
 		this.absoluteLeft = coordinates[0];
 		
-		//Logger.d(TAG, "SetDerivedValues top=" + coordinates[1] + " left" + coordinates[0]  );
-		
+	// 	Display display = this.parent.getWindowManager().getDefaultDisplay(); 
+	// 	int w = display.getWidth();  // deprecated
+	// 	int h = this.getHolder().getSurfaceFrame().bottom ; //display.getHeight();  // deprecated
+		 
+	 	//this.getHolder().getSurfaceFrame().bottom;
+	// 	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().bottom=" +  this.getHolder().getSurfaceFrame().bottom );
+	//	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().top=" +  this.getHolder().getSurfaceFrame().top );
+	//	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().left=" +  this.getHolder().getSurfaceFrame().left );
+	//	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().right=" +  this.getHolder().getSurfaceFrame().right );
+	 	
+	//	DisplayMetrics displaymetrics = new DisplayMetrics();
+	//	this.parent.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+	//	int h = displaymetrics.heightPixels;
+	//	int w  = displaymetrics.widthPixels;
+	// 	Logger.d(TAG, "SetDerivedValues gameboard_button_area_height=" +  this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height) );
+	// 	Logger.d(TAG, "SetDerivedValues scoreboard_height=" +  this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height) );
+	// 	Logger.d(TAG, "SetDerivedValues h1=" +  this.getHeight() );
+	// 	 Logger.d(TAG, "SetDerivedValues h=" +  h );
 	 	 this.fullWidth = this.getWidth();
-	 	 this.height = this.getHeight() - GameSurface.BUTTON_CONTROL_HEIGHT - GameSurface.SCOREBOARD_HEIGHT + 6;// lp.height; //getMeasuredHeight();
+	//	 this.height = h -  this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height) - this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height);// + 6;// lp.height; //getMeasuredHeight();
+
+	 	 //	 this.height = this.getHeight() - this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height) - this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height);// + 6;// lp.height; //getMeasuredHeight();
+
+		
+	 	  this.height = this.getHolder().getSurfaceFrame().bottom - 
+		 		 Utils.convertDensityPixelsToPixels(context, this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height));// - 
+		 		// Utils.convertDensityPixelsToPixels(context, this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height));// + 6;// lp.height; //getMeasuredHeight();
+
+		 Logger.d(TAG, "SetDerivedValues  this.height=" +  this.height );
+		 //	 this.height = this.getHeight() - GameSurface.BUTTON_CONTROL_HEIGHT - GameSurface.SCOREBOARD_HEIGHT + 6;// lp.height; //getMeasuredHeight();
 	 //	this.height = this.parent.getWindowHeight() - GameSurface.SCOREBOARD_HEIGHT - GameSurface.BUTTON_CONTROL_HEIGHT-100;
 			this.trayTileSize = Math.round(this.fullWidth / 7.50f);	
+			if (this.trayTileSize > 90){this.trayTileSize = 90;}
 			this.draggingTileSize  = Math.round(this.trayTileSize * 1.6f);
 			if (this.draggingTileSize > 120){this.draggingTileSize = 120;}
 			this.trayTileLeftMargin = Math.round(this.fullWidth - ((this.trayTileSize * 7) + (TRAY_TILE_GAP * 6))) / 2;
@@ -426,7 +457,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.visibleAreaRect.setRight(this.fullWidth);
 	     
 		 this.boardAreaRect.setTop(0);
-	     this.boardAreaRect.setBottom(this.trayAreaRect.getTop() - 1);
+	     this.boardAreaRect.setBottom(this.topGapHeight + this.fullWidth); //this.trayAreaRect.getTop() - 1);
 	     this.boardAreaRect.setLeft(0);
 	     this.boardAreaRect.setRight(this.fullWidth);
 	     
@@ -868,14 +899,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         					// this.resetPointsView();
     						 
     						 //let's make sure the board zooms (if it's not already in that state, upon drop)
-    						 if (this.isZoomed){
-    							 //within onDraw, we will not move the board when dropping on board that is already in zoomed state
-    							 this.alreadyInZoomedState = true;
-    						 }
-    						 else{
-    							 this.isZoomed = true;
-    						 }
-    						 
+        					 if(this.isZoomAllowed){
+	    						 if (this.isZoomed){
+	    							 //within onDraw, we will not move the board when dropping on board that is already in zoomed state
+	    							 this.alreadyInZoomedState = true;
+	    						 }
+	    						 else{
+	    							 this.isZoomed = true;
+	    						 }
+        					 }
     						 Logger.d(TAG, "ACTION_UP this.alreadyInZoomedState=" + this.alreadyInZoomedState);
     						 this.trayTileDropped = true;
     						 this.readyToDraw = true;
@@ -2199,11 +2231,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 	
 	private void LoadExtras(){
-		int height = Math.round(this.bottomGapHeight * .6F);
+		int height = Math.round(this.bottomGapHeight * .7F);
 		Bitmap bgLogo = BitmapFactory.decodeResource(getResources(), R.drawable.wordsmash_logo8);
 	 
-		float factor = height / (float) bgLogo.getHeight();
-		this.logo = Bitmap.createScaledBitmap(bgLogo, (int) (bgLogo.getWidth() * factor), height, false);  
+		float factor = height / (float) bgLogo.getHeight(); 
+		this.logo = Bitmap.createScaledBitmap(bgLogo, (int) (bgLogo.getWidth() * factor), height, false);   
 	  
 	} 
 	
@@ -2417,6 +2449,21 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 }
 
 	 private void drawFullView(Canvas canvas){
+		 
+		//first apply the background color
+		Paint pBoard = new Paint(); 
+		pBoard.setColor(Color.parseColor(this.parent.getString(R.color.game_board_full_view_board_bg)));  
+	    
+		pBoard.setAntiAlias(true);
+	  //   p.setTypeface(this.bonusTypeface);
+	     Rect boundsBoard = new Rect(); 
+	     boundsBoard.left = 0;
+	     boundsBoard.right = this.fullWidth;
+	     boundsBoard.top = this.topGapHeight;
+	     boundsBoard.bottom = this.topGapHeight + this.fullWidth;
+		
+	     canvas.drawRect(boundsBoard, pBoard);
+		 
         for (GameTile tile : this.tiles) { 
 	    	 
 	    	 

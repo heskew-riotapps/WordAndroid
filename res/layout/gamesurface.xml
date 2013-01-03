@@ -18,17 +18,7 @@
     </RelativeLayout>
 
 	<LinearLayout
-        android:orientation="horizontal"
-    	android:layout_alignParentBottom="true"
-     
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:layout_width="fill_parent" 
-        android:layout_height="48dp"
-       
-        android:gravity="center"
-      
-        android:background="@drawable/gameboard_btn_area_bg" >
+        style="@style/GameBoardButtonAreaStyle">
 	<com.riotapps.word.ui.ScoreboardButton 
   	    style="@style/GameBoardButtonStyle"
   	    android:id="@+id/bPlayedWords"

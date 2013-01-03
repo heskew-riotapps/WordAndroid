@@ -3,6 +3,7 @@
 	<color name="button_text_color_on">#fff5ee</color>
 	<color name="button_text_color_off">#790909</color>
 	<color name="game_board_full_view_upper_gap_bg">#eec591</color>
+	<color name="game_board_full_view_board_bg">#eec591</color>
 	<color name="game_board_full_view_upper_gap_text">#ffffff</color>
 	<color name="game_board_full_view_lower_gap_bg">#eec591</color>
 	<color name="game_board_tray_border">#eec591</color>
