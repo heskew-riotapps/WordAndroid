@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_id">314938401925933</string>
+    <string name="admob_pub_id_main_landing">a150e5e3748e238</string>
+    <string name="admob_pub_id_interstitial">a150e6e3f4832b4</string>
+    <string name="admob_pub_id_badges">a150e7b31dd0858</string>
+    <string name="admob_pub_id_full_rules">a150e7b398d7ec4</string>
+    <string name="admob_pub_id_condensed_rules">a150e7b4dc8b49f</string>
+    <string name="admob_pub_id_game_played_words">a150e7b549b5cb3</string>
+    <string name="admob_pub_id_options">a150e7b841d7e88</string>
+       
     <string name="app_name">WordSmash</string>
     <string name="join_via_facebook">connect with facebook</string>
 	<string name="join_via_native">connect with your email address</string>

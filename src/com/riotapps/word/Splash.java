@@ -164,103 +164,113 @@ public class Splash  extends FragmentActivity {
 			// TODO Auto-generated method stub
 			super.onPostExecute(serverResponseObject);
 			
-			this.context.handleResponse(serverResponseObject);
+			this.handleResponse(serverResponseObject);
 
 		}
  
-	}
-	
-	private void handleResponse(ServerResponse serverResponseObject){
-	     HttpResponse response = serverResponseObject.response;   
-	     Exception exception = serverResponseObject.exception;   
+		private void handleResponse(ServerResponse serverResponseObject){
+		     HttpResponse response = serverResponseObject.response;   
+		     Exception exception = serverResponseObject.exception;   
 
-	     if(response != null){  
+		     if(response != null){  
 
-	         InputStream iStream = null;  
+		         InputStream iStream = null;  
 
-	         try {  
-	             iStream = response.getEntity().getContent();  
-	         } catch (IllegalStateException e) {  
-	             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-	         } catch (IOException e) {  
-	             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-	         }  
+		         try {  
+		             iStream = response.getEntity().getContent();  
+		         } catch (IllegalStateException e) {  
+		             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
+		         } catch (IOException e) {  
+		             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
+		         }  
 
-	         int statusCode = response.getStatusLine().getStatusCode();  
-	         
-	         Logger.i(TAG, "StatusCode: " + statusCode);
-
-	         switch(statusCode){  
-	             case 200:  
-	            	 try{
-	            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, iStream);
-	            		 
-	            		 long currentTime = System.nanoTime();
+		         int statusCode = response.getStatusLine().getStatusCode();  
+		         
+		         Logger.i(TAG, "StatusCode: " + statusCode);
+		    	 long currentTime = System.nanoTime();
+		    	 long timeDiff = 0;
+		    	 Intent intent;
+		    	 
+		         switch(statusCode){  
+		             case 200:  
+		            	// try{
+		            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, iStream);
+		            		 
+		             
+			            	 
+			            	 //default time in which to leave splash up
+		            		 timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
+			            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
+			            		 try {
+									Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									Logger.d(TAG, "Thread sleep error=" + e.toString());
+								}
+			            	 }
+		            		 
+			     
+			            	 if (player.getTotalNumLocalGames() == 0){
+			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
+			            	 }
+			            	 else {
+			            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+			            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+			            	 }
+		            		// Intent intent = new Intent( this, com.riotapps.word.MainLanding.class);
+		            		// intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+				     	     context.startActivity(intent);
+		            	// }
+		            //	 catch(Exception e){
+		           // /		 Logger.w(TAG, e.getStackTrace());
+		           // 		 DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage(), true, 0); 
+		            //	 }
+		               break;
+		             case 401:    
+		                //unauthorized
+		            	 //clear local storage and send to login
+		            	 PlayerService.clearLocalStorageAndCache(context);
+		            	 
+		            
 		            	 
 		            	 //default time in which to leave splash up
-	            		 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime);
+		            	 timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
 		            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
-		            		 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
+		            		 try {
+		            			 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
+							} catch (InterruptedException e) {
+								Logger.w(TAG, "Thread.sleep timeDiff=" + timeDiff + " " + e.getMessage());
+								e.printStackTrace();
+							}
 		            	 }
-	            		 
-		            	 Intent intent;
-		            	 if (player.getTotalNumLocalGames() == 0){
-		            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
-		            	 }
-		            	 else {
-		            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
-		            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
-		            	 }
-	            		// Intent intent = new Intent( this, com.riotapps.word.MainLanding.class);
-	            		// intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
-			     	     this.startActivity(intent);
-	            	 }
-	            	 catch(Exception e){
-	            		 Logger.w(TAG, e.getLocalizedMessage());
-	            		 DialogManager.SetupAlert(this, this.getString(R.string.sorry), e.getMessage(), true, 0); 
-	            	 }
-	               break;
-	             case 401:    
-	                //unauthorized
-	            	 //clear local storage and send to login
-	            	 PlayerService.clearLocalStorageAndCache(this);
-	            	 
-	            	 long currentTime = System.nanoTime();
-	            	 
-	            	 //default time in which to leave splash up
-	            	 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime);
-	            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
-	            		 try {
-	            			 Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
-						} catch (InterruptedException e) {
-							Logger.w(TAG, "Thread.sleep timeDiff=" + timeDiff + " " + e.getMessage());
-							e.printStackTrace();
-						}
-	            	 }
-	            	 Intent intent = new Intent( this, com.riotapps.word.Welcome.class);
-		     	     this.startActivity(intent);
-		     	     break;  
+		            	 intent = new Intent( context, com.riotapps.word.Welcome.class);
+		            	 context.startActivity(intent);
+			     	     break;  
 
-	             case 404:
-	            	 DialogManager.SetupAlert(this, this.getString(R.string.sorry), this.getString(R.string.server_404_error), true, 0);
-	            	 break;
-	             case 422: 
-	             case 500:
+		             case 404:
+		            	 DialogManager.SetupAlert(context, context.getString(R.string.sorry), context.getString(R.string.server_404_error), true, 0);
+		            	 break;
+		             case 422: 
+		             case 500:
 
-	            	 DialogManager.SetupAlert(this, this.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), true, 0);  
-	            	 break;
-	         }  
-	     }else if (exception instanceof ConnectTimeoutException) {
-	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_connection_timeout), true, 0);
-	     }else if(exception != null){  
-	    	 DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.msg_not_connected), true, 0);  
+		            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), true, 0);  
+		            	 break;
+		         }  
+		     }else if (exception instanceof ConnectTimeoutException) {
+		    	 DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.msg_connection_timeout), true, 0);
+		     }else if(exception != null){  
+		    	 DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.msg_not_connected), true, 0);  
 
-	     }  
-	     else{  
-	         Logger.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
+		     }  
+		     else{  
+		         Logger.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
 
-	     }//end of else  
+		     }//end of else  
+		}
+		
 	}
+	
+	
 }
 	
  

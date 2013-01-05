@@ -7,6 +7,9 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
+import com.google.ads.Ad;
+import com.google.ads.AdListener;
+import com.google.ads.AdRequest;
 import com.google.gson.Gson;
 import com.riotapps.word.hooks.AlphabetService;
 import com.riotapps.word.hooks.Game;
@@ -25,6 +28,7 @@ import com.riotapps.word.ui.WordLoaderThread;
 import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
+import com.riotapps.word.utils.CustomProgressDialog;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
@@ -48,10 +52,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.google.ads.*;
+import com.google.ads.AdRequest.ErrorCode;
 
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class GameSurface extends FragmentActivity implements View.OnClickListener{
+public class GameSurface extends FragmentActivity implements View.OnClickListener, AdListener{
 	private static final String TAG = GameSurface.class.getSimpleName();
 	GameSurface context = this;
 	GameSurfaceView gameSurfaceView;
@@ -64,6 +70,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 Button bSkip;
 	 Button bShuffle;
 	
+	 private com.google.ads.InterstitialAd interstitial;
+	 private GameActionType postTurnAction;
+	 private CustomProgressDialog preInterstitialSpinner;
+	 
 	 //View bottom;
 	private int currentPoints = 0;
 	public static final int MSG_SCOREBOARD_VISIBILITY = 1;
@@ -1028,7 +1038,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
 	    		         int statusCode = response.getStatusLine().getStatusCode();  
 	    		         
-	    		         Log.i(GameSurface.TAG, "StatusCode: " + statusCode);
+	    		         Log.d(GameSurface.TAG, "StatusCode: " + statusCode);
 	    		         Gson gson = new Gson();
 
 	    		         Player player = null;
@@ -1036,6 +1046,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		         switch(statusCode){  
 	    		             case 200:  
 	    		             case 201: {
+	    		            	 context.handlePostTurn(this.actionType, iStream);
+	    		            	 /*
 	    		            	 switch(this.actionType){
 	    		            	 	case CANCEL_GAME:
 	    		            	 		 
@@ -1099,6 +1111,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		            	 			setupGame();
     		            	 			gameSurfaceView.resetGameAfterPlay();
     		            	 			
+    		            	 			context.loadInterstitialAd();
+    		            	 			
     		            	 			break;
 	    		            	 	case SKIP:
 	    		            	 		
@@ -1144,6 +1158,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		    		      	      	 this.context.startActivity(intent);
     		    		                 break;  
 	    		            	 }
+	    		            	 */
 	    		             
 	    		             }//end of case 200 & 201 
 	    		             break;
@@ -1156,7 +1171,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.find_player_opponent_not_found), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
 	    		            	 break;
 	    		             case 422: 
-	    		             case 500:
+	    		             default:
 
 	    		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
 	    		            	 break;
@@ -1372,4 +1387,217 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			}
 	    	
 	    }
+
+	    private void handlePostTurn(GameActionType action, InputStream iStream){
+	    	Gson gson = new Gson();
+	    	
+	    	this.postTurnAction = action;
+	    	
+	    	switch(action){
+    	 	case CANCEL_GAME:
+    	 		 
+ 				//remove game from local storage
+	 			GameService.removeGameFromLocal(context, context.game);
+	 			
+	 			//refresh player's game list with response from server
+	 			player = GameService.handleCancelGameResponse(context, iStream);
+	 			GameService.updateLastGameListCheckTime(this.context);
+	 			
+    	 		this.handlePostTurnOption(action);
+    	 			
+    	 		break;
+    	 	case DECLINE_GAME:
+    	 		//remove game from local storage
+	 			GameService.removeGameFromLocal(context, context.game);
+	 			
+	 			//refresh player's game list with response from server
+	 			player = GameService.handleDeclineGameResponse(context, iStream);
+	 			GameService.updateLastGameListCheckTime(this.context);
+	 			
+    	 		this.handlePostTurnOption(action);
+
+    	 		break;
+    	 	case RESIGN:
+    	 		//remove game from local storage
+	 			GameService.removeGameFromLocal(context, context.game);
+	 			
+	 			//refresh player's game list with response from server
+	 			player = GameService.handleResignGameResponse(context, iStream);
+	 			GameService.updateLastGameListCheckTime(this.context);
+	 			
+    	 		this.handlePostTurnOption(action);
+	 
+    	 		break;
+    	 	case PLAY:
+	 			//update game list for active games for last played action
+	 			
+	 			//refresh player's game list with response from server
+	 			
+    	 		//refresh game board
+    	 		game = GameService.handleGamePlayResponse(context, iStream);
+    	 		
+    	 		
+    	 		//Logger.d(TAG, "handleResponse game=" + gson.toJson(game));
+    	 		
+    	 		this.handlePostTurnOption(action);
+	 			
+	 			break;
+    	 	case SKIP:
+    	 		
+    	 		//update game list for active games for last played action
+	 			
+	 			//refresh player's game list with response from server
+	 			
+    	 		//refresh game board
+    	 		game = GameService.handleGamePlayResponse(context, iStream);
+    	
+    	 		Logger.d(TAG, "handleResponse SKIP game=" + gson.toJson(game));
+    	 		
+    	 		this.handlePostTurnOption(action);
+	 			
+	 			break;
+    	 	case SWAP:
+    	 		
+    	 		//update game list for active games for last played action
+	 			
+	 			//refresh player's game list with response from server
+	 			
+    	 		//refresh game board
+    	 		game = GameService.handleGamePlayResponse(context, iStream);
+    	
+    	 		Logger.d(TAG, "handleResponse SWAP game=" + gson.toJson(game));
+    	 		
+    	 		this.handlePostTurnOption(action);
+
+    	 		break;
+    	 	case REMATCH:
+    	 		Game newGame = GameService.handleCreateGameResponse(this.context, iStream);
+
+            	 GameService.putGameToLocal(this.context, newGame);
+            	 GameService.clearLastGameListCheckTime(this.context);
+            	 
+            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+            	 intent.putExtra(Constants.EXTRA_GAME_ID, newGame.getId());
+             
+      	      	 this.context.startActivity(intent);
+                 break;  
+    	 }
+		}
+	    
+	    private void handlePostTurnOption(GameActionType action){
+	    	if (this.player.isNoAdsOption() || Constants.HIDE_ALL_ADS){
+	 			this.handlePostTurnFinalAction(action);   		            	 					
+	 			}
+	 		else{
+	 			this.preInterstitialSpinner = new CustomProgressDialog(this);
+	 			this.preInterstitialSpinner.setMessage(this.getString(R.string.progress_updating));
+	 			this.preInterstitialSpinner.show();
+	 			this.loadInterstitialAd();
+ 			}
+	    }
+	    
+	    private void handlePostTurnFinalAction(GameActionType action){
+	    	Gson gson = new Gson();
+ 	    	
+	    	switch(action){
+    	 	case CANCEL_GAME:
+	 			if (player.getTotalNumLocalGames() == 0){
+	 				context.handleBack(com.riotapps.word.StartGame.class);	    		            	 					
+	 			}
+	 			else{
+	 				//send player back to main landing 
+	 				context.handleBack(com.riotapps.word.MainLanding.class);
+	 			}
+    	 	
+    	 		break;
+    	 	case DECLINE_GAME:
+	 			if (player.getTotalNumLocalGames() == 0){
+	 				context.handleBack(com.riotapps.word.StartGame.class);	    		            	 					
+	 			}
+	 			else{
+	 				//send player back to main landing 
+	 				context.handleBack(com.riotapps.word.MainLanding.class);
+	 			}
+
+    	 		break;
+    	 	case RESIGN:
+
+	 			//send player back to main landing 
+	 			context.handleBack(com.riotapps.word.MainLanding.class);
+	 
+    	 		break;
+    	 	case PLAY:
+	 			//refresh game board and buttons
+	 			setupGame();
+	 			gameSurfaceView.resetGameAfterPlay();
+
+	 			break;
+    	 	case SKIP:
+
+	 			//refresh game board and buttons
+	 			setupGame();
+	 			gameSurfaceView.resetGameAfterPlay();
+	 			
+	 			break;
+    	 	case SWAP:
+
+	 			//refresh game board and buttons
+	 			setupGame();
+	 			gameSurfaceView.resetGameAfterPlay();
+
+    	 		break;
+ 
+    	 }
+		}
+ 
+	    
+	    private void loadInterstitialAd(){
+		    // Create the interstitial
+	        interstitial = new  com.google.ads.InterstitialAd(this, this.getString(R.string.admob_pub_id_interstitial));
+	
+	        // Create ad request
+	        AdRequest adRequest = new AdRequest();
+	
+	        // Begin loading your interstitial
+	        interstitial.loadAd(adRequest);
+	
+	        // Set Ad Listener to use the callbacks below
+	        interstitial.setAdListener(this);
+	    }
+	    
+		@Override
+		public void onDismissScreen(Ad ad) {
+			// TODO Auto-generated method stub
+			Logger.d(TAG, "interstitial onDismissScreen called");
+			this.preInterstitialSpinner.dismiss();
+			this.handlePostTurnFinalAction(this.postTurnAction);
+		}
+
+		@Override
+		public void onFailedToReceiveAd(Ad ad, ErrorCode arg1) {
+			Logger.d(TAG, "interstitial onFailedToReceiveAd called");
+			this.preInterstitialSpinner.dismiss();
+			this.handlePostTurnFinalAction(this.postTurnAction);
+		}
+
+		@Override
+		public void onLeaveApplication(Ad ad) {
+			Logger.d(TAG, "interstitial onLeaveApplication called");
+			 //not sure what this needs here
+			
+		}
+
+		@Override
+		public void onPresentScreen(Ad ad) {
+			Logger.d(TAG, "interstitial onPresentScreen called");
+		}
+
+		@Override
+		public void onReceiveAd(Ad ad) {
+			Logger.d(TAG, "interstitial onReceiveAd called");
+		  if (ad == interstitial) {
+		    interstitial.show();
+		  }
+		}
+
 }

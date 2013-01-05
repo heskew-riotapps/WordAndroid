@@ -1,5 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    style="@style/LayoutStyle"
+    android:orientation="vertical" >
+ 
+
+	<com.google.ads.AdView  
+          android:id="@+id/adView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           ads:adUnitId="@string/admob_pub_id_condensed_rules" 
+           ads:adSize="BANNER"
+           ads:testDevices="TEST_EMULATOR"
+           ads:loadAdOnCreate="true"/>
+<LinearLayout 
+    android:layout_above="@id/adView" 
     style="@style/LayoutStyle"
     android:orientation="vertical" >
    
@@ -52,3 +69,4 @@
    </LinearLayout>
    </ScrollView>
 </LinearLayout>
+</RelativeLayout>

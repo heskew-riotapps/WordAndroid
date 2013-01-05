@@ -376,26 +376,26 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	// 	int h = this.getHolder().getSurfaceFrame().bottom ; //display.getHeight();  // deprecated
 		 
 	 	//this.getHolder().getSurfaceFrame().bottom;
-	// 	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().bottom=" +  this.getHolder().getSurfaceFrame().bottom );
-	//	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().top=" +  this.getHolder().getSurfaceFrame().top );
-	//	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().left=" +  this.getHolder().getSurfaceFrame().left );
-	//	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().right=" +  this.getHolder().getSurfaceFrame().right );
+	 	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().bottom=" +  this.getHolder().getSurfaceFrame().bottom );
+	 	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().top=" +  this.getHolder().getSurfaceFrame().top );
+	 	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().left=" +  this.getHolder().getSurfaceFrame().left );
+	 	Logger.d(TAG, "SetDerivedValues getSurfaceFrame().right=" +  this.getHolder().getSurfaceFrame().right );
 	 	
-	//	DisplayMetrics displaymetrics = new DisplayMetrics();
-	//	this.parent.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-	//	int h = displaymetrics.heightPixels;
+	 	DisplayMetrics displaymetrics = new DisplayMetrics();
+	 	this.parent.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+	    int h = displaymetrics.heightPixels;
 	//	int w  = displaymetrics.widthPixels;
-	// 	Logger.d(TAG, "SetDerivedValues gameboard_button_area_height=" +  this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height) );
-	// 	Logger.d(TAG, "SetDerivedValues scoreboard_height=" +  this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height) );
-	// 	Logger.d(TAG, "SetDerivedValues h1=" +  this.getHeight() );
-	// 	 Logger.d(TAG, "SetDerivedValues h=" +  h );
+	  	Logger.d(TAG, "SetDerivedValues gameboard_button_area_height=" +  this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height) );
+	 	Logger.d(TAG, "SetDerivedValues scoreboard_height=" +  this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height) );
+	  	Logger.d(TAG, "SetDerivedValues h1=" +  this.getHeight() );
+	  	 Logger.d(TAG, "SetDerivedValues h=" +  h );
 	 	 this.fullWidth = this.getWidth();
 	//	 this.height = h -  this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height) - this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height);// + 6;// lp.height; //getMeasuredHeight();
 
 	 	 //	 this.height = this.getHeight() - this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height) - this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height);// + 6;// lp.height; //getMeasuredHeight();
 
 		
-	 	  this.height = this.getHolder().getSurfaceFrame().bottom - 
+	 	  this.height = this.getHeight() - 
 		 		 Utils.convertDensityPixelsToPixels(context, this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height));// - 
 		 		// Utils.convertDensityPixelsToPixels(context, this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height));// + 6;// lp.height; //getMeasuredHeight();
 

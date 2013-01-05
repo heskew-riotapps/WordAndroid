@@ -90,6 +90,7 @@ public class Constants {
 	/**=============================================
 	 * the web
 	 *==============================================*/  
+	public static final boolean HIDE_ALL_ADS = false;   
 	public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";       
 	//public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";     
 	public static final String FACEBOOK_API_ID = "314938401925933"; 

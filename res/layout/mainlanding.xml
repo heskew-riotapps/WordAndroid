@@ -1,12 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     style="@style/LayoutStyle"
     android:orientation="vertical" >
     <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
 
-
+	<com.google.ads.AdView  
+          android:id="@+id/adView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           ads:adUnitId="@string/admob_pub_id_main_landing" 
+           ads:adSize="BANNER"
+           ads:testDevices="TEST_EMULATOR"
+           ads:loadAdOnCreate="true"/>
    	 <LinearLayout
    	     android:layout_below="@id/topAreaLayout"
         style="@style/LayoutFormStyle"
+     
+        android:layout_above="@id/adView" 
         android:layout_marginBottom="5dp"
         >
         <LinearLayout
@@ -155,5 +168,5 @@
         </LinearLayout> 	    
   	</ScrollView>
    </LinearLayout>
-    
+      
 </RelativeLayout>

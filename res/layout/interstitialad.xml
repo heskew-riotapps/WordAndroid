@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutStyle" >
+     <ImageView 
+       android:id="@+id/logo"
+       android:contentDescription="@string/logo"
+       android:src="@drawable/wordsmash_logo8"
+       android:layout_width="250dp"
+	    style="@style/TopLogoNoContextStyle" 
+	  />
+
+
+</RelativeLayout>
