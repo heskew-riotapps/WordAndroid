@@ -54,8 +54,8 @@ public class Player implements Parcelable{
 	@SerializedName("n_d")
 	private int numDraws = 0; //num draws
 	
-	@SerializedName("o_n_a")
-	private boolean noAdsOption = true; //a paid upgrade to not display certain ads 
+	@SerializedName("o_n_i_a")
+	private boolean noInterstitialAdsOption = false; //a paid upgrade to not display interstitial ads 
 
 	private List<Opponent> opponents = new ArrayList<Opponent>();
 	
@@ -146,12 +146,15 @@ public class Player implements Parcelable{
 		
 	}
 	
-	public boolean isNoAdsOption() {
-		return noAdsOption;
+ 
+	public boolean isNoInterstitialAdsOption() {
+		return noInterstitialAdsOption;
 	}
-	public void setNoAdsOption(boolean noAdsOption) {
-		this.noAdsOption = noAdsOption;
+	
+	public void setNoInterstitialAdsOption(boolean noInterstitialAdsOption) {
+		this.noInterstitialAdsOption = noInterstitialAdsOption;
 	}
+	
 	public String getAbbreviatedName(){
 		//eventually check for fb friendship
 		if (this.isFacebookUser()){

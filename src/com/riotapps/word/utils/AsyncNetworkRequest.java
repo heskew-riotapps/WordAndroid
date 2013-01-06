@@ -2,13 +2,15 @@ package com.riotapps.word.utils;
 
 import java.util.ArrayList;
 import org.apache.http.NameValuePair;
+
+import com.riotapps.word.hooks.Player;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Enums.ResponseHandlerType;
 import android.content.Context;
 import android.os.AsyncTask;
 
 public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse> {
-
+	private static final String TAG = AsyncNetworkRequest.class.getSimpleName();
 	Context ctx = null;
 	RequestType requestType;
 	ResponseHandlerType responseHandleBy;
@@ -88,6 +90,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 			 progress.setMessage(shownOnProgressDialog);
 			 progress.show();
 		 }
+
 	 }
 
 	 /**====================================================================================   
@@ -99,6 +102,9 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	     String urlString = urlArray[0];   
 	     ServerResponse serverResponseObject = null;   
   
+		 
+		 Logger.d(TAG, "doInBackground url=" + urlString + " json=" + this.jsonPost);
+	     
 	     switch(this.requestType){  
 
 	         case GET:  

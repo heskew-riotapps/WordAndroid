@@ -1485,7 +1485,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		}
 	    
 	    private void handlePostTurnOption(GameActionType action){
-	    	if (this.player.isNoAdsOption() || Constants.HIDE_ALL_ADS){
+	    	if (this.player.isNoInterstitialAdsOption() || Constants.HIDE_ALL_ADS){
 	 			this.handlePostTurnFinalAction(action);   		            	 					
 	 			}
 	 		else{
