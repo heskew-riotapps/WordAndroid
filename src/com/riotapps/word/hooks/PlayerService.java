@@ -172,6 +172,19 @@ public class PlayerService {
 		return gson.toJson(updateAccount);
 	}
 	
+	public static void updateRegistrationId(Context context, String gcmRegistrationId){ 
+		
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(Constants.USER_PREFS_GCM_REGISTRATION_ID, gcmRegistrationId);
+		editor.commit();
+	}
+	
+	public static String getRegistrationId(Context context){
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		return settings.getString(Constants.USER_PREFS_GCM_REGISTRATION_ID, "");
+	}
+	
 	
 //	public static void saveFacebookFriendsFromJSONResponseXXXXX(Context ctx, String response) throws FacebookError, JSONException{
 //		JSONObject json;

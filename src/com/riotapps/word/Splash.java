@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+
+import com.google.android.gcm.GCMRegistrar;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.ui.DialogManager;
@@ -39,7 +41,16 @@ public class Splash  extends FragmentActivity {
         
        // Intent i = new Intent(this, WordLoaderService.class);
        // this.startService(new Intent(this, WordLoaderService.class));
-      
+     
+        GCMRegistrar.checkDevice(this);
+        GCMRegistrar.checkManifest(this);
+        final String regId = GCMRegistrar.getRegistrationId(this);
+        if (regId.equals("")) {
+          GCMRegistrar.register(this, this.getString(R.string.gcm_sender_id));
+        } else {
+          Logger.d(TAG, "onCreated Already registered");
+        }
+        
         this.handlePreProcessing();
      }
     

@@ -8,6 +8,7 @@
     <string name="admob_pub_id_condensed_rules">a150e7b4dc8b49f</string>
     <string name="admob_pub_id_game_played_words">a150e7b549b5cb3</string>
     <string name="admob_pub_id_options">a150e7b841d7e88</string>
+    <string name="gcm_sender_id">505875093616</string>
        
     <string name="app_name">WordSmash</string>
     <string name="join_via_facebook">connect with facebook</string>

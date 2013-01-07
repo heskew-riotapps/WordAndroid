@@ -67,6 +67,7 @@ public class Constants {
  	public static final String USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME = "friends_reg_check";
  	public static final String USER_PREFS_PLAYER_CHECK_TIME = "player_check";
  	public static final String USER_PREFS_GAME_LIST_CHECK_TIME = "game_list_check";
+ 	public static final String USER_PREFS_GCM_REGISTRATION_ID = "gcm";
 	public static final String USER_PREFS_GAME_ALERT_CHECK = "game_alert_check_%s";
 	public static final String USER_PREFS_GAME_CHAT_CHECK = "game_chat_check_%s";
  	public static final String USER_PREFS_LATEST_COMPLETED_GAME_DATE = "cg_date";
@@ -104,6 +105,7 @@ public class Constants {
 	public static final String REST_PLAYER_UPDATE_ACCOUNT = REST_URL_SITE + "players/update_account.json";
 	public static final String REST_PLAYER_UPDATE_FB_ACCOUNT = REST_URL_SITE + "players/update_fb_account.json";
 	public static final String REST_PLAYER_GET_GAMES = REST_URL_SITE + "games/get_active_games.json";
+	public static final String REST_PLAYER_GCM_REGISTER = REST_URL_SITE + "games/gcm_register.json";
 	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "games.json";
 	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get.json";
 	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_all_by_fb";
