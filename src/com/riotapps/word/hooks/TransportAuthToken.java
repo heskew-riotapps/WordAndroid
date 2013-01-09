@@ -10,6 +10,9 @@ public class TransportAuthToken {
 	
 	@SerializedName("c_g_d")
 	private Date completedGameDate;
+	
+	@SerializedName("r_id")
+	private String gcmRegistrationId;
 
 	public TransportAuthToken(){}
 	
@@ -28,6 +31,12 @@ public class TransportAuthToken {
 	public void setCompletedGameDate(Date completedGameDate) {
 		this.completedGameDate = completedGameDate;
 	}
-	
+	public String getGcmRegistrationId() {
+		return gcmRegistrationId;
+	}
+
+	public void setGcmRegistrationId(String gcmRegistrationId) {
+		this.gcmRegistrationId = gcmRegistrationId;
+	}
 	
 }

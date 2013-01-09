@@ -42,15 +42,18 @@ public class Splash  extends FragmentActivity {
        // Intent i = new Intent(this, WordLoaderService.class);
        // this.startService(new Intent(this, WordLoaderService.class));
      
-        GCMRegistrar.checkDevice(this);
-        GCMRegistrar.checkManifest(this);
-        final String regId = GCMRegistrar.getRegistrationId(this);
-        if (regId.equals("")) {
-          GCMRegistrar.register(this, this.getString(R.string.gcm_sender_id));
-        } else {
-          Logger.d(TAG, "onCreated Already registered");
+        try{
+	        GCMRegistrar.checkDevice(this);
+	        GCMRegistrar.checkManifest(this);
+	        final String regId = GCMRegistrar.getRegistrationId(this);
+	        if (regId.equals("")) {
+	          GCMRegistrar.register(this, this.getString(R.string.gcm_sender_id));
+	        } else {
+	          Logger.d(TAG, "onCreated Already registered");
+	        }
+        } catch(Exception e){
+        	
         }
-        
         this.handlePreProcessing();
      }
     

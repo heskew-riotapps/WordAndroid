@@ -86,6 +86,7 @@ public class PlayerService {
 		TransportCreatePlayer player = new TransportCreatePlayer();
 		player.setEmail(email);
 		player.setNickname(nickname);
+		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
 		player.setPassword(password);
 		
 		return gson.toJson(player);
@@ -105,6 +106,7 @@ public class PlayerService {
 		TransportCreateFBPlayer player = new TransportCreateFBPlayer();
 		player.setEmail(email);
 		player.setFb(fb);
+		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
 		player.setFirstName(firstName);
 		player.setLastName(lastName);
 		
@@ -125,6 +127,7 @@ public class PlayerService {
 	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 		TransportAuthToken player = new TransportAuthToken();
 		player.setToken(authToken);
+		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
 		player.setCompletedGameDate(new Date(completedDate));
 
 		

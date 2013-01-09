@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.android.gcm.GCMBaseIntentService;
+import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.Logger;
 
 public class GCMIntentService extends GCMBaseIntentService {
@@ -16,6 +17,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onError(Context context, String regId) {
 		// TODO Auto-generated method stub
 		Logger.d(TAG, "onError called regId=" + regId);
+		
 		
 	}
 
@@ -32,7 +34,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onRegistered(Context context, String regId) {
 		Logger.d(TAG, "onRegistered called regId=" + regId);	
-		
+		PlayerService.updateRegistrationId(context, regId);
 	}
 
 	//Called after the device has been unregistered from GCM. 

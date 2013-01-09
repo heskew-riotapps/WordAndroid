@@ -69,6 +69,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int fullWidth;
     private int fullHeight;
     private int fullViewTileWidth;
+    private boolean isTablet = false;
     //private int trayAreaTop = 0;
     
     private boolean trayTileTapped = false;
@@ -85,7 +86,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private boolean isZoomAllowed = true; //if width of board greater than x disable zooming.  it means we are on a tablet and zooming not needed.
     private int activeTileWidth; 
     private long tapCheck = 0;
-    private final float zoomMultiplier = 2.0f;
+    private float zoomMultiplier = 2.0f;
     private final int tileGap = 1;
     private static final int TRAY_TILE_GAP = 3;
     private int zoomedTileWidth;
@@ -96,7 +97,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private static final int TRAY_TOP_BORDER_HEIGHT = 4;
     private static final int UPPER_GAP_BOTTOM_BORDER_HEIGHT = 4;
     private static final int LOWER_GAP_TOP_BORDER_HEIGHT = 4;
-    private static final long SINGLE_TAP_DURATION_IN_NANOSECONDS = 300000000;
+    private static final long SINGLE_TAP_DURATION_IN_NANOSECONDS = 350000000;
     private static final long DOUBLE_TAP_DURATION_IN_NANOSECONDS = 500000000;
     private static final long MOVE_STOPPED_DURATION_IN_MILLISECONDS = 200;
     private static final float MOVEMENT_TRIGGER_THRESHOLD = .05f;
@@ -316,9 +317,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 this.letterValueTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_VALUE_FONT); 
 		 this.holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
-		 boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+		 isTablet = getResources().getBoolean(R.bool.isTablet);
 		 if (isTablet) {
-		      this.isZoomAllowed = false;
+			 this.zoomMultiplier = 1.5f;
+		      //this.isZoomAllowed = false;
 		 }  
 		// this.isDrawn = false;
 		 

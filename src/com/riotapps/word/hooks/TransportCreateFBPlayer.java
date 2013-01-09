@@ -16,6 +16,9 @@ public class TransportCreateFBPlayer {
 	@SerializedName("e_m")
 	private String email;
 
+	@SerializedName("r_id")
+	private String gcmRegistrationId;
+	
 	public String getFb() {
 		return fb;
 	}
@@ -48,5 +51,12 @@ public class TransportCreateFBPlayer {
 		this.email = email;
 	}
 	
+	public String getGcmRegistrationId() {
+		return gcmRegistrationId;
+	}
+
+	public void setGcmRegistrationId(String gcmRegistrationId) {
+		this.gcmRegistrationId = gcmRegistrationId;
+	}
 	
 }

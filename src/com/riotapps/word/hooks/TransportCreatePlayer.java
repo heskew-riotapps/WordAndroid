@@ -13,6 +13,9 @@ public class TransportCreatePlayer {
 	@SerializedName("n_n")
 	private String nickname;
 
+	@SerializedName("r_id")
+	private String gcmRegistrationId;
+	
 	public String getEmail() {
 		return email;
 	}
@@ -37,6 +40,12 @@ public class TransportCreatePlayer {
 		this.nickname = nickname.trim();
 	}
 	
-	
+	public String getGcmRegistrationId() {
+		return gcmRegistrationId;
+	}
+
+	public void setGcmRegistrationId(String gcmRegistrationId) {
+		this.gcmRegistrationId = gcmRegistrationId;
+	}
 	
 }
