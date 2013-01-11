@@ -369,20 +369,20 @@ public class GameService {
 	}
 	
 
-	public static Player handleCancelGameResponse(final Context ctx, InputStream iStream){
-		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
+	public static Player handleCancelGameResponse(final Context ctx, String result){// InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(ctx, result);
 	}
 	
-	public static Player handleDeclineGameResponse(final Context ctx, InputStream iStream){
-		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
+	public static Player handleDeclineGameResponse(final Context ctx, String result){// InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(ctx, result);
 	}
 	
-	public static Player handleResignGameResponse(final Context ctx, InputStream iStream){
-		return PlayerService.handleAuthByTokenResponse(ctx, iStream);
+	public static Player handleResignGameResponse(final Context ctx, String result){// InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(ctx, result);
 	}
 
-	public static Game handleGamePlayResponse(final Context ctx, InputStream iStream){
-		Game game = handleGameResponse(ctx, iStream); 
+	public static Game handleGamePlayResponse(final Context ctx, String result){// InputStream iStream){
+		Game game = handleGameResponse(ctx, result); 
 		if (game.getStatus() == 1){ //if game is still active
 			//update local storage game lists
 			GameService.moveActiveGameYourTurnToOpponentsTurn(ctx, game);
@@ -392,32 +392,32 @@ public class GameService {
 		return game;
 	}
 	
-	public static Game handleGameChatResponse(final Context ctx, InputStream iStream){
-		Game game = handleGameResponse(ctx, iStream); 
+	public static Game handleGameChatResponse(final Context ctx, String result){// InputStream iStream){
+		Game game = handleGameResponse(ctx, result); 
 		GameService.updateLastGameListCheckTime(ctx);
 		GameService.putGameToLocal(ctx, game);
 		
 		return game;
 	}
 	
-	public static Game handleCreateGameResponse(final Context ctx, InputStream iStream){
-		return handleGameResponse(ctx, iStream); 
+	public static Game handleCreateGameResponse(final Context ctx, String result){// InputStream iStream){
+		return handleGameResponse(ctx, result); 
 	}
 	
-	public static Game handleGetGameResponse(final Context ctx, InputStream iStream){
-        return handleGameResponse(ctx, iStream); 
+	public static Game handleGetGameResponse(final Context ctx, String result){// InputStream iStream){
+        return handleGameResponse(ctx, result); 
 	}
 	
-	private static Game handleGameResponse(final Context ctx, InputStream iStream){
+	private static Game handleGameResponse(final Context ctx, String result){// InputStream iStream){
 		 Gson gson = new Gson(); //wrap json return into a single call that takes a type
     	 
 		// Logger.w(TAG, "handleGameResponse incoming json=" + IOHelper.streamToString(iStream));
    	  //Logger.d(TAG, "handleCreateGameResponse");
         
-         Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+         //Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 
          Type type = new TypeToken<Game>() {}.getType();
-         Game game = gson.fromJson(reader, type);
+         Game game = gson.fromJson(result, type);
         
        // Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
 	       

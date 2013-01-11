@@ -13,14 +13,14 @@ import android.content.Context;
 
 public class ErrorService {
 	
-	public static ErrorType translateError(final Context ctx, InputStream iStream){
+	public static ErrorType translateError(final Context ctx, String result){
 		
 		Gson gson = new Gson(); //wrap json return into a single call that takes a type
 	        
-        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+      //  Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
         
         Type type = new TypeToken<Error>() {}.getType();
-        Error error = gson.fromJson(reader, type);
+        Error error = gson.fromJson(result, type);
         
         return error.getErrorType();
 	}

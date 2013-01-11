@@ -1,11 +1,13 @@
 package com.riotapps.word.utils;
 
+import com.riotapps.word.AddOpponents;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class NetworkConnectivity {
-
+	private static final String TAG = NetworkConnectivity.class.getSimpleName();
 	Context ctx;
 
 	public NetworkConnectivity(Context ctx){
@@ -19,6 +21,9 @@ public class NetworkConnectivity {
 
 		//put thread sleep in here
 		
+		Logger.d(TAG, "checkNetworkConnectivity ctx = null " + (this.ctx == null));
+		
+		try{
 	     ConnectivityManager connec = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);   
 	     
 	     
@@ -40,7 +45,10 @@ public class NetworkConnectivity {
 	            
 	     return false;       
 	            
-	            
+		}catch (Exception e){
+			Logger.d(TAG, "checkNetworkConnectivity error=" + e.toString());
+			return false;
+		}
 	     
 	     
 	     

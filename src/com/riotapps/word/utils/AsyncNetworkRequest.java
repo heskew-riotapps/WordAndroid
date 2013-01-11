@@ -1,15 +1,22 @@
 package com.riotapps.word.utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 
+import com.riotapps.word.MainLanding;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Enums.ResponseHandlerType;
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse> {
+public class AsyncNetworkRequest extends AsyncTask<String, Void, NetworkTaskResult> {
 	private static final String TAG = AsyncNetworkRequest.class.getSimpleName();
 	Context ctx = null;
 	RequestType requestType;
@@ -97,11 +104,12 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * method doInBackground   
 	  * ====================================================================================*/   
 	 @Override   
-	 protected ServerResponse doInBackground(String... urlArray) {   
+	 protected NetworkTaskResult doInBackground(String... urlArray) {   
 
 	     String urlString = urlArray[0];   
 	     ServerResponse serverResponseObject = null;   
   
+	     NetworkTaskResult result = new NetworkTaskResult();
 		 
 		 Logger.d(TAG, "doInBackground url=" + urlString + " json=" + this.jsonPost);
 	     
@@ -136,10 +144,46 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	             break;  
 	     }//end of switch  
  
- 
+	     result.setException(serverResponseObject.exception);
+	     result.setStatusCode(serverResponseObject.response.getStatusLine().getStatusCode());
+	    
+	     Logger.d(TAG, "StatusCode: " + result.getStatusCode()); 
+	     InputStream iStream = null; 
+	     try{
+	    	 result.setStatusReason(serverResponseObject.response.getStatusLine().getReasonPhrase());
+	     }
+	     catch(Exception e){
+	     }
+	     
+         if (serverResponseObject.response != null ) {
+       
+            try {  
+	             iStream = serverResponseObject.response.getEntity().getContent();  
+	         } catch (IllegalStateException e) {  
+	             Logger.e(TAG,"doInBackground IllegalStateException " + e);
+	             throw e;
+	         } catch (IOException e) {  
+	        	 Logger.e(TAG,"doInBackground IOException " + e);  
+	         
+	         }  
+         }  
+         if (iStream != null) {
+             try {
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(iStream, "UTF-8"));
+                 StringBuilder sb = new StringBuilder();
+                 String line = null;
+                 while ((line = reader.readLine()) != null) {
+                     sb.append(line + "\n");
+                 }
+                 iStream.close();
 
+                 result.setResult(sb.toString());
+             } catch (Exception e) {
+            	 Logger.e(TAG,"doInBackground error converting result to string= " + e); 
+             }
+         }
 
-	     return serverResponseObject;  
+	     return result;  
 
 	 }//end method doInBackground()
 
@@ -148,7 +192,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 	  * method onPostExecute   
 	  * ====================================================================================*/  
 	 @Override
-	 protected void onPostExecute(ServerResponse serverResponseObject){
+	 protected void onPostExecute(NetworkTaskResult result){
 		 if (this.shownOnProgressDialog != null){
 			 progress.dismiss();
 		 }
@@ -156,4 +200,11 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, ServerResponse>
 		 //new ResponseHandler().handleResponse(ctx, responseHandleBy, serverResponseObject, goToClass);			
 	 }//end method onPostExecute
 
+	 public void dismiss(){
+		 if (this.shownOnProgressDialog != null){
+			 progress.dismiss();
+		 }
+	 }
+ 
+	 
 }//end class RequestSentToServerAsyncTask

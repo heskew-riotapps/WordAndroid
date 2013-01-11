@@ -12,6 +12,7 @@ import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
+import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.ServerResponse;
@@ -98,40 +99,25 @@ public class FindPlayer extends FragmentActivity implements View.OnClickListener
 		}
 
 		@Override
-		protected void onPostExecute(ServerResponse serverResponseObject) {
+		protected void onPostExecute(NetworkTaskResult result) {
 			// TODO Auto-generated method stub
-			super.onPostExecute(serverResponseObject);
+			super.onPostExecute(result);
 			
-			this.handleResponse(serverResponseObject);
+			this.handleResponse(result);
 			
 			
 		}
  
-		private void handleResponse(ServerResponse serverResponseObject){
-		     HttpResponse response = serverResponseObject.response;   
-		     Exception exception = serverResponseObject.exception;   
+		private void handleResponse(NetworkTaskResult result){
+		      
+		     Exception exception = result.getException();   
 
-		     if(response != null){  
-
-		         InputStream iStream = null;  
-
-		         try {  
-		             iStream = response.getEntity().getContent();  
-		         } catch (IllegalStateException e) {  
-		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-		         } catch (IOException e) {  
-		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-		         }  
-
-		         int statusCode = response.getStatusLine().getStatusCode();  
-		         
-		         Log.i(FindPlayer.TAG, "StatusCode: " + statusCode);
-
-		         switch(statusCode){  
+		     if(result.getResult() != null){  
+		         switch(result.getStatusCode()){  
 		             case 200:  
 		             case 201: {  
 		                //update text
-		            	 Player player = PlayerService.handleFindPlayerByNicknameResponse(this.context, iStream);
+		            	 Player player = PlayerService.handleFindPlayerByNicknameResponse(this.context, result.getResult());
 
 		                // Toast t = Toast.makeText(this.context, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 		         	   // t.show();
@@ -151,7 +137,7 @@ public class FindPlayer extends FragmentActivity implements View.OnClickListener
 		             case 422: 
 		             case 500:
 
-		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 		         }  
 		     }else if (exception instanceof ConnectTimeoutException) {
 		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);
@@ -160,7 +146,7 @@ public class FindPlayer extends FragmentActivity implements View.OnClickListener
 
 		     }  
 		     else{  
-		         Log.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
+		         Log.d("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
 
 		     }//end of else  
 		}

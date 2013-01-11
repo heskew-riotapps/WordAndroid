@@ -14,6 +14,7 @@ import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
+import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -119,41 +120,26 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 			}
 
 			@Override
-			protected void onPostExecute(ServerResponse serverResponseObject) {
+			protected void onPostExecute(NetworkTaskResult result) {
 				// TODO Auto-generated method stub
-				super.onPostExecute(serverResponseObject);
+				super.onPostExecute(result);
 				
-				this.handleResponse(serverResponseObject);
+				this.handleResponse(result);
 				
 				
 			}
 	 
-			private void handleResponse(ServerResponse serverResponseObject){
-			     HttpResponse response = serverResponseObject.response;   
-			     Exception exception = serverResponseObject.exception;   
+			private void handleResponse(NetworkTaskResult result){  
+			     Exception exception = result.getException();   
 
-			     if(response != null){  
+			     if(result.getResult() != null){  
 
-			         InputStream iStream = null;  
-
-			         try {  
-			             iStream = response.getEntity().getContent();  
-			         } catch (IllegalStateException e) {  
-			             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-			         } catch (IOException e) {  
-			             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-			         }  
-
-			         int statusCode = response.getStatusLine().getStatusCode();  
-			         
-			         Log.i(AccountSettings.TAG, "StatusCode: " + statusCode);
- 
-			         switch(statusCode){  
+			         switch(result.getStatusCode()){  
 			             case 200:  
 			             case 201: {   
 			                //update text
 			            	 if (this.isPasswordChange){
-			            		Player player = PlayerService.handleChangePasswordResponse(this.context, iStream);
+			            		Player player = PlayerService.handleChangePasswordResponse(this.context, result.getResult());
 			            		 
 			            		EditText tConfirmPassword = (EditText) findViewById(R.id.tConfirmPassword);
 			     				EditText tPassword = (EditText) findViewById(R.id.tPassword);
@@ -164,7 +150,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 						           
 			            	 }
 			            	 else{
-			            		 Player player = PlayerService.handleUpdateAccountResponse(this.context, iStream);
+			            		 Player player = PlayerService.handleUpdateAccountResponse(this.context, result.getResult());
 			            		 
 			            		 //clear image cache just in case email was changed.
 			            		 PlayerService.clearImageCache(this.context);
@@ -176,7 +162,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 
 			             }//end of case 200 & 201 
 			             case 401:
-			            	 ErrorType errorType = ErrorService.translateError(this.context, iStream);
+			            	 ErrorType errorType = ErrorService.translateError(this.context, result.getResult());
 			            	 
 			            	 String errorMessage;
 			            	 
@@ -214,7 +200,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 			             case 422: 
 			             case 500:
 
-			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 			         }  
 			     }else if (exception instanceof ConnectTimeoutException) {
 			    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);

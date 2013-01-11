@@ -52,7 +52,7 @@ public class Splash  extends FragmentActivity {
 	          Logger.d(TAG, "onCreated Already registered");
 	        }
         } catch(Exception e){
-        	
+        	 Logger.d(TAG, "onCreated GCMRegistrar error=" + e.toString());
         }
         this.handlePreProcessing();
      }
@@ -111,7 +111,7 @@ public class Splash  extends FragmentActivity {
 
 	
 	private Boolean checkInitialConnectivity(){
-		  NetworkConnectivity connection = new NetworkConnectivity(this);
+		  NetworkConnectivity connection = new NetworkConnectivity(context);
 	        //are we connected to the web?
 	        boolean isConnected = connection.checkNetworkConnectivity();
 	        
@@ -174,44 +174,27 @@ public class Splash  extends FragmentActivity {
 		}
 
 		@Override
-		protected void onPostExecute(ServerResponse serverResponseObject) {
+		protected void onPostExecute(NetworkTaskResult result) {
 			// TODO Auto-generated method stub
-			super.onPostExecute(serverResponseObject);
+			super.onPostExecute(result);
 			
-			this.handleResponse(serverResponseObject);
+			this.handleResponse(result);
 
 		}
  
-		private void handleResponse(ServerResponse serverResponseObject){
-		     HttpResponse response = serverResponseObject.response;   
-		     Exception exception = serverResponseObject.exception;   
+		private void handleResponse(NetworkTaskResult result){
+		     Exception exception = result.getException();   
 
-		     if(response != null){  
-
-		         InputStream iStream = null;  
-
-		         try {  
-		             iStream = response.getEntity().getContent();  
-		         } catch (IllegalStateException e) {  
-		             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-		         } catch (IOException e) {  
-		             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-		         }  
-
-		         int statusCode = response.getStatusLine().getStatusCode();  
-		         
-		         Logger.i(TAG, "StatusCode: " + statusCode);
+		     if(result.getResult() != null){  
 		    	 long currentTime = System.nanoTime();
 		    	 long timeDiff = 0;
 		    	 Intent intent;
 		    	 
-		         switch(statusCode){  
+		         switch(result.getStatusCode()){  
 		             case 200:  
 		            	// try{
-		            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, iStream);
-		            		 
-		             
-			            	 
+		            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, result.getResult());
+	
 			            	 //default time in which to leave splash up
 		            		 timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
 			            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
@@ -267,7 +250,7 @@ public class Splash  extends FragmentActivity {
 		             case 422: 
 		             case 500:
 
-		            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), true, 0);  
+		            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), true, 0);  
 		            	 break;
 		         }  
 		     }else if (exception instanceof ConnectTimeoutException) {

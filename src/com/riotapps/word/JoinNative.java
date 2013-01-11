@@ -14,6 +14,7 @@ import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
+import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -106,40 +107,26 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			}
 
 			@Override
-			protected void onPostExecute(ServerResponse serverResponseObject) {
+			protected void onPostExecute(NetworkTaskResult result) {
 				// TODO Auto-generated method stub
-				super.onPostExecute(serverResponseObject);
+				super.onPostExecute(result);
 				
-				this.handleResponse(serverResponseObject);
+				this.handleResponse(result);
 				
 				
 			}
 	 
-			private void handleResponse(ServerResponse serverResponseObject){
-			     HttpResponse response = serverResponseObject.response;   
-			     Exception exception = serverResponseObject.exception;   
+			private void handleResponse(NetworkTaskResult result){
+			   
+			     Exception exception = result.getException(); 
 
-			     if(response != null){  
+			     if(result.getResult() != null){  
 
-			         InputStream iStream = null;  
-
-			         try {  
-			             iStream = response.getEntity().getContent();  
-			         } catch (IllegalStateException e) {  
-			             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-			         } catch (IOException e) {  
-			             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-			         }  
-
-			         int statusCode = response.getStatusLine().getStatusCode();  
-			         
-			        // Log.i(JoinNative.TAG, "StatusCode: " + statusCode);
-
-			         switch(statusCode){   
+			         switch(result.getStatusCode()){   
 			             case 200:   
 			             case 201: {  
 			          
-			            	 Player player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
+			            	 Player player = PlayerService.handleCreatePlayerResponse(this.context, result.getResult());
 			            	 Intent intent;
 			            	 if (player.getTotalNumLocalGames() == 0){
 			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
@@ -156,7 +143,7 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 
 			             }//end of case 200 & 201 
 			             case 401:  
-			            	 ErrorType errorType = ErrorService.translateError(this.context, iStream);
+			            	 ErrorType errorType = ErrorService.translateError(this.context, result.getResult());
 			            	 
 			            	 String errorMessage;
 			            	 
@@ -185,7 +172,7 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			             case 422: 
 			             case 500:
 
-			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 			            	 break;
 			         }  
 			     }else if (exception instanceof ConnectTimeoutException) {

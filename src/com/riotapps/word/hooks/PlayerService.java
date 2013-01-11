@@ -435,30 +435,30 @@ public class PlayerService {
 	     return player;
 	}
 	
-	public static Player handleCreatePlayerResponse(final Context ctx, InputStream iStream){
-	   return handlePlayerResponse(ctx, iStream);
+	public static Player handleCreatePlayerResponse(final Context ctx, String result){// InputStream iStream){
+	   return handlePlayerResponse(ctx, result);
 	}
 	
-	public static Player handleChangePasswordResponse(final Context ctx, InputStream iStream){
-       return handlePlayerResponse(ctx, iStream);
+	public static Player handleChangePasswordResponse(final Context ctx, String result){// InputStream iStream){
+       return handlePlayerResponse(ctx, result);
 	}
 	
-	public static Player handleUpdateAccountResponse(final Context ctx, InputStream iStream){
-	       return handlePlayerResponse(ctx, iStream);
+	public static Player handleUpdateAccountResponse(final Context ctx, String result){// InputStream iStream){
+	       return handlePlayerResponse(ctx, result);
 	}
 
-	public static Player handleAuthByTokenResponse(final Context ctx, InputStream iStream){
-	       return handlePlayerResponse(ctx, iStream);
+	public static Player handleAuthByTokenResponse(final Context ctx, String result){// InputStream iStream){
+	       return handlePlayerResponse(ctx, result);
 	}
 	
-	private static Player handlePlayerResponse(final Context ctx, InputStream iStream){
+	private static Player handlePlayerResponse(final Context ctx, String result){//InputStream iStream){
     	Gson gson = new Gson(); //wrap json return into a single call that takes a type
 	        
           //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
-	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+	       // Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 	        
 	        Type type = new TypeToken<Player>() {}.getType();
-	        Player player = gson.fromJson(reader, type);
+	        Player player = gson.fromJson(result, type);
 	        
 	        ///save player info to shared preferences
 	        //userId and auth_token ...email and password should have been stored before this call
@@ -557,13 +557,13 @@ public class PlayerService {
 	}
 	
 //	@SuppressWarnings("unchecked")
-	public static FBFriends findRegisteredFBFriendsResponse(final Context ctx, InputStream iStream){
+	public static FBFriends findRegisteredFBFriendsResponse(final Context ctx, String result){
 		Gson gson = new Gson();
         
-	    Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+//	    Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
         
         Type type = new TypeToken<List<Player>>() {}.getType();
-        List<Player> players = gson.fromJson(reader, type);
+        List<Player> players = gson.fromJson(result, type);
 		
 		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();	
@@ -744,15 +744,15 @@ public class PlayerService {
 		return Constants.BADGE_0;
 	}
 	
-	public static Player handleFindPlayerByNicknameResponse(final Context ctx, InputStream iStream){
+	public static Player handleFindPlayerByNicknameResponse(final Context ctx, String result){// InputStream iStream){
         try {
             
         	 Gson gson = new Gson(); //wrap json return into a single call that takes a type
  	        
- 	        Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
+ 	       // Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
  	        
  	        Type type = new TypeToken<Player>() {}.getType();
- 	        Player player = gson.fromJson(reader, type);
+ 	        Player player = gson.fromJson(result, type);
  	        return player;  
          } 
          catch (Exception e) {

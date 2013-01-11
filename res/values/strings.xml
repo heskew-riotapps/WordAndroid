@@ -335,7 +335,7 @@
 	 <string name="gravatar_refresh_button">refresh your gravatar</string>
 	  <string name="gravatar_refreshed_text">You should now be seeing your latest Gravatar above.\n\n
 	      If you just updated your Gravatar and you\'re not seeing it above, try to refresh it again in WordSmash in a few minutes, since it could take 5 to 10 minutes for avatar changes to take effect at Gravatar.\n\n   
-	      If you still don\'t see your Gravatar after the recommendation above, perhaps it was not updated properly at Gravatar.com, or perhaps your Gravatar is associated with an email other then %s. 
+	      If you still don\'t see your Gravatar after the recommendation above, perhaps it was not updated properly at Gravatar.com, or perhaps your Gravatar is associated with an email other than %s. 
 	  </string>
 	   <string name="password_changed_successfully">Your password has been changed successfully.</string>
 	   <string name="account_changed_successfully">Your account has been changed successfully.</string>

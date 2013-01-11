@@ -40,6 +40,7 @@ import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 
@@ -491,40 +492,26 @@ private class NetworkTask extends AsyncNetworkRequest{
 		}
 
 		@Override
-		protected void onPostExecute(ServerResponse serverResponseObject) {
+		protected void onPostExecute(NetworkTaskResult result) {
 			// TODO Auto-generated method stub
-			super.onPostExecute(serverResponseObject);
+			super.onPostExecute(result);
 			
-			this.handleResponse(serverResponseObject);
-			
-			
+			this.handleResponse(result);
+	
 		}
  
-		private void handleResponse(ServerResponse serverResponseObject){
-		     HttpResponse response = serverResponseObject.response;   
-		     Exception exception = serverResponseObject.exception;   
+		private void handleResponse(NetworkTaskResult result){  
+		     Exception exception = result.getException();   
 
-		     if(response != null){  
+		     if(result.getResult() != null){  
 
 		         InputStream iStream = null;  
 
-		         try {  
-		             iStream = response.getEntity().getContent();  
-		         } catch (IllegalStateException e) {  
-		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-		         } catch (IOException e) {  
-		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-		         }  
-
-		         int statusCode = response.getStatusLine().getStatusCode();  
-		         
-		         Log.i(AddOpponents.TAG, "StatusCode: " + statusCode);
-
-		         switch(statusCode){  
+		         switch(result.getStatusCode()){  
 		             case 200:  
 		             case 201: {
 		            	 
-		            	 Game game = GameService.handleCreateGameResponse(this.context, iStream);
+		            	 Game game = GameService.handleCreateGameResponse(this.context, result.getResult());
 		            //	 handleResponseFromIOThread(game);
 		            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
 		            	 //was not working and driving me crazy
@@ -549,7 +536,7 @@ private class NetworkTask extends AsyncNetworkRequest{
 		             case 422: 
 		             case 500:
 
-		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 		            	 break;
 		         }  
 		     }else if (exception instanceof ConnectTimeoutException) {

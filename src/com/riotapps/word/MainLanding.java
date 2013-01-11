@@ -19,6 +19,7 @@ import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -68,6 +69,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
         
        // Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 	   // t.show();
+        
+        Logger.d(TAG, "onCreate called");
         
     	//Logger.d(TAG, "onCreate started");
         this.imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
@@ -484,41 +487,25 @@ private void handleGameClick(String gameId){
 		}
 
 		@Override
-		protected void onPostExecute(ServerResponse serverResponseObject) {
+		protected void onPostExecute(NetworkTaskResult result) {
 			// TODO Auto-generated method stub
-			super.onPostExecute(serverResponseObject);
+			super.onPostExecute(result);
 			
-			this.context.handleResponse(serverResponseObject, this.fetchGame);
+			this.context.handleResponse(result, this.fetchGame);
 		}
  	}
 	
-	private void handleResponse(ServerResponse serverResponseObject, boolean fetchGame){
-	     HttpResponse response = serverResponseObject.response;   
-	     Exception exception = serverResponseObject.exception;   
+	private void handleResponse(NetworkTaskResult result, boolean fetchGame){
+	     Exception exception = result.getException();   
 
-	     if(response != null){  
-
-	         InputStream iStream = null;  
-
-	         try {  
-	             iStream = response.getEntity().getContent();  
-	         } catch (IllegalStateException e) {  
-	             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-	         } catch (IOException e) {  
-	             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-	         }  
-
-	         int statusCode = response.getStatusLine().getStatusCode();  
-	         
-	         Logger.i(MainLanding.TAG, "StatusCode: " + statusCode); 
-
-	         switch(statusCode){  
+	     if(result.getResult() != null){  
+	         switch(result.getStatusCode()){  
 	             case 200:  
 	            	 try{
 	            		 if (fetchGame){
 			            	 
-			            	 Game game = GameService.handleCreateGameResponse(this.context, iStream);
-			            //	 handleResponseFromIOThread(game);
+			            	 Game game = GameService.handleCreateGameResponse(this.context, result.getResult());
+			    
 			            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
 			            	 //was not working and driving me crazy
 			            	 GameService.putGameToLocal(context, game);
@@ -528,7 +515,7 @@ private void handleGameClick(String gameId){
 			      	      	 this.context.startActivity(intent);
 	            		 }
 	            		 else{	 //this is the same as authenticating, so this is ok
-		            		 player = PlayerService.handleAuthByTokenResponse(this.context, iStream);
+		            		 player = PlayerService.handleAuthByTokenResponse(this.context, result.getResult());
 		            		 GameService.updateLastGameListCheckTime(this.context);
 		            		 
 		            		 if (player.getTotalNumLocalGames() == 0){
@@ -564,7 +551,7 @@ private void handleGameClick(String gameId){
 	             case 422: 
 	             case 500:
 
-	            	 DialogManager.SetupAlert(context, this.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), true, 0);  
+	            	 DialogManager.SetupAlert(context, this.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), true, 0);  
 	            	 break;
 	         }  
 	     }else if (exception instanceof ConnectTimeoutException) {
@@ -574,7 +561,7 @@ private void handleGameClick(String gameId){
 
 	     }  
 	     else{  
-	         Logger.v("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
+	         Logger.d("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
 
 	     }//end of else  
 	}

@@ -32,6 +32,7 @@ import com.riotapps.word.utils.CustomProgressDialog;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 
@@ -1012,156 +1013,29 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		}
 
 	    		@Override
-	    		protected void onPostExecute(ServerResponse serverResponseObject) {
+	    		protected void onPostExecute(NetworkTaskResult result) {
 	    		 
-	    			super.onPostExecute(serverResponseObject);
+	    			super.onPostExecute(result);
 	    			
-	    			this.handleResponse(serverResponseObject);
+	    			this.handleResponse(result);
 
 	    		}
 	     
-	    		private void handleResponse(ServerResponse serverResponseObject){
-	    		     HttpResponse response = serverResponseObject.response;   
-	    		     Exception exception = serverResponseObject.exception;   
+	    		private void handleResponse(NetworkTaskResult result){
+	    		    
+	    		     Exception exception = result.getException();
+	    		    		 
+	    		     if(result.getResult() != null){  
 
-	    		     if(response != null){  
-
-	    		         InputStream iStream = null;  
-
-	    		         try {  
-	    		             iStream = response.getEntity().getContent();  
-	    		         } catch (IllegalStateException e) {  
-	    		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-	    		         } catch (IOException e) {  
-	    		             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-	    		         }  
-
-	    		         int statusCode = response.getStatusLine().getStatusCode();  
-	    		         
-	    		         Log.d(GameSurface.TAG, "StatusCode: " + statusCode);
 	    		         Gson gson = new Gson();
 
 	    		         Player player = null;
 	    		         
-	    		         switch(statusCode){  
+	    		         switch(result.getStatusCode()){  
 	    		             case 200:  
-	    		             case 201: {
-	    		            	 context.handlePostTurn(this.actionType, iStream);
-	    		            	 /*
-	    		            	 switch(this.actionType){
-	    		            	 	case CANCEL_GAME:
-	    		            	 		 
-	    		    		 				//remove game from local storage
-	    		            	 			GameService.removeGameFromLocal(context, context.game);
-	    		            	 			
-	    		            	 			//refresh player's game list with response from server
-	    		            	 			player = GameService.handleCancelGameResponse(context, iStream);
-	    		            	 			GameService.updateLastGameListCheckTime(this.context);
-	    		            	 			
-	    		            	 			if (player.getTotalNumLocalGames() == 0){
-	    		            	 				context.handleBack(com.riotapps.word.StartGame.class);	    		            	 					
-	    		            	 			}
-	    		            	 			else{
-	    		            	 				//send player back to main landing 
-	    		            	 				context.handleBack(com.riotapps.word.MainLanding.class);
-	    		            	 			}
-	    		            	 			
-	    		            	 		break;
-	    		            	 	case DECLINE_GAME:
-	    		            	 		//remove game from local storage
-    		            	 			GameService.removeGameFromLocal(context, context.game);
-    		            	 			
-    		            	 			//refresh player's game list with response from server
-    		            	 			player = GameService.handleDeclineGameResponse(context, iStream);
-    		            	 			GameService.updateLastGameListCheckTime(this.context);
-    		            	 			
-    		            	 			if (player.getTotalNumLocalGames() == 0){
-    		            	 				context.handleBack(com.riotapps.word.StartGame.class);	    		            	 					
-    		            	 			}
-    		            	 			else{
-    		            	 				//send player back to main landing 
-    		            	 				context.handleBack(com.riotapps.word.MainLanding.class);
-    		            	 			}
-
-	    		            	 		break;
-	    		            	 	case RESIGN:
-	    		            	 		//remove game from local storage
-    		            	 			GameService.removeGameFromLocal(context, context.game);
-    		            	 			
-    		            	 			//refresh player's game list with response from server
-    		            	 			player = GameService.handleResignGameResponse(context, iStream);
-    		            	 			GameService.updateLastGameListCheckTime(this.context);
-    		            	 			
-    		            	 			//send player back to main landing 
-    		            	 			context.handleBack(com.riotapps.word.MainLanding.class);
-    		            	 
-	    		            	 		break;
-	    		            	 	case PLAY:
-    		            	 			//update game list for active games for last played action
-    		            	 			
-    		            	 			//refresh player's game list with response from server
-    		            	 			
-	    		            	 		//refresh game board
-	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
-	    		            	 		
-	    		            	 		
-	    		            	 		Logger.d(TAG, "handleResponse game=" + gson.toJson(game));
-	    		            	 		
-    		            	 			//refresh game board and buttons
-    		            	 			setupGame();
-    		            	 			gameSurfaceView.resetGameAfterPlay();
-    		            	 			
-    		            	 			context.loadInterstitialAd();
-    		            	 			
-    		            	 			break;
-	    		            	 	case SKIP:
-	    		            	 		
-	    		            	 		//update game list for active games for last played action
-    		            	 			
-    		            	 			//refresh player's game list with response from server
-    		            	 			
-	    		            	 		//refresh game board
-	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
-	    		            	
-	    		            	 		Logger.d(TAG, "handleResponse SKIP game=" + gson.toJson(game));
-	    		            	 		
-    		            	 			//refresh game board and buttons
-    		            	 			setupGame();
-    		            	 			gameSurfaceView.resetGameAfterPlay();
-    		            	 			
-    		            	 			break;
-	    		            	 	case SWAP:
-	    		            	 		
-	    		            	 		//update game list for active games for last played action
-    		            	 			
-    		            	 			//refresh player's game list with response from server
-    		            	 			
-	    		            	 		//refresh game board
-	    		            	 		game = GameService.handleGamePlayResponse(context, iStream);
-	    		            	
-	    		            	 		Logger.d(TAG, "handleResponse SWAP game=" + gson.toJson(game));
-	    		            	 		
-    		            	 			//refresh game board and buttons
-    		            	 			setupGame();
-    		            	 			gameSurfaceView.resetGameAfterPlay();
-
-	    		            	 		break;
-	    		            	 	case REMATCH:
-	    		            	 		Game newGame = GameService.handleCreateGameResponse(this.context, iStream);
-	    		 
-    		    		            	 GameService.putGameToLocal(this.context, newGame);
-    		    		            	 GameService.clearLastGameListCheckTime(this.context);
-    		    		            	 
-    		    		            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
-    		    		            	 intent.putExtra(Constants.EXTRA_GAME_ID, newGame.getId());
-    		    		             
-    		    		      	      	 this.context.startActivity(intent);
-    		    		                 break;  
-	    		            	 }
-	    		            	 */
-	    		             
-	    		             }//end of case 200 & 201 
-	    		             break;
+	    		             case 201: 
+	    		            	 context.handlePostTurn(this.actionType, result.getResult());
+	    		            	 break;
 	    		             case 401:
 	    			             //case Status code == 422
 	    			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.sorry), this.context.getString(R.string.validation_unauthorized));  
@@ -1173,7 +1047,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		             case 422: 
 	    		             default:
 
-	    		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+	    		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 	    		            	 break;
 	    		         }  
 	    		     }else if (exception instanceof ConnectTimeoutException) {
@@ -1388,7 +1262,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	
 	    }
 
-	    private void handlePostTurn(GameActionType action, InputStream iStream){
+	    private void handlePostTurn(GameActionType action, String result){
 	    	Gson gson = new Gson();
 	    	
 	    	this.postTurnAction = action;
@@ -1400,7 +1274,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			GameService.removeGameFromLocal(context, context.game);
 	 			
 	 			//refresh player's game list with response from server
-	 			player = GameService.handleCancelGameResponse(context, iStream);
+	 			player = GameService.handleCancelGameResponse(context, result);
 	 			GameService.updateLastGameListCheckTime(this.context);
 	 			
     	 		this.handlePostTurnOption(action);
@@ -1411,7 +1285,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			GameService.removeGameFromLocal(context, context.game);
 	 			
 	 			//refresh player's game list with response from server
-	 			player = GameService.handleDeclineGameResponse(context, iStream);
+	 			player = GameService.handleDeclineGameResponse(context, result);
 	 			GameService.updateLastGameListCheckTime(this.context);
 	 			
     	 		this.handlePostTurnOption(action);
@@ -1422,7 +1296,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			GameService.removeGameFromLocal(context, context.game);
 	 			
 	 			//refresh player's game list with response from server
-	 			player = GameService.handleResignGameResponse(context, iStream);
+	 			player = GameService.handleResignGameResponse(context, result);
 	 			GameService.updateLastGameListCheckTime(this.context);
 	 			
     	 		this.handlePostTurnOption(action);
@@ -1434,7 +1308,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			//refresh player's game list with response from server
 	 			
     	 		//refresh game board
-    	 		game = GameService.handleGamePlayResponse(context, iStream);
+    	 		game = GameService.handleGamePlayResponse(context, result);
     	 		
     	 		
     	 		//Logger.d(TAG, "handleResponse game=" + gson.toJson(game));
@@ -1449,7 +1323,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			//refresh player's game list with response from server
 	 			
     	 		//refresh game board
-    	 		game = GameService.handleGamePlayResponse(context, iStream);
+    	 		game = GameService.handleGamePlayResponse(context, result);
     	
     	 		Logger.d(TAG, "handleResponse SKIP game=" + gson.toJson(game));
     	 		
@@ -1463,7 +1337,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			//refresh player's game list with response from server
 	 			
     	 		//refresh game board
-    	 		game = GameService.handleGamePlayResponse(context, iStream);
+    	 		game = GameService.handleGamePlayResponse(context, result);
     	
     	 		Logger.d(TAG, "handleResponse SWAP game=" + gson.toJson(game));
     	 		
@@ -1471,7 +1345,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
     	 		break;
     	 	case REMATCH:
-    	 		Game newGame = GameService.handleCreateGameResponse(this.context, iStream);
+    	 		Game newGame = GameService.handleCreateGameResponse(this.context, result);
 
             	 GameService.putGameToLocal(this.context, newGame);
             	 GameService.clearLastGameListCheckTime(this.context);

@@ -22,6 +22,7 @@ import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.CustomProgressDialog;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.hooks.ErrorService;
@@ -299,40 +300,23 @@ public class ConnectToFacebook  extends FragmentActivity{
 		}
 
 		@Override
-		protected void onPostExecute(ServerResponse serverResponseObject) {
+		protected void onPostExecute(NetworkTaskResult result) {
 			// TODO Auto-generated method stub
-			super.onPostExecute(serverResponseObject);
-			 Logger.d(TAG,"NetworkTask onPostExecute ");
-			this.handleResponse(serverResponseObject);
-
+			super.onPostExecute(result);
+			this.handleResponse(result);
 		}
  
-		private void handleResponse(ServerResponse serverResponseObject){
-		     HttpResponse response = serverResponseObject.response;   
-		     Exception exception = serverResponseObject.exception;   
+		private void handleResponse(NetworkTaskResult result){   
+		     Exception exception = result.getException();   
 
-		     if(response != null){  
+		     if(result.getResult() != null){  
 
-		         InputStream iStream = null;  
-
-		         try {  
-		             iStream = response.getEntity().getContent();  
-		         } catch (IllegalStateException e) {  
-		             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-		         } catch (IOException e) {  
-		             Logger.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-		         }  
-
-		         int statusCode = response.getStatusLine().getStatusCode();  
-		         
-		        // Logger.e(Welcome.TAG, "StatusCode: " + statusCode);
-
-		         switch(statusCode){  
+		         switch(result.getStatusCode()){  
 		             case 200:  
 		             case 201: {   
 		            	 	//update local player context
 		            	 Logger.d(TAG, "handleResponse about to call PlayerService.handleCreatePlayerResponse");
-		            	 player = PlayerService.handleCreatePlayerResponse(this.context, iStream);
+		            	 player = PlayerService.handleCreatePlayerResponse(this.context, result.getResult());
 		            		
 	            		 Logger.d(TAG, "handleResponse about to call fetchFriends");
 	            		 //go get user's friends 
@@ -346,7 +330,7 @@ public class ConnectToFacebook  extends FragmentActivity{
 		            	 String errorMessage;
 
 		            	 try{
-			            	 ErrorType errorType = ErrorService.translateError(context, iStream);
+			            	 ErrorType errorType = ErrorService.translateError(context, result.getResult());
 			            	 
 			            	 switch (errorType){
 			            	 	case INCORRECT_PASSWORD:
@@ -389,7 +373,7 @@ public class ConnectToFacebook  extends FragmentActivity{
 		             case 422: 
 		             case 500:
 
-		            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+		            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 		         }  
 		     }else if (exception instanceof ConnectTimeoutException) {
 		    	 DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.msg_connection_timeout), 0);

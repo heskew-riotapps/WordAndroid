@@ -14,6 +14,7 @@ import com.riotapps.word.ui.CustomDialog;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
+import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -148,36 +149,22 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 			}
 
 			@Override
-			protected void onPostExecute(ServerResponse serverResponseObject) {
+			protected void onPostExecute(NetworkTaskResult result) {
 				// TODO Auto-generated method stub
-				super.onPostExecute(serverResponseObject);
+				super.onPostExecute(result);
 				
-				this.handleResponse(serverResponseObject);
+				this.handleResponse(result);
 				
 				
 			}
 	 
-			private void handleResponse(ServerResponse serverResponseObject){
-			     HttpResponse response = serverResponseObject.response;   
-			     Exception exception = serverResponseObject.exception;   
+			private void handleResponse(NetworkTaskResult result){
+			    
+			     Exception exception = result.getException();
 
-			     if(response != null){  
+			     if(result.getResult() != null){  
 
-			         InputStream iStream = null;  
-
-			         try {  
-			             iStream = response.getEntity().getContent();  
-			         } catch (IllegalStateException e) {  
-			             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IllegalStateException " + e);  
-			         } catch (IOException e) {  
-			             Log.e("in ResponseHandler -> in handleResponse() -> in if(response !=null) -> in catch ","IOException " + e);  
-			         }  
-
-			         int statusCode = response.getStatusLine().getStatusCode();  
-			         
-			         Log.i(Options.TAG, "StatusCode: " + statusCode);
-
-			         switch(statusCode){  
+			         switch(result.getStatusCode()){  
 			             case 200:  
 			             case 201: {  
 			            	 //dialog.dismiss();
@@ -200,7 +187,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 			             case 422: 
 			             case 500:
 
-			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), statusCode + " " + response.getStatusLine().getReasonPhrase(), 0);  
+			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 			            	 break;
 			         }  
 			     }else if (exception instanceof ConnectTimeoutException) {
