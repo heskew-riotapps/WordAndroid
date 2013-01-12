@@ -21,7 +21,7 @@ public class NetworkConnectivity {
 
 		//put thread sleep in here
 		
-		Logger.d(TAG, "checkNetworkConnectivity ctx = null " + (this.ctx == null));
+		Logger.w(TAG, "checkNetworkConnectivity ctx = null " + (this.ctx == null));
 		
 		try{
 	     ConnectivityManager connec = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);   
@@ -46,7 +46,7 @@ public class NetworkConnectivity {
 	     return false;       
 	            
 		}catch (Exception e){
-			Logger.d(TAG, "checkNetworkConnectivity error=" + e.toString());
+			Logger.w(TAG, "checkNetworkConnectivity error=" + e.toString());
 			return false;
 		}
 	     

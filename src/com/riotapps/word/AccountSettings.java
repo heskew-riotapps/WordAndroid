@@ -202,7 +202,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 
 			            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 			         }  
-			     }else if (exception instanceof ConnectTimeoutException) {
+			     }else if (exception instanceof ConnectTimeoutException ||  exception instanceof java.net.SocketTimeoutException) {
 			    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);
 			     }else if(exception != null){  
 			    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_not_connected), 0);  

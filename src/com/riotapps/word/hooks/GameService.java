@@ -1351,6 +1351,17 @@ public class GameService {
   			}
   		}
 
+  		//remove it from opponents list just in case it was clicked on in that list and main
+  		//landing had not been refreshed
+  		int numOpponentGames = player.getActiveGamesOpponentTurn().size();
+  		for(int i = 0; i < numOpponentGames; i++){
+  			if (game.getId().equals(player.getActiveGamesOpponentTurn().get(i).getId())){
+  				player.getActiveGamesOpponentTurn().remove(i);
+  				break;
+  			}
+  		}
+  		
+  		//now add it (back) to the list
   		player.getActiveGamesOpponentTurn().add(0, game);
 
   		Gson gson = new Gson();  

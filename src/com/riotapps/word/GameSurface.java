@@ -1050,7 +1050,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), 0);  
 	    		            	 break;
 	    		         }  
-	    		     }else if (exception instanceof ConnectTimeoutException) {
+	    		     }else if (exception instanceof ConnectTimeoutException ||  exception instanceof java.net.SocketTimeoutException) {
 	    		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_connection_timeout), 0);
 	    		     }else if(exception != null){  
 	    		    	 DialogManager.SetupAlert(this.context, this.context.getString(R.string.oops), this.context.getString(R.string.msg_not_connected), 0);  
@@ -1061,8 +1061,6 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
 	    		     }//end of else  
 	    		}
-	    		
-	     
 	    	}
 	    
 	    private class SwapDialog  implements View.OnClickListener{ 

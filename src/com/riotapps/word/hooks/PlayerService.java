@@ -133,7 +133,21 @@ public class PlayerService {
 		
 		return gson.toJson(player);
 	}
+	public static String setupGameListCheck(Context ctx, String authToken, Date lastRefreshDate) throws DesignByContractException{
+		Gson gson = new Gson();
 	
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 
+		Check.Require(authToken.length() > 0, ctx.getString(R.string.validation_auth_token_required));
+
+	    TransportGameListCheck player = new TransportGameListCheck();
+		player.setToken(authToken);
+		player.setLastRefreshDate(lastRefreshDate);
+		
+		return gson.toJson(player);
+	}
 	
 	public static String setupAccountUpdate(Context ctx, String email, String nickname) throws DesignByContractException{
 		Gson gson = new Gson(); 
@@ -189,46 +203,6 @@ public class PlayerService {
 	}
 	
 	
-//	public static void saveFacebookFriendsFromJSONResponseXXXXX(Context ctx, String response) throws FacebookError, JSONException{
-//		JSONObject json;
-//		 
-//		json = Util.parseJson(response);
-//		final JSONArray friends = json.getJSONArray("data");
-//		
-//		List<FBFriend> fbFriends = new ArrayList<FBFriend>();
-//		
-//		for(int i = 0 ; i < friends.length(); i++){
-//			FBFriend fbFriend = new FBFriend();
-//			
-//			JSONObject row = friends.getJSONObject(i);
-//			fbFriend.setId(row.getString("id"));
-//			fbFriend.setName(row.getString("name"));
-//			
-//			fbFriends.add(fbFriend);
-//		}
-//		
-//		FBFriends friendsList = new FBFriends();
-//		friendsList.setFriends(fbFriends);
-//		
-//		Gson gson = new Gson(); 	
-//	//	Type fooType = new TypeToken<Foo<Bar>>() {}.getType();
-//	//	gson.toJson(foo, fooType);
-//		String friendJSON = gson.toJson(friendsList, FBFriends.class);
-//		
-//		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
-//	    SharedPreferences.Editor editor = settings.edit();
-//	        
-//	  //  Logger.w(TAG, "saveFacebookFriendsFromJSONResponse fbFriends=" + friendJSON.length());
-// 
-//	    //String json1 = gson.toJson(friendJSON);
-//	    editor.putString(Constants.USER_PREFS_FRIENDS_JSON, friendJSON);
-//	    
-//	 
-//	    editor.commit(); 
-//	    
-//	    String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
-//	   // Logger.w(TAG, "saveFacebookFriendsFromJSONResponse friendsLocal=" + friendsLocal.length());
-//	}
 	
 	public static void saveFacebookFriendsFromJSONResponse(Context ctx, List<GraphUser> users) throws FacebookError, JSONException{
 

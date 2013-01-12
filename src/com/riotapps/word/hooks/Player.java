@@ -1,6 +1,7 @@
 package com.riotapps.word.hooks;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -64,6 +65,9 @@ public class Player implements Parcelable{
 
 	@SerializedName("c_games")
 	private List<Game> completedGames = new ArrayList<Game>();
+	
+	@SerializedName("l_rf_d") 
+	private Date lastRefreshDate = new Date("10/6/2012"); //last time a game status changed that the player was involved in
 	
 	private List<Game> activeGamesYourTurn= new ArrayList<Game>();
 	private List<Game> activeGamesOpponentTurn= new ArrayList<Game>();
@@ -147,6 +151,12 @@ public class Player implements Parcelable{
 	}
 	
  
+	public Date getLastRefreshDate() {
+		return lastRefreshDate;
+	}
+	public void setLastRefreshDate(Date lastRefreshDate) {
+		this.lastRefreshDate = lastRefreshDate;
+	}
 	public boolean isNoInterstitialAdsOption() {
 		return noInterstitialAdsOption;
 	}

@@ -144,19 +144,20 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, NetworkTaskResu
 	             break;  
 	     }//end of switch  
  
-	     result.setException(serverResponseObject.exception);
-	     result.setStatusCode(serverResponseObject.response.getStatusLine().getStatusCode());
-	    
-	     Logger.d(TAG, "StatusCode: " + result.getStatusCode()); 
-	     InputStream iStream = null; 
-	     try{
-	    	 result.setStatusReason(serverResponseObject.response.getStatusLine().getReasonPhrase());
-	     }
-	     catch(Exception e){
-	     }
-	     
          if (serverResponseObject.response != null ) {
-       
+	             
+		     result.setException(serverResponseObject.exception);
+		     result.setStatusCode(serverResponseObject.response.getStatusLine().getStatusCode());
+		    
+		     Logger.d(TAG, "StatusCode: " + result.getStatusCode()); 
+		     InputStream iStream = null; 
+		     try{
+		    	 result.setStatusReason(serverResponseObject.response.getStatusLine().getReasonPhrase());
+		     }
+		     catch(Exception e){
+		     }
+	     
+
             try {  
 	             iStream = serverResponseObject.response.getEntity().getContent();  
 	         } catch (IllegalStateException e) {  
@@ -166,23 +167,23 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, NetworkTaskResu
 	        	 Logger.e(TAG,"doInBackground IOException " + e);  
 	         
 	         }  
-         }  
-         if (iStream != null) {
-             try {
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(iStream, "UTF-8"));
-                 StringBuilder sb = new StringBuilder();
-                 String line = null;
-                 while ((line = reader.readLine()) != null) {
-                     sb.append(line + "\n");
-                 }
-                 iStream.close();
-
-                 result.setResult(sb.toString());
-             } catch (Exception e) {
-            	 Logger.e(TAG,"doInBackground error converting result to string= " + e); 
-             }
+           
+	         if (iStream != null) {
+	             try {
+	                 BufferedReader reader = new BufferedReader(new InputStreamReader(iStream, "UTF-8"));
+	                 StringBuilder sb = new StringBuilder();
+	                 String line = null;
+	                 while ((line = reader.readLine()) != null) {
+	                     sb.append(line + "\n");
+	                 }
+	                 iStream.close();
+	
+	                 result.setResult(sb.toString());
+	             } catch (Exception e) {
+	            	 Logger.e(TAG,"doInBackground error converting result to string= " + e); 
+	             }
+	         }
          }
-
 	     return result;  
 
 	 }//end method doInBackground()

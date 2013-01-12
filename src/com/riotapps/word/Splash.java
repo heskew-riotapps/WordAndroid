@@ -27,7 +27,7 @@ public class Splash  extends FragmentActivity {
     final Context context = this;
     Splash me = this;
     Handler handler;
-    long startTime = System.nanoTime();
+    public long startTime = System.nanoTime();
     NetworkTask runningTask = null;
     
     public void test(){}
@@ -37,22 +37,23 @@ public class Splash  extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
       
-        Logger.d(TAG, "onCreate started");
+        Logger.w(TAG, "onCreate started");
         
        // Intent i = new Intent(this, WordLoaderService.class);
        // this.startService(new Intent(this, WordLoaderService.class));
      
         try{
+        	Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
 	        GCMRegistrar.checkDevice(this);
 	        GCMRegistrar.checkManifest(this);
 	        final String regId = GCMRegistrar.getRegistrationId(this);
 	        if (regId.equals("")) {
 	          GCMRegistrar.register(this, this.getString(R.string.gcm_sender_id));
 	        } else {
-	          Logger.d(TAG, "onCreated Already registered");
+	          Logger.w(TAG, "onCreated Already registered");
 	        }
         } catch(Exception e){
-        	 Logger.d(TAG, "onCreated GCMRegistrar error=" + e.toString());
+        	 Logger.w(TAG, "onCreated GCMRegistrar error=" + e.toString());
         }
         this.handlePreProcessing();
      }
@@ -61,7 +62,7 @@ public class Splash  extends FragmentActivity {
 		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, 0);
 	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
 	       
-	    Logger.d(TAG, "handlePreProcessing called.");
+	    Logger.w(TAG, "handlePreProcessing called.");
 	    
 	    if (storedToken.length() > 0){
 	    	String json = "";
@@ -76,7 +77,7 @@ public class Splash  extends FragmentActivity {
 			this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
 	    }
 	    else{
-	    	 Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token");
+	    	 Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token_1");
 	    	new CheckConnectivityTask().execute("");
 	     
 	    }
@@ -97,55 +98,55 @@ public class Splash  extends FragmentActivity {
 
 		 @Override
 		    protected void onPostExecute(Boolean result) {
-	    	 	Logger.w(TAG, " CheckConnectivityTask onPostExecute");
+	    	 	Logger.w(TAG, " CheckConnectivityTask onPostExecute_1");
 
 	    	 	processConnectivityResults(result);
 		    }
 
 			@Override
 			protected Boolean doInBackground(String... arg0) {
-				 Logger.w(TAG, " CheckConnectivityTask doInBackground");
+				 Logger.w(TAG, " CheckConnectivityTask doInBackground_1");
 				return checkInitialConnectivity();
 			}
-	  }
 
-	
-	private Boolean checkInitialConnectivity(){
-		  NetworkConnectivity connection = new NetworkConnectivity(context);
-	        //are we connected to the web?
-	        boolean isConnected = connection.checkNetworkConnectivity();
-	        
-	        if (isConnected == false)  
-	        {
-	        	try {
-					Thread.sleep(Constants.INITIAL_CONNECTIVITY_THREAD_SLEEP);
-					isConnected = connection.checkNetworkConnectivity();
-					
-		        } 
-	        	catch (InterruptedException e1) {
-	        		isConnected = false;
-					e1.printStackTrace();
-				}
-	        }
-	        else{
-	        	 long currentTime = System.nanoTime();
-	        	 
-            	 //default time in which to leave splash up//watch out for negative values
-	        	 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime);
-            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
-            		 try {
-            			// Logger.w(TAG, " checkInitialConnectivity OK , about to sleep" + Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime)  + " milliseconds" ); 
-						Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-            	 }
-	        }
-	        
-	       return isConnected;
-	}
-	
+			private Boolean checkInitialConnectivity(){
+				  NetworkConnectivity connection = new NetworkConnectivity(context);
+			        //are we connected to the web?
+			        boolean isConnected = connection.checkNetworkConnectivity();
+			        
+			        if (isConnected == false)  
+			        {
+			        	try {
+							Thread.sleep(Constants.INITIAL_CONNECTIVITY_THREAD_SLEEP);
+							isConnected = connection.checkNetworkConnectivity();
+							
+				        } 
+			        	catch (InterruptedException e1) {
+			        		isConnected = false;
+							e1.printStackTrace();
+						}
+			        }
+			        /*
+			        else{
+			        	 long currentTime = System.nanoTime();
+			        	 
+		            	 //default time in which to leave splash up//watch out for negative values
+			        	 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
+		            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
+		            		 try {
+		            			// Logger.w(TAG, " checkInitialConnectivity OK , about to sleep" + Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime)  + " milliseconds" ); 
+								Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+		            	 }
+			        }
+			        */
+			        
+			       return isConnected;
+			}
+	  }
 	private void processConnectivityResults(Boolean connected){
 	   	 Logger.w(TAG, " processTaskResults" );  
 		 if (connected == true) 
@@ -169,7 +170,7 @@ public class Splash  extends FragmentActivity {
 				String jsonPost) {
 			super(ctx, requestType, "", jsonPost);
 			this.context = ctx;
-		    Logger.d(TAG, "NetworkTask called with jsonPost=" + jsonPost);
+		    Logger.w(TAG, "NetworkTask called with jsonPost=" + jsonPost);
 		 
 		}
 
@@ -196,16 +197,16 @@ public class Splash  extends FragmentActivity {
 		            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, result.getResult());
 	
 			            	 //default time in which to leave splash up
-		            		 timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
+		            		/* timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
 			            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
 			            		 try {
 									Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
 								} catch (InterruptedException e) {
 									// TODO Auto-generated catch block
-									Logger.d(TAG, "Thread sleep error=" + e.toString());
+									Logger.w(TAG, "Thread sleep error=" + e.toString());
 								}
 			            	 }
-		            		 
+		            		 */
 			     
 			            	 if (player.getTotalNumLocalGames() == 0){
 			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
@@ -253,7 +254,7 @@ public class Splash  extends FragmentActivity {
 		            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), true, 0);  
 		            	 break;
 		         }  
-		     }else if (exception instanceof ConnectTimeoutException) {
+		     }else if (exception instanceof ConnectTimeoutException ||  exception instanceof java.net.SocketTimeoutException) {
 		    	 DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.msg_connection_timeout), true, 0);
 		     }else if(exception != null){  
 		    	 DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.msg_not_connected), true, 0);  

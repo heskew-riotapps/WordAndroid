@@ -61,10 +61,6 @@ public class TestLanding extends FragmentActivity implements View.OnClickListene
         		goToActivity = new Intent(getApplicationContext(), Welcome.class);
         		startActivity(goToActivity);   
         		break;
-	       	case R.id.testLandingRules:  
-        		goToActivity = new Intent(getApplicationContext(), RulesTab.class);
-        		startActivity(goToActivity);
-        		break;
 	     	case R.id.testLandingGameSurface:  
         		goToActivity = new Intent(getApplicationContext(), GameSurface.class);
         		startActivity(goToActivity);

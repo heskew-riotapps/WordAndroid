@@ -3,10 +3,12 @@ package com.riotapps.word;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
-
+ 
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -56,6 +58,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	Player player;
 	ImageFetcher imageLoader;
 	NetworkTask runningTask = null;
+	Timer timer = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,8 +129,67 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//	this.loadLists();
 		//}
     }
-     
+    
+    private void setupTimer(){
+    	timer = new Timer();
+    	updateListTask updateList = new updateListTask();
+    	timer.scheduleAtFixedRate(updateList, Constants.GAME_LIST_CHECK_START_IN_MILLISECONDS, Constants.GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS);
+    			//updateList, 300000, 300000);
+    }
+    
+    private class updateListTask extends TimerTask {
+    	  // Ball myBall;
+
+    	   public void run() {
+    		   ((Activity) context).runOnUiThread(new handleGameListCheck());
+    		 /*  try { 
+   				String json = PlayerService.setupGameListCheck(context, player.getAuthToken(), player.getLastRefreshDate());
+   				//this will bring back the players games too
+   				new NetworkTask((MainLanding) context, RequestType.POST, context.getString(R.string.progress_syncing), json, false).execute(Constants.REST_GAME_LIST_CHECK);
+	   			} catch (DesignByContractException e) {
+	   				//this should never happen unless there is some tampering
+	   				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
+	   			}
+	   			*/
+    	   }
+    }
+    
+    private class handleGameListCheck implements Runnable {
+	
+		 
+		    public void run() {
+		    	 try { 
+	   				String json = PlayerService.setupGameListCheck(context, player.getAuthToken(), player.getLastRefreshDate());
+	   				//this will bring back the players games too
+	   				new NetworkTask((MainLanding) context, RequestType.POST, context.getString(R.string.progress_syncing), json, false).execute(Constants.REST_GAME_LIST_CHECK);
+		   			} catch (DesignByContractException e) {
+		   				//this should never happen unless there is some tampering
+		   				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
+		   			}
+		    }
+	  }
+    
     @Override
+	protected void onResume() {
+		super.onResume();
+		if (this.timer == null){
+			this.setupTimer();
+		}
+	}
+
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		if (this.timer != null){
+			this.timer.cancel();
+			this.timer = null;
+		}
+
+	}
+
+	@Override
 	public void onBackPressed() {
 		// do nothing if back is pressed
 		//super.onBackPressed();
@@ -424,6 +486,11 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	  	if (this.runningTask != null){
 	  		this.runningTask.cancel(true);
 	  	}
+		if (this.timer != null){
+			this.timer.cancel();
+			this.timer = null;
+		}
+
 		super.onPause();
 	}
 
@@ -546,7 +613,8 @@ private void handleGameClick(String gameId){
 		     	     break;  
 
 	             case 404:
-	            	 DialogManager.SetupAlert(context, this.getString(R.string.sorry), this.getString(R.string.server_404_error), true, 0);
+	            	 //no updates, do nothing
+	
 	            	 break;
 	             case 422: 
 	             case 500:
@@ -554,7 +622,7 @@ private void handleGameClick(String gameId){
 	            	 DialogManager.SetupAlert(context, this.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), true, 0);  
 	            	 break;
 	         }  
-	     }else if (exception instanceof ConnectTimeoutException) {
+	     }else if (exception instanceof ConnectTimeoutException ||  exception instanceof java.net.SocketTimeoutException) {
 	    	 DialogManager.SetupAlert(context, this.getString(R.string.oops), this.getString(R.string.msg_connection_timeout), true, 0);
 	     }else if(exception != null){  
 	    	 DialogManager.SetupAlert(context, this.getString(R.string.oops), this.getString(R.string.msg_not_connected), true, 0);  

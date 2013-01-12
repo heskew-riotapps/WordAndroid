@@ -28,15 +28,16 @@ public class Constants {
  	public static final long LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS = 300000;//5 minutes in milliseconds
  	public static final long LOCAL_GAME_LIST_STORAGE_DURATION_IN_MILLISECONDS = 300000; //5 minutes in milliseconds
  	
- 	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm";
+ 	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm"; 
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
  	public static final int DEFAULT_CONNECTION_TIMEOUT = 12000;
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 20000;
-	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 4000;
+	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 1000;
 	public static final int REGISTERED_FB_FRIENDS_CACHE_DURATION = 604800000; //a week of milliseconds
 	public static final int SPLASH_ACTIVITY_TIMEOUT = 1000;
 	public static final int NETWORK_CONNECTIVITY_CHECK_DURATION = 2000;
-	
+	public static final long GAME_LIST_CHECK_START_IN_MILLISECONDS = 30000;// 300000;
+	public static final long GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS = 30000;// = 300000;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
@@ -92,14 +93,15 @@ public class Constants {
 	 * the web
 	 *==============================================*/  
 	public static final boolean HIDE_ALL_ADS = false;   
-	public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";       
-	// public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";     
+	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";       
+	 public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";     
 	public static final String FACEBOOK_API_ID = "314938401925933"; 
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
 	public static final String REST_FIND_PLAYER_BY_NICKNAME = REST_URL_SITE + "players/find.json?n_n=%s";
 	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN = REST_URL_SITE + "players/auth_via_token.json";
 	public static final String REST_GET_PLAYER_BY_TOKEN = REST_URL_SITE + "players/get_via_token.json";
+	public static final String REST_GAME_LIST_CHECK = REST_URL_SITE + "players/game_list_check.json";
 	public static final String REST_PLAYER_LOGOUT = REST_URL_SITE + "players/log_out.json";
 	public static final String REST_PLAYER_CHANGE_PASSWORD = REST_URL_SITE + "players/change_password.json";
 	public static final String REST_PLAYER_UPDATE_ACCOUNT = REST_URL_SITE + "players/update_account.json";
