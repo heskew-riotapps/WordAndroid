@@ -37,7 +37,7 @@ public class Constants {
 	public static final int SPLASH_ACTIVITY_TIMEOUT = 1000;
 	public static final int NETWORK_CONNECTIVITY_CHECK_DURATION = 2000;
 	public static final long GAME_LIST_CHECK_START_IN_MILLISECONDS = 30000;// 300000;
-	public static final long GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS = 30000;// = 300000;
+	public static final long GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS = 300000;// = 300000;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
@@ -52,6 +52,9 @@ public class Constants {
  	public static final String EXTRA_GAME = "com.riotapps.word.hooks.Game";
 	public static final String EXTRA_GAME_ID = "gameId";
 	public static final String EXTRA_PLAYER = "com.riotapps.word.hooks.Player";
+	public static final String EXTRA_GCM_GAME_ID = "id";
+	public static final String EXTRA_GCM_MESSAGE = "msg";
+	public static final String NOTIFICATION_ID = "___com.riotapps.word";
 	 	
  	/**============================================
 	 * storage
@@ -87,14 +90,14 @@ public class Constants {
 	 *==============================================*/
 	//public static final String MODE_OF_PAGE = "MODE_OF_PAGE";
 	///public static final int PAGE_ADD = 300;
-	//public static final int PAGE_EDIT = 301; 	  
+	//public static final int PAGE_EDIT = 301; 	   
 
 	/**=============================================
 	 * the web
 	 *==============================================*/  
-	public static final boolean HIDE_ALL_ADS = false;   
+	public static final boolean HIDE_ALL_ADS = false;    
 	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";       
-	 public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";     
+	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";     
 	public static final String FACEBOOK_API_ID = "314938401925933"; 
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";

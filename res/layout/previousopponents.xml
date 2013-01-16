@@ -9,12 +9,15 @@
      <LinearLayout
 	        	android:layout_marginBottom="5dp"
 	        	android:id="@+id/llButtons"
+	        	android:gravity="center"
 	         >
 			<com.riotapps.word.utils.TypefaceButton 
 		  	    style="@style/MainLandingButtonStyle"
 		  	    android:id="@+id/bAdd" 
-		        android:layout_width="0dp" 
-		        android:layout_weight="1.0"
+		  	    android:layout_height="wrap_content"
+		  	    android:paddingTop="1.5dp"
+		        android:paddingBottom="1.5dp"
+		        android:layout_width="250dp" 
 		        android:text="@string/choose_previous_opponents_add_button_text"
 		    />
     </LinearLayout>   

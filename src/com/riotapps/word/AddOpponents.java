@@ -163,7 +163,24 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     
     
     
-    public View getView(Player opponent ) {
+    @Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		Intent intent;
+		 if (this.player.getTotalNumLocalGames() == 0){
+    		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
+    	 }
+    	 else {
+    		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+    		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, false);
+    	 }
+ 	     context.startActivity(intent);
+	}
+
+
+
+	public View getView(Player opponent ) {
   		View view = LayoutInflater.from(this).inflate(R.layout.playerlistitem, null);
   
   		Logger.d(TAG, "getView opponent.name=" + opponent.getName() + " opponent.getNameWithMaxLength(28)=" + opponent.getNameWithMaxLength(28) );

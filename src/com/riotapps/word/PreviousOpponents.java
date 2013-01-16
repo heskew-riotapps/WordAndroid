@@ -1,6 +1,8 @@
 package com.riotapps.word;
 
 import java.util.ArrayList;
+
+import com.riotapps.word.hooks.FBFriend;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Opponent;
@@ -39,7 +41,7 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
 	int maxAvailable;
 	ImageFetcher imageLoader;
 	ArrayList<Integer> selectedIds = new ArrayList<Integer>();
-
+	Button bAdd;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,9 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
       //  Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 	  //  t.show();
     	  
-    	Button bAdd = (Button)findViewById(R.id.bAdd); 
+    	bAdd = (Button)findViewById(R.id.bAdd); 
     	bAdd.setOnClickListener(this);
+    	this.setButton();
      
     	TextView tvSubtitle =(TextView)findViewById(R.id.tvSubtitle);
     	 
@@ -136,7 +139,29 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
 		}
 	}
     
-      
+    private void setButton(){
+    	if (this.selectedIds.size() == 0){
+    		this.bAdd.setVisibility(View.GONE);
+    	}
+    	else {
+    		if (this.selectedIds.size() == 1){
+    			Player opponent = player.getOpponents().get(selectedIds.get(0)).getPlayer();
+    			this.bAdd.setText(String.format(this.getString(R.string.choose_1_previous_opponent_add_button_text), opponent.getAbbreviatedName()));
+    		}
+    		else if (this.selectedIds.size() == 2){
+    			Player opponent1 = player.getOpponents().get(selectedIds.get(0)).getPlayer();
+    			Player opponent2 = player.getOpponents().get(selectedIds.get(1)).getPlayer();
+    			this.bAdd.setText(String.format(this.getString(R.string.choose_2_previous_opponents_add_button_text), opponent1.getAbbreviatedName(), opponent2.getAbbreviatedName()));
+    		}
+    		else {
+       			Player opponent1 = player.getOpponents().get(selectedIds.get(0)).getPlayer();
+    			Player opponent2 = player.getOpponents().get(selectedIds.get(1)).getPlayer();
+    			Player opponent3 = player.getOpponents().get(selectedIds.get(2)).getPlayer();
+    			this.bAdd.setText(String.format(this.getString(R.string.choose_3_previous_opponents_add_button_text), opponent1.getAbbreviatedName(), opponent2.getAbbreviatedName(), opponent3.getAbbreviatedName()));
+			}
+	    	this.bAdd.setVisibility(View.VISIBLE);
+    	}
+    }
     private void loadList(Opponent[] opponents){
     	OpponentArrayAdapter adapter = new OpponentArrayAdapter(context, opponents);
     
@@ -197,6 +222,7 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
       		    		 //  rlItem.setBackgroundResource(itemBGSelectedColor);
       		    	   }
       		       }
+      		      setButton();
             }
         });
 

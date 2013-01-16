@@ -48,9 +48,10 @@ public class Splash  extends FragmentActivity {
 	        GCMRegistrar.checkManifest(this);
 	        final String regId = GCMRegistrar.getRegistrationId(this);
 	        if (regId.equals("")) {
-	          GCMRegistrar.register(this, this.getString(R.string.gcm_sender_id));
+	        	GCMRegistrar.register(this, this.getString(R.string.gcm_sender_id));
 	        } else {
-	          Logger.w(TAG, "onCreated Already registered");
+	        	Logger.w(TAG, "onCreated gcm already registered regId=" + regId);
+	  			PlayerService.updateRegistrationId(context, regId);
 	        }
         } catch(Exception e){
         	 Logger.w(TAG, "onCreated GCMRegistrar error=" + e.toString());
@@ -249,7 +250,7 @@ public class Splash  extends FragmentActivity {
 		            	 DialogManager.SetupAlert(context, context.getString(R.string.sorry), context.getString(R.string.server_404_error), true, 0);
 		            	 break;
 		             case 422: 
-		             case 500:
+		             default:
 
 		            	 DialogManager.SetupAlert(context, context.getString(R.string.oops), result.getStatusCode() + " " + result.getStatusReason(), true, 0);  
 		            	 break;

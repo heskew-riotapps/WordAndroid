@@ -66,6 +66,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 //	int itemBGColor;
 //	int itemBGSelectedColor;
 	FBFriends friends;
+	Button bAddFBFriends;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,9 +92,11 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
       //  Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 	  //  t.show();
     	  
-    	Button bAddFBFriends = (Button)findViewById(R.id.bAddFBFriends); 
-    	bAddFBFriends.setOnClickListener(this);
-     
+    	
+    	this.bAddFBFriends = (Button)findViewById(R.id.bAddFBFriends); 
+    	this.bAddFBFriends.setOnClickListener(this);
+    	this.setButton();
+    	
     	TextView tvSubtitle =(TextView)findViewById(R.id.tvSubtitle);
     	 
     	if (this.game.getNumPlayers() == 1 ){
@@ -107,7 +110,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	else {
     		tvSubtitle.setText(this.getString(R.string.choose_opponents_one_more_subtitle));
     		this.maxAvailable = 1;
-    		bAddFBFriends.setText(this.getString(R.string.choose_previous_opponent_add_button_text));
+    		//bAddFBFriends.setText(this.getString(R.string.choose_previous_opponent_add_button_text));
     	}
      
   
@@ -154,7 +157,32 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	}
     	
     }  
-    
+    private void setButton(){
+    	if (this.selectedIds.size() == 0){
+    		this.bAddFBFriends.setVisibility(View.GONE);
+    	}
+    	else {
+    		if (this.selectedIds.size() == 1){
+    			FBFriend friend = friends.getFriends().get(selectedIds.get(0));
+    			this.bAddFBFriends.setText(String.format(this.getString(R.string.choose_1_fb_friend_add_button_text), friend.getFirstName()));
+    		}
+    		else if (this.selectedIds.size() == 2){
+    			FBFriend friend1 = friends.getFriends().get(selectedIds.get(0));
+    			FBFriend friend2 = friends.getFriends().get(selectedIds.get(1));
+    			this.bAddFBFriends.setText(String.format(this.getString(R.string.choose_2_fb_friends_add_button_text), friend1.getFirstName(), friend2.getFirstName()));
+    		}
+    		else {
+    			FBFriend friend1 = friends.getFriends().get(selectedIds.get(0));
+    			FBFriend friend2 = friends.getFriends().get(selectedIds.get(1));
+    			FBFriend friend3 = friends.getFriends().get(selectedIds.get(2));
+
+    			this.bAddFBFriends.setText(String.format(this.getString(R.string.choose_3_fb_friends_add_button_text), friend1.getFirstName(), friend2.getFirstName(), friend3.getFirstName()));
+			}
+	    	this.bAddFBFriends.setVisibility(View.VISIBLE);
+    	}
+    }
+	
+	
     private void addPlayers(){
 		
 		try 
@@ -279,7 +307,9 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
       		    		   rlItem.setBackgroundColor(Color.parseColor(context.getString(R.color.content_area_background_selected_color)));
       		    		 //  rlItem.setBackgroundResource(itemBGSelectedColor);
       		    	   }
+      		    	
       		       }
+      		    setButton();
             }
         });
 

@@ -231,9 +231,12 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	else {
     		if (this.player.getActiveGamesOpponentTurn().size() > 0){
     			llYourTurn.setVisibility(View.GONE);
+        		tvWaiting.setVisibility(View.VISIBLE);
+
     		}
     		else{
         		llYourTurnWrapper.setVisibility(View.GONE);
+        		tvWaiting.setVisibility(View.GONE);
     		}
     	}
 

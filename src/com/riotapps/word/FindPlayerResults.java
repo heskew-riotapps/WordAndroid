@@ -67,6 +67,7 @@ public class FindPlayerResults extends FragmentActivity  implements View.OnClick
 			
 			Button bAddToGame = (Button)findViewById(R.id.bAddToGame);
 			bAddToGame.setOnClickListener(this);
+			bAddToGame.setText(String.format(this.getString(R.string.add_player_to_game_button_text), opponent.getNickname()));
 			
 		}
 

@@ -428,6 +428,13 @@
 	   <string name="choose_previous_opponent_add_button_text">add chosen friend to this game</string>
 	     <string name="choose_previous_opponents_title">your previous opponents</string> 
 	   
+	      <string name="add_player_to_game_button_text">add %s to this game</string>
+	      <string name="choose_1_previous_opponent_add_button_text">add %s to this game</string>
+	     <string name="choose_2_previous_opponents_add_button_text">add %1$s and %2$s to this game</string>
+	     <string name="choose_3_previous_opponents_add_button_text">add %1$s, %2$s and %3$s to this game</string>
+	     <string name="choose_1_fb_friend_add_button_text">add %s to this game</string>
+	     <string name="choose_2_fb_friends_add_button_text">add %1$s and %2$s to this game</string>
+	     <string name="choose_3_fb_friends_add_button_text">add %1$s, %2$s and %3$s to this game</string>
 	   <string name="choose_fb_friends_add_button_text">add chosen friends to this game</string>
 	   <string name="choose_fb_friend_add_button_text">add chosen friend to this game</string>
 	     <string name="choose_fb_friends_title">your facebook friends</string> 

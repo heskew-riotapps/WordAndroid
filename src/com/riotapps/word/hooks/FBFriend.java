@@ -88,8 +88,16 @@ public class FBFriend{
 		}
 	}
  
-
-
-	
+	public String getFirstName(){
+			String[] parts = this.name.split(" ");
+			
+			if (parts.length > 2){
+				return parts[0] + " " + parts[1].substring(0,1);
+			}
+			else{
+				return parts[0];
+			}
+			
+	}
 }
  
