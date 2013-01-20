@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -30,7 +31,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 	//If the message has a payload, its contents are available as extras in the intent.
 	@Override
 	protected void onMessage(Context context, Intent intent) {
-		Logger.d(TAG, "onMessage called");		
+		Logger.d(TAG, "onMessage called. data=" + intent.getStringExtra("data")  + "gameId=" + intent.getStringExtra(Constants.EXTRA_GCM_GAME_ID) + " msg=" + intent.getStringExtra(Constants.EXTRA_GCM_MESSAGE));		
+		
+	  
 		this.sendMessage(context, intent.getStringExtra(Constants.EXTRA_GCM_GAME_ID), intent.getStringExtra(Constants.EXTRA_GCM_MESSAGE));
 	}
 
@@ -65,11 +68,17 @@ public class GCMIntentService extends GCMBaseIntentService {
 	
 	private void sendMessage(Context context, String gameId, String message){
 		//"message_text"
+		if (message == null){
+			message = "message is null again";
+			gameId = "123";
+		}
+		
 		if (message != null){
 			NotificationCompat.Builder mBuilder =
 			        new NotificationCompat.Builder(this)
 			        .setSmallIcon(R.drawable.status_icon)
 			        .setContentTitle(context.getString(R.string.app_name))
+			        .setLargeIcon( BitmapFactory.decodeResource(getResources(), R.drawable.icon_launcher))
 			        .setContentText(message);
 			// Creates an explicit intent for an Activity in your app
 			Intent resultIntent = new Intent(this, Splash.class);

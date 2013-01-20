@@ -133,6 +133,29 @@ public class PlayerService {
 		
 		return gson.toJson(player);
 	}
+	
+
+	public static String setupAuthTokenCheckWithGame(Context ctx, String authToken, String gameId) throws DesignByContractException{
+		Gson gson = new Gson();
+	
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 
+		Check.Require(authToken.length() > 0, ctx.getString(R.string.validation_auth_token_required));
+		 
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+	    TransportAuthTokenWithGame player = new TransportAuthTokenWithGame();
+		player.setToken(authToken);
+		player.setGameId(gameId);
+		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
+		player.setCompletedGameDate(new Date(completedDate));
+
+		
+		return gson.toJson(player);
+	}
+	
 	public static String setupGameListCheck(Context ctx, String authToken, Date lastRefreshDate) throws DesignByContractException{
 		Gson gson = new Gson();
 	
@@ -363,7 +386,8 @@ public class PlayerService {
 	
 	public static void loadPlayerInHeader(final FragmentActivity context, Boolean activateGravatarOnClick){
 		 Player player = PlayerService.getPlayerFromLocal();
-		ImageFetcher imageLoader = new ImageFetcher(context, 34, 34, 0);
+		 int playerImage = context.getResources().getInteger(com.riotapps.word.R.integer.player_image_width);
+		ImageFetcher imageLoader = new ImageFetcher(context, playerImage, playerImage, 0);
 		imageLoader.setImageCache(ImageCache.findOrCreateCache(context, Constants.IMAGE_CACHE_DIR));
 		ImageView ivContextPlayer = (ImageView) context.findViewById(R.id.ivHeaderContextPlayer);
 		//android.util.Logger.i(TAG, "FindPlayerResults: playerImage=" + player.getImageUrl());
@@ -394,7 +418,7 @@ public class PlayerService {
 			tvHeaderContextPlayerWins.setText(context.getString(R.string.header_1_win));
 		}
 		else { 			
-			tvHeaderContextPlayerWins.setText(String.format(context.getString(R.string.header_num_wins), player.getNumWins()));
+			tvHeaderContextPlayerWins.setText(String.format(context.getString(R.string.header_num_wins), player.getNumWins())); 
 		}
 	}
 	
@@ -668,8 +692,8 @@ public class PlayerService {
 		if (numWins >= 450 && numWins <= 499) {
 			return Constants.BADGE_450_499;
 		}
-		if (numWins >= 1000) { // stop here for now
-			return Constants.BADGE_1000_1249;
+		if (numWins >= 500) { // stop here for now
+			return Constants.BADGE_500_599;
 		}
 
 		if (numWins >= 500 && numWins <= 599) {

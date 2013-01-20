@@ -36,19 +36,21 @@
         android:text="@string/gravatar_text" 
         />
    
-	 <LinearLayout
+	 <RelativeLayout
         style="@style/FormButtonAreaStyle"
-        android:layout_below="@+id/inner_form" >
+        android:layout_below="@+id/inner_form"
+		android:paddingBottom="0dp"
+		android:paddingTop="0dp"
+		android:layout_height="45dp"
+         >
 	 
 	<com.riotapps.word.utils.TypefaceButton 
   	    style="@style/ButtonStyle"
   	    android:id="@+id/bGravatar"
-        android:layout_width="0dp" 
-        android:layout_weight="1.0"
         android:text="@string/gravatar_setup_button"
     />
     
-    </LinearLayout>
+    </RelativeLayout>
   
    </LinearLayout>
    </LinearLayout>
@@ -67,19 +69,21 @@
         android:text="@string/gravatar_refresh_text" 
         />
    
-	 <LinearLayout
+	<RelativeLayout
         style="@style/FormButtonAreaStyle"
-          >
+     
+		android:paddingBottom="0dp"
+		android:paddingTop="0dp"
+		android:layout_height="45dp"
+         >
 	 
 	<com.riotapps.word.utils.TypefaceButton 
   	    style="@style/ButtonStyle"
   	    android:id="@+id/bGravatarRefresh"
-        android:layout_width="0dp" 
-        android:layout_weight="1.0"
         android:text="@string/gravatar_refresh_button"
     />
     
-    </LinearLayout>
+    </RelativeLayout>
     </LinearLayout>
  
    </LinearLayout>

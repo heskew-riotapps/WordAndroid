@@ -130,6 +130,17 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//}
     }
     
+    @Override
+	protected void onRestart() {
+		//Log.w(TAG, "onRestart called");
+		super.onRestart();
+		 
+		//if (!this.getIntent().getBooleanExtra(name, false)){
+		//	//((Activity) context).runOnUiThread(new handleGameListCheck());
+			this.loadLists();
+		//}
+	}
+    
     private void setupTimer(){
     	timer = new Timer();
     	updateListTask updateList = new updateListTask();
@@ -155,8 +166,6 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     }
     
     private class handleGameListCheck implements Runnable {
-	
-		 
 		    public void run() {
 		    	 try { 
 	   				String json = PlayerService.setupGameListCheck(context, player.getAuthToken(), player.getLastRefreshDate());
@@ -227,6 +236,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	        	 i += 1;
 			}
 	        llYourTurnWrapper.setVisibility(View.VISIBLE);
+	        llYourTurn.setVisibility(View.VISIBLE);
     	}
     	else {
     		if (this.player.getActiveGamesOpponentTurn().size() > 0){
@@ -497,6 +507,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		super.onPause();
 	}
 
+   
 private void handleGameClick(String gameId){	   
 	   try { 
 		   //this logic needs to be refactored more than likely

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style
+    name="ButtonStyle" >
+   	<item name="android:layout_width">340dp</item>
+   	<item name="android:layout_height">wrap_content</item>
+   	<item name="android:paddingLeft">10dp</item>
+   	<item name="android:paddingTop">3dp</item>
+   	<item name="android:paddingBottom">3dp</item>
+   	<item name="android:textColor">@color/button_text_color</item>
+	<item name="android:paddingRight">10dp</item>
+	
+	<item name="android:background">@drawable/button_main</item>  
+	 	<item name="android:textSize">18dp</item>
+	<item name="android:layout_centerInParent">true</item>
+</style>
+</resources>

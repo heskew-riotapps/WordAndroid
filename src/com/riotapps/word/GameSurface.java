@@ -210,6 +210,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
          
  //        return iv;
 		//this._surfaceView = new GameSurfaceView(this); 
+		Logger.d(TAG, "onCreate bRecall visible=" + bRecall.getVisibility() + " bShuffle=" + bShuffle.getVisibility());
 	}
 	
 	private void setupGame(){
@@ -358,6 +359,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 
 	 private void setupButtons(){
 		  buttonsLoaded = true;
+		  Logger.d(TAG,  "setupButtons called");
 		Button bRematch = (Button) findViewById(R.id.bRematch);
 		this.bRecall = (Button) findViewById(R.id.bRecall);
 		this.bPlay = (Button) findViewById(R.id.bPlay);
@@ -386,7 +388,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	bResign.setTextColor(Color.parseColor(btnTextColor));
 	 	bSwap.setTextColor(Color.parseColor(btnTextColor));
 	 	
-	 	bRecall.setVisibility(View.GONE);
+	 	//bRecall.setVisibility(View.GONE);
 	 	bShuffle.setVisibility(View.VISIBLE);
 	 	
 	 	bPlay.setVisibility(View.GONE);
@@ -409,10 +411,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	this.bRecall.setVisibility(View.GONE); 
 	 	
 	 	
-	 	Logger.d(TAG, "setupButtons this.game.getNumActiveOpponents()=" + this.game.getNumActiveOpponents());
-	 	Logger.d(TAG, "setupButtons this.game.getTurn()=" + this.game.getTurn());
-	 	Logger.d(TAG, "setupButtons this.game.isContextPlayerStarter()=" + this.game.isContextPlayerStarter(this.player));
-	 	Logger.d(TAG, "setupButtons this.game.getStatus()=" + this.game.getStatus());
+	 //	Logger.d(TAG, "setupButtons this.game.getNumActiveOpponents()=" + this.game.getNumActiveOpponents());
+	 //	Logger.d(TAG, "setupButtons this.game.getTurn()=" + this.game.getTurn());
+	 //	Logger.d(TAG, "setupButtons this.game.isContextPlayerStarter()=" + this.game.isContextPlayerStarter(this.player));
+	 //	Logger.d(TAG, "setupButtons this.game.getStatus()=" + this.game.getStatus());
 	 	
 	 	
 	 	bChat.setCompoundDrawables(null, null, null, null);
@@ -532,7 +534,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 		bDecline.setVisibility(View.GONE);
 	 		bCancel.setVisibility(View.GONE);
 	 		bShuffle.setVisibility(View.GONE);
-	 		if (this.game.getPlayedWords().size() == 0){
+	 		if (this.game.getPlayedWords().size() == 0){ 
 	 			bPlayedWords.setVisibility(View.GONE);
 	 		}
 	 		bRematch.setVisibility(View.VISIBLE);
@@ -540,6 +542,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 		bRematch.setOnClickListener(this);
 	 	}
 	 
+	 	
+	 	Logger.d(TAG, "setupButtons bRecall visible=" + bRecall.getVisibility() + " bShuffle=" + bShuffle.getVisibility());
 	}
 	    
 	    
@@ -654,6 +658,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		Log.d(TAG, "onResume called");
 		super.onResume();
 		this.gameSurfaceView.onResume();
+		
 	}
 
 	
@@ -697,14 +702,17 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	protected void onRestart() {
 		//Log.w(TAG, "onRestart called");
 		super.onRestart();
-		this.gameSurfaceView.onRestart();
-		if (buttonsLoaded){
+		this.gameSurfaceView.onRestart(); 
+		
+		Logger.d(TAG, "onRestart buttonsLoaded=" + buttonsLoaded);  
+		
+		if (buttonsLoaded){ 
 			//reset buttons
 			this.game = GameService.getGameFromLocal(game.getId());
+			this.fillGameState();
 			this.setupButtons();
+			this.gameSurfaceView.setInitialButtonStates();
 		}
-		
-
 	}
 
 	 @Override 

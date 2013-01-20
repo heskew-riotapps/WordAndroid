@@ -125,7 +125,7 @@
  	<string name="full_rules_option">full game rules</string>
  	<string name="full_rules_title">full set of rules</string>
  	<string name="full_rules_subtitle">all the details</string>
- 	<string name="full_rules_1">The idea is to score more points than your opponent by forming valid words out of the letters in your tray. 
+ 	<string name="full_rules_1">The idea is to score more points than your opponent (or opponents) by forming valid words out of the letters in your tray. 
                    Letters must be placed on the board in a single axis, either horizontally or vertically.  As you win more games, 
                    you\'ll earn new badges.</string>
    	<string name="full_rules_2">To start the game, the letters of the first word must placed on at least one of the smiley faces.  All words must contain 2 or more letters. 
@@ -164,22 +164,22 @@
     <string name="full_rules_finish_1">Win, Lose, or Draw</string>                        
     <string name="full_rules_finish_2">Normally, the game ends when a player uses all of the letters in his or her tray after the hopper has been emptied. 
                             The first person to finish the letters gets a bonus value added to his or her score.
-                            The bonus is equal to the accumulated value of all of the letters left in the opponent\'s tray.  For instance, if a player finished out the 
+                            The bonus is equal to the accumulated value of all of the letters left in all of the opponents\' trays.  For instance, in a two-player game, if a player finished out the 
                             letters (and the hopper was empty) and the opponent still had a "K", a "U", and a "B" left in the tray, a bonus of 15 points would be awarded
                             to the player in addition to the points that the turn earned.  The player with the most points after the bonus is awarded is declared the 
-                            winner.  If both players have the same score, a draw is declared.</string>
-    <string name="full_rules_finish_3">If 4 skips in a row happen (2 by one player and 2 by the opponent), the game is automatically stopped and a winner is determined based on the 
-                                points already earned by the 2 players.  No bonus points are awarded in this situation.  If both players have the same score, a draw is declared.</string>
-    <string name="full_rules_finish_4">If a player concedes the game, the opponent automatically wins, even if the player was leading at the time or the score was tied.  
+                            winner.  If any players have the same high score, a draw is declared.</string>
+    <string name="full_rules_finish_3">If 2 skips in a row happen by each player, the game is automatically stopped and a winner is determined based on the 
+                                points already earned by the players.  No bonus points are awarded in this situation.  If any players have the same high score, a draw is declared.</string>
+    <string name="full_rules_finish_4">In a two-player game, if a player concedes, the opponent automatically wins, even if the player was leading at the time or the score was tied.  
                                If the player was leading (or the score was tied) when the concede button was clicked, the opponent\'s score is adjusted to be 1 point higher
-                               than the player\'s score, making the opponent the winner.</string>
+                               than the player\'s score, making the opponent the winner.  In a three-player or four-player game, the game continues even after a player concedes as long as 
+                               there are at least two active players in the game.  When there are only two players left in the game and one of the players concedes,
+                               the rules for a two-player game applies in terms of conceding.</string>
     <string name="full_rules_finish_5">If a turn has not been taken for 2 weeks (or so), the player whose turn is pending will automatically "concede".</string>                            
     <string name="full_rules_dictionary_1">The Dictionary</string>                                                                 		
     <string name="full_rules_dictionary_2">The original source for the dictionary is 
                         <a href="http://code.google.com/p/dotnetperls-controls/downloads/detail?name=enable1.txt">Enhanced North American Benchmark Lexicon (ENABLE)</a>. 
-                         We are continually expanding our dictionary. If you determine that we are missing a word, please leave us a 
-                        <a href="com.riotapps.word://suggestions">word suggestion</a> and we will verify the word and add it to the dictionary as quickly as we can.
-                        The definitions lookups are from <a href="http://www.wordnik.com">wordnik image here</a>.  Thanks to the wordnik folks for providing such a great service!
+                         We have added many words to the dictionary and are continually expanding it. 
 	</string>
 	<string name="full_rules_letter1_value">A - 1</string>
 	<string name="full_rules_letter2_value">B - 6</string>
@@ -310,7 +310,7 @@
  	<string name="gameboard_chat_button_text">chat</string>
  	<string name="gameboard_play_button_text">play</string>
  	<string name="gameboard_rematch_button_text">rematch</string>
- 	<string name="gameboard_resign_button_text">resign</string>
+ 	<string name="gameboard_resign_button_text">concede</string>
  	<string name="gameboard_decline_button_text">decline</string>
  	<string name="gameboard_skip_button_text">skip</string>
  	<string name="gameboard_cancel_button_text">cancel</string>
@@ -359,7 +359,7 @@
 	   <string name="game_surface_cancel_game_confirmation_text">are you sure?</string>
 	    <string name="game_surface_decline_game_confirmation_title">decline this game</string>
 	   <string name="game_surface_decline_game_confirmation_text">are you sure?</string>
-	   <string name="game_surface_resign_game_confirmation_title">resign this game</string>
+	   <string name="game_surface_resign_game_confirmation_title">concede this game</string>
 	   <string name="game_surface_resign_game_confirmation_text">are you sure?</string>
 	   <string name="game_last_action_started_context">You started the game.  Have fun and thanks for playing!</string>
 	   <string name="game_last_action_started">%s started the game</string>
@@ -370,8 +370,8 @@
 	   <string name="game_last_action_swapped">%1$s swapped %2$s letters</string>
 	   <string name="game_last_action_skipped_context">You skipped your turn</string>
 	   <string name="game_last_action_skipped">%s skipped a turn</string>
-	   <string name="game_last_action_resigned_context">You resigned</string>
-	   <string name="game_last_action_resigned">%s resigned</string>
+	   <string name="game_last_action_resigned_context">You conceded</string>
+	   <string name="game_last_action_resigned">%s conceded</string>
 	   <string name="few_seconds_ago">a few seconds ago</string>
 	   <string name="seconds_ago">%s seconds ago</string>
 	   <string name="about_a_minute_ago">about a minute ago</string>
@@ -381,8 +381,8 @@
 	   <string name="a_day_ago">a day ago</string>
 	   <string name="days_ago">%s days ago</string>
 	   <string name="game_last_action_list_declined">%2$s declined %1$s</string>
-	   <string name="game_last_action_list_resigned_context">You resigned %s</string>
-	   <string name="game_last_action_list_resigned">%2$s resigned %1$s</string>
+	   <string name="game_last_action_list_resigned_context">You conceded %s</string>
+	   <string name="game_last_action_list_resigned">%2$s conceded %1$s</string>
 	   <string name="game_last_action_list_started_context">You started this game %s</string>
 	   <string name="game_last_action_list_started">%2$s started this game %1$s</string>
 	   <string name="game_last_action_list_undetermined">The last action is undetermined.</string>

@@ -5,15 +5,21 @@ import java.io.InputStream;
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 import com.google.android.gcm.GCMRegistrar;
+import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.ui.DialogManager;
@@ -29,6 +35,7 @@ public class Splash  extends FragmentActivity {
     Handler handler;
     public long startTime = System.nanoTime();
     NetworkTask runningTask = null;
+    String gameId = null; 
     
     public void test(){}
     
@@ -39,9 +46,11 @@ public class Splash  extends FragmentActivity {
       
         Logger.w(TAG, "onCreate started");
         
+        this.gameId = this.getIntent().getStringExtra(Constants.EXTRA_GAME_ID);
+        
        // Intent i = new Intent(this, WordLoaderService.class);
        // this.startService(new Intent(this, WordLoaderService.class));
-     
+        //sendMessage(this, "123", "message from Wordsmash");
         try{
         	Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
 	        GCMRegistrar.checkDevice(this);
@@ -56,6 +65,19 @@ public class Splash  extends FragmentActivity {
         } catch(Exception e){
         	 Logger.w(TAG, "onCreated GCMRegistrar error=" + e.toString());
         }
+        
+        if (this.gameId != null){
+        	try{
+        	//cancel notification
+        	NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        	notificationManager.cancel(1);
+        	}
+        	catch (Exception e){
+           	 Logger.w(TAG, "onCreated NotificationManager error=" + e.toString());
+
+        	}
+        }
+	 	
         this.handlePreProcessing();
      }
     
@@ -68,14 +90,24 @@ public class Splash  extends FragmentActivity {
 	    if (storedToken.length() > 0){
 	    	String json = "";
 			try {
-				json = PlayerService.setupAuthTokenCheck(this, storedToken);
+				if (this.gameId == null){
+					json = PlayerService.setupAuthTokenCheck(this, storedToken);
+				}
+				else{
+					json = PlayerService.setupAuthTokenCheckWithGame(this, storedToken, this.gameId);
+				}
 			} catch (DesignByContractException e) {
 				//this should never happen unless there is some tampering
 				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
 			}
  
 			this.runningTask = new NetworkTask(this, RequestType.POST, json);
-			this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
+			if (this.gameId == null){
+				this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
+			}
+			else{
+				this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN_WITH_GAME);
+			}
 	    }
 	    else{
 	    	 Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token_1");
@@ -93,8 +125,7 @@ public class Splash  extends FragmentActivity {
 	  	}
 		finish();
 	}
-	
-	  
+
 	private class CheckConnectivityTask extends AsyncTask<String, Void, Boolean> {
 
 		 @Override
@@ -191,7 +222,7 @@ public class Splash  extends FragmentActivity {
 		    	 long currentTime = System.nanoTime();
 		    	 long timeDiff = 0;
 		    	 Intent intent;
-		    	 
+		    	  
 		         switch(result.getStatusCode()){  
 		             case 200:  
 		            	// try{
@@ -208,8 +239,13 @@ public class Splash  extends FragmentActivity {
 								}
 			            	 }
 		            		 */
-			     
-			            	 if (player.getTotalNumLocalGames() == 0){
+		            		 if (gameId != null){
+		            			 GameService.putGameToLocal(context, player.getNotificationGame());
+		            			 
+		            			 intent = new Intent(context, com.riotapps.word.GameSurface.class);
+		 			             intent.putExtra(Constants.EXTRA_GAME_ID, gameId);
+		            		 }
+		            		 else if (player.getTotalNumLocalGames() == 0){
 			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
 			            	 }
 			            	 else {

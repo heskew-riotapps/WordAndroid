@@ -97,8 +97,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private static final int TRAY_TOP_BORDER_HEIGHT = 4;
     private static final int UPPER_GAP_BOTTOM_BORDER_HEIGHT = 4;
     private static final int LOWER_GAP_TOP_BORDER_HEIGHT = 4;
-    private static final long SINGLE_TAP_DURATION_IN_NANOSECONDS = 350000000;
-    private static final long DOUBLE_TAP_DURATION_IN_NANOSECONDS = 500000000;
+    private static final long SINGLE_TAP_DURATION_IN_NANOSECONDS = 550000000;
+    private static final long DOUBLE_TAP_DURATION_IN_NANOSECONDS = 800000000;
     private static final long MOVE_STOPPED_DURATION_IN_MILLISECONDS = 200;
     private static final float MOVEMENT_TRIGGER_THRESHOLD = .05f;
     private static final int DECELERATION = 100;
@@ -422,8 +422,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.zoomedTileWidth = Math.round(this.fullViewTileWidth * this.zoomMultiplier);
 		this.midpoint = Math.round(this.fullWidth / 2);
 		this.outerZoomLeft = this.fullWidth - Math.round((this.zoomedTileWidth + 1) * 15); 
-//		this.outerZoomTop = this.trayTop - TRAY_TOP_BORDER_HEIGHT - 1 - Math.round((this.zoomedTileWidth + 1) * 15); ///((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15);  
-		this.outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15) + this.topGapHeight + this.bottomGapHeight + 1;  
+	//	this.outerZoomTop = this.trayTop - TRAY_TOP_BORDER_HEIGHT - 1 - Math.round((this.zoomedTileWidth + 1) * 15); ///((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15);  
+//		this.outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15) + this.topGapHeight + this.bottomGapHeight + 1;  
 
 		this.fullViewTileMidpoint = Math.round(this.fullViewTileWidth / 2);
 		this.zoomedTileMidpoint = Math.round(this.zoomedTileWidth / 2);	
@@ -459,9 +459,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     this.visibleAreaRect.setRight(this.fullWidth);
 	     
 		 this.boardAreaRect.setTop(0);
-	     this.boardAreaRect.setBottom(this.topGapHeight + this.fullWidth); //this.trayAreaRect.getTop() - 1);
+	     this.boardAreaRect.setBottom(this.trayTop - 1); //setBottom(this.topGapHeight + this.fullWidth); //this.trayAreaRect.getTop() - 1);
 	     this.boardAreaRect.setLeft(0);
 	     this.boardAreaRect.setRight(this.fullWidth);
+	     
+			this.outerZoomTop =this.trayAreaRect.getTop() - Math.round((this.zoomedTileWidth + 1) * 15); ///((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15);  
+//			this.outerZoomTop = ((this.fullViewTileWidth + 1) * 15) - Math.round((this.zoomedTileWidth + 1) * 15) + this.topGapHeight + this.bottomGapHeight + 1;  
+
+	     
 	     
 		 Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
 		 this.bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
@@ -1228,6 +1233,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 if (yPosition < this.trayAreaRect.getTop()){ //this.trayAreaTop){
 				 tileId = this.FindTileFromPositionInZoomedMode(xPosition, yPosition);
 			 }
+			 else{
+				 Logger.d(TAG, "findTapTargetTile yPosition is below this.trayAreaRect.getTop()");
+				 
+				 
+			 }
+			 
 		 }
 		 else{
 			 tileId = this.FindTileFromPositionInFullViewMode(xPosition, yPosition);
@@ -2111,7 +2122,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		}
 	}
 	
-	private void setInitialButtonStates(){
+	public void setInitialButtonStates(){
 		//gameSurface class will default the button to shuffle.
 		//we just need to change it here if the tray is not full
 		if (!this.isTrayFull()){
@@ -2413,9 +2424,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     				 return tile.getId();	 
     			 }
 	    	 }
-//			 else{
-//				 Logger.d(TAG, "FindTileFromPositionInZoomedMode " + tile.getId() + " is fully outside of the given boundary");
-//			 }
+			 else{
+				 Logger.d(TAG, "FindTileFromPositionInZoomedMode " + tile.getId() + " is fully outside of the given boundary");
+			 }
 
 	     }
 		// Logger.d(TAG, "FindTileFromPositionInZoomedMode tileId match=" + tileId);

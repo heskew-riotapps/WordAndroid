@@ -57,8 +57,8 @@
 	         >
         <ImageView  
 		    android:id="@+id/ivOpponentBadge_1"
-			android:layout_width="11dp"
-			android:layout_height="11dp"
+			android:layout_width="14dp"
+			android:layout_height="14dp"
 			android:layout_marginTop="2dp"
 			android:layout_marginRight="1dp"
 		 />
@@ -78,8 +78,8 @@
 	       
 	       <ImageView  
 			     android:id="@+id/ivOpponentBadge_2"
-			     android:layout_width="11dp"
-				android:layout_height="11dp"
+			     android:layout_width="14dp"
+				android:layout_height="14dp"
 				android:layout_marginTop="2dp"
 				android:layout_marginRight="1dp"
 				android:layout_below="@id/rlPlayer_1"
@@ -99,8 +99,8 @@
 	         >
 	        <ImageView  
 			    android:id="@+id/ivOpponentBadge_3"
-				android:layout_width="11dp"
-				android:layout_height="11dp"
+				android:layout_width="14dp"
+				android:layout_height="14dp"
 				android:layout_marginTop="2dp"
 				android:layout_marginRight="1dp"
 				android:layout_below="@id/rlPlayer_2"
@@ -130,7 +130,7 @@
 	 			 <com.riotapps.word.ui.MainFontTextView
 		            android:id="@+id/tvLastAction"
 		            style="@style/SubTextStyle"
-		            android:textSize="11dp"
+		            android:textSize="14dp"
 		            android:layout_marginTop="2dp"
 		           android:layout_toRightOf="@id/ivChatAlert"
 		            android:paddingTop="4dp"

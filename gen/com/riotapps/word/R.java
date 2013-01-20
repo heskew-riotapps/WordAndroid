@@ -635,6 +635,7 @@ containing a value of this type.
     }
     public static final class integer {
         public static final int gameboard_button_area_height=0x7f0b0001;
+        public static final int player_image_width=0x7f0b0002;
         public static final int scoreboard_height=0x7f0b0000;
     }
     public static final class layout {

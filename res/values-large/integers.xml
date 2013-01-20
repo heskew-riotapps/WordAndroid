@@ -2,4 +2,5 @@
 <resources>
     <integer name="scoreboard_height">44</integer>
      <integer name="gameboard_button_area_height">56</integer>
+     <integer name="player_image_width">44</integer>
 </resources>
