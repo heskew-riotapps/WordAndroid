@@ -274,6 +274,31 @@ public class Player implements Parcelable{
 		return activeGamesOpponentTurn;
 	}
 	
+	public Game getGameFromLists(String gameId){
+		if (this.getActiveGamesYourTurn().size() > 0){
+			for(Game game : this.getActiveGamesYourTurn()){
+				if (game.getId().equals(gameId)){
+					return game;
+				}
+			}
+		}
+		if (this.getActiveGamesOpponentTurn().size() > 0){
+			for(Game game : this.getActiveGamesOpponentTurn()){
+				if (game.getId().equals(gameId)){
+					return game;
+				}
+			}
+		}
+		if (this.getCompletedGames().size() > 0){
+			for(Game game : this.getCompletedGames()){
+				if (game.getId().equals(gameId)){
+					return game;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public long getLastPlayedDateFromGameList(String gameId){
 		if (this.getActiveGamesYourTurn().size() > 0){
 			for(Game game : this.getActiveGamesYourTurn()){

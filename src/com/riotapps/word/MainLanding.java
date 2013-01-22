@@ -202,6 +202,10 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	public void onBackPressed() {
 		// do nothing if back is pressed
 		//super.onBackPressed();
+		Intent startMain = new Intent(Intent.ACTION_MAIN);
+		startMain.addCategory(Intent.CATEGORY_HOME);
+		startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(startMain);
 	}
 
 	private void loadLists(){
@@ -528,7 +532,11 @@ private void handleGameClick(String gameId){
 			   Logger.d(TAG, "handleGameClick called  System.nanoTime() / 1000000=" + (System.nanoTime() / 1000000));
 			   
 			   //also compare lastturndate from list and local storage..if list is later, refresh game from server 
-			   if (this.player.getLastPlayedDateFromGameList(gameId) > game.getLocalStorageLastTurnDate()){
+			   //if (this.player.getLastPlayedDateFromGameList(gameId) > game.getLocalStorageLastTurnDate()){
+			   
+			   //also compare turns from list and local storage..if list is different, refresh game from server 
+			   Game gameFromList = this.player.getGameFromLists(gameId);
+				if (gameFromList != null && gameFromList.getTurn() == game.getTurn()){
 				   Logger.d(TAG, "handleGameClick game Found localStorageDuration=" + localStorageDuration);
 				   if (localStorageDuration < Constants.LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS){
 				 	//game was found locally and was stored there less than 15 seconds ago, no need to hit the server

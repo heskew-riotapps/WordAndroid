@@ -485,7 +485,16 @@ public class PlayerService {
 	        		//more than x games are found in combined list. remove earliest to get the list down to x number
 	        		List<Game> combinedGames = storedPlayer.getCompletedGames();
 	        		for (Game game : player.getCompletedGames()) {
-	        			combinedGames.add(game);
+	        			//dont add game if it already happens to be here
+	        			boolean add = true;
+	        			for (Game innerGame : storedPlayer.getCompletedGames()) {
+	        				if (innerGame.getId() == game.getId()){
+	        					add = false;
+	        					//update stored game's last chat date, just in case its changed
+	        					innerGame.setLastChatDate(game.getLastChatDate());
+	        				}
+	        			}
+	        			if (add) {combinedGames.add(game);}
 		            }
 	        		
 	        		
@@ -562,6 +571,10 @@ public class PlayerService {
         
         Type type = new TypeToken<List<Player>>() {}.getType();
         List<Player> players = gson.fromJson(result, type);
+        
+      //  for (Player player : players){
+ 		//	Logger.d(TAG, "findRegisteredFBFriendsResponse name=" + player.getFirstName() + "fb=" + player.getFB());
+ 	//	}
 		
 		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();	
@@ -570,16 +583,18 @@ public class PlayerService {
  
         FBFriends friends = gson.fromJson(friendsLocal, FBFriends.class);
         
-        Logger.d(TAG, "findRegisteredFBFriendsResponse friends=" + friends.getFriends().size());
+     //   Logger.d(TAG, "findRegisteredFBFriendsResponse friends=" + friends.getFriends().size());
      
  //loop through friends with inner loop that tries to match friend with registered player coming back from server
      	for(FBFriend fb : friends.getFriends()){
      		
-     		Logger.d(TAG, "findRegisteredFBFriendsResponse fb=" + fb.getName() + " numWins=" + fb.getNumWins());
+     		
      		
      		for (Player player : players){
      			if (fb.getId().equals(player.getFB())){
      				fb.setPlayerId(player.getId());
+     				fb.setNumWins(player.getNumWins());
+     			//	Logger.d(TAG, "findRegisteredFBFriendsResponse fb=" + fb.getId() + " " + fb.getName() + " numWins=" + fb.getNumWins());
      			}
      		}
      	}

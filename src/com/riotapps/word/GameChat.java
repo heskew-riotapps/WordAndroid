@@ -30,6 +30,7 @@ import com.riotapps.word.utils.Enums.RequestType;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -63,7 +64,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	
 	//private ChatArrayAdapter adapter = null;
 	
-	ListView lvChat;
+//	ListView lvChat;
 	ScrollView scrChat;
 	
 	@Override
@@ -91,9 +92,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	 	this.loadLayout();
 	 	this.checkGameStatus();
 	}
-	
-	
-	
+
 	/*
 	@Override
 	public void onBackPressed() {
@@ -148,7 +147,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 			 }
 		 }
 	 }
-	
+	/*
 	private void loadList(){ 
 		
 		//Collections.reverse(this.game.getChats());
@@ -189,15 +188,15 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		//this.adapter.setList( this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
 		//this.adapter.reloadList( this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
 		//this.adapter.notifyDataSetChanged();
-		/*
-		lvChat.post(new Runnable(){
-			  public void run() {
-				  lvChat.setSelection(lvChat.getCount() - 1);
-			  }});
+		 
+		//lvChat.post(new Runnable(){
+		//	  public void run() {
+		//		  lvChat.setSelection(lvChat.getCount() - 1);
+		//	  }});
 			  
-			  */
+			   
 	}
-	
+*/
 	public View getChatView(Chat chat) {
 		View view = LayoutInflater.from(this).inflate(R.layout.gamechatitem, null);
 		  
@@ -220,10 +219,10 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	    	  }
 		  }
     	  
-		  Logger.d(TAG, "getChatView chatPlayer1Id=" + chatPlayer1Id);
-		  Logger.d(TAG, "getChatView chatPlayer2Id=" + chatPlayer2Id);
-		  Logger.d(TAG, "getChatView chatPlayer3Id=" + chatPlayer3Id);
-		  Logger.d(TAG, "getChatView chatPlayer4Id=" + chatPlayer4Id);
+		 // Logger.d(TAG, "getChatView chatPlayer1Id=" + chatPlayer1Id);
+		//  Logger.d(TAG, "getChatView chatPlayer2Id=" + chatPlayer2Id);
+		//  Logger.d(TAG, "getChatView chatPlayer3Id=" + chatPlayer3Id);
+		//  Logger.d(TAG, "getChatView chatPlayer4Id=" + chatPlayer4Id);
 		  
     	   TextView tvChat = (TextView) view.findViewById(R.id.tvChat);
     	   TextView tvPlayerName = (TextView) view.findViewById(R.id.tvPlayerName);

@@ -59,14 +59,14 @@ public class GameThread extends Thread {
 		    while (this.running) {
 		    	
 		    	//get game board drawn as quickly as possible, so don't thread sleep at first
-		    	if (this.tickCount > 1){
-			    	try {
-			    		Thread.sleep(3);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		    	}
+		    	//if (this.tickCount > 1){
+			    //	try {
+			    //		Thread.sleep(3);
+				//	} catch (InterruptedException e) {
+				//		// TODO Auto-generated catch block
+				//		e.printStackTrace();
+				//	}
+		    	//}
 		    	if (parent.isReadyToDraw()) {
 			        c = null;
 			        try {

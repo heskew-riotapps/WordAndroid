@@ -765,13 +765,13 @@ public class GameService {
 			 ivPlayerTurn3.setVisibility(View.GONE);	
 			 ivPlayerTurn4.setVisibility(View.GONE);	
 			 
-			 TextView tvNumPoints = (TextView)context.findViewById(R.id.tvNumPoints);
-			 tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_randoms), 
-					 game.getRandomConsonants().get(0),
-					 game.getRandomConsonants().get(1),
-					 game.getRandomConsonants().get(2),
-					 game.getRandomVowels().get(0),
-					 game.getRandomVowels().get(1)));
+		//	 TextView tvNumPoints = (TextView)context.findViewById(R.id.tvNumPoints);
+		//	 tvNumPoints.setText(String.format(context.getString(R.string.scoreboard_randoms), 
+		//			 game.getRandomConsonants().get(0),
+		//			 game.getRandomConsonants().get(1),
+		//			 game.getRandomConsonants().get(2),
+		//			 game.getRandomVowels().get(0),
+		//			 game.getRandomVowels().get(1)));
 		 }
 		 
 		 

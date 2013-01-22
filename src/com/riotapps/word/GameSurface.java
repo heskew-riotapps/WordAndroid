@@ -35,6 +35,7 @@ import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
+import com.riotapps.word.utils.Utils;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -70,6 +71,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 Button bPlay;
 	 Button bSkip;
 	 Button bShuffle;
+	// CustomProgressDialog spinner = null;
 	
 	 private com.google.ads.InterstitialAd interstitial;
 	 private GameActionType postTurnAction;
@@ -88,6 +90,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	private GameState gameState;
 	private AlphabetService alphabetService;
 //	private WordService wordService;
+	
+	public long runningTime = System.nanoTime();
+	public long captureTime = System.nanoTime();
+
  
 	private Player player;
 	private TextView tvNumPoints;
@@ -148,7 +154,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 Display display = getWindowManager().getDefaultDisplay(); 
 	     this.windowHeight = display.getHeight();  // deprecated
 	     
- 
+	     this.captureTime("onCreate starting");
+	     
 	  	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);
 	  	this.scoreboardHeight = this.scoreboard.getHeight();
 	 //	ImageView ivPlayer = (ImageView) findViewById(R.id.ivPlayerScoreboard);
@@ -164,8 +171,13 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	Intent i = getIntent();
 	 	String gameId = i.getStringExtra(Constants.EXTRA_GAME_ID);
 	 	//this.game = (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
-	 	this.game = GameService.getGameFromLocal(gameId); //(Game) i.getParcelableExtra(Constants.EXTRA_GAME);
 	 	
+	 	this.captureTime("get game from local starting");
+	 	this.game = GameService.getGameFromLocal(gameId); //(Game) i.getParcelableExtra(Constants.EXTRA_GAME);
+	 	this.captureTime("get game from local ended");	 	
+	// 	spinner = new CustomProgressDialog(this);
+    //    spinner.setMessage(this.getString(R.string.progress_loading));
+    //    spinner.show();
 
   		//Gson gson = new Gson();  
 	    //Logger.d(TAG, "game json=" + gson.toJson(game));
@@ -174,43 +186,40 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	//this.game = getTempGame();
 
 		this.gameSurfaceView = (GameSurfaceView)findViewById(R.id.gameSurface);
+		
+	 	this.captureTime("alphabet service starting");
 		this.alphabetService = new AlphabetService(context);
 		//this.wordService = new WordService(context);
+	 	this.captureTime("alphabet service started");
 		
 		ApplicationContext appContext = (ApplicationContext)this.getApplicationContext();
 		//appContext.getWordService()
 		
-		this.gameSurfaceView.construct(this, this.alphabetService, appContext.getWordService());
-		this.gameSurfaceView.setParent(this);
-		
+	 	this.captureTime("gamesurfaceview starting");
+		this.gameSurfaceView.construct(this, this.alphabetService, appContext.getWordService(), this);
+		//this.gameSurfaceView.setParent(this);
+	 	this.captureTime("gamesurfaceview started");		
 	
-		 Logger.d(TAG, "SetDerivedValues  this.getWindowHeight=" +  this.getWindowHeight() );
-		 Logger.d(TAG, "SetDerivedValues  this.gameSurfaceView.height=" +  gameSurfaceView.getHeight() );
+		// Logger.d(TAG, "SetDerivedValues  this.getWindowHeight=" +  this.getWindowHeight() );
+		// Logger.d(TAG, "SetDerivedValues  this.gameSurfaceView.height=" +  gameSurfaceView.getHeight() );
 	 	
 		//Logger.d(TAG, "scoreboard about to be loaded");
 	 	//this.loadScoreboard();
 	 	
+	 	this.captureTime("setup game starting");
 		this.setupGame();
-	 	
+	 	this.captureTime("setup game ended");
+		
+	 	this.captureTime("checkGameStatus starting");
 		this.checkGameStatus();
-		///this.wordLoaderThread = new WordLoaderThread(appContext.getWordService(), this.game, this.player.getId());
-	 	
-	 //	this.gameSurfaceView.setGame(game);
-	 	//retrieve game from server
-	 	 
-	 	
-//	 	 ImageView iv;
- //        if (convertView == null)
- //            convertView = iv = new ImageView(UrlImageViewHelperSample.this);
- //        else
- //            iv = (ImageView)convertView;
-         
-         // yep, that's it. it handles the downloading and showing an interstitial image automagically.
-         // UrlImageViewHelper.setUrlDrawable(ivPlayer, getItem(position), R.drawable.badge_0, null);
-         
- //        return iv;
-		//this._surfaceView = new GameSurfaceView(this); 
-		Logger.d(TAG, "onCreate bRecall visible=" + bRecall.getVisibility() + " bShuffle=" + bShuffle.getVisibility());
+	 	this.captureTime("checkGameStatus ended");
+	}
+
+	public void captureTime(String text){
+	     this.captureTime = System.nanoTime();
+	     Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", text, Utils.convertNanosecondsToMilliseconds(this.captureTime - this.runningTime)));
+	     this.runningTime = this.captureTime;
+
 	}
 	
 	private void setupGame(){
@@ -221,6 +230,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	
 	 	this.setupButtons();
 
+	}
+	
+	public void onInitialRenderComplete(){
+	//	this.spinner.dismiss();
 	}
 	
 	 public Handler updateHandler = new Handler(){
@@ -629,7 +642,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	//		this.wordLoaderThread = null;
 	//	}
 		
-		
+	//	try{
+	//		this.spinner.dismiss();
+	//	}
+	//	catch(Exception e){}
 		super.onStop();
 		
 		
@@ -643,6 +659,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		if (this.runningTask != null){
     		this.runningTask.cancel(true);
     	}
+	//	try{
+	//		this.spinner.dismiss();
+	//	}
+	//	catch(Exception e){}
 		this.gameSurfaceView.onPause();
 		
 	//	if (this.wordLoaderThread != null){

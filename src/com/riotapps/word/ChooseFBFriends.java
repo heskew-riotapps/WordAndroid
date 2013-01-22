@@ -433,6 +433,8 @@ private class NetworkTask extends AsyncNetworkRequest{
 		             case 200:  
 		             case 201: {
 		            	 
+		            	// Logger.d(TAG, "handleResponse result=" + result.getResult());
+		            	 
 		            	 friends = PlayerService.findRegisteredFBFriendsResponse(this.context, result.getResult());
 		            	 loadList(friends.getArray());
 		                 break;  

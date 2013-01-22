@@ -41,17 +41,7 @@
 	 				android:layout_marginBottom="45dp"
 	 			/>
 	 			</ScrollView> 
-		    	<ListView
-		     	
-		    	    android:fadingEdge="none"
-		    	    android:id="@+id/lvChat"
-		    	    android:layout_below="@id/topAreaLayout"
-		    	  
-					android:layout_width="fill_parent"		    	  
-					android:layout_height="fill_parent"
-					android:dividerHeight="-1dp"
-				  android:layout_marginBottom="45dp"
-		    	    />
+
 			    <RelativeLayout
 			        style="@style/FormButtonAreaStyle"
 			      

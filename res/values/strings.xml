@@ -301,6 +301,7 @@
  	<string name="tile_2L">2L</string>
  	<string name="tile_2W">2W</string>
  	<string name="scoreboard_randoms">(%1$s, %2$s, %3$s, %4$s, %5$s)</string>
+ 	<string name="upper_gap_randoms">the random letters in this game: %1$s, %2$s, %3$s, %4$s, %5$s</string>
  	<string name="scoreboard_letters_left">%s letters left</string>
  	<string name="scoreboard_1_letter_left">1 letter left</string>
  	<string name="scoreboard_num_points">%s points</string>
