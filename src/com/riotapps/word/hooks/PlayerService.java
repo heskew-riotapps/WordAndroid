@@ -180,6 +180,7 @@ public class PlayerService {
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	//check funky characters in nickname [a-zA-Z0-9\-#\.\(\)\/%&\s]
+	  
 		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
 		Check.Require(nickname.length() > 0, ctx.getString(R.string.validation_nickname_required));
 		Check.Require(Validations.validateEmail(email.trim()) == true, ctx.getString(R.string.validation_email_invalid));
@@ -189,7 +190,7 @@ public class PlayerService {
 		updateAccount.setEmail(email);
 		updateAccount.setNickname(nickname);
 		updateAccount.setToken(player.getAuthToken());
-		
+		updateAccount.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
 		return gson.toJson(updateAccount);
 	}
 
@@ -208,7 +209,7 @@ public class PlayerService {
 		TransportFBUpdateAccount updateAccount = new TransportFBUpdateAccount();
 		updateAccount.setNickname(nickname);
 		updateAccount.setToken(player.getAuthToken());
-		
+		updateAccount.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
 		return gson.toJson(updateAccount);
 	}
 	

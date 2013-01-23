@@ -39,7 +39,7 @@
 					        android:layout_width="wrap_content"
 					        android:layout_height="wrap_content"
 					        android:text="@string/email" 
-					        android:paddingLeft="4.0dip"
+					         android:layout_centerHorizontal="true" 
 					        android:layout_below="@id/header"/>
 					 	<com.riotapps.word.ui.MainFontTextView
 					 	    style="@style/SubTextStyle"
@@ -65,10 +65,10 @@
 						     style="@style/SubTextStyle"
 					     	android:id="@+id/nickname_label"
 					     	android:text="@string/nickname"   
-					        android:layout_width="fill_parent"
+					        android:layout_width="wrap_content"
 					        android:layout_height="wrap_content"
 					        android:layout_below="@id/tEmail" 
-					        android:paddingLeft="4.0dip"
+					         android:layout_centerHorizontal="true"
 					     />
 						<EditText 
 						    android:id="@+id/tNickname"
@@ -80,19 +80,19 @@
 						    />
 
 						</RelativeLayout>
-						<LinearLayout
+						<RelativeLayout
 					        style="@style/FormButtonAreaStyle"
 					        android:layout_below="@+id/inner_form" >
 	 
 							<com.riotapps.word.utils.TypefaceButton 
 						  	    style="@style/ButtonStyle"
 						  	    android:id="@+id/bSave"
-						        android:layout_width="0dp" 
-						        android:layout_weight="1.0"
+						        android:layout_width="250dp" 
+						          android:layout_centerHorizontal="true"
 						        android:text="@string/save"
 						    />
    
-						</LinearLayout>
+						</RelativeLayout>
    
     			</RelativeLayout>
     	 

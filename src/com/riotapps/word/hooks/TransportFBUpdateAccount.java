@@ -10,6 +10,17 @@ public class TransportFBUpdateAccount {
 	@SerializedName("a_t")
 	private String token;
 
+	@SerializedName("r_id")
+	private String gcmRegistrationId;
+	
+	public String getGcmRegistrationId() {
+		return gcmRegistrationId;
+	}
+
+	public void setGcmRegistrationId(String gcmRegistrationId) {
+		this.gcmRegistrationId = gcmRegistrationId;
+	}
+
 	public String getNickname() {
 		return nickname;
 	}

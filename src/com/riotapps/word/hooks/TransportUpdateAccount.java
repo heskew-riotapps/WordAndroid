@@ -12,6 +12,9 @@ public class TransportUpdateAccount {
 	
 	@SerializedName("a_t")
 	private String token;
+	
+	@SerializedName("r_id")
+	private String gcmRegistrationId;
 
 	public String getEmail() {
 		return email;
@@ -34,6 +37,14 @@ public class TransportUpdateAccount {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getGcmRegistrationId() {
+		return gcmRegistrationId;
+	}
+
+	public void setGcmRegistrationId(String gcmRegistrationId) {
+		this.gcmRegistrationId = gcmRegistrationId;
 	}
 	
 	

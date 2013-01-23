@@ -7,8 +7,8 @@
     <!-- i have no idea why bottom radiuses these have to be backwards (bug in emulator)-->
     <corners 
         android:radius="2dp"
-        android:bottomRightRadius="0dp"
-          android:bottomLeftRadius="8dp" 
+        android:bottomRightRadius="8dp"
+          android:bottomLeftRadius="0dp" 
         android:topRightRadius="0dp" 
         android:topLeftRadius="0dp"
           
