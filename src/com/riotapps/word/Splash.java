@@ -36,6 +36,8 @@ public class Splash  extends FragmentActivity {
     public long startTime = System.nanoTime();
     NetworkTask runningTask = null;
     String gameId = null; 
+	public long runningTime = System.nanoTime();
+	public long captureTime = System.nanoTime();
     
     public void test(){}
     
@@ -45,12 +47,14 @@ public class Splash  extends FragmentActivity {
         setContentView(R.layout.splash);
       
         Logger.w(TAG, "onCreate started");
-        
+        this.captureTime("onCreate starting");
         this.gameId = this.getIntent().getStringExtra(Constants.EXTRA_GAME_ID);
         
        // Intent i = new Intent(this, WordLoaderService.class);
        // this.startService(new Intent(this, WordLoaderService.class));
         //sendMessage(this, "123", "message from Wordsmash");
+        
+        this.captureTime("GCMRegistrar starting");
         try{
         	Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
 	        GCMRegistrar.checkDevice(this);
@@ -65,6 +69,7 @@ public class Splash  extends FragmentActivity {
         } catch(Exception e){
         	 Logger.w(TAG, "onCreated GCMRegistrar error=" + e.toString());
         }
+        this.captureTime("GCMRegistrar ended");
         
         if (this.gameId != null){
         	try{
@@ -78,9 +83,17 @@ public class Splash  extends FragmentActivity {
         	}
         }
 	 	
+        this.captureTime("handlePreProcessing starting");
         this.handlePreProcessing();
+        this.captureTime("handlePreProcessing ended");
      }
     
+    public void captureTime(String text){
+	     this.captureTime = System.nanoTime();
+	     Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", text, Utils.convertNanosecondsToMilliseconds(this.captureTime - this.runningTime)));
+	     this.runningTime = this.captureTime;
+
+	}
     private void handlePreProcessing(){
 		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, 0);
 	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
@@ -90,6 +103,7 @@ public class Splash  extends FragmentActivity {
 	    if (storedToken.length() > 0){
 	    	String json = "";
 			try {
+		        this.captureTime("steup authtoken check starting");
 				if (this.gameId == null){
 					json = PlayerService.setupAuthTokenCheck(this, storedToken);
 				}
@@ -101,6 +115,7 @@ public class Splash  extends FragmentActivity {
 				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
 			}
  
+	        this.captureTime("rest_authenticate_player starting");
 			this.runningTask = new NetworkTask(this, RequestType.POST, json);
 			if (this.gameId == null){
 				this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
@@ -111,6 +126,7 @@ public class Splash  extends FragmentActivity {
 	    }
 	    else{
 	    	 Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token_1");
+	         this.captureTime("check connectivity task starting");
 	    	new CheckConnectivityTask().execute("");
 	     
 	    }
@@ -130,27 +146,32 @@ public class Splash  extends FragmentActivity {
 
 		 @Override
 		    protected void onPostExecute(Boolean result) {
-	    	 	Logger.w(TAG, " CheckConnectivityTask onPostExecute_1");
-
+	    	 //	Logger.w(TAG, " CheckConnectivityTask onPostExecute_1");
+	            captureTime("CheckConnectivityTask onPostExecute_1");
 	    	 	processConnectivityResults(result);
 		    }
 
 			@Override
 			protected Boolean doInBackground(String... arg0) {
-				 Logger.w(TAG, " CheckConnectivityTask doInBackground_1");
+				 //Logger.w(TAG, " CheckConnectivityTask doInBackground_1");
+			        captureTime("check connectivity task do in background");
 				return checkInitialConnectivity();
 			}
 
 			private Boolean checkInitialConnectivity(){
+		        captureTime("check connectivity checkInitialConnectivity");
 				  NetworkConnectivity connection = new NetworkConnectivity(context);
 			        //are we connected to the web?
 			        boolean isConnected = connection.checkNetworkConnectivity();
 			        
 			        if (isConnected == false)  
 			        {
+			        	 captureTime("check connectivity isconnect=false");
+
 			        	try {
 							Thread.sleep(Constants.INITIAL_CONNECTIVITY_THREAD_SLEEP);
 							isConnected = connection.checkNetworkConnectivity();
+				        	 captureTime("check connectivity isconnect=false second check");
 							
 				        } 
 			        	catch (InterruptedException e1) {
@@ -183,6 +204,7 @@ public class Splash  extends FragmentActivity {
 	   	 Logger.w(TAG, " processTaskResults" );  
 		 if (connected == true) 
 	        {
+        	 captureTime("processConnectivityResults starting intent");
 	        	Intent intent = new Intent(this, com.riotapps.word.Welcome.class);
 	        	intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 	 	      	this.startActivity(intent); 	
@@ -211,6 +233,7 @@ public class Splash  extends FragmentActivity {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			
+       	 captureTime("NetworkTask onPostExecute starting");
 			this.handleResponse(result);
 
 		}
@@ -218,6 +241,7 @@ public class Splash  extends FragmentActivity {
 		private void handleResponse(NetworkTaskResult result){
 		     Exception exception = result.getException();   
 
+	       	 captureTime("NetworkTask handleResponse starting");
 		     if(result.getResult() != null){  
 		    	 long currentTime = System.nanoTime();
 		    	 long timeDiff = 0;
@@ -226,8 +250,9 @@ public class Splash  extends FragmentActivity {
 		         switch(result.getStatusCode()){  
 		             case 200:  
 		            	// try{
+		    	       	 captureTime("NetworkTask plauyerservice handleauthtokenresponse starting");
 		            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, result.getResult());
-	
+			    	       	 captureTime("NetworkTask plauyerservice handleauthtokenresponse ended");	
 			            	 //default time in which to leave splash up
 		            		/* timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
 			            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
@@ -249,6 +274,7 @@ public class Splash  extends FragmentActivity {
 			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
 			            	 }
 			            	 else {
+				    	       	 captureTime("NetworkTask mainlanding intent starting");
 			            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
 			            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 			            	 }

@@ -13,6 +13,7 @@ import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.TileLayout;
 import com.riotapps.word.hooks.TileLayoutService;
+import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Logger;
@@ -55,6 +56,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.parent = parent;
 	}
 	
+	ApplicationContext appContext;
 	int absoluteTop = 0;
 	int absoluteLeft = 0;
 	int onDrawCounter = 0;
@@ -104,8 +106,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private static final long DOUBLE_TAP_DURATION_IN_NANOSECONDS = 800000000;
     private static final long MOVE_STOPPED_DURATION_IN_MILLISECONDS = 200;
     private static final float MOVEMENT_TRIGGER_THRESHOLD = .05f;
-    private static final int MAX_LOGO_HEIGHT = 50;
-    private static final long MAX_TEXT_HEIGHT = 38;
+    private static final int MAX_LOGO_HEIGHT = 36;
+    private static final long MAX_TEXT_HEIGHT = 22;
     private static final float MAX_TEXT_WIDTH = .90F;
     private static final int DECELERATION = 100;
     private float xVelocity = 0;
@@ -233,7 +235,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private Bitmap logo;
     private boolean surfaceCreated = false;
     
-	private Bitmap bgTray;// = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+	//private Bitmap bgTray;// = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
 	private Bitmap bgTrayBaseScaled;
 	private Bitmap bgTrayEmptyScaled;
 	private Bitmap bgTrayBaseDragging; 
@@ -303,9 +305,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		// TODO Auto-generated constructor stub
 	}
 
-	public void construct(Context context, AlphabetService alphabetService, WordService wordService, GameSurface parent ) {
+	public void construct(Context context, AlphabetService alphabetService, WordService wordService, GameSurface parent, ApplicationContext appContext ) {
 		//Log.w(TAG, "construct called");
 		this.parent = parent;
+		this.appContext = appContext;
 		this.parent.captureTime(TAG + " construct starting");
 		
 		this.context = context;
@@ -412,7 +415,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	 	 //	 this.height = this.getHeight() - this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height) - this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height);// + 6;// lp.height; //getMeasuredHeight();
 
-this.parent.captureTime("SetDerivedValues before getHeight");		
+	 	 this.parent.captureTime("SetDerivedValues before getHeight");		
 	 	  this.height = this.getHeight() - 
 		 		 Utils.convertDensityPixelsToPixels(context, this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height));// - 
 		 		// Utils.convertDensityPixelsToPixels(context, this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height));// + 6;// lp.height; //getMeasuredHeight();
@@ -421,12 +424,12 @@ this.parent.captureTime("SetDerivedValues before getHeight");
 		 //	 this.height = this.getHeight() - GameSurface.BUTTON_CONTROL_HEIGHT - GameSurface.SCOREBOARD_HEIGHT + 6;// lp.height; //getMeasuredHeight();
 	 //	this.height = this.parent.getWindowHeight() - GameSurface.SCOREBOARD_HEIGHT - GameSurface.BUTTON_CONTROL_HEIGHT-100;
 
-	 	 this.parent.captureTime("SetDerivedValues before math");
-	 	  this.trayTileSize = Math.round(this.fullWidth / 7.50f);	
-			if (this.trayTileSize > 90){this.trayTileSize = 90;}
-			this.draggingTileSize  = Math.round(this.trayTileSize * 1.6f);
-			if (this.draggingTileSize > 120){this.draggingTileSize = 120;}
-			this.trayTileLeftMargin = Math.round(this.fullWidth - ((this.trayTileSize * 7) + (TRAY_TILE_GAP * 6))) / 2;
+	 	this.parent.captureTime("SetDerivedValues before math");
+	 	this.trayTileSize = Math.round(this.fullWidth / 7.50f);	
+		if (this.trayTileSize > 90){this.trayTileSize = 90;}
+		this.draggingTileSize  = Math.round(this.trayTileSize * 1.6f);
+		if (this.draggingTileSize > 120){this.draggingTileSize = 120;}
+		this.trayTileLeftMargin = Math.round(this.fullWidth - ((this.trayTileSize * 7) + (TRAY_TILE_GAP * 6))) / 2;
 	 	this.trayTop = this.height - trayTileSize -  TRAY_VERTICAL_MARGIN; 
 		this.bottomOfFullView = this.trayTop - TRAY_VERTICAL_MARGIN - TRAY_TOP_BORDER_HEIGHT - 1;
 		this.topGapHeight = Math.round((this.bottomOfFullView - this.fullWidth) / 2);
@@ -451,26 +454,111 @@ this.parent.captureTime("SetDerivedValues before getHeight");
 		this.parent.captureTime("SetDerivedValues before bitmaps");
 		  
 		
-		this.bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
-		Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
-		Bitmap bgTrayEmpty = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_empty_bg);
-		this.bgTrayBaseScaled = Bitmap.createScaledBitmap(bgTrayBase, this.trayTileSize , this.trayTileSize, false);
-		
-		this.bgTrayEmptyScaled = Bitmap.createScaledBitmap(bgTrayEmpty, this.trayTileSize , this.trayTileSize, false);
-		this.bgTrayBaseDragging = Bitmap.createScaledBitmap(bgTrayBase, this.draggingTileSize, this.draggingTileSize, false);
-		this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
-		
-		 Bitmap bgPlacedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_placed_bg);
-		 this.bgPlacedTileFull = Bitmap.createScaledBitmap(bgPlacedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 this.bgPlacedTileZoomed = Bitmap.createScaledBitmap(bgPlacedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 if (this.appContext.getBgTrayBaseScaled() == null) {
+			this.bgTrayBaseScaled = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);//decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_bg, this.trayTileSize,this.trayTileSize);
+			this.bgTrayBaseScaled = Bitmap.createScaledBitmap(this.bgTrayBaseScaled, this.trayTileSize , this.trayTileSize, false);
+			//this.bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+		//Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
+			this.appContext.setBgTrayBaseScaled(this.bgTrayBaseScaled);
+		 }
+		 else {
+			this.bgTrayBaseScaled = this.appContext.getBgTrayBaseScaled();
+		 }
 
-		 Bitmap bgLastPlayedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_last_played_bg);
-		 this.bgLastPlayedTileFull = Bitmap.createScaledBitmap(bgLastPlayedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 this.bgLastPlayedTileZoomed = Bitmap.createScaledBitmap(bgLastPlayedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 if (this.appContext.getBgTrayBaseDragging() == null) {
+			this.bgTrayBaseDragging = decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_bg, this.draggingTileSize,this.draggingTileSize);
+			this.bgTrayBaseDragging = Bitmap.createScaledBitmap(this.bgTrayBaseDragging, this.draggingTileSize , this.draggingTileSize, false);
+			//this.bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+		//Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
+			this.appContext.setBgTrayBaseDragging(this.bgTrayBaseDragging);
+		 }
+		 else {
+			this.bgTrayBaseDragging = this.appContext.getBgTrayBaseDragging();
+		 }
+		
+		 if (this.appContext.getBgTrayBackground() == null) {
+			Bitmap bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+			this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
+			this.appContext.setBgTrayBackground(this.trayBackground);
+		 }
+		 else {
+			this.trayBackground = this.appContext.getBgTrayBackground();
+		 }
+		//Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
+		
+		//this.bgTrayBaseScaled = Bitmap.createScaledBitmap(bgTrayBase, this.trayTileSize , this.trayTileSize, false);
+		
+		 if (this.appContext.getBgTrayEmptyScaled() == null) {
+			this.bgTrayEmptyScaled = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_empty_bg); //decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_empty_bg, this.trayTileSize,this.trayTileSize);
+		//Bitmap bgTrayEmpty = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_empty_bg);
+			this.bgTrayEmptyScaled = Bitmap.createScaledBitmap(bgTrayEmptyScaled, this.trayTileSize , this.trayTileSize, false);
+			this.appContext.setBgTrayEmptyScaled(this.bgTrayEmptyScaled);
+		 }
+		 else {
+			this.bgTrayEmptyScaled = this.appContext.getBgTrayEmptyScaled();
+		 }
+	//	this.bgTrayBaseDragging = Bitmap.createScaledBitmap(bgTrayBase, this.draggingTileSize, this.draggingTileSize, false);
+		//this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
+		
+		 if (this.appContext.getBgPlacedTileZoomed() == null){
+			this.bgPlacedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_placed_bg, this.zoomedTileWidth,this.zoomedTileWidth);
+			this.bgPlacedTileZoomed = Bitmap.createScaledBitmap(bgPlacedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			this.appContext.setBgPlacedTileZoomed(this.bgPlacedTileZoomed);
+		 }
+		 else {
+			this.bgPlacedTileZoomed = this.appContext.getBgPlacedTileZoomed();
+		 }
+		
+		 if (this.appContext.getBgPlacedTileFull() == null) {
+			 this.bgPlacedTileFull = Bitmap.createScaledBitmap(this.bgPlacedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			 this.appContext.setBgPlacedTileFull(this.bgPlacedTileFull);
+		 } 
+		 else {
+			 this.bgPlacedTileFull = this.appContext.getBgPlacedTileFull();
+		 }
+		// Bitmap bgPlacedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_placed_bg);
+		// this.bgPlacedTileFull = Bitmap.createScaledBitmap(bgPlacedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 //this.bgPlacedTileZoomed = Bitmap.createScaledBitmap(bgPlacedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 
-		 Bitmap bgPlayedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_played_bg);
-		 this.bgPlayedTileFull = Bitmap.createScaledBitmap(bgPlayedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		 this.bgPlayedTileZoomed = Bitmap.createScaledBitmap(bgPlayedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 if (this.appContext.getBgLastPlayedTileZoomed() == null) {
+			this.bgLastPlayedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_last_played_bg, this.zoomedTileWidth,this.zoomedTileWidth);
+			this.bgLastPlayedTileZoomed = Bitmap.createScaledBitmap(this.bgLastPlayedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			this.appContext.setBgLastPlayedTileZoomed(this.bgLastPlayedTileZoomed);
+		 }
+		 else {
+			this.bgLastPlayedTileZoomed = this.appContext.getBgLastPlayedTileZoomed();
+		 }
+		
+		 if (this.appContext.getBgLastPlayedTileFull() == null) {
+			 this.bgLastPlayedTileFull = Bitmap.createScaledBitmap(this.bgLastPlayedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			 this.appContext.setBgLastPlayedTileFull(this.bgLastPlayedTileFull);
+		 }
+		 else {
+			this.bgLastPlayedTileFull = this.appContext.getBgLastPlayedTileFull();
+		 }
+		 //Bitmap bgLastPlayedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_last_played_bg);
+		// this.bgLastPlayedTileFull = Bitmap.createScaledBitmap(bgLastPlayedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		// this.bgLastPlayedTileZoomed = Bitmap.createScaledBitmap(bgLastPlayedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+
+		 if (this.appContext.getBgPlayedTileZoomed() == null) {
+			this.bgPlayedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_played_bg, this.zoomedTileWidth,this.zoomedTileWidth);
+			this.bgPlayedTileZoomed = Bitmap.createScaledBitmap(this.bgPlayedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			this.appContext.setBgPlayedTileZoomed(this.bgPlayedTileZoomed);
+		 }
+		 else {
+			this.bgPlayedTileZoomed = this.appContext.getBgPlayedTileZoomed();
+		 } 
+		
+		 if (this.appContext.getBgPlayedTileFull() == null) {
+			this.bgPlayedTileFull = Bitmap.createScaledBitmap(this.bgPlayedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			this.appContext.setBgPlayedTileFull(this.bgPlayedTileFull);
+		 }
+		 else {
+			this.bgPlayedTileFull = this.appContext.getBgPlayedTileFull();
+		 }
+	//	 Bitmap bgPlayedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_played_bg);
+	//	 this.bgPlayedTileFull = Bitmap.createScaledBitmap(bgPlayedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+	//	 this.bgPlayedTileZoomed = Bitmap.createScaledBitmap(bgPlayedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 		 
 		 this.trayAreaRect.setTop(this.trayTop - TRAY_VERTICAL_MARGIN - TRAY_TOP_BORDER_HEIGHT);
 	     this.trayAreaRect.setBottom(this.trayTop + this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2));
@@ -496,51 +584,152 @@ this.parent.captureTime("SetDerivedValues before getHeight");
 //				 decodeSampledBitmapFromResource(getResources(), R.id.myimage, 100, 100));
 		 //Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
 
-		 this.bgBaseZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.blank_tile_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-
-		 this.bgBaseScaled = Bitmap.createScaledBitmap(this.bgBaseZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-
+		if (this.appContext.getBgBaseZoomed() == null) {
+			this.bgBaseZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.blank_tile_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			this.bgBaseZoomed = Bitmap.createScaledBitmap(this.bgBaseZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
+			this.appContext.setBgBaseZoomed(this.bgBaseZoomed);
+		}
+		else {
+			this.bgBaseZoomed = this.appContext.getBgBaseZoomed();
+			//Logger.d(TAG, "bgBaseZoomed retrieved from memory");
+		}
+		
+		if (this.appContext.getBgBaseScaled() == null) {
+			this.bgBaseScaled = Bitmap.createScaledBitmap(this.bgBaseZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			this.appContext.setBgBaseScaled(this.bgBaseScaled);
+		}
+		else {
+			this.bgBaseScaled = this.appContext.getBgBaseScaled();
+			//Logger.d(TAG, "bgBaseScaled retrieved from memory");
+		}
 //		 this.bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 //		 this.bgBaseZoomed = Bitmap.createScaledBitmap(bgBase, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 		 
 		 
 	//	 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
-		 this.bg4LZoomed =decodeSampledBitmapFromResource(getResources(), R.drawable.tile_4l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-		 this.bg4LScaled = Bitmap.createScaledBitmap(bg4LZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+		if (this.appContext.getBg4LZoomed() == null) {
+			this.bg4LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_4l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			this.bg4LZoomed = Bitmap.createScaledBitmap(bg4LZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			this.appContext.setBg4LZoomed(this.bg4LZoomed);
+		}
+		else {
+			this.bg4LZoomed = this.appContext.getBg4LZoomed();
+		}
+		
+		if (this.appContext.getBg4LScaled() == null) {
+			this.bg4LScaled = Bitmap.createScaledBitmap(bg4LZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			this.appContext.setBg4LScaled(this.bg4LScaled);
+		}
+		else {
+			this.bg4LScaled = this.appContext.getBg4LScaled();
+		}
 //		 this.bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 //		 this.bg4LZoomed = Bitmap.createScaledBitmap(bg4L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 
 		 
-		 
+		 if (this.appContext.getBg3LZoomed() == null){
 		// Bitmap bg3L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3l_bg);
-		 this.bg3LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_3l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-		 this.bg3LScaled = Bitmap.createScaledBitmap(bg3LZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			 this.bg3LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_3l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+		 	 this.bg3LZoomed = Bitmap.createScaledBitmap(bg3LZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 	 this.appContext.setBg3LZoomed(this.bg3LZoomed);
+		 }
+		 else {
+			 this.bg3LZoomed = this.appContext.getBg3LZoomed();
+		 }
+		 
+		 if (this.appContext.getBg3LScaled() == null){
+			 this.bg3LScaled = Bitmap.createScaledBitmap(bg3LZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			 this.appContext.setBg3LScaled(this.bg3LScaled);
+		 }
+		 else {
+			 this.bg3LScaled = this.appContext.getBg3LScaled();
+		 }
 		 
 	//	 Bitmap bg3W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3w_bg);
-		 this.bg3WZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_3w_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-		 this.bg3WScaled = Bitmap.createScaledBitmap(bg3WZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
-
+		 if (this.appContext.getBg3WZoomed() == null){
+			 this.bg3WZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_3w_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			 this.bg3WZoomed = Bitmap.createScaledBitmap(bg3WZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			 this.appContext.setBg3WZoomed(this.bg3WZoomed);
+		 }
+		 else {
+			 this.bg3WZoomed = this.appContext.getBg3WZoomed();
+		 }
+		 
+		 if (this.appContext.getBg3WScaled() == null) {
+			 this.bg3WScaled = Bitmap.createScaledBitmap(bg3WZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			 this.appContext.setBg3WScaled(this.bg3WScaled);
+		 }
+		 else {
+			 this.bg3WScaled = this.appContext.getBg3WScaled();
+		 }
 //		 this.bg3WScaled = Bitmap.createScaledBitmap(bg3W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 //		 this.bg3WZoomed = Bitmap.createScaledBitmap(bg3W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 
 		 
 	//	 Bitmap bg2L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2l_bg);
-		 this.bg2LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_2l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-		 this.bg2LScaled = Bitmap.createScaledBitmap(bg2LZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		 
+		 //Logger.d(TAG, "decodeSampledBitmapFromResource 2L target zoomed size=" + (this.zoomedTileWidth + 1) );
+		 if (this.appContext.getBg2LZoomed() == null) {
+			 this.bg2LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_2l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+				 //resize exactly
+			 this.bg2LZoomed = Bitmap.createScaledBitmap(bg2LZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
+			 this.appContext.setBg2LZoomed(this.bg2LZoomed);
+		 }
+		 else {
+			 this.bg2LZoomed = this.appContext.getBg2LZoomed();
+		 }
 		
+		 //Logger.d(TAG, "decodeSampledBitmapFromResource 2L actual zoomed size=" + this.bg2LZoomed.getHeight() );
+		 if (this.appContext.getBg2LScaled() == null) {
+			 this.bg2LScaled = Bitmap.createScaledBitmap(bg2LZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			 this.appContext.setBg2LScaled(this.bg2LScaled);
+		 }
+		 else {
+			 this.bg2LScaled = this.appContext.getBg2LScaled();
+		 }
 
 //		 this.bg2LScaled = Bitmap.createScaledBitmap(bg2L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 //		 this.bg2LZoomed = Bitmap.createScaledBitmap(bg2L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 
 		 
 		//Bitmap bg2W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2w_bg);
-		 this.bg2WZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_2w_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-		 this.bg2WScaled = Bitmap.createScaledBitmap(bg2WZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
-		
+		 if (this.appContext.getBg2WZoomed() == null) {
+			 //this.bg2WZoomed = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2w_bg);
+			 this.bg2WZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_2w_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			 this.bg2WZoomed = Bitmap.createScaledBitmap(bg2WZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			 this.appContext.setBg2WZoomed(this.bg2WZoomed);
+		 }
+		 else {
+			 this.bg2WZoomed = this.appContext.getBg2WZoomed();
+		 }
+		 
+		 if (this.appContext.getBg2WScaled() == null) {
+			 this.bg2WScaled = Bitmap.createScaledBitmap(bg2WZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			 this.appContext.setBg2WScaled(this.bg2WScaled);
+		 }
+		 else {
+			 this.bg2WScaled = this.appContext.getBg2WScaled();
+		 }
+		 
 		// Bitmap bgStarter = BitmapFactory.decodeResource(getResources(), R.drawable.tile_starter_bg);
-		 this.bgStarterZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_starter_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-		 this.bgStarterScaled = Bitmap.createScaledBitmap(bgStarterZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-		
+		 
+		 if (this.appContext.getBgStarterZoomed() == null) {
+			 this.bgStarterZoomed = BitmapFactory.decodeResource(getResources(), R.drawable.tile_starter_bg);
+			// this.bgStarterZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_starter_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			 this.bgStarterZoomed = Bitmap.createScaledBitmap(bgStarterZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
+			 this.appContext.setBgStarterZoomed(this.bgStarterZoomed);
+		 }
+		 else {
+			 this.bgStarterZoomed = this.appContext.getBgStarterZoomed();
+		 }
+		 
+		 if (this.appContext.getBgStarterScaled() == null) {	 
+			 this.bgStarterScaled = Bitmap.createScaledBitmap(bgStarterZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			 this.appContext.setBgStarterScaled(this.bgStarterScaled);
+		 }
+		 else {
+			 this.bgStarterScaled = this.appContext.getBgStarterScaled();
+		 }
 		
 		 this.parent.captureTime("SetDerivedValues after bitmap loads");
 		//Toast t = Toast.makeText(context, "Hello " +  this.height + " " + this.fullWidth + " " + getMeasuredHeight() , Toast.LENGTH_LONG);   
@@ -558,10 +747,13 @@ this.parent.captureTime("SetDerivedValues before getHeight");
 	    // Calculate inSampleSize
 	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
+ 
+	    
 	    // Decode bitmap with inSampleSize set
 	    options.inJustDecodeBounds = false;
 	    return BitmapFactory.decodeResource(res, resId, options);
 	}
+	
 	public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
     // Raw height and width of image
@@ -569,6 +761,8 @@ this.parent.captureTime("SetDerivedValues before getHeight");
     final int width = options.outWidth;
     int inSampleSize = 1;
 
+   // Logger.d(TAG, "calculateInSampleSize height=" + height + " reqHeight=" + reqHeight + " width=" + width + " reqWidth=" + reqWidth);
+    
     if (height > reqHeight || width > reqWidth) {
 
         // Calculate ratios of height and width to requested height and width
@@ -580,7 +774,7 @@ this.parent.captureTime("SetDerivedValues before getHeight");
         // requested height and width.
         inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
     }
-
+   // Logger.d(TAG, "calculateInSampleSize inSampleSize=" + inSampleSize);
     return inSampleSize;
 }
 	

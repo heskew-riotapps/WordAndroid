@@ -196,7 +196,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		//appContext.getWordService()
 		
 	 	this.captureTime("gamesurfaceview starting");
-		this.gameSurfaceView.construct(this, this.alphabetService, appContext.getWordService(), this);
+		this.gameSurfaceView.construct(this, this.alphabetService, appContext.getWordService(), this, appContext);
 		//this.gameSurfaceView.setParent(this);
 	 	this.captureTime("gamesurfaceview started");		
 	
