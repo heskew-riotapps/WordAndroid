@@ -87,7 +87,7 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
     		bAdd.setText(this.getString(R.string.choose_previous_opponent_add_button_text));
     	}
      
-    	this.loadList(this.player.getOpponents().toArray(new Opponent[this.player.getOpponents().size()])); 
+    	this.loadList(this.player.getOfficialOpponents().toArray(new Opponent[this.player.getOpponents().size()])); 
     }
   
     

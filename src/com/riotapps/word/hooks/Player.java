@@ -1,18 +1,12 @@
 package com.riotapps.word.hooks;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
-
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.view.View;
-
-import com.riotapps.word.hooks.Error.ErrorType;
 import com.riotapps.word.utils.Constants;
-import com.riotapps.word.utils.Logger;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Player implements Parcelable{
@@ -62,6 +56,11 @@ public class Player implements Parcelable{
 	private boolean noInterstitialAdsOption = false; //a paid upgrade to not display interstitial ads 
 
 	private List<Opponent> opponents = new ArrayList<Opponent>();
+		
+	//used as the transport from server, using separate property just in case..
+	//don't want opponents property to be overridden by accident
+	@SerializedName("opps")
+	private List<Opponent> opponents_ = null; //new ArrayList<Opponent>();
 	
 	@SerializedName("a_games")
 	private List<Game> activeGames= new ArrayList<Game>();
@@ -70,7 +69,7 @@ public class Player implements Parcelable{
 	private List<Game> completedGames = new ArrayList<Game>();
 	
 	@SerializedName("l_rf_d") 
-	private Date lastRefreshDate = new Date("10/6/2012"); //last time a game status changed that the player was involved in
+	private Date lastRefreshDate = null; //new GregorianCalendar("10/6/2012"); //last time a game status changed that the player was involved in
 	
 	private List<Game> activeGamesYourTurn= new ArrayList<Game>();
 	private List<Game> activeGamesOpponentTurn= new ArrayList<Game>();
@@ -161,6 +160,18 @@ public class Player implements Parcelable{
 		this.notificationGame = notificationGame;
 	}
 	public Date getLastRefreshDate() {
+		if (lastRefreshDate == null){
+			String mytime="20121006102400";
+	        SimpleDateFormat dateFormat = new SimpleDateFormat(
+	                "yyyymmddhhmmss");
+
+	        try {
+				lastRefreshDate = dateFormat.parse(mytime);
+			} catch (java.text.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return lastRefreshDate;
 	}
 	public void setLastRefreshDate(Date lastRefreshDate) {
@@ -274,6 +285,14 @@ public class Player implements Parcelable{
 		return activeGamesOpponentTurn;
 	}
 	
+	
+	
+	public List<Opponent> getOpponents_() {
+		return opponents_;
+	}
+	public void setOpponents_(List<Opponent> opponents_) {
+		this.opponents_ = opponents_;
+	}
 	public Game getGameFromLists(String gameId){
 		if (this.getActiveGamesYourTurn().size() > 0){
 			for(Game game : this.getActiveGamesYourTurn()){
@@ -330,6 +349,17 @@ public class Player implements Parcelable{
 	}
 	
 	public List<Opponent> getOpponents() {
+		return opponents;
+	}
+	
+	//these are opponents that have at least one completed game with the context player
+	public List<Opponent> getOfficialOpponents() {
+		List<Opponent> opponents = new ArrayList<Opponent>();
+		for (Opponent o : this.getOpponents()){
+			if (o.getStatus() == 2){
+				opponents.add(o);
+			}
+		}
 		return opponents;
 	}
 	

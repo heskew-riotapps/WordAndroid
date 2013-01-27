@@ -128,6 +128,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//else {
 		//	this.loadLists();
 		//}
+		this.setupTimer();
     }
     
     @Override
@@ -142,7 +143,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	}
     
     private void setupTimer(){
-    	timer = new Timer();
+		Logger.d(TAG, "setupTimer");
+    	timer = new Timer();  
     	updateListTask updateList = new updateListTask();
     	timer.scheduleAtFixedRate(updateList, Constants.GAME_LIST_CHECK_START_IN_MILLISECONDS, Constants.GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS);
     			//updateList, 300000, 300000);
@@ -168,6 +170,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     private class handleGameListCheck implements Runnable {
 		    public void run() {
 		    	 try { 
+		    		 Logger.d(TAG, "handleGameListCheck");
 	   				String json = PlayerService.setupGameListCheck(context, player.getAuthToken(), player.getLastRefreshDate());
 	   				//this will bring back the players games too
 	   				new NetworkTask((MainLanding) context, RequestType.POST, context.getString(R.string.progress_syncing), json, false).execute(Constants.REST_GAME_LIST_CHECK);
@@ -181,12 +184,14 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     @Override
 	protected void onResume() {
 		super.onResume();
+		
+		Logger.d(TAG, "onResume is timer null=" + (timer == null));
 		if (this.timer == null){
 			this.setupTimer();
 		}
 	}
 
-
+ 
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
@@ -210,7 +215,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 
 	private void loadLists(){
  
-    	//Logger.d(TAG, "loadLists started");
+    	 Logger.d(TAG, "loadLists started");
 		LinearLayout llCompletedGames = (LinearLayout)findViewById(R.id.llCompletedGames);
     	LinearLayout llYourTurn = (LinearLayout)findViewById(R.id.llYourTurn);
     	LinearLayout llOpponentsTurn = (LinearLayout)findViewById(R.id.llOpponentsTurn);
@@ -604,6 +609,7 @@ private void handleGameClick(String gameId){
 			      	      	 this.context.startActivity(intent);
 	            		 }
 	            		 else{	 //this is the same as authenticating, so this is ok
+	            			 Logger.d(TAG, "handleAuthByTokenResponse after timer");
 		            		 player = PlayerService.handleAuthByTokenResponse(this.context, result.getResult());
 		            		 GameService.updateLastGameListCheckTime(this.context);
 		            		 

@@ -35,12 +35,13 @@ import com.riotapps.word.utils.Validations;
 import com.facebook.model.GraphUser;
 import com.facebook.android.FacebookError;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
  
 ////make this class static
 public class PlayerService {
 	private static final String TAG = PlayerService.class.getSimpleName();
-
+/*
 	Gson gson = new Gson();
 	NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
 	
@@ -62,7 +63,7 @@ public class PlayerService {
 		
 		return new Player();
 	}
-	
+	*/
 	
 	public static String setupConnectViaEmail(Context ctx, String email, String nickname, String password) throws DesignByContractException{
 		Gson gson = new Gson();
@@ -456,6 +457,8 @@ public class PlayerService {
           //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
 	       // Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 	        
+    		Logger.d(TAG, "handlePlayerResponse result=" + result.length() + " " + result);
+    	
 	        Type type = new TypeToken<Player>() {}.getType();
 	        Player player = gson.fromJson(result, type);
 	        
@@ -489,7 +492,7 @@ public class PlayerService {
 	        			//dont add game if it already happens to be here
 	        			boolean add = true;
 	        			for (Game innerGame : storedPlayer.getCompletedGames()) {
-	        				if (innerGame.getId() == game.getId()){
+	        				if (innerGame.getId().equals(game.getId())){
 	        					add = false;
 	        					//update stored game's last chat date, just in case its changed
 	        					innerGame.setLastChatDate(game.getLastChatDate());
@@ -513,7 +516,7 @@ public class PlayerService {
 			for (Game game : player.getActiveGames()) {
 				Boolean isYourTurn = false;
 				for (PlayerGame pg : game.getPlayerGames()){
-					if (pg.getPlayer().getId() == player.getId() && pg.isTurn()){
+					if (pg.getPlayerId() == player.getId() && pg.isTurn()){
 						yourTurn.add(game);
 						isYourTurn = true;
 						break;
@@ -530,6 +533,84 @@ public class PlayerService {
 			//so let's clear this out
 			player.getActiveGames().clear();
 			
+			//if opponent list comes from the server, move it to local opponents list, otherwise local opponents
+			//list should already be populated
+			if (player.getOpponents_() != null){
+				player.getOpponents().clear();
+				//pull real opponents list from server list
+				//loop through to save non-referenced objects
+				for (Opponent o : player.getOpponents_()){
+					Opponent opponent = new Opponent();
+					//attribute :n_g 
+					//child :player do
+					//	attribute :id, :fb, :f_n, :l_n, :n_n, :gravatar, :n_w
+					opponent.setNumGames(o.getNumGames());
+					opponent.setStatus(o.getStatus());
+					Player p = new Player();
+					p.setId(o.getPlayer().getId());
+					p.setNickname(o.getPlayer().getNickname());
+					p.setFirstName(o.getPlayer().getFirstName());
+					p.setLastName(o.getPlayer().getLastName());
+					p.setGravatar(o.getPlayer().getGravatar());
+					p.setFB(o.getPlayer().getFB());
+					p.setNumWins(o.getPlayer().getNumWins());
+					opponent.setPlayer(p);
+					player.getOpponents().add(opponent);
+				}
+				
+				
+				//player.setOpponents(player.getOpponents_());
+				//clear out server list just to save on local storage space and gson processing
+				player.getOpponents_().clear();
+			}
+			
+			
+			
+			Player currentPlayer = new Player();
+			currentPlayer.setId(player.getId());
+			currentPlayer.setNickname(player.getNickname());
+			currentPlayer.setFirstName(player.getFirstName());
+			currentPlayer.setLastName(player.getLastName());
+			currentPlayer.setGravatar(player.getGravatar());
+			currentPlayer.setFB(player.getFB());
+			currentPlayer.setNumWins(player.getNumWins());
+			
+			Logger.d(TAG, "loading players from opponent list activegames=" + player.getActiveGamesYourTurn().size() + " opponent=" + player.getActiveGamesOpponentTurn().size() + " completed=" + player.getCompletedGames().size());
+			//since the players are no longer being sent as part of playerGame, load the Player properties for playerGames and playedWords from opponents list
+			//if the playerId does not exist in the opponents list, create a placeholder player
+			for (Game game : player.getActiveGamesYourTurn()){
+			
+				for (PlayerGame pg : game.getPlayerGames()){
+					Logger.d(TAG, "getActiveGamesYourTurn game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
+					pg.setPlayer(getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
+					//pg.setPlayer(null);
+				}
+			}
+			for (Game game : player.getActiveGamesOpponentTurn()){
+			
+				for (PlayerGame pg : game.getPlayerGames()){
+					Logger.d(TAG, "getActiveGamesOpponentTurn game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
+					pg.setPlayer(getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
+					//pg.setPlayer(null);
+				}
+			}
+			for (Game game : player.getCompletedGames()){
+				
+				for (PlayerGame pg : game.getPlayerGames()){
+					Logger.d(TAG, "getCompletedGames game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
+					pg.setPlayer(getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
+					//pg.setPlayer(null);
+				}
+			}
+			if (player.getNotificationGame() != null){
+				for (PlayerGame pg : player.getNotificationGame().getPlayerGames()){
+				 	Logger.d(TAG, "getNotificationGame game=" + player.getNotificationGame().getId() + " pg.getPlayerId()" + pg.getPlayerId());
+					pg.setPlayer(getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
+				//	pg.setPlayer(null);
+				}
+			}
+			
+			
 			//Logger.w(TAG, "handlePlayerResponse num active and opponent=" + player.getActiveGamesYourTurn().size() + " " + player.getActiveGamesOpponentTurn().size());
 
 			long now =  Utils.convertNanosecondsToMilliseconds(System.nanoTime());
@@ -544,6 +625,37 @@ public class PlayerService {
 	        //Logger.w(TAG, "player=" + gson.toJson(player));
 	        return player;
 
+	}
+	
+	public static Player getPlayerFromOpponentList(List<Opponent> opponents, Player player, String opponentId){
+		Logger.d(TAG, "getPlayerFromOpponentList opponentId=" + opponentId);
+		Player opponent = null;
+		if (opponentId.equals(player.getId())){ //because the player has a playerGame record as well
+			opponent = player;
+		}
+		else {
+			for (Opponent o : opponents){
+				Logger.d(TAG, "getPlayerFromOpponentList opponentLoopId=" + o.getPlayer().getId());
+				if (o.getPlayer().getId().equals(opponentId)){
+					opponent = new Player();
+					opponent.setId(o.getPlayer().getId());
+					opponent.setNickname(o.getPlayer().getNickname());
+					opponent.setFirstName(o.getPlayer().getFirstName());
+					opponent.setLastName(o.getPlayer().getLastName());
+					opponent.setGravatar(o.getPlayer().getGravatar());
+					opponent.setFB(o.getPlayer().getFB());
+					opponent.setNumWins(o.getPlayer().getNumWins());
+				//	opponent = o.getPlayer();
+					break;
+				}
+			}
+			if (opponent == null) {
+				opponent = new Player();
+				opponent.setId(opponentId);
+				opponent.setNickname(opponentId);
+			}
+		}
+		return opponent;
 	}
 	
 	public static Player updateAuthToken(final Context ctx, String authToken){

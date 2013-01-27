@@ -14,6 +14,8 @@ public class Opponent  implements Parcelable{
 	@SerializedName("n_g")
 	private int numGames = 0;  
 
+	@SerializedName("st")
+	private int status = 0;  
 	
 	public Player getPlayer() {
 		return player;
@@ -28,6 +30,15 @@ public class Opponent  implements Parcelable{
 
 	public void setNumGames(int numGames) {
 		this.numGames = numGames;
+	}
+
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public int describeContents() {
@@ -56,6 +67,10 @@ public class Opponent  implements Parcelable{
 		this.player = in.readParcelable(Player.class.getClassLoader());
 		this.numGames = in.readInt();
 		}
+
+	public Opponent() {
+		// TODO Auto-generated constructor stub
+	}
 
 	
 	

@@ -89,7 +89,9 @@ public class Game implements Parcelable, Comparable<Game> {
 		this.chats = chats;
 	}
 	
-	
+	//only used for new games, to add opponent to the player for "client-side joins"
+	@SerializedName("opps")
+	private List<Opponent> opponents_ = new ArrayList<Opponent>();
 
 	public Date getLastChatDate() {
 		return lastChatDate;
@@ -97,6 +99,15 @@ public class Game implements Parcelable, Comparable<Game> {
 
 	public void setLastChatDate(Date lastChatDate) {
 		this.lastChatDate = lastChatDate;
+	}
+
+	
+	public List<Opponent> getOpponents_() {
+		return opponents_;
+	}
+
+	public void setOpponents_(List<Opponent> opponents_) {
+		this.opponents_ = opponents_;
 	}
 
 	private Player getLastTurnPlayer(){

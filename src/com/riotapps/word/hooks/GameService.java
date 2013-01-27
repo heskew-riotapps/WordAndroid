@@ -412,12 +412,71 @@ public class GameService {
 		 Gson gson = new Gson(); //wrap json return into a single call that takes a type
     	 
 		// Logger.w(TAG, "handleGameResponse incoming json=" + IOHelper.streamToString(iStream));
-   	  //Logger.d(TAG, "handleCreateGameResponse");
+   	   Logger.d(TAG, "handleGameResponse result=" + result);
         
          //Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 
          Type type = new TypeToken<Game>() {}.getType();
          Game game = gson.fromJson(result, type);
+         
+         Player player = PlayerService.getPlayerFromLocal();
+         
+         Player currentPlayer = new Player();
+         currentPlayer.setId(player.getId());
+         currentPlayer.setNickname(player.getNickname());
+         currentPlayer.setFirstName(player.getFirstName());
+         currentPlayer.setLastName(player.getLastName());
+         currentPlayer.setGravatar(player.getGravatar());
+         currentPlayer.setFB(player.getFB());
+         currentPlayer.setNumWins(player.getNumWins());
+     	 
+         for (PlayerGame pg : game.getPlayerGames()){
+			pg.setPlayer(PlayerService.getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
+         }
+		 
+         
+         //this means the game was just created.  lets see if any of these opponents are new. if so they need to be added to the 
+         //player's opponent list that is stored locally
+         
+         Logger.d(TAG, "createGame game.getOpponents_().size()=" + game.getOpponents_().size());
+         if (game.getOpponents_().size() > 0){
+        	 boolean resavePlayer = false;
+        	 for (Opponent o : game.getOpponents_()){
+        		 Logger.d(TAG,"createGame opponentLoop playerid=" + o.getPlayer().getId());
+        		 boolean exists = false;
+        		 for (Opponent oContext : player.getOpponents()){
+        			 if (o.getPlayer().getId().equals(oContext.getPlayer().getId())){
+        				 //opponent already exists.  don't need to add
+        				 exists = true;
+                		 Logger.d(TAG,"createGame opponentLoop playerid exists=" + o.getPlayer().getId());
+        			 }
+        		 }
+        		 if (!exists){
+        			 Logger.d(TAG,"createGame opponentLoop playerid NOT exists=" + o.getPlayer().getId());
+        			 resavePlayer = true;
+        			 //add to opponents list
+        			Opponent opponent = new Opponent();
+ 					opponent.setNumGames(o.getNumGames());
+ 					opponent.setStatus(o.getStatus());
+ 					Player p = new Player();
+ 					p.setId(o.getPlayer().getId());
+ 					p.setNickname(o.getPlayer().getNickname());
+ 					p.setFirstName(o.getPlayer().getFirstName());
+ 					p.setLastName(o.getPlayer().getLastName());
+ 					p.setGravatar(o.getPlayer().getGravatar());
+ 					p.setFB(o.getPlayer().getFB());
+ 					p.setNumWins(o.getPlayer().getNumWins());
+ 					opponent.setPlayer(p);
+ 					player.getOpponents().add(opponent);
+        		 }
+        	 }
+        	 if (resavePlayer){
+        		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+     	         SharedPreferences.Editor editor = settings.edit();
+        		 editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+        		 editor.commit();  
+        	 }
+         }
         
        // Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
 	       
@@ -782,7 +841,8 @@ public class GameService {
 	
 	//return int that represents the display message
 	public static PlacedResult checkPlayRules(Context context, TileLayout layout, Game game, List<GameTile> boardTiles, 
-					List<com.riotapps.word.ui.TrayTile> trayTiles, AlphabetService alphabetService, WordService wordService) throws DesignByContractException{
+					List<com.riotapps.word.ui.TrayTile> trayTiles, AlphabetService alphabetService, WordService wordService,
+					boolean bypassValidWordCheck) throws DesignByContractException{
 		
 		PlacedResult placedResult = new PlacedResult();
 		
@@ -874,10 +934,12 @@ public class GameService {
         for (PlacedWord word : words)
         {
             totalPoints += word.getTotalPoints();
-            if (appContext.getWordService().isWordValid(word.getWord().toLowerCase()) == false)
-            {
-            	Logger.d(TAG, "checkPlayRules invalid word=" + word.getWord());
-                invalidWords.add(word);
+            if (!bypassValidWordCheck){
+            	if (appContext.getWordService().isWordValid(word.getWord().toLowerCase()) == false)
+            	{
+            	//	Logger.d(TAG, "checkPlayRules invalid word=" + word.getWord());
+            		invalidWords.add(word);
+            	}
             }
         }
 

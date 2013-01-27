@@ -32,6 +32,14 @@ public class Logger {
 			Log.d((tag==null?"UNKNOWN_TAG":tag), (msg==null?"unknown message":msg));
 		}
 	}
+	
+	public static void longInfo(String tag, String str) {
+	    if(str.length() > 1000) {
+	        Log.d(tag, str.substring(0, 1000));
+	        longInfo(tag, str.substring(1000));
+	    } else
+	        Log.d(tag, str);
+	}
 
 	public static void e(String tag, String msg){
 		Logger.e((tag==null?"UNKNOWN_TAG":tag), (msg==null?"unknown message":msg), null);

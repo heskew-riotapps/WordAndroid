@@ -41,7 +41,7 @@
 		  </intent-filter>
 		</receiver>
 
-        <service android:enabled="true" android:name="com.riotapps.word.services.WordLoaderService" />
+        <service android:enabled="true" android:name="com.riotapps.word.services.WordLoaderService"  android:process=":bkgdLoader"/>
         <service android:name=".GCMIntentService" />
         
        <activity android:name=".Splash" android:label="@string/app_name" android:screenOrientation="portrait">

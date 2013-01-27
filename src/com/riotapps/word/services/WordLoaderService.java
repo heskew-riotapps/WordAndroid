@@ -31,8 +31,13 @@ public class WordLoaderService extends Service {
       //code to execute when the service is starting up
 	   Logger.d(TAG, "onStartCommand called");
 	   ApplicationContext appContext = (ApplicationContext)this.getApplicationContext();
-	   
-	   appContext.getWordService().loadAll();
+	   try{
+		   appContext.getWordService().loadAll();
+	   }
+	   catch (Exception e){
+		   Logger.d(TAG, e.toString());
+	   }
+	   Logger.d(TAG, "all words loaded");
 	   
 	   this.stopSelf();
 	   return START_STICKY;

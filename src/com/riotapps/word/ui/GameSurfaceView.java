@@ -106,8 +106,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private static final long DOUBLE_TAP_DURATION_IN_NANOSECONDS = 800000000;
     private static final long MOVE_STOPPED_DURATION_IN_MILLISECONDS = 200;
     private static final float MOVEMENT_TRIGGER_THRESHOLD = .05f;
-    private static final int MAX_LOGO_HEIGHT = 36;
-    private static final long MAX_TEXT_HEIGHT = 22;
+    private static final int MAX_LOGO_HEIGHT = 42;
+    private static final long MAX_TEXT_HEIGHT = 28;
     private static final float MAX_TEXT_WIDTH = .90F;
     private static final int DECELERATION = 100;
     private float xVelocity = 0;
@@ -1485,7 +1485,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 private void resetPointsView(){
 		 if (!this.parent.getGame().isCompleted()){
 			 try{
-					PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
+					PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService, true);
 					this.parent.setPointsView(placedResult.getTotalPoints());
 				}
 				catch (DesignByContractException e){
@@ -2549,7 +2549,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	public void onPlayClick(){
 		try{
-			final PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService);
+			final PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService, false);
 		
 			this.parent.setPointsView(placedResult.getTotalPoints());
 			

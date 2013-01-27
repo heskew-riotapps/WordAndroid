@@ -349,6 +349,8 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 		    	   TextView tvInvitationWillBeSent = (TextView) rowView.findViewById(R.id.tvInvitationWillBeSent);
 		    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
 		    	   tvPlayerName.setText(friend.getAdjustedName(23));
+		    	   ImageView ivBadge = (ImageView)rowView.findViewById(R.id.ivPlayerBadge);
+		    	   TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
 		    	   
 		    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
 		    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
@@ -357,13 +359,13 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 		    	   if (friend.isRegisteredPlayer()){
 		    		   int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + friend.getBadgeDrawable(), null, null);
 		    		   
-			    		ImageView ivBadge = (ImageView)rowView.findViewById(R.id.ivPlayerBadge);
+			    		
 
 		   				Logger.d(TAG, "FBFriendArrayAdapter friend drawable=" + friend.getName() + " " + friend.getBadgeDrawable() + " badge=" + badgeId + " " + (ivBadge == null));
 		   				
 			   			ivBadge.setImageResource(badgeId);
 			   			
-			   			TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
+			   			
 						if (friend.getNumWins() == 1){
 							tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
 						}
@@ -375,9 +377,14 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 						}
 						
 						tvInvitationWillBeSent.setVisibility(View.GONE);
+						ivBadge.setVisibility(View.VISIBLE);
+						tvPlayerWins.setVisibility(View.VISIBLE);
+						  
 		    	   }
 		    	   else{
 		    		   tvInvitationWillBeSent.setVisibility(View.VISIBLE);
+						ivBadge.setVisibility(View.GONE);
+						tvPlayerWins.setVisibility(View.GONE);
 		    	   }
 		    	   
 		    	   rowView.setTag(friend.getId());

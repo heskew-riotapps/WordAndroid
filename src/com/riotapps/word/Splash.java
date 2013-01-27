@@ -22,6 +22,7 @@ import com.google.android.gcm.GCMRegistrar;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
+import com.riotapps.word.services.WordLoaderService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.*;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -50,8 +51,8 @@ public class Splash  extends FragmentActivity {
         this.captureTime("onCreate starting");
         this.gameId = this.getIntent().getStringExtra(Constants.EXTRA_GAME_ID);
         
-       // Intent i = new Intent(this, WordLoaderService.class);
-       // this.startService(new Intent(this, WordLoaderService.class));
+       //Intent i = new Intent(this, WordLoaderService.class);
+         this.startService(new Intent(this, WordLoaderService.class));
         //sendMessage(this, "123", "message from Wordsmash");
         
         this.captureTime("GCMRegistrar starting");
