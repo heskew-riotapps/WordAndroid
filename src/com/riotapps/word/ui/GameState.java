@@ -116,7 +116,7 @@ public class GameState {
 	public void addTrayLocation(int index, String letter){
 		if (this.locations.size() < 7){
 			
-			Logger.d(TAG, "addTrayLocation index=" + index + " letter=" + letter);
+			//Logger.d(TAG, "addTrayLocation index=" + index + " letter=" + letter);
 			
 			GameStateLocation location = new GameStateLocation();
 			location.setLetter(letter);

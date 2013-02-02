@@ -135,6 +135,10 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	protected void onRestart() {
 		//Log.w(TAG, "onRestart called");
 		super.onRestart();
+		
+		if (this.player == null){
+			this.player = PlayerService.getPlayerFromLocal();
+		}
 		 
 		//if (!this.getIntent().getBooleanExtra(name, false)){
 		//	//((Activity) context).runOnUiThread(new handleGameListCheck());
@@ -200,6 +204,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			this.timer.cancel();
 			this.timer = null;
 		}
+		this.player = null;
 
 	}
 
@@ -230,7 +235,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	llCompletedGames.removeAllViews();
 
     	
-  	Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() size=" + this.player.getActiveGamesYourTurn().size() );
+  //	Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() size=" + this.player.getActiveGamesYourTurn().size() );
 
     	
     	int i = 1;
@@ -259,7 +264,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     		}
     	}
 
-        Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() size=" + this.player.getActiveGamesOpponentTurn().size() );
+     //   Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() size=" + this.player.getActiveGamesOpponentTurn().size() );
     	i = 1;
     	if (this.player.getActiveGamesOpponentTurn().size() > 0){
     	
@@ -277,7 +282,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	}
     	
     	
-        Logger.w(TAG, "loadLists this.player.getCompletedGames() size=" + this.player.getCompletedGames().size() );
+     //   Logger.w(TAG, "loadLists this.player.getCompletedGames() size=" + this.player.getCompletedGames().size() );
     	i = 1;
     	if (this.player.getCompletedGames().size() > 0){
 	        for (Game g : this.player.getCompletedGames()){
@@ -606,6 +611,8 @@ private void handleGameClick(String gameId){
 			            	 
 			            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
 			            	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
+			            	 
+			            	 game = null;
 			      	      	 this.context.startActivity(intent);
 	            		 }
 	            		 else{	 //this is the same as authenticating, so this is ok

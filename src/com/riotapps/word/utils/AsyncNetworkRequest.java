@@ -177,13 +177,15 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, NetworkTaskResu
 	                     sb.append(line + "\n");
 	                 }
 	                 iStream.close();
-	
+	                 reader = null;	
 	                 result.setResult(sb.toString());
 	             } catch (Exception e) {
 	            	 Logger.e(TAG,"doInBackground error converting result to string= " + e); 
 	             }
 	         }
          }
+         serverResponseObject = null;
+         
 	     return result;  
 
 	 }//end method doInBackground()

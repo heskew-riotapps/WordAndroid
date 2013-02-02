@@ -34,10 +34,12 @@ public class Constants {
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 20000;
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 1000;
 	public static final int REGISTERED_FB_FRIENDS_CACHE_DURATION = 604800000; //a week of milliseconds
-	public static final int SPLASH_ACTIVITY_TIMEOUT = 1000;
+	public static final int SPLASH_ACTIVITY_TIMEOUT = 1500;
 	public static final int NETWORK_CONNECTIVITY_CHECK_DURATION = 2000;
 	public static final long GAME_LIST_CHECK_START_IN_MILLISECONDS = 300000;// 300000;
 	public static final long GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS = 300000;// = 300000;
+	public static final long GAME_SURFACE_CHECK_START_IN_MILLISECONDS = 30000;// 300000;
+	public static final long GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS = 30000;// = 300000;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
@@ -73,6 +75,7 @@ public class Constants {
  	public static final String USER_PREFS_GAME_LIST_CHECK_TIME = "game_list_check";
  	public static final String USER_PREFS_GCM_REGISTRATION_ID = "gcm";
 	public static final String USER_PREFS_GAME_ALERT_CHECK = "game_alert_check_%s";
+	public static final String USER_PREFS_FIRST_TIME_GAME_SURFACE_ALERT_CHECK = "f_t_g_s";
 	public static final String USER_PREFS_GAME_CHAT_CHECK = "game_chat_check_%s";
  	public static final String USER_PREFS_LATEST_COMPLETED_GAME_DATE = "cg_date";
  	public static final String GAME_STATE = "game_state";
@@ -96,8 +99,8 @@ public class Constants {
 	 * the web
 	 *==============================================*/  
 	public static final boolean HIDE_ALL_ADS = false;          
-	//public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";        
-	public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";      
+	public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";        
+	//public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";      
 	public static final String FACEBOOK_API_ID = "314938401925933"; 
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
@@ -114,6 +117,7 @@ public class Constants {
 	public static final String REST_PLAYER_GCM_REGISTER = REST_URL_SITE + "games/gcm_register.json";
 	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "games.json";
 	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get.json";
+	public static final String REST_GAME_REFRESH_URL = REST_URL_SITE + "games/refresh.json";
 	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_all_by_fb";
 	public static final String REST_GAME_CANCEL = REST_URL_SITE + "games/cancel";
 	public static final String REST_GAME_PLAY = REST_URL_SITE + "games/play";

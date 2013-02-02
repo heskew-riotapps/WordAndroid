@@ -149,7 +149,16 @@ public class Player implements Parcelable{
 			return this.getNickname();
 		}
 		//if (this.nickname.length() > 0){return this.nickname;}
-		
+	}
+	
+	public String getFirstNameOrNickname(){
+		if (this.isFacebookUser()){
+			return this.getFirstName();	
+		}
+		else{
+			return this.getNickname();
+		}
+		//if (this.nickname.length() > 0){return this.nickname;}
 	}
 	
  
@@ -356,7 +365,7 @@ public class Player implements Parcelable{
 	public List<Opponent> getOfficialOpponents() {
 		List<Opponent> opponents = new ArrayList<Opponent>();
 		for (Opponent o : this.getOpponents()){
-			if (o.getStatus() == 2){
+			if (o.getStatus() == 2 || o.getStatus() == 1){ //1 will go away soon
 				opponents.add(o);
 			}
 		}

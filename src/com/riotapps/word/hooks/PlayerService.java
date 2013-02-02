@@ -166,8 +166,12 @@ public class PlayerService {
 	 
 		Check.Require(authToken.length() > 0, ctx.getString(R.string.validation_auth_token_required));
 
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+
 	    TransportGameListCheck player = new TransportGameListCheck();
 		player.setToken(authToken);
+		player.setCompletedGameDate(new Date(completedDate));
 		player.setLastRefreshDate(lastRefreshDate);
 		
 		return gson.toJson(player);
@@ -214,6 +218,22 @@ public class PlayerService {
 		return gson.toJson(updateAccount);
 	}
 	
+	
+	public static boolean checkFirstTimeGameSurfaceAlertAlreadyShown(Context context){
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		if (settings.getBoolean(Constants.USER_PREFS_FIRST_TIME_GAME_SURFACE_ALERT_CHECK, false) == false) { 
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean(Constants.USER_PREFS_FIRST_TIME_GAME_SURFACE_ALERT_CHECK,true);
+			editor.commit();
+			Logger.d(TAG, "checkFirstTimeAlertAlreadyShown=false");
+			return false;
+		}
+		else{
+			Logger.d(TAG, "checkFirstTimeAlertAlreadyShown=true");
+			return true;
+		}
+	}
+	
 	public static void updateRegistrationId(Context context, String gcmRegistrationId){ 
 		
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
@@ -234,7 +254,7 @@ public class PlayerService {
 		List<FBFriend> fbFriends = new ArrayList<FBFriend>();
 		
 		for(GraphUser user : users){
-			Logger.d(TAG, "saveFacebookFriendsFromJSONResponse user=" + user.getId() + " " + user.getName());
+			//Logger.d(TAG, "saveFacebookFriendsFromJSONResponse user=" + user.getId() + " " + user.getName());
 			FBFriend fbFriend = new FBFriend();
 
 			fbFriend.setId(user.getId());
@@ -262,7 +282,12 @@ public class PlayerService {
 	 
 	    editor.commit(); 
 	    
-	    String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
+	   // String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
+	    
+	    friendsList = null;
+	    fbFriends = null;
+	    friendJSON = null;
+	    gson = null;		
 	   // Logger.w(TAG, "saveFacebookFriendsFromJSONResponse friendsLocal=" + friendsLocal.length());
 	}
 	
@@ -422,6 +447,8 @@ public class PlayerService {
 		else { 			
 			tvHeaderContextPlayerWins.setText(String.format(context.getString(R.string.header_num_wins), player.getNumWins())); 
 		}
+		
+		player = null;
 	}
 	
 	
@@ -458,7 +485,15 @@ public class PlayerService {
 	       // Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 	        
     		Logger.d(TAG, "handlePlayerResponse result=" + result.length() + " " + result);
-    	
+
+	        Player storedPlayer = getPlayerFromLocal();
+	    
+	        List<Opponent> localOpponents = new ArrayList<Opponent>();
+
+	        if (storedPlayer != null && storedPlayer.getOpponents() != null){
+	        	localOpponents = storedPlayer.getOpponents(); 
+	        }
+    		
 	        Type type = new TypeToken<Player>() {}.getType();
 	        Player player = gson.fromJson(result, type);
 	        
@@ -471,6 +506,7 @@ public class PlayerService {
 	       // Logger.w(TAG, "handlePlayerResponse auth=" + player.getAuthToken() + " " + gson.toJson(player));
 	        Date completedDate = new Date(settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE));
 	        
+	     //   Logger.d(TAG,"handlePlayerResponse about to check completed games");
 	        if (player.getCompletedGames().size() > 0) {
 	        	//reset the rolling latest completion date to last completed game's date. this makes the response from the server as small as possible
 	        	for (Game game : player.getCompletedGames()) {
@@ -481,30 +517,51 @@ public class PlayerService {
 	            }
 	        }
 	        
+	        Logger.d(TAG,"handlePlayerResponse about to getPlayerFromLocal");
 	        //manage the local completed games list, only keep 10 max in the list. roll off older games.
 	        //do this before the player is stored locally
-	        Player storedPlayer = getPlayerFromLocal();
 	        if (storedPlayer != null){
+	        	//Logger.d(TAG,"handlePlayerResponse starting completed games, num stored=" + storedPlayer.getCompletedGames().size() + " num incoming=" + player.getCompletedGames().size());
 	        	if (storedPlayer.getCompletedGames().size() + player.getCompletedGames().size() > Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE){
 	        		//more than x games are found in combined list. remove earliest to get the list down to x number
+	        		
+	        		//Logger.d(TAG,"handlePlayerResponse about to loop completed games from server");
 	        		List<Game> combinedGames = storedPlayer.getCompletedGames();
 	        		for (Game game : player.getCompletedGames()) {
+	        			
+	        			//Logger.d(TAG,"handlePlayerResponse about to inner loop completed games from local - gameId=" + game.getId() + " completed date =" + game.getCompletionDate().toString());
 	        			//dont add game if it already happens to be here
 	        			boolean add = true;
-	        			for (Game innerGame : storedPlayer.getCompletedGames()) {
+	        			for (Game innerGame : combinedGames) {
+	        				
+	        			//	Logger.d(TAG,"handlePlayerResponse inside inner loop completed games - innerGame.getId()=" + innerGame.getId());
 	        				if (innerGame.getId().equals(game.getId())){
+	        					Logger.d(TAG,"handlePlayerResponse inside inner loop do not add to list");
 	        					add = false;
 	        					//update stored game's last chat date, just in case its changed
 	        					innerGame.setLastChatDate(game.getLastChatDate());
+	        					break;
 	        				}
 	        			}
-	        			if (add) {combinedGames.add(game);}
+	        			if (add) {
+	        			//	Logger.d(TAG,"handlePlayerResponse inside loop completed games- adding game=" + game.getId());
+	        				combinedGames.add(game);
+	        			}
 		            }
 	        		
-	        		
+	        		//Logger.d(TAG,"handlePlayerResponse sorting completed games, num=" + combinedGames.size());
 	        		Collections.sort(combinedGames);
 	        		
-	        		combinedGames.subList(Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE + 1, combinedGames.size()).clear();
+	        		//Logger.d(TAG,"handlePlayerResponse about to truncate games at end");
+	        		//combinedGames.subList(Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE + 1, combinedGames.size()).clear();
+	        		
+	        		if (combinedGames.size() > Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE){
+		        		for(int i = combinedGames.size() - 1; i >= Constants.NUM_LOCAL_COMPLETED_GAMES_TO_STORE ; i--){
+		        		    combinedGames.remove(i);
+		        		}
+	        		}
+	        		
+	        		//Logger.d(TAG,"handlePlayerResponse afer truncation completed games, num=" + combinedGames.size());
 	        		player.setCompletedGames(combinedGames);
 	        	}
 	        }
@@ -526,6 +583,8 @@ public class PlayerService {
 					opponentTurn.add(game);
 				}
 	        }
+			
+			//Logger.d(TAG,"handlePlayerResponse setting active games opponentTurn=" + opponentTurn.size() + " yourTurn=" + yourTurn.size());
 			player.setActiveGamesOpponentTurn(opponentTurn);
 			player.setActiveGamesYourTurn(yourTurn);
 			
@@ -535,11 +594,18 @@ public class PlayerService {
 			
 			//if opponent list comes from the server, move it to local opponents list, otherwise local opponents
 			//list should already be populated
-			if (player.getOpponents_() != null){
+	       //  Logger.d(TAG, "handlePlayerResponse numOpponents=" + player.getOpponents().size() );
+ 
+			if (player.getOpponents_() != null && player.getOpponents_().size() > 0){
+
+				//get opponents from storedPlayer
+				
+			//	Logger.d(TAG,"handlePlayerResponse pulling opponents from server to local");
 				player.getOpponents().clear();
 				//pull real opponents list from server list
 				//loop through to save non-referenced objects
 				for (Opponent o : player.getOpponents_()){
+				//	Logger.d(TAG,"handlePlayerResponse looping opponents player=" + o.getPlayer().getId());
 					Opponent opponent = new Opponent();
 					//attribute :n_g 
 					//child :player do
@@ -563,8 +629,10 @@ public class PlayerService {
 				//clear out server list just to save on local storage space and gson processing
 				player.getOpponents_().clear();
 			}
-			
-			
+			else {
+				//if opponents are not loaded from server, make sure to pull them in from local storage 
+				player.setOpponents(localOpponents);
+			}	
 			
 			Player currentPlayer = new Player();
 			currentPlayer.setId(player.getId());
@@ -575,36 +643,45 @@ public class PlayerService {
 			currentPlayer.setFB(player.getFB());
 			currentPlayer.setNumWins(player.getNumWins());
 			
-			Logger.d(TAG, "loading players from opponent list activegames=" + player.getActiveGamesYourTurn().size() + " opponent=" + player.getActiveGamesOpponentTurn().size() + " completed=" + player.getCompletedGames().size());
+			//Logger.d(TAG, "loading players from opponent list activegames=" + player.getActiveGamesYourTurn().size());
 			//since the players are no longer being sent as part of playerGame, load the Player properties for playerGames and playedWords from opponents list
 			//if the playerId does not exist in the opponents list, create a placeholder player
 			for (Game game : player.getActiveGamesYourTurn()){
 			
 				for (PlayerGame pg : game.getPlayerGames()){
-					Logger.d(TAG, "getActiveGamesYourTurn game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
+				//	Logger.d(TAG, "getActiveGamesYourTurn game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
 					pg.setPlayer(getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
 					//pg.setPlayer(null);
 				}
 			}
+			
+			//Logger.d(TAG, "loading players from opponent list opponent games=" + player.getActiveGamesOpponentTurn().size());
+
 			for (Game game : player.getActiveGamesOpponentTurn()){
 			
 				for (PlayerGame pg : game.getPlayerGames()){
-					Logger.d(TAG, "getActiveGamesOpponentTurn game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
+					//Logger.d(TAG, "getActiveGamesOpponentTurn game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
 					pg.setPlayer(getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
 					//pg.setPlayer(null);
 				}
 			}
+			
+			//Logger.d(TAG, "loading players from opponent list - completed=" + player.getCompletedGames().size());
+
 			for (Game game : player.getCompletedGames()){
 				
 				for (PlayerGame pg : game.getPlayerGames()){
-					Logger.d(TAG, "getCompletedGames game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
+					//Logger.d(TAG, "getCompletedGames game=" +game.getId() + " pg.getPlayerId()" + pg.getPlayerId());
 					pg.setPlayer(getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
 					//pg.setPlayer(null);
 				}
 			}
+			
+		//	Logger.d(TAG, "loading players getNotificationGame");
+
 			if (player.getNotificationGame() != null){
 				for (PlayerGame pg : player.getNotificationGame().getPlayerGames()){
-				 	Logger.d(TAG, "getNotificationGame game=" + player.getNotificationGame().getId() + " pg.getPlayerId()" + pg.getPlayerId());
+				 	//Logger.d(TAG, "getNotificationGame game=" + player.getNotificationGame().getId() + " pg.getPlayerId()" + pg.getPlayerId());
 					pg.setPlayer(getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
 				//	pg.setPlayer(null);
 				}
@@ -621,21 +698,28 @@ public class PlayerService {
 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
 	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
 	        editor.commit();  
-	        
+	         
+	        Logger.d(TAG, "handlePlayerResponse numOpponents=" + player.getOpponents().size() );
 	        //Logger.w(TAG, "player=" + gson.toJson(player));
+	        
+	        storedPlayer = null;
+	        localOpponents = null;
+	        gson = null;
+	        result = null;
+	        
 	        return player;
 
 	}
 	
 	public static Player getPlayerFromOpponentList(List<Opponent> opponents, Player player, String opponentId){
-		Logger.d(TAG, "getPlayerFromOpponentList opponentId=" + opponentId);
+	//	Logger.d(TAG, "getPlayerFromOpponentList opponentId=" + opponentId);
 		Player opponent = null;
 		if (opponentId.equals(player.getId())){ //because the player has a playerGame record as well
 			opponent = player;
 		}
 		else {
 			for (Opponent o : opponents){
-				Logger.d(TAG, "getPlayerFromOpponentList opponentLoopId=" + o.getPlayer().getId());
+			//	Logger.d(TAG, "getPlayerFromOpponentList opponentLoopId=" + o.getPlayer().getId());
 				if (o.getPlayer().getId().equals(opponentId)){
 					opponent = new Player();
 					opponent.setId(o.getPlayer().getId());
@@ -652,7 +736,13 @@ public class PlayerService {
 			if (opponent == null) {
 				opponent = new Player();
 				opponent.setId(opponentId);
-				opponent.setNickname(opponentId);
+				opponent.setNickname("ws_" + opponentId.substring(15, opponentId.length()));
+				opponent.setFB("");
+				opponent.setFirstName("");
+				opponent.setLastName("");
+				opponent.setNumWins(0);
+				opponent.setGravatar(Utils.md5("nobody__@riotapps.com"));
+				//figure out unknown gravatar link
 			}
 		}
 		return opponent;
@@ -879,6 +969,8 @@ public class PlayerService {
  	        
  	        Type type = new TypeToken<Player>() {}.getType();
  	        Player player = gson.fromJson(result, type);
+ 	        
+ 	        result = null;
  	        return player;  
          } 
          catch (Exception e) {

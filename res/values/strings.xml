@@ -518,5 +518,6 @@
 		<string name="game_surface_rematch_with_1">rematch with\n%s</string>		
 		<string name="game_surface_rematch_with_2">rematch with\n%1$s\n%2$s</string>
 		<string name="game_surface_rematch_with_3">rematch with\n%1$s\n%2$s\n%3$s</string>
-		
+		<string name="game_surface_first_time_alert_title">quick tips</string>
+		<string name="game_surface_first_time_alert_message">welcome to WordSmash, %s!\n\nto zoom in or out just single tap the game board.\n\ndrag letters from the tray onto the board to form words in a single axis.\n\nthe first played word must be played on at least one smiley.\n\nletters can be played on top of previously played letters.\n\ngood luck!</string>
 </resources>

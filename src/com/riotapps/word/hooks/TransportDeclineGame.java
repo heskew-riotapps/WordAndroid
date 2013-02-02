@@ -10,6 +10,17 @@ public class TransportDeclineGame {
 	
 	@SerializedName("id")
 	private String gameId;
+	
+	@SerializedName("c_g_d")
+	private Date completedGameDate;
+
+	public Date getCompletedGameDate() {
+		return completedGameDate;
+	}
+
+	public void setCompletedGameDate(Date completedGameDate) {
+		this.completedGameDate = completedGameDate;
+	}
 
 	public TransportDeclineGame(){}
 	

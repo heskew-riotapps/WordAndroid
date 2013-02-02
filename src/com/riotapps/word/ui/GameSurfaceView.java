@@ -22,6 +22,7 @@ import com.riotapps.word.utils.Utils;
 import android.os.Message;
 import android.util.Log;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
  
 import android.graphics.Bitmap;
@@ -229,6 +230,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private void clearDropTargetTrayTile(){
     	this.dropTargetTrayTileId = -1;
     }
+
     
     //private TrayTile currentTrayTile = null;
     private Bitmap trayBackground;
@@ -1698,13 +1700,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 
 	 @Override
 	 protected void onDraw(Canvas canvas) {
-		 this.parent.captureTime("onDraw starting");
+		// this.parent.captureTime("onDraw starting");
 		 if (canvas == null){
 			 return;
 		 }
  		// super.onDraw(canvas);
-	 Logger.d(TAG,  "onDraw motion=" + this.currentTouchMotion + " " + " zoom=" + this.isZoomed + " tapCheck=" + this.tapCheck + " osMoving=" +  this.isMoving  + " readyToDraw=" + this.readyToDraw + " prevX=" + this.previousX + " prevY=" + this.previousY
-	 			 + " currX=" + this.currentX + " currY=" + this.currentY);
+	// Logger.d(TAG,  "onDraw motion=" + this.currentTouchMotion + " " + " zoom=" + this.isZoomed + " tapCheck=" + this.tapCheck + " osMoving=" +  this.isMoving  + " readyToDraw=" + this.readyToDraw + " prevX=" + this.previousX + " prevY=" + this.previousY
+	// 			 + " currX=" + this.currentX + " currY=" + this.currentY);
 	 
 	// Logger.d(TAG, "this.getDraggingTile()=" + (this.getDraggingTile() == null));
 		 
@@ -2520,6 +2522,33 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		}
 	}
 	
+	public void resetGameAfterRefresh(){
+		//loop through game tiles, changing placed letter to original letter
+		//doing it this way keeps the previous drag locations set properly
+		for (GameTile tile : this.tiles){
+			 //reset all last played flags
+            tile.setLastPlayed(false);
+
+			if (tile.getPlacedLetter().length() > 0){
+				 tile.setOriginalBitmap(this.bgBaseScaled); //this will change as default bonus and played tiles are incorporated
+				 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(this.bgBaseZoomed); }
+				 
+				 tile.setOriginalLetter(tile.getPlacedLetter());
+				 tile.setPlacedLetter("");
+				 tile.setLastPlayed(true);
+			}
+		}
+		
+	   	this.LoadTray();
+	    this.setInitialButtonStates();
+	   
+	    this.afterPlayRedraw = true;
+		this.readyToDraw = true;
+		
+		this.parent.setPointsAfterPlayView();
+		// this.resetPointsView();
+		}
+	
 	public void resetGameAfterPlay(){
 		//loop through game tiles, changing placed letter to original letter
 		//doing it this way keeps the previous drag locations set properly
@@ -2555,7 +2584,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			
 			if (placedResult.getPlacedTiles().size() == 0){
 				//user is skipping this turn
-				final CustomDialog dialog = new CustomDialog(context, 
+				final CustomButtonDialog dialog = new CustomButtonDialog(context, 
 		    			context.getString(R.string.game_play_skip_title), 
 		    			context.getString(R.string.game_play_skip_confirmation_text),
 		    			context.getString(R.string.yes),
@@ -2568,13 +2597,31 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 			parent.handleGameSkipOnClick();
 			 		}
 				});
+		    	
+		    	dialog.setOnDismissListener(new View.OnClickListener() {
+			 		@Override
+					public void onClick(View v) {
+			 			dialog.dismiss(); 
+			 			parent.unfreezeButtons();
+			 		}
+				});
+		    	
+		    	 
+		    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						parent.unfreezeButtons();
+						
+					}
+				});
+				 
 	
 		    	dialog.show();
 
 			}
 			else{
 				//loop through placed words and show confirmation messages 
-				final CustomDialog dialog = new CustomDialog(context, 
+				final CustomButtonDialog dialog = new CustomButtonDialog(context, 
 		    			context.getString(R.string.game_play_title), 
 		    			GameService.getPlacedWordsMessage(context, placedResult.getPlacedWords()),
 		    			context.getString(R.string.yes),
@@ -2588,11 +2635,28 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 		}
 				});
 	
+		    	dialog.setOnDismissListener(new View.OnClickListener() {
+			 		@Override
+					public void onClick(View v) {
+			 			dialog.dismiss(); 
+			 			parent.unfreezeButtons();
+			 		}
+				});
+		    	 
+		    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						parent.unfreezeButtons();
+						
+					}
+				});
+				 
 		    	dialog.show();
 			}
 		}
 		catch (DesignByContractException e){
 			this.parent.openAlertDialog(this.parent.getString(R.string.sorry), e.getMessage());
+			this.parent.unfreezeButtons();
 		}
 	}
 	
@@ -2817,9 +2881,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     				 return tile.getId();	 
     			 }
 	    	 }
-			 else{
-				 Logger.d(TAG, "FindTileFromPositionInZoomedMode " + tile.getId() + " is fully outside of the given boundary");
-			 }
+		//	 else{
+	//			 Logger.d(TAG, "FindTileFromPositionInZoomedMode " + tile.getId() + " is fully outside of the given boundary");
+	//		 }
 
 	     }
 		// Logger.d(TAG, "FindTileFromPositionInZoomedMode tileId match=" + tileId);
@@ -2843,7 +2907,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		int tileId = -1;
 		 //Logger.d(TAG, "FindTrayTileFromPositionInFullViewMode xPosition=" + xPosition + " yPosition=" + yPosition);
 		 for (TrayTile tile : this.trayTiles) { 
-			 Logger.d(TAG, "FindTrayTileFromPosition letter=" + tile.getVisibleLetter() + " xPosition=" + tile.getxPosition() + " yPosition=" + tile.getyPosition());
+			// Logger.d(TAG, "FindTrayTileFromPosition letter=" + tile.getVisibleLetter() + " xPosition=" + tile.getxPosition() + " yPosition=" + tile.getyPosition());
 	    	 if (xPosition >= tile.getxPosition() && xPosition <= tile.getxPosition() + this.trayTileSize + TRAY_TILE_GAP &&
 	    	 		 yPosition >= tile.getyPosition() && yPosition <= tile.getyPosition() + this.trayTileSize + TRAY_TILE_GAP){
 	    		// Logger.d(TAG, "FindTrayTileFromPositionInFullViewMode MATCH letter=" + tile.getVisibleLetter());

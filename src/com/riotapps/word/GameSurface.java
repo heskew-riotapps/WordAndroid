@@ -17,8 +17,10 @@ import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
-import com.riotapps.word.ui.CustomDialog;
+import com.riotapps.word.ui.CustomButtonDialog;
+
 import com.riotapps.word.ui.DialogManager;
+import com.riotapps.word.ui.GameAction;
 import com.riotapps.word.ui.GameAction.GameActionType;
 import com.riotapps.word.ui.GameState;
 import com.riotapps.word.ui.GameStateService;
@@ -33,12 +35,14 @@ import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.NetworkTaskResult;
-import com.riotapps.word.utils.ServerResponse;
+ 
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -56,6 +60,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.google.ads.*;
 import com.google.ads.AdRequest.ErrorCode;
+import java.util.Timer;
+import java.util.TimerTask;
 
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -71,6 +77,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 Button bPlay;
 	 Button bSkip;
 	 Button bShuffle;
+	 boolean isButtonActive = false;
+	 boolean isNetworkTaskActive = false;
+	 Timer timer = null;
 	// CustomProgressDialog spinner = null;
 	
 	 private com.google.ads.InterstitialAd interstitial;
@@ -141,6 +150,11 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+	
+    
+    public void unfreezeButtons(){
+    	this.isButtonActive = false;
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +227,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 	this.captureTime("checkGameStatus starting");
 		this.checkGameStatus();
 	 	this.captureTime("checkGameStatus ended");
+	 	this.checkFirstTimeStatus();
+	 	this.setupTimer();
 	}
 
 	public void captureTime(String text){
@@ -221,6 +237,21 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	     this.runningTime = this.captureTime;
 
 	}
+	
+    private void setupTimer(){
+		Logger.d(TAG, "setupTimer");
+    	timer = new Timer();  
+    	updateGameTask updateGame = new updateGameTask();
+    	timer.scheduleAtFixedRate(updateGame, Constants.GAME_SURFACE_CHECK_START_IN_MILLISECONDS, Constants.GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS);
+    }
+    
+    private class updateGameTask extends TimerTask {
+    	   public void run() {
+    		   if (!game.isContextPlayerTurn(player)){
+    			   ((Activity) context).runOnUiThread(new handleGameRefresh());
+    		   }
+    	   }
+    }
 	
 	private void setupGame(){
 		Logger.d(TAG,"setupGame game turn=" + this.game.getTurn());
@@ -370,9 +401,20 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 }
 	 }
 	 
+	 private void checkFirstTimeStatus(){
+		 //completed
+		 //first check to see if this score has already been alerted (from local storage) 
+		 
+		 if (!PlayerService.checkFirstTimeGameSurfaceAlertAlreadyShown(this)) {
+			 DialogManager.SetupAlert(this, this.getString(R.string.game_surface_first_time_alert_title), String.format(this.getString(R.string.game_surface_first_time_alert_message), this.player.getFirstNameOrNickname()));
+		 }
+		 
+	 }
+	 
 	 private void setupButtons(){
-		  buttonsLoaded = true;
-		  Logger.d(TAG,  "setupButtons called");
+		this.isButtonActive = false;
+		buttonsLoaded = true;
+		//Logger.d(TAG,  "setupButtons called");
 		Button bRematch = (Button) findViewById(R.id.bRematch);
 		this.bRecall = (Button) findViewById(R.id.bRecall);
 		this.bPlay = (Button) findViewById(R.id.bPlay);
@@ -665,6 +707,11 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	//	catch(Exception e){}
 		this.gameSurfaceView.onPause();
 		
+		if (this.preInterstitialSpinner != null){
+			this.preInterstitialSpinner.dismiss();
+		}
+		
+		
 	//	if (this.wordLoaderThread != null){
 	//		this.wordLoaderThread.interrupt();
 	//		this.wordLoaderThread = null;
@@ -677,6 +724,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onResume called");
 		super.onResume();
+		this.isButtonActive = false;
 		this.gameSurfaceView.onResume();
 		
 	}
@@ -712,7 +760,13 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		this.runningTask.cancel(true);
     	}
 		
+		
+		
 		this.gameSurfaceView.onStop();
+		this.game = null;
+		this.player = null;
+		this.gameState = null;
+		
 		Intent intent = new Intent(this.context, cls );
 	    this.context.startActivity(intent);
 	    this.finish();
@@ -732,58 +786,68 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			this.fillGameState();
 			this.setupButtons();
 			this.gameSurfaceView.setInitialButtonStates();
+			this.isButtonActive = false;
 		}
 	}
 
+	
 	 @Override 
 	    public void onClick(View v) {
 	    	Intent intent;
-	    	
-	    	switch(v.getId()){  
-		        case R.id.bShuffle:  
-		        	this.gameSurfaceView.shuffleTray();
-					break;
-		        case R.id.bChat:  
-		        	intent = new Intent(this, GameChat.class);
-		        	intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
-					startActivity(intent);
-					break;
-		        case R.id.bPlayedWords:  
-		        	intent = new Intent(this, GameHistory.class);
-		        	intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
-					startActivity(intent);
-				 
-					break;
-		        case R.id.bCancel:  
-		        	this.handleCancel();
-					break;
-		        case R.id.bRecall:
-		        	this.gameSurfaceView.recallLetters();
-					break;
-		        case R.id.bPlay:
-		        	this.gameSurfaceView.onPlayClick();
-					break;
-		       case R.id.bSkip:
-		        	this.gameSurfaceView.onPlayClick();
-					break;
-		       case R.id.bSwap:
-		        	this.onSwapClick();
-					break;
-		        case R.id.bDecline:  
-		        	this.handleDecline();
-					break;
-		        case R.id.bResign:  
-		        	this.handleResign();
-					break;
-		        case R.id.bRematch:  
-		        	this.handleRematch();
-					break;
+	    	if (this.isButtonActive == true){
+	    		//skip processing to stop dialogs from doubling up
 	    	}
+	    	else {	
+	    		this.isButtonActive = true;
+		    	    	
+		    	switch(v.getId()){  
+			        case R.id.bShuffle:  
+			        	this.gameSurfaceView.shuffleTray();
+			        	this.unfreezeButtons();
+			        	break;
+			        case R.id.bChat:  
+			        	intent = new Intent(this, GameChat.class);
+			        	intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
+						startActivity(intent);
+						break;
+			        case R.id.bPlayedWords:  
+			        	intent = new Intent(this, GameHistory.class);
+			        	intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
+						startActivity(intent);
+					 
+						break;
+			        case R.id.bCancel:  
+			        	this.handleCancel();
+						break;
+			        case R.id.bRecall:
+			        	this.gameSurfaceView.recallLetters();
+			        	this.unfreezeButtons();
+						break;
+			        case R.id.bPlay:
+			        	this.gameSurfaceView.onPlayClick();
+						break;
+			       case R.id.bSkip:
+			        	this.gameSurfaceView.onPlayClick();
+						break;
+			       case R.id.bSwap:
+			        	this.onSwapClick();
+						break;
+			        case R.id.bDecline:  
+			        	this.handleDecline();
+						break;
+			        case R.id.bResign:  
+			        	this.handleResign();
+						break;
+			        case R.id.bRematch:  
+			        	this.handleRematch();
+						break;
+		    	}
+	    	}	
 	 }
 	
 	 
 	    private void handleCancel(){
-	    	final CustomDialog dialog = new CustomDialog(this, 
+	    	final CustomButtonDialog dialog = new CustomButtonDialog(this, 
 	    			this.getString(R.string.game_surface_cancel_game_confirmation_title), 
 	    			this.getString(R.string.game_surface_cancel_game_confirmation_text),
 	    			this.getString(R.string.yes),
@@ -798,11 +862,26 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		}
 			});
 
+	    	dialog.setOnDismissListener(new View.OnClickListener() {
+			 		@Override
+					public void onClick(View v) {
+			 			dialog.dismiss(); 
+			 			unfreezeButtons();
+			 		}
+				});
+	    	
+	     	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					unfreezeButtons();
+					
+				}
+			});  
 	    	dialog.show();	
 	    }
 	    
 	    private void handleDecline(){
-	    	final CustomDialog dialog = new CustomDialog(this, 
+	    	final CustomButtonDialog dialog = new CustomButtonDialog(this, 
 	    			this.getString(R.string.game_surface_decline_game_confirmation_title), 
 	    			this.getString(R.string.game_surface_decline_game_confirmation_text),
 	    			this.getString(R.string.yes),
@@ -816,12 +895,28 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		
 		 		}
 			});
-
+	    	
+	    	dialog.setOnDismissListener(new View.OnClickListener() {
+		 		@Override
+				public void onClick(View v) {
+		 			dialog.dismiss(); 
+		 			unfreezeButtons();
+		 		}
+			});
+ 
+	    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					unfreezeButtons();
+					
+				}
+			});
+			 
 	    	dialog.show();	
 	    }
 
 	    private void handleResign(){
-	    	final CustomDialog dialog = new CustomDialog(this, 
+	    	final CustomButtonDialog dialog = new CustomButtonDialog(this, 
 	    			this.getString(R.string.game_surface_resign_game_confirmation_title), 
 	    			this.getString(R.string.game_surface_resign_game_confirmation_text),
 	    			this.getString(R.string.yes),
@@ -835,7 +930,24 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		
 		 		}
 			});
-
+	    	
+	    	dialog.setOnDismissListener(new View.OnClickListener() {
+			 		@Override
+					public void onClick(View v) {
+			 			dialog.dismiss(); 
+			 			unfreezeButtons();
+			 		}
+				});
+ 
+	    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					unfreezeButtons();
+					
+				}
+			});
+			
+			 
 	    	dialog.show();	
 	    }
 	    
@@ -861,7 +973,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		rematchText = String.format(this.getString(R.string.game_surface_rematch_with_1), opponent1);	    		
 	    	}
 	    	
-	    	final CustomDialog dialog = new CustomDialog(this, 
+	    	final CustomButtonDialog dialog = new CustomButtonDialog(this, 
 	    			this.getString(R.string.game_surface_rematch_title), 
 	    			rematchText,
 	    			this.getString(R.string.yes),
@@ -875,6 +987,23 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		
 		 		}
 			});
+	    	
+	    	dialog.setOnDismissListener(new View.OnClickListener() {
+			 		@Override
+					public void onClick(View v) {
+			 			dialog.dismiss(); 
+			 			unfreezeButtons();
+			 		}
+				});
+	    	 
+	    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					unfreezeButtons();
+					
+				}
+			});
+			 
 
 	    	dialog.show();	
 	    }
@@ -894,6 +1023,22 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
 			}
 	    }
+	    private class handleGameRefresh implements Runnable {
+		    public void run() {
+		    	 try { 
+		    		 if (isNetworkTaskActive == false){
+			    		 Logger.d(TAG, "handleGameRefresh");
+			    		 String json = GameService.setupGameCheck(context, game.getId(), game.getTurn());
+			
+						runningTask = new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_syncing), GameActionType.REFRESH);
+						runningTask.execute(Constants.REST_GAME_REFRESH_URL);
+		    		 }
+				} catch (DesignByContractException e) {
+					 Logger.d(TAG, "handleGameRefresh error=" + e.toString());
+					//DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+				}
+		    }
+	   }
 	    
 	    private void handleGameDeclineOnClick(){
 	    	//stop thread first
@@ -963,7 +1108,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
 			} catch (DesignByContractException e) {
 				 
-				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());
+				this.unfreezeButtons();
 			}
 			 
 	    }
@@ -984,6 +1130,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			} catch (DesignByContractException e) {
 				 
 				DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  
+				this.unfreezeButtons();
 			}
 			 
 	    }
@@ -1037,6 +1184,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    			super(ctx, requestType, shownOnProgressDialog, json);
 	    			this.context = ctx;
 	    			this.actionType = actionType;
+	    			isNetworkTaskActive = true;
 	    		 
 	    		}
 
@@ -1046,6 +1194,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    			super.onPostExecute(result);
 	    			
 	    			this.handleResponse(result);
+	    			isNetworkTaskActive = false;
 
 	    		}
 	     
@@ -1055,14 +1204,29 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		    		 
 	    		     if(result.getResult() != null){  
 
-	    		         Gson gson = new Gson();
+	    		         //Gson gson = new Gson();
 
-	    		         Player player = null;
+	    		         //Player player = null;
 	    		         
 	    		         switch(result.getStatusCode()){  
 	    		             case 200:  
 	    		             case 201: 
-	    		            	 context.handlePostTurn(this.actionType, result.getResult());
+	    		            	 if (this.actionType == GameAction.GameActionType.REFRESH){
+	    		            		 game = GameService.handleCreateGameResponse(this.context, result.getResult());
+	    		     			    
+	    			            	 GameService.putGameToLocal(context, game);
+	    			            	 setupGame();
+	    			 	 			 checkGameStatus();
+	    			 	 			 gameSurfaceView.resetGameAfterPlay();
+	    		            	 }
+	    		            	 else {
+	    		            		 context.handlePostTurn(this.actionType, result.getResult());
+	    		            	 }
+	    		            	 break;
+	    		             case 202:
+	    		            	 if (this.actionType == GameAction.GameActionType.REFRESH){
+	    		            		 //take no action, nothing to do here
+	    		            	 }
 	    		            	 break;
 	    		             case 401:
 	    			             //case Status code == 422
@@ -1172,6 +1336,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		bCancel.setOnClickListener(new View.OnClickListener() {
 	    			@Override
 	    			public void onClick(View v) {
+	    				unfreezeButtons();
 	    				dialog.dismiss();
 	    			}
 	    		});
@@ -1181,9 +1346,20 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		close.setOnClickListener(new View.OnClickListener() {
 	    	 		@Override
 	    			public void onClick(View v) {
+	    	 			unfreezeButtons();
 	    				dialog.dismiss();
 	    			}
 	    		});
+	    		
+	    		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						unfreezeButtons();
+						
+					}
+				});
+	    		
+	    	 
 	    	}
 	    	
 	    	public void show(){
@@ -1191,6 +1367,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	}
 	    	
 	    	public void dismiss(){
+	    		isButtonActive = false;
 	    		this.dialog.dismiss();	
 	    	}
 
@@ -1292,6 +1469,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	Gson gson = new Gson();
 	    	
 	    	this.postTurnAction = action;
+	    	this.unfreezeButtons();
 	    	
 	    	switch(action){
     	 	case CANCEL_GAME:
@@ -1429,6 +1607,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     	 	case PLAY:
 	 			//refresh game board and buttons
 	 			setupGame();
+	 			checkGameStatus();
 	 			gameSurfaceView.resetGameAfterPlay();
 
 	 			break;
@@ -1484,6 +1663,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		public void onLeaveApplication(Ad ad) {
 			Logger.d(TAG, "interstitial onLeaveApplication called");
 			 //not sure what this needs here
+			this.handlePostTurnFinalAction(this.postTurnAction);
 			
 		}
 

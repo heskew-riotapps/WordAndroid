@@ -86,7 +86,7 @@ public class GameThread extends Thread {
 			        }
 			      
 			        this.tickCount += 1;
-			        Log.d(TAG, "Game loop executed " + tickCount + " times");
+			    //   Log.d(TAG, "Game loop executed " + tickCount + " times");
 
 		    	}
 		    //	synchronized (pauseLock) {

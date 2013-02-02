@@ -1,20 +1,19 @@
 package com.riotapps.word.hooks;
 
-import java.util.Date;
-
 import com.google.gson.annotations.SerializedName;
 
-public class TransportResignGame {
+public class TransportGameCheck {
+	
 	@SerializedName("a_t")
 	private String token;
 	
 	@SerializedName("id")
 	private String gameId;
-
-	@SerializedName("c_g_d")
-	private Date completedGameDate;
 	
-	public TransportResignGame(){}
+	@SerializedName("t")
+	private int turn;
+
+	public TransportGameCheck(){}
 	
 	public String getToken() {
 		return token;
@@ -24,22 +23,23 @@ public class TransportResignGame {
 		this.token = token;
 	}
 
+	 
 	public String getGameId() {
 		return gameId;
 	}
 
+	
 	public void setGameId(String gameId) {
 		this.gameId = gameId;
 	}
 
-	public Date getCompletedGameDate() {
-		return completedGameDate;
+	public int getTurn() {
+		return turn;
 	}
 
-	public void setCompletedGameDate(Date completedGameDate) {
-		this.completedGameDate = completedGameDate;
+	public void setTurn(int turn) {
+		this.turn = turn;
 	}
 	
- 
 	
 }

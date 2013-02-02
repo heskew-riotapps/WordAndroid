@@ -138,7 +138,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
            	 tvFB.setOnClickListener(this);
             }
             
-            if (this.player.getOpponents().size() == 0){
+            if (this.player.getOfficialOpponents().size() == 0){
            	 tvByOpponent.setVisibility(View.GONE);
             }
             else {

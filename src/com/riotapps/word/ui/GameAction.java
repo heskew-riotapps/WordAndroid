@@ -13,7 +13,8 @@ public class GameAction {
 		PLAY(4),
 		SKIP(5),
 		SWAP(6),
-		REMATCH(7);
+		REMATCH(7),
+		REFRESH(8);
 				
 		private final int value;
 		private GameActionType(int value) {

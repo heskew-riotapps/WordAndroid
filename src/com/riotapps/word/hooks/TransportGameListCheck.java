@@ -10,6 +10,9 @@ public class TransportGameListCheck {
 	
 	@SerializedName("l_rf_d")
 	private Date lastRefreshDate;
+	
+	@SerializedName("c_g_d")
+	private Date completedGameDate;
 
 	public String getToken() {
 		return token;
@@ -25,6 +28,14 @@ public class TransportGameListCheck {
 
 	public void setLastRefreshDate(Date lastRefreshDate) {
 		this.lastRefreshDate = lastRefreshDate;
+	}
+
+	public Date getCompletedGameDate() {
+		return completedGameDate;
+	}
+
+	public void setCompletedGameDate(Date completedGameDate) {
+		this.completedGameDate = completedGameDate;
 	}
 	
  

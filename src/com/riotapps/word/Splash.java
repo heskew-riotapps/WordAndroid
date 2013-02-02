@@ -180,12 +180,12 @@ public class Splash  extends FragmentActivity {
 							e1.printStackTrace();
 						}
 			        }
-			        /*
+			        
 			        else{
 			        	 long currentTime = System.nanoTime();
 			        	 
 		            	 //default time in which to leave splash up//watch out for negative values
-			        	 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
+			        	 long timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  startTime);
 		            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
 		            		 try {
 		            			// Logger.w(TAG, " checkInitialConnectivity OK , about to sleep" + Utils.convertNanosecondsToMilliseconds(currentTime -  this.startTime)  + " milliseconds" ); 
@@ -196,7 +196,7 @@ public class Splash  extends FragmentActivity {
 							}
 		            	 }
 			        }
-			        */
+			       
 			        
 			       return isConnected;
 			}

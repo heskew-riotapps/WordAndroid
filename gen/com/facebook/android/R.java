@@ -1072,6 +1072,8 @@ containing a value of this type.
         public static final int game_surface_cancel_game_confirmation_title=0x7f060151;
         public static final int game_surface_decline_game_confirmation_text=0x7f060154;
         public static final int game_surface_decline_game_confirmation_title=0x7f060153;
+        public static final int game_surface_first_time_alert_message=0x7f0601ec;
+        public static final int game_surface_first_time_alert_title=0x7f0601eb;
         public static final int game_surface_game_over_2_player=0x7f0601e2;
         public static final int game_surface_game_over_2_player_context=0x7f0601e1;
         public static final int game_surface_game_over_2_player_draw=0x7f0601e3;

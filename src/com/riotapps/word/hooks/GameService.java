@@ -76,7 +76,7 @@ public class GameService {
 	
 	public static boolean checkGameAlertAlreadyShown(Context context, String gameId){
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
-		if (settings.getBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId), false)) { 
+		if (settings.getBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId), false) == false) { 
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId),true);
 			editor.commit();
@@ -93,7 +93,7 @@ public class GameService {
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
 		long localChatTime = settings.getLong(String.format(Constants.USER_PREFS_GAME_CHAT_CHECK, game.getId()), 0);
 		
-		Logger.d(TAG, "checkGameChatAlert gameChatTime=" + gameChatTime + " localChatTime=" + localChatTime);
+		//Logger.d(TAG, "checkGameChatAlert gameChatTime=" + gameChatTime + " localChatTime=" + localChatTime);
 		
 		if (update){
 			
@@ -103,7 +103,7 @@ public class GameService {
 			editor.putLong(String.format(Constants.USER_PREFS_GAME_CHAT_CHECK, game.getId()),gameChatTime);
 			editor.commit();
 		}
-		Logger.d(TAG, "checkGameChatAlert about to return " + (gameChatTime != localChatTime)); 
+		//Logger.d(TAG, "checkGameChatAlert about to return " + (gameChatTime != localChatTime)); 
 			 
 		return gameChatTime != localChatTime;
 	}
@@ -158,8 +158,13 @@ public class GameService {
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
+		
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+
 		TransportCancelGame game = new TransportCancelGame();
 		game.setToken(player.getAuthToken());
+		game.setCompletedGameDate(new Date(completedDate));
 		game.setGameId(gameId);
 		
 		return gson.toJson(game);
@@ -176,8 +181,12 @@ public class GameService {
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+
 		TransportDeclineGame game = new TransportDeclineGame();
 		game.setToken(player.getAuthToken());
+		game.setCompletedGameDate(new Date(completedDate));
 		game.setGameId(gameId);
 		
 		return gson.toJson(game);
@@ -194,8 +203,12 @@ public class GameService {
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+		
 		TransportResignGame game = new TransportResignGame();
 		game.setToken(player.getAuthToken());
+		game.setCompletedGameDate(new Date(completedDate));
 		game.setGameId(gameId);
 		
 		return gson.toJson(game);
@@ -289,6 +302,24 @@ public class GameService {
 		return gson.toJson(turn);
 	}
 	
+	public static String setupGameCheck(Context ctx, String gameId, int turn) throws DesignByContractException{
+		 
+		Logger.d(TAG, "setupGameCheck");
+		Gson gson = new Gson();
+		
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 	
+		Player player = PlayerService.getPlayerFromLocal();
+		
+		TransportGameCheck game = new TransportGameCheck();
+		game.setToken(player.getAuthToken());
+		game.setGameId(gameId);
+		game.setTurn(turn);
+		
+		return gson.toJson(game);
+	}
 	
 	public static String setupGetGame(Context ctx, String gameId) throws DesignByContractException{
 		 
@@ -412,7 +443,7 @@ public class GameService {
 		 Gson gson = new Gson(); //wrap json return into a single call that takes a type
     	 
 		// Logger.w(TAG, "handleGameResponse incoming json=" + IOHelper.streamToString(iStream));
-   	   Logger.d(TAG, "handleGameResponse result=" + result);
+   //	   Logger.d(TAG, "handleGameResponse result=" + result);
         
          //Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
 
@@ -420,6 +451,8 @@ public class GameService {
          Game game = gson.fromJson(result, type);
          
          Player player = PlayerService.getPlayerFromLocal();
+     //    Logger.d(TAG, "handleGameResponse numOpponents=" + player.getOpponents().size() );
+         
          
          Player currentPlayer = new Player();
          currentPlayer.setId(player.getId());
@@ -430,29 +463,22 @@ public class GameService {
          currentPlayer.setFB(player.getFB());
          currentPlayer.setNumWins(player.getNumWins());
      	 
-         for (PlayerGame pg : game.getPlayerGames()){
-			pg.setPlayer(PlayerService.getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
-         }
-		 
-         
-         //this means the game was just created.  lets see if any of these opponents are new. if so they need to be added to the 
-         //player's opponent list that is stored locally
-         
-         Logger.d(TAG, "createGame game.getOpponents_().size()=" + game.getOpponents_().size());
+        // Logger.d(TAG, "createGame game.getOpponents_().size()=" + game.getOpponents_().size());
          if (game.getOpponents_().size() > 0){
         	 boolean resavePlayer = false;
         	 for (Opponent o : game.getOpponents_()){
-        		 Logger.d(TAG,"createGame opponentLoop playerid=" + o.getPlayer().getId());
+        		// Logger.d(TAG,"createGame opponentLoop playerid=" + o.getPlayer().getId());
         		 boolean exists = false;
         		 for (Opponent oContext : player.getOpponents()){
         			 if (o.getPlayer().getId().equals(oContext.getPlayer().getId())){
         				 //opponent already exists.  don't need to add
         				 exists = true;
-                		 Logger.d(TAG,"createGame opponentLoop playerid exists=" + o.getPlayer().getId());
+                		// Logger.d(TAG,"createGame opponentLoop playerid exists=" + o.getPlayer().getId());
+                		 break;
         			 }
         		 }
         		 if (!exists){
-        			 Logger.d(TAG,"createGame opponentLoop playerid NOT exists=" + o.getPlayer().getId());
+        			// Logger.d(TAG,"createGame opponentLoop playerid NOT exists=" + o.getPlayer().getId());
         			 resavePlayer = true;
         			 //add to opponents list
         			Opponent opponent = new Opponent();
@@ -471,12 +497,25 @@ public class GameService {
         		 }
         	 }
         	 if (resavePlayer){
+        		// Logger.d(TAG,"createGame opponentLoop playerid NOT exists PLAYER will be saved locally");
         		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
      	         SharedPreferences.Editor editor = settings.edit();
         		 editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
         		 editor.commit();  
         	 }
          }
+         
+         game.getOpponents_().clear();
+         
+         for (PlayerGame pg : game.getPlayerGames()){
+			pg.setPlayer(PlayerService.getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
+         }
+		 
+         
+         //this means the game was just created.  lets see if any of these opponents are new. if so they need to be added to the 
+         //player's opponent list that is stored locally
+         
+       //  Logger.d(TAG, "handleGameResponse numOpponents=" + player.getOpponents().size() );
         
        // Logger.d(TAG, "game authtoken=" + game.getAuthToken()); 
 	       
@@ -486,6 +525,10 @@ public class GameService {
          //should this be saved locally??????
          //perhaps save it locally if it's the context player's turn, since the only thing that can
          //change is chat in this state
+         
+         player = null;
+         currentPlayer = null;
+         gson = null;
          
          return game;  
 	}
