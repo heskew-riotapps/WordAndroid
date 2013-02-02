@@ -21,6 +21,7 @@ import com.riotapps.word.utils.Utils;
 
 import android.os.Message;
 import android.util.Log;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -2583,6 +2584,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			this.parent.setPointsView(placedResult.getTotalPoints());
 			
 			if (placedResult.getPlacedTiles().size() == 0){
+				
+			/*	View view = getLayoutInflater().inflate(R.layout.custom_dialog, null);
+				Button btn = (Button)view.findViewById(R.id.the_id_of_the_button);
+				btn.setOnClickListener(blah blah);
+				AlertDialog dialog = new AlertDialog.Builder(context)
+				    .setView(view)
+				    .create();
+				*/
 				//user is skipping this turn
 				final CustomButtonDialog dialog = new CustomButtonDialog(context, 
 		    			context.getString(R.string.game_play_skip_title), 

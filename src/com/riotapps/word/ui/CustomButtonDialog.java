@@ -73,7 +73,7 @@ public class CustomButtonDialog extends AlertDialog{
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		
+	 
 		LayoutInflater inflater = getLayoutInflater();//(LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
         this.layout = inflater.inflate(R.layout.twobuttondialog, 
                                         (ViewGroup) findViewById(R.id.progress_root));
@@ -123,7 +123,7 @@ public class CustomButtonDialog extends AlertDialog{
 			this.close.setOnClickListener(onCancel);
 			this.bCancel.setOnClickListener(onCancel);
 		}
-		this.layout.setLayoutParams(new LayoutParams(300, ViewGroup.LayoutParams.WRAP_CONTENT));
+		//this.layout.setLayoutParams(new LayoutParams(300, ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		this.setContentView(this.layout);
 	

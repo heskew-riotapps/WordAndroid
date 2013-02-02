@@ -678,6 +678,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onStop called");
+		if (this.timer != null){
+			this.timer.cancel();
+			this.timer = null;
+		}
 		this.gameSurfaceView.onStop();
 	//	if (this.wordLoaderThread != null){
 	//		this.wordLoaderThread.interrupt();
@@ -701,6 +705,11 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		if (this.runningTask != null){
     		this.runningTask.cancel(true);
     	}
+		if (this.timer != null){
+			this.timer.cancel();
+			this.timer = null;
+		}
+
 	//	try{
 	//		this.spinner.dismiss();
 	//	}
@@ -726,6 +735,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		super.onResume();
 		this.isButtonActive = false;
 		this.gameSurfaceView.onResume();
+		if (this.timer == null){
+			this.setupTimer();
+		}
 		
 	}
 
@@ -760,7 +772,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		this.runningTask.cancel(true);
     	}
 		
-		
+		if (this.timer != null){
+			this.timer.cancel();
+			this.timer = null;
+		}
 		
 		this.gameSurfaceView.onStop();
 		this.game = null;
