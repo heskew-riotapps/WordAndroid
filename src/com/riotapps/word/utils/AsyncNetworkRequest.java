@@ -204,7 +204,7 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, NetworkTaskResu
 	 }//end method onPostExecute
 
 	 public void dismiss(){
-		 if (this.shownOnProgressDialog != null){
+		 if (this.shownOnProgressDialog != null && progress != null){
 			 progress.dismiss();
 		 }
 	 }

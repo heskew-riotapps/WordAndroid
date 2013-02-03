@@ -56,6 +56,7 @@ public class GameThread extends Thread {
 	 @Override
 	 public void run() {
 		 Canvas c;
+		 this.parent.parent.captureTime("gamethread run started");
 		    while (this.running) {
 		    	
 		    	//get game board drawn as quickly as possible, so don't thread sleep at first
@@ -72,6 +73,7 @@ public class GameThread extends Thread {
 			        try {
 			            c = this.surfaceHolder.lockCanvas(null);
 			            synchronized (this.surfaceHolder) {
+			            	this.parent.parent.captureTime("gamethread draw started");
 			            	 parent.onDraw(c); 
 			            	
 			            }  

@@ -790,14 +790,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.w(TAG, "surfaceCreated called");
+		this.parent.captureTime("surfaceCreated starting");
 		this.startThread();
 		this.surfaceCreated = true;
+		this.parent.captureTime("surfaceCreated ending");
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(TAG, "surfaceDestroyed called");
+		this.parent.captureTime("surfaceDestroyed starting");
 	    this.stopThread();
+	    this.parent.captureTime("surfaceDestroyed ending");
 	}
 	
 	public void onPause() {
@@ -822,7 +826,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	//	this.gameThread = null;
 		 this.gameThread = new GameThread(holder, this);
 		 this.holder.setFormat(PixelFormat.TRANSPARENT);
-		 this.startThread();
+	//	 this.startThread();
 		 
 		 me.readyToDraw = true;
 	//	 this.startThread(); ///?????
@@ -844,7 +848,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		
 		//make sure surface has been created first because onresume is initially called before surfacecreated and starting the 
 		//thread then kills things (canvas is null in onDraw)
-	 if (this.surfaceCreated) {this.startThread();}
+		this.parent.captureTime("startThread starting");
+	//	if (this.surfaceCreated) {this.startThread();}
+		this.parent.captureTime("startThread ended");
 	}
 	
 	
@@ -1703,6 +1709,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 protected void onDraw(Canvas canvas) {
 		// this.parent.captureTime("onDraw starting");
 		 if (canvas == null){
+			 Logger.d("TAG", "onDraw canvas is null");
 			 return;
 		 }
  		// super.onDraw(canvas);
@@ -2524,29 +2531,22 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 	
 	public void resetGameAfterRefresh(){
-		//loop through game tiles, changing placed letter to original letter
-		//doing it this way keeps the previous drag locations set properly
-		for (GameTile tile : this.tiles){
-			 //reset all last played flags
-            tile.setLastPlayed(false);
-
-			if (tile.getPlacedLetter().length() > 0){
-				 tile.setOriginalBitmap(this.bgBaseScaled); //this will change as default bonus and played tiles are incorporated
-				 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(this.bgBaseZoomed); }
-				 
-				 tile.setOriginalLetter(tile.getPlacedLetter());
-				 tile.setPlacedLetter("");
-				 tile.setLastPlayed(true);
-			}
-		}
 		
+		//clear out everything and start anew
+		this.tiles.clear();
+		this.trayTiles.clear();
+		
+		this.LoadTiles();
 	   	this.LoadTray();
 	    this.setInitialButtonStates();
+	    this.resetPointsView();
 	   
-	    this.afterPlayRedraw = true;
+	    this.setInitialButtonStates();
+	   
+	   // this.afterPlayRedraw = true; ??
+	    this.isZoomed = false;
 		this.readyToDraw = true;
-		
-		this.parent.setPointsAfterPlayView();
+	 
 		// this.resetPointsView();
 		}
 	
@@ -2748,7 +2748,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 tile.setOriginalBitmap(this.bgTrayBaseScaled);
 			 //tile.setOriginalBitmapDragging(this.bgTrayBaseDragging);
 
-			 Logger.d(TAG, "LoadTray this.parent.getGameState().getTrayLetter(y)=" + this.parent.getGameState().getTrayLetter(y));
+			// Logger.d(TAG, "LoadTray this.parent.getGameState().getTrayLetter(y)=" + this.parent.getGameState().getTrayLetter(y));
 			 
 			 //this will come from state object if it exists for this turn, this is temp
 			 tile.setOriginalLetter(this.parent.getGameState().getTrayLetter(y)); //getTrayTiles().get(y).getLetter());

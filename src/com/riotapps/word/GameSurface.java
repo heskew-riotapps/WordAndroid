@@ -40,6 +40,7 @@ import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,8 +53,10 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -239,10 +242,25 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	}
 	
     private void setupTimer(){
-		Logger.d(TAG, "setupTimer");
-    	timer = new Timer();  
-    	updateGameTask updateGame = new updateGameTask();
-    	timer.scheduleAtFixedRate(updateGame, Constants.GAME_SURFACE_CHECK_START_IN_MILLISECONDS, Constants.GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS);
+    	//expand this for chat updates at some point
+    	if (!this.game.isContextPlayerTurn(this.player)){
+    		if (this.timer == null){
+				Logger.d(TAG, "setupTimer");
+				this.captureTime("setupTimer starting");
+		    	timer = new Timer();  
+		    	updateGameTask updateGame = new updateGameTask();
+		    	timer.scheduleAtFixedRate(updateGame, Constants.GAME_SURFACE_CHECK_START_IN_MILLISECONDS, Constants.GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS);
+		    	this.captureTime("checkGameStatus ended");
+    		}
+    	}
+    }
+    
+    private void stopTimer(){
+    	if (this.timer != null) {
+    		this.timer.cancel();
+    		this.timer = null;
+    	}
+    
     }
     
     private class updateGameTask extends TimerTask {
@@ -678,10 +696,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onStop called");
-		if (this.timer != null){
-			this.timer.cancel();
-			this.timer = null;
-		}
+		this.stopTimer();
 		this.gameSurfaceView.onStop();
 	//	if (this.wordLoaderThread != null){
 	//		this.wordLoaderThread.interrupt();
@@ -704,11 +719,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		super.onPause();
 		if (this.runningTask != null){
     		this.runningTask.cancel(true);
+    		this.runningTask.dismiss();
     	}
-		if (this.timer != null){
-			this.timer.cancel();
-			this.timer = null;
-		}
+		this.stopTimer();
 
 	//	try{
 	//		this.spinner.dismiss();
@@ -732,12 +745,20 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onResume called");
+		this.captureTime("onResume starting");
 		super.onResume();
-		this.isButtonActive = false;
+		this.captureTime("unfreezeButtons starting");
+		this.unfreezeButtons();
+		this.captureTime("gameSurfaceview resume starting");
 		this.gameSurfaceView.onResume();
-		if (this.timer == null){
-			this.setupTimer();
+		this.captureTime("setup timer_ starting");
+	 
+		this.setupTimer();
+		if (this.runningTask != null){
+			this.runningTask.dismiss();
 		}
+		 
+		
 		
 	}
 
@@ -1216,6 +1237,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		private void handleResponse(NetworkTaskResult result){
 	    		    
 	    		     Exception exception = result.getException();
+	    		     
+	    		     Logger.d(TAG, "handleResponse status=" + result.getStatusCode() + " result=" + result.getResult());
 	    		    		 
 	    		     if(result.getResult() != null){  
 
@@ -1230,9 +1253,11 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		            		 game = GameService.handleCreateGameResponse(this.context, result.getResult());
 	    		     			    
 	    			            	 GameService.putGameToLocal(context, game);
+	    			            	 gameState = GameStateService.clearGameState(context, game.getId());
 	    			            	 setupGame();
 	    			 	 			 checkGameStatus();
-	    			 	 			 gameSurfaceView.resetGameAfterPlay();
+	    			 	 			 gameSurfaceView.resetGameAfterRefresh();
+	    			 	 			 setupTimer();
 	    		            	 }
 	    		            	 else {
 	    		            		 context.handlePostTurn(this.actionType, result.getResult());
@@ -1270,8 +1295,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		}
 	    	}
 	    
-	    private class SwapDialog  implements View.OnClickListener{ 
-	    	private Dialog dialog;
+	    private class SwapDialog extends AlertDialog implements View.OnClickListener{ 
+	    //	private Dialog dialog;
 	    	private Button bOK;
 	    	private Button bCancel;
 	    	private List<String> swapped = new ArrayList<String>();
@@ -1290,37 +1315,61 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	private TextView tvLetter5;
 	    	private TextView tvLetter6;
 	    	private TextView tvLetter7;
+	    	private View layout;
+	    	Context context;
 	    	//private Context context;
 	    	//private Boolean onCancelFinishActivity;
 	    	
 	     
 	    	public SwapDialog(Context context, List<String> letters) {
-	    	    final Context ctx = context;
+	    		super(context);
+	    	    this.context = context;
 
 	    	    this.letters = letters;
-	    		this.dialog = new Dialog(ctx, R.style.DialogStyle);
-	    		this.dialog.setContentView(R.layout.swapdialog);
+	    	//	this.dialog = new Dialog(ctx, R.style.DialogStyle);
+	    	//	this.dialog.setContentView(R.layout.swapdialog);
+	    	
+	    		
+	    	 
+	    	}
+	    	
+	    	protected void onCreate(Bundle savedInstanceState) {
+	    		// TODO Auto-generated method stub
+	    		super.onCreate(savedInstanceState);
+//	    		this.setContentView(BUTTON1);
+	          //  this.setProgressStyle(R.style.CustomProgressStyle);
+	    		
+	    	}
+
+	    	@Override
+	    	public void onStart() {
+	    		// TODO Auto-generated method stub
+	    		super.onStart();
+	 
+	    		LayoutInflater inflater = getLayoutInflater();//(LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+	            this.layout = inflater.inflate(R.layout.swapdialog, 
+	                                            (ViewGroup) findViewById(R.id.progress_root));
 	    		
 	    		 //loop through letters, filling the views
 
-	    		bOK = (Button) dialog.findViewById(R.id.bOK);
+	    		bOK = (Button) this.layout.findViewById(R.id.bOK);
 	    		bOK.setOnClickListener(this);
-	    		bCancel = (Button) dialog.findViewById(R.id.bCancel);
-	    		tvLetter1 = (TextView) dialog.findViewById(R.id.tvLetter1);
-	    		tvLetter2 = (TextView) dialog.findViewById(R.id.tvLetter2);
-	    		tvLetter3 = (TextView) dialog.findViewById(R.id.tvLetter3);
-	    		tvLetter4 = (TextView) dialog.findViewById(R.id.tvLetter4);
-	    		tvLetter5 = (TextView) dialog.findViewById(R.id.tvLetter5);
-	    		tvLetter6 = (TextView) dialog.findViewById(R.id.tvLetter6);
-	    		tvLetter7 = (TextView) dialog.findViewById(R.id.tvLetter7);
+	    		bCancel = (Button) this.layout.findViewById(R.id.bCancel);
+	    		tvLetter1 = (TextView) this.layout.findViewById(R.id.tvLetter1);
+	    		tvLetter2 = (TextView) this.layout.findViewById(R.id.tvLetter2);
+	    		tvLetter3 = (TextView) this.layout.findViewById(R.id.tvLetter3);
+	    		tvLetter4 = (TextView) this.layout.findViewById(R.id.tvLetter4);
+	    		tvLetter5 = (TextView) this.layout.findViewById(R.id.tvLetter5);
+	    		tvLetter6 = (TextView) this.layout.findViewById(R.id.tvLetter6);
+	    		tvLetter7 = (TextView) this.layout.findViewById(R.id.tvLetter7);
 	   	
-	    		TextView tvValue1 = (TextView) dialog.findViewById(R.id.tvValue1);
-	    		TextView tvValue2 = (TextView) dialog.findViewById(R.id.tvValue2);
-	    		TextView tvValue3 = (TextView) dialog.findViewById(R.id.tvValue3);
-	    		TextView tvValue4 = (TextView) dialog.findViewById(R.id.tvValue4);
-	    		TextView tvValue5 = (TextView) dialog.findViewById(R.id.tvValue5);
-	    		TextView tvValue6 = (TextView) dialog.findViewById(R.id.tvValue6);
-	    		TextView tvValue7 = (TextView) dialog.findViewById(R.id.tvValue7);
+	    		TextView tvValue1 = (TextView) this.layout.findViewById(R.id.tvValue1);
+	    		TextView tvValue2 = (TextView) this.layout.findViewById(R.id.tvValue2);
+	    		TextView tvValue3 = (TextView) this.layout.findViewById(R.id.tvValue3);
+	    		TextView tvValue4 = (TextView) this.layout.findViewById(R.id.tvValue4);
+	    		TextView tvValue5 = (TextView) this.layout.findViewById(R.id.tvValue5);
+	    		TextView tvValue6 = (TextView) this.layout.findViewById(R.id.tvValue6);
+	    		TextView tvValue7 = (TextView) this.layout.findViewById(R.id.tvValue7);
 
 	    		tvLetter1.setText(letters.get(0));
 	    		tvLetter2.setText(letters.get(1));
@@ -1347,43 +1396,41 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		tvLetter7.setOnClickListener(this);
 
 	    		
-	    		
+	    		this.setCanceledOnTouchOutside(false);
 	    		bCancel.setOnClickListener(new View.OnClickListener() {
 	    			@Override
 	    			public void onClick(View v) {
 	    				unfreezeButtons();
-	    				dialog.dismiss();
+	    				dismiss();
 	    			}
 	    		});
 
-	    		ImageView close = (ImageView) dialog.findViewById(R.id.img_close);
+	    		ImageView close = (ImageView) this.layout.findViewById(R.id.img_close);
 	    		//if button is clicked, close the custom dialog
 	    		close.setOnClickListener(new View.OnClickListener() {
 	    	 		@Override
 	    			public void onClick(View v) {
 	    	 			unfreezeButtons();
-	    				dialog.dismiss();
+	    				dismiss();
 	    			}
 	    		});
 	    		
-	    		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+	    		this.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
 						unfreezeButtons();
 						
 					}
 				});
+
+	    		this.setContentView(this.layout);
+	    	}
 	    		
-	    	 
-	    	}
 	    	
-	    	public void show(){
-	    		this.dialog.show();	
-	    	}
-	    	
+	    	@Override
 	    	public void dismiss(){
-	    		isButtonActive = false;
-	    		this.dialog.dismiss();	
+	    		unfreezeButtons();
+	    		super.dismiss();	
 	    	}
 
 	    	public void handleOKClick(){
@@ -1590,8 +1637,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    }
 	    
 	    private void handlePostTurnFinalAction(GameActionType action){
-	    	Gson gson = new Gson();
- 	    	
+
 	    	switch(action){
     	 	case CANCEL_GAME:
 	 			if (player.getTotalNumLocalGames() == 0){
@@ -1624,6 +1670,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			setupGame();
 	 			checkGameStatus();
 	 			gameSurfaceView.resetGameAfterPlay();
+	 			this.setupTimer();
 
 	 			break;
     	 	case SKIP:
@@ -1631,14 +1678,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			//refresh game board and buttons
 	 			setupGame();
 	 			gameSurfaceView.resetGameAfterPlay();
-	 			
+	 			this.setupTimer();
 	 			break;
     	 	case SWAP:
 
 	 			//refresh game board and buttons
 	 			setupGame();
 	 			gameSurfaceView.resetGameAfterPlay();
-
+	 			this.setupTimer();
     	 		break;
  
     	 }

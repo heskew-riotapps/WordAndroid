@@ -732,7 +732,7 @@ public class Game implements Parcelable, Comparable<Game> {
 	//	LastTurn lastTurn = this.getLastTurn(contextPlayerId);
 		
 	// return "p";
-		Logger.d(TAG, "getLastActionTextForList gameId=" + this.id + " status=" + this.getStatus() + " this.getLastAction()=" + this.getLastAction());
+	//	Logger.d(TAG, "getLastActionTextForList gameId=" + this.id + " status=" + this.getStatus() + " this.getLastAction()=" + this.getLastAction());
 		
 		String timeSince = Utils.getTimeSinceString(context, this.getLastTurnDate());
 		boolean isContext = this.isContextPlayerPerformedLastTurn(contextPlayerId);

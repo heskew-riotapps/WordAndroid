@@ -26,6 +26,7 @@ import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.DialogManager;
+import com.riotapps.word.ui.GameStateService;
 import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
@@ -510,6 +511,7 @@ public class PlayerService {
 	        if (player.getCompletedGames().size() > 0) {
 	        	//reset the rolling latest completion date to last completed game's date. this makes the response from the server as small as possible
 	        	for (Game game : player.getCompletedGames()) {
+	        		
 	        		game.setShowCompletionAlert(true);
 	        		if (completedDate.before(game.getCompletionDate())){
 	        			completedDate = game.getCompletionDate();
@@ -564,6 +566,11 @@ public class PlayerService {
 	        		//Logger.d(TAG,"handlePlayerResponse afer truncation completed games, num=" + combinedGames.size());
 	        		player.setCompletedGames(combinedGames);
 	        	}
+	        }
+	        
+	        //remove game state for completed games
+	        for (Game game : player.getCompletedGames()){
+	        	GameStateService.clearGameState(ctx, game.getId());
 	        }
 	        
 	        //now set activegames by turn
