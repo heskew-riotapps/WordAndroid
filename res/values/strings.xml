@@ -140,8 +140,8 @@
                        and given to the player.  The player\'s turn is then skipped.  Swapping is not allowed after the hopper is empty.</string>  
  	<string name="full_rules_letters_1">The Letters</string>
  	<string name="full_rules_letters_2">105 letters are shuffled and stored in the hopper until they are dispersed into the player\'s trays.  The mix of the first 100 letters is as follows:</string>                      
- 	<string name="full_rules_letters_3">The final 5 letters are made up of 3 randomly chosen consonants and 2 randomly chosen vowels (A, E, I, O, or U).  The random letters will 
-                        be unique, meaning that the random consonants chosen might be "P", "R", and "C", but would never be "P", "R", and "R".</string>   
+ 	<string name="full_rules_letters_3">The final 5 letters are made up of 4 randomly chosen consonants and 1 randomly chosen vowel (A, E, I, O, or U).  The random letters will 
+                        be unique, meaning that the random consonants chosen might be "P", "R", "K" and "C", but would never be "P", "K", "R", and "R".</string>   
 	<string name="full_rules_scoring_1">Scoring</string>
 	<string name="full_rules_scoring_2">Each letter has an assigned value as follows:</string>	
 	<string name="full_rules_scoring_3">Bonuses</string>	
@@ -452,7 +452,7 @@
   		<string name="add_opponents_cancel_app_request_3_message">%1$s, %2$s, and %3$s are not registered in WordSmash yet so the Facebook app request is the only way for us to send a notification for the new game.</string>
   		<string name="game_play_confirm_skip">You didn\'t place any letters. Are you sure you want to skip this turn?</string>
   		<string name="game_play_too_few_letters">Please form a word at least 2 letters long.</string>
-  		<string name="game_play_invalid_start_position">To get started, at least one letter must be placed on a smiley.</string>
+  		<string name="game_play_invalid_start_position">The first played word must have at least one letter placed on a smiley.</string>
   		<string name="game_play_invalid_overlay">You can only overlay previously played letters with a different letter.</string>
   		<string name="game_play_invalid_axis">Please be sure to place letters in a single axis with no gaps between letters.</string>
   		<string name="game_play_invalid_gaps">Sorry, there cannot be any gaps between letters.</string>
@@ -519,5 +519,5 @@
 		<string name="game_surface_rematch_with_2">rematch with\n%1$s\n%2$s</string>
 		<string name="game_surface_rematch_with_3">rematch with\n%1$s\n%2$s\n%3$s</string>
 		<string name="game_surface_first_time_alert_title">quick tips</string>
-		<string name="game_surface_first_time_alert_message">welcome to WordSmash, %s!\n\nto zoom in or out just single tap the game board.\n\ndrag letters from the tray onto the board to form words in a single axis.\n\nthe first played word must be played on at least one smiley.\n\nletters can be played on top of previously played letters.\n\ngood luck!</string>
+		<string name="game_surface_first_time_alert_message">welcome to WordSmash, %s!\n\nto zoom in or out, just single tap the game board.\n\ndrag letters from the tray onto the board to form words in a single axis.\n\nthe first played word must be played on at least one smiley.\n\nletters can be played on top of previously played letters.\n\ngood luck!</string>
 </resources>

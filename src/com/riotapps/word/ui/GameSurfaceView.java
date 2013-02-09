@@ -86,6 +86,24 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private RectArea trayAreaRect = new RectArea();
     private RectArea visibleAreaRect = new RectArea();
     private RectArea boardAreaRect = new RectArea();
+    private RectArea region1FullViewRect = new RectArea();
+    private RectArea region2FullViewRect = new RectArea();
+    private RectArea region3FullViewRect = new RectArea();
+    private RectArea region4FullViewRect = new RectArea();
+    private RectArea region5FullViewRect = new RectArea();
+    private RectArea region6FullViewRect = new RectArea();
+    private RectArea region7FullViewRect = new RectArea();
+    private RectArea region8FullViewRect = new RectArea();
+    private RectArea region9FullViewRect = new RectArea();
+    private RectArea region1ZoomViewRect = new RectArea();
+    private RectArea region2ZoomViewRect = new RectArea();
+    private RectArea region3ZoomViewRect = new RectArea();
+    private RectArea region4ZoomViewRect = new RectArea();
+    private RectArea region5ZoomViewRect = new RectArea();
+    private RectArea region6ZoomViewRect = new RectArea();
+    private RectArea region7ZoomViewRect = new RectArea();
+    private RectArea region8ZoomViewRect = new RectArea();
+    private RectArea region9ZoomViewRect = new RectArea();
   //  private int top;
   //  private int left;
     private boolean isZoomed = false;
@@ -801,6 +819,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		Log.w(TAG, "surfaceDestroyed called");
 		this.parent.captureTime("surfaceDestroyed starting");
 	    this.stopThread();
+	    this.surfaceCreated = false;
 	    this.parent.captureTime("surfaceDestroyed ending");
 	}
 	
@@ -822,7 +841,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	public void onRestart() {
 		 Log.w(TAG, "onRestart called");
-		// if (this.surfaceCreated) {this.startThread();}
+		//  if (this.surfaceCreated) {this.startThread();}
 	//	this.gameThread = null;
 		 this.gameThread = new GameThread(holder, this);
 		 this.holder.setFormat(PixelFormat.TRANSPARENT);
@@ -830,7 +849,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 
 		 me.readyToDraw = true;
 	//	 this.startThread(); ///?????
-	//	 if (this.surfaceCreated) {this.startThread();}
+	     if (this.surfaceCreated) {this.startThread();}
 	}
 	
 	 public void onDestroy(){
@@ -849,7 +868,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		//make sure surface has been created first because onresume is initially called before surfacecreated and starting the 
 		//thread then kills things (canvas is null in onDraw)
 		this.parent.captureTime("startThread starting");
-	//	if (this.surfaceCreated) {this.startThread();}
+	 	if (this.surfaceCreated) {this.startThread();}
 		this.parent.captureTime("startThread ended");
 	}
 	
@@ -1061,7 +1080,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
              case MotionEvent.ACTION_UP: //1
             	 //includes a check to ignore double taps
             	 //  Log.w(getClass().getSimpleName() + "onTouchEvent ActionUP ", this.tapCheck + " " + currentTouchTime + " " + this.readyToDraw);
-            	   
+            	 this.parent.captureTime(TAG + " ACTION_UP");
             	   
             	   this.readyToDraw = false;
             	   Logger.w(TAG, "ACTION_UP tapcheck = " + this.tapCheck + " currentTouchTime=" + currentTouchTime + " dbltapcheck = " + this.dblTapCheck + " diff = " + (this.tapCheck - this.dblTapCheck)); 
@@ -1144,7 +1163,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 else {
             		 //we are coming out of a move action here...let's determine if the momentum scroll should be triggered
         			 //Logger.w(TAG,"onTouchEvent: ACTION_UP number of coordinates" + this.coordinates.size());
-        			 
+            		 this.parent.captureTime(TAG + " find tile starting");
         			 //first check to see if a tray tile is being dragged. if so this means the tray tile is being dropped
             		 //if ((this.currentTrayTile != null && this.currentTrayTile.isDragging()) || this.getDraggingTile() != null){
         			 if ((this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()) || this.getDraggingTile() != null){
@@ -1156,10 +1175,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         				 //what the closed eligible drop candidate was (either on a board tile or on the tray)
         				 //but first let's start with determining (the easy way) if we dropped on a board tile 
 
-        				 
+        				 this.parent.captureTime(TAG + " setClosestDropTarget starting");
         				 //we need to find where the tile was dropped.  because it was dropped somewhere.  this method will 
         				 //determine the closest available drop target to the dropped location (hence the name)
         				 this.setClosestDropTarget();
+        				 
+        				 this.parent.captureTime(TAG + " setClosestDropTarget ended");
         				// this.targetTileId = this.findClosestOpenTile(this.currentX, this.currentY);
         				
         				 if (this.getTargetTile() != null){
@@ -1172,6 +1193,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         					  
         						 //assign the letter from the tray tile to the board tile
         						// this.tiles.get(this.targetTile.getId()).setPlacedLetter(this.currentTrayTile.getDraggingLetter());
+        					 
+        					 this.parent.captureTime(TAG + " clearCurrentTrayTile starting");
         					 
         					 //handle a tray tile dropping
         					 if (this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()){
@@ -1188,10 +1211,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    						 this.getDraggingTile().setDraggingLetter("");
 	    						 this.clearDraggingTile(); //this.draggingTile = null;		 
         					 }
+        					 
+        					 this.parent.captureTime(TAG + " setGameState starting");
+        					 
         					 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
         					 GameStateService.setGameState(this.context, this.parent.getGameState());
         					// this.resetPointsView();
     						 
+        					 this.parent.captureTime(TAG + " setGameState ended");
+        					 
     						 //let's make sure the board zooms (if it's not already in that state, upon drop)
         					 if(this.isZoomAllowed){
 	    						 if (this.isZoomed){
@@ -1202,11 +1230,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    							 this.isZoomed = true;
 	    						 }
         					 }
-    						 Logger.d(TAG, "ACTION_UP this.alreadyInZoomedState=" + this.alreadyInZoomedState);
+    						// Logger.d(TAG, "ACTION_UP this.alreadyInZoomedState=" + this.alreadyInZoomedState);
     						 this.trayTileDropped = true;
     						 this.readyToDraw = true;
     						 
+    						 this.parent.captureTime(TAG + " resetPointsView starting");
+    						 
     						 this.resetPointsView();
+    						 
+    						 this.parent.captureTime(TAG + " resetPointsView ended");
     						 
     					 }
         				 else
@@ -1590,8 +1622,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 int xPosition = this.currentX;
 		 int yPosition = this.currentY;
 		 
-		 
-		 Logger.d(TAG, "setClosestDropTarget pre xPosition=" + xPosition + " yPosition=" + yPosition);
+		 this.parent.captureTime(TAG + " setClosestDropTarget started");
+		// Logger.d(TAG, "setClosestDropTarget pre xPosition=" + xPosition + " yPosition=" + yPosition);
 		 //if the finger location is outside of the visible bounds of the game surface
 		 //instead of using specific finger location from onTouchEvent, let's use the center of the dragging tile 
 		 if (this.visibleAreaRect.isCoordinateWithinArea(xPosition, yPosition)){
@@ -1601,18 +1633,21 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 yPosition = center.getyLocation();
 		 }
 
-		 Logger.d(TAG, "setClosestDropTarget post xPosition=" + xPosition + " yPosition=" + yPosition);
+		// Logger.d(TAG, "setClosestDropTarget post xPosition=" + xPosition + " yPosition=" + yPosition);
 
-		 
+		 this.parent.captureTime(TAG + " findClosestOpenTile starting");
 		 //first lets check board tiles
 		 DropTarget boardDrop = this.findClosestOpenTile(xPosition, yPosition);
 		 
-		 Logger.d(TAG, "boardDrop distance=" + boardDrop.getDistance() + " tileId=" + boardDrop.getTileId());
+		 this.parent.captureTime(TAG + " findClosestOpenTile ended");
+		 //Logger.d(TAG, "boardDrop distance=" + boardDrop.getDistance() + " tileId=" + boardDrop.getTileId());
 		 
+		 this.parent.captureTime(TAG + " findClosestTrayTile starting");
 		 //then lets check tray tiles
 		 DropTarget trayDrop = this.findClosestTrayTile(xPosition, yPosition);
 
-		 Logger.d(TAG, "trayDrop distance=" + trayDrop.getDistance() + " tileId=" + trayDrop.getTileId());
+		 this.parent.captureTime(TAG + " findClosestTrayTile ended");
+		 //Logger.d(TAG, "trayDrop distance=" + trayDrop.getDistance() + " tileId=" + trayDrop.getTileId());
 		 
 		 //now determine which was closer, the closest board tile or closest tray tile...it has to have been dropped on at least one
 		 if (boardDrop.getTileId() > -1 && boardDrop.getDistance() <= trayDrop.getDistance() ){
@@ -1623,8 +1658,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 this.dropTargetTrayTileId = trayDrop.getTileId();
 			 this.clearTargetTile();
 		 }
-		 Logger.d(TAG, "trayDrop this.targetTileId=" + this.targetTileId + " dropTargetTrayTileId=" + this.dropTargetTrayTileId);
-		 
+		// Logger.d(TAG, "trayDrop this.targetTileId=" + this.targetTileId + " dropTargetTrayTileId=" + this.dropTargetTrayTileId);
+		 this.parent.captureTime(TAG + " setClosestDropTarget ending");
 	 }
 	 
 	 private DropTarget findClosestOpenTile(int xPosition, int yPosition){
@@ -1632,6 +1667,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 //GameTile dropTargetTile = null;
 		 boolean zoomed = this.isZoomed;
 		 
+		 this.parent.captureTime(TAG + " findClosestOpenTile internal starting");
 		 //when in zoomed mode, use the boardAreaRect to readjust the center position
 		 //of each tile when checking for the the closest drop target.  this adjusts for 
 		 //board tiles that are mostly hidden behind the tray for instance.  they should
@@ -1712,13 +1748,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 Logger.d("TAG", "onDraw canvas is null");
 			 return;
 		 }
+		 
+		 this.parent.captureTime(TAG + " onDraw started");
+		 
  		// super.onDraw(canvas);
 	// Logger.d(TAG,  "onDraw motion=" + this.currentTouchMotion + " " + " zoom=" + this.isZoomed + " tapCheck=" + this.tapCheck + " osMoving=" +  this.isMoving  + " readyToDraw=" + this.readyToDraw + " prevX=" + this.previousX + " prevY=" + this.previousY
 	// 			 + " currX=" + this.currentX + " currY=" + this.currentY);
 	 
 	// Logger.d(TAG, "this.getDraggingTile()=" + (this.getDraggingTile() == null));
 		 
-		long currentTouchTime = System.nanoTime();
+	//	long currentTouchTime = System.nanoTime();
 		
 		if (!this.shuffleRedraw && !this.recallLettersRedraw  && !this.afterPlayRedraw && !this.trayTileTapped ){
 			//  if (this.touchMotion == MotionEvent.ACTION_MOVE ) {this.readyToDraw = false;} 
@@ -1815,6 +1854,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 }
 				 else if (this.currentTouchMotion == MotionEvent.ACTION_UP){ 	
 					
+					 this.parent.captureTime(TAG + " onDraw action_up started");
 				// 	this.parent.updateHandler.sendMessage(this.parent.updateHandler.obtainMessage(GameSurface.MSG_SCOREBOARD_VISIBILITY, GONE, 0));
 					 
 			//		MarginLayoutParams  params = (MarginLayoutParams )this.getLayoutParams();
@@ -1825,13 +1865,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 					//if board is already zoomed and a tile was dropped, do not move board, keep it in the same position
 					if ((this.trayTileDropped || this.trayTileDropTarget) && this.alreadyInZoomedState){
+						
+						 this.parent.captureTime(TAG + " drawBoardOnMove 1 started");
 						this.drawBoardOnMove(canvas, 0, 0); //////////////?????????????
 					}
 					else if (this.getTargetTile() != null){
+						
+						this.parent.captureTime(TAG + " drawBoardZoomOnUp 1 started");
 						this.drawBoardZoomOnUp(canvas);
 					}
 					else{
 						//assume that if the current tile is null, just keep board as is
+						this.parent.captureTime(TAG + " drawBoardOnMove 2 started");
 						this.drawBoardOnMove(canvas, 0, 0);
 					}
 					this.readyToDraw = false;
@@ -1997,7 +2042,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	private void drawBoardOnMove(Canvas canvas, int leftDiff, int topDiff){
 		Logger.d(TAG, "drawBoardOnMove");
 		 this.readyToDraw = false;
-		   
+		 this.parent.captureTime(TAG + " drawBoardOnMove started");
 		 boolean setReadyToDraw = false;
 	//	 int leftDiff = this.previousX - this.currentX ;
 	//	 int topDiff =  this.previousY - this.currentY;
@@ -2033,6 +2078,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			// + topLeftTile.getxPositionZoomed() + " " + topLeftTile.getyPositionZoomed() + " "
 			// + this.outerZoomLeft + " " + this.outerZoomTop);
 
+			 this.parent.captureTime(TAG + " drawBoardOnMove check bounds starting ");
 			 
 			 //make sure it will be within outer left bounds
 			 if (topLeftTile.getxPositionZoomed() - leftDiff < this.outerZoomLeft){
@@ -2076,11 +2122,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 }
 			 }
 
-			
+			 this.parent.captureTime(TAG + " drawBoardOnMove check bounds ended ");
 				// this.previousX = this.currentX;
 				// this.previousY = this.currentY;
 				 canvas.drawColor(0, Mode.CLEAR);
+				 
+				 this.parent.captureTime(TAG + " drawZoomedBoardByDiff  starting ");
 				 this.drawZoomedBoardByDiff(canvas, leftDiff, topDiff);	
+				 
+				 this.parent.captureTime(TAG + " drawZoomedBoardByDiff  ended ");
+				 
 				 if (setReadyToDraw){ this.readyToDraw = true; }
 		  //   this.loadZoomedBoardByDiff(canvas, leftDiff, topDiff);	
 		   //  if (setReadyToDraw){this.readyToDraw = true;}
@@ -2528,6 +2579,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			this.parent.switchToRecall();
 			this.parent.switchToPlay();
 		}
+	
 	}
 	
 	public void resetGameAfterRefresh(){
@@ -2541,7 +2593,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	    this.setInitialButtonStates();
 	    this.resetPointsView();
 	   
-	    this.setInitialButtonStates();
+	 
 	   
 	   // this.afterPlayRedraw = true; ??
 	    this.isZoomed = false;
@@ -2577,10 +2629,20 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		// this.resetPointsView();
 		}
 	
+	public void clearPlacedTiles(){
+		for(GameTile tile : this.tiles){
+			if (tile.getPlacedLetter().length() > 0){
+				tile.removePlacement();
+			}
+		}
+	}
+	
 	public void onPlayClick(){
 		try{
+			this.parent.captureTime("onPlayClick checkPlayRules starting");
 			final PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService, false);
-		
+
+			this.parent.captureTime("onPlayClick checkPlayRules ended");
 			this.parent.setPointsView(placedResult.getTotalPoints());
 			
 			if (placedResult.getPlacedTiles().size() == 0){
@@ -2681,11 +2743,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				numLettersInTray += 1;
 			}
 		}
-		//Logger.d(TAG, "isTrayFull numLettersInTray=" + numLettersInTray);
-		//Logger.d(TAG, "isTrayFull this.parent.getGameState().getNumTrayTiles()=" + this.parent.getGameState().getNumTrayTiles());
+		Logger.d(TAG, "isTrayFull numLettersInTray=" + numLettersInTray);  
+		Logger.d(TAG, "isTrayFull this.parent.getGameState().getLocations().size()=" + this.parent.getGameState().getLocations().size());
+		Logger.d(TAG, "isTrayFull this.parent.contextPlayerGame.getTrayLetters().size()=" + this.parent.contextPlayerGame.getTrayLetters().size());
 		
 		//some letters are out of the tray, only recall is allowed now, not shuffling
-		return (numLettersInTray == this.parent.getGameState().getLocations().size());
+		return (numLettersInTray == this.parent.contextPlayerGame.getTrayLetters().size()); //this.parent.getGameState().getLocations().size());
 	}
 	
 	public void shuffleTray(){
@@ -2839,6 +2902,121 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 }
 		 }
 	 }
+	 
+	 private void setFullViewRegionPosition(GameTile tile){
+		 //region1 top left third
+		 //ids=0,1,2,3,4.. 15,16,17,18,19...30,31,32,33,34...45,46,47,48,49...60,61,62,63,64
+		 //corners= top left=0, top right=4 , bottom left=60 , bottom right=64
+		 
+		 //region2 top center third
+		 //ids=5,6,7,8,9.. 20,21,22,23,24...35,36,37,38,39...50,51,52,53,54...65,66,67,68,69
+		 //corners= top left=5, top right=9 , bottom left=65 , bottom right=69
+		 
+		 //region3 top right third
+		 //ids=10,11,12,13,14.. 25,26,27,28,29...40,41,42,43,44...55,56,57,58,59...70,71,72,73,74
+		 //corners= top left=10, top right=14 , bottom left=70 , bottom right=74
+		 
+		 //region4 center left third
+		 //ids=75,76,77,78,79.. 90,91,92,93,94...105,106,107,108,109...120,121,122,123,124...135,136,137,138,139
+		 //corners= top left=75, top right=79 , bottom left=135 , bottom right=139
+		 
+		 //region5 center center third
+		 //ids=80,81,82,83,84... 95,96,97,98,99...110,111,112,113,114...125,126,127,128,129...140,141,142,143,144
+		 //corners= top left=80, top right=84 , bottom left=140 , bottom right=144
+		 
+		 //region6 center right third
+		 //ids=85,86,87,88,89... 100,101,102,103,104...115,116,117,118,119...130,131,132,133,134...145,146,147,148,149
+		 //corners= top left=85, top right=89 , bottom left=145 , bottom right=149
+		 
+		 //region7 bottom left third
+		 //ids=150,151,152,153,154... 165,166,167,168,169...180,181,182,183,184...195,196,197,198,199...210,211,212,213,214
+		 //corners= top left=150, top right=154 , bottom left=210 , bottom right=214
+		 
+		 //region8 bottom center third
+		 //ids=155,156,157,158,159... 170,171,172,173,174...185,186,187,188,189...200,201,202,203,204...215,216,217,218,219
+		 //corners= top left=155, top right=159 , bottom left=215 , bottom right=219
+
+		 //region9 bottom center third
+		 //ids=160,161,162,163,164... 175,176,177,178,179...190,191,192,193,194...205,206,207,208,209...220,221,222,223,224
+		 //corners= top left=160, top right=164 , bottom left=220 , bottom right=224
+		 
+		 switch (tile.getId())
+		 {
+		 case 0: //top left of region 1
+			 this.region1FullViewRect.setLeft(tile.getxPosition());
+			 this.region1FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	 case 64: //bottom right of region 1
+	 		this.region1FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region1FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+		 case 5: //top left of region 2
+			 this.region2FullViewRect.setLeft(tile.getxPosition());
+			 this.region2FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	 case 69: //bottom right of region 2
+	 		this.region2FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region2FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+	 	case 10: //top left of region 3
+			 this.region3FullViewRect.setLeft(tile.getxPosition());
+			 this.region3FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	 case 74: //bottom right of region 3
+	 		this.region3FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region3FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+	  	case 75: //top left of region 4
+			 this.region4FullViewRect.setLeft(tile.getxPosition());
+			 this.region4FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	 case 139: //bottom right of region 4
+	 		this.region4FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region4FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+	  	case 80: //top left of region 5
+			 this.region5FullViewRect.setLeft(tile.getxPosition());
+			 this.region5FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	 case 144: //bottom right of region 5
+	 		this.region5FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region5FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+	  	case 85: //top left of region 6
+			 this.region6FullViewRect.setLeft(tile.getxPosition());
+			 this.region6FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	 case 149: //bottom right of region 6
+	 		this.region6FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region6FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+	  	case 150: //top left of region 7
+			 this.region7FullViewRect.setLeft(tile.getxPosition());
+			 this.region7FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	case 214: //bottom right of region 7
+	 		this.region7FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region7FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+	 	case 155: //top left of region 8
+			 this.region8FullViewRect.setLeft(tile.getxPosition());
+			 this.region8FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	case 219: //bottom right of region 8
+	 		this.region8FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region8FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+	 	case 160: //top left of region 9
+			 this.region9FullViewRect.setLeft(tile.getxPosition());
+			 this.region9FullViewRect.setTop(tile.getyPosition());		 
+			 break;
+	 	case 224: //bottom right of region 9
+	 		this.region9FullViewRect.setRight(tile.getxPosition() + this.fullViewTileWidth + this.tileGap);  
+	 		this.region9FullViewRect.setBottom(tile.getyPosition() + this.fullViewTileWidth + this.tileGap);	
+	 		break;
+		 }
+		 
+	 }
 	 //private GameTile FindTileFromPositionInZoomedMode(int xPosition, int yPosition){
 	 private int FindTileFromPositionInZoomedMode(int xPosition, int yPosition){
 		 
@@ -2851,6 +3029,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 //				 + " bottom=" + this.boardAreaRect.getBottom() 
 //				 + " left=" + this.boardAreaRect.getLeft() 
 //				 + " right=" + this.boardAreaRect.getRight());
+		 this.parent.captureTime(TAG + " FindTileFromPositionInZoomedMode loop starting");
 		 
 		 for (GameTile tile : this.tiles) { 
 	    	  //if (xPosition >= tile.getxPositionZoomed() && xPosition <= tile.getxPositionZoomed() + this.zoomedTileWidth + this.tileGap &&
@@ -2890,11 +3069,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     				 return tile.getId();	 
     			 }
 	    	 }
+			 
+			 
 		//	 else{
 	//			 Logger.d(TAG, "FindTileFromPositionInZoomedMode " + tile.getId() + " is fully outside of the given boundary");
 	//		 }
 
 	     }
+		 
+		 this.parent.captureTime(TAG + " FindTileFromPositionInZoomedMode loop ended");
 		// Logger.d(TAG, "FindTileFromPositionInZoomedMode tileId match=" + tileId);
 		 return tileId; //null;
 	 }
@@ -2902,12 +3085,16 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 //private GameTile FindTileFromPositionInFullViewMode(int xPosition, int yPosition){
 	 private int FindTileFromPositionInFullViewMode(int xPosition, int yPosition){
 		 int tileId = -1;
+		 this.parent.captureTime(TAG + " FindTileFromPositionInFullViewMode loop starting");
+		 
 		 for (GameTile tile : this.tiles) { 
 	    	 if (xPosition >= tile.getxPosition() && xPosition <= tile.getxPosition() + this.fullViewTileWidth + this.tileGap &&
 	    	 		 yPosition >= tile.getyPosition() && yPosition <= tile.getyPosition() + this.fullViewTileWidth + this.tileGap){
 	    		 return tile.getId();
 	    	 }
 	    	}
+		 
+		 this.parent.captureTime(TAG + " FindTileFromPositionInFullViewMode loop ended");
 		 return tileId; //null;
 	 }
 	 

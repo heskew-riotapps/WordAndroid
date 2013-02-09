@@ -21,7 +21,8 @@ public class WordService {
 	private static final String TAG = WordService.class.getSimpleName();
 	
 	boolean isLoaded = false;
-	SortedSet<String> words_a = null;
+	/*
+	 SortedSet<String> words_a = null;
 	SortedSet<String> words_b = null;
 	SortedSet<String> words_c = null;
 	SortedSet<String> words_d = null;
@@ -47,8 +48,37 @@ public class WordService {
 	SortedSet<String> words_x = null;
 	SortedSet<String> words_y = null;
 	SortedSet<String> words_z = null;
+	
+	*/
+	ArrayList<String> words_a = null;
+	ArrayList<String> words_b = null;
+	ArrayList<String> words_c = null;
+	ArrayList<String> words_d = null;
+	ArrayList<String> words_e = null;
+	ArrayList<String> words_f = null;
+	ArrayList<String> words_g = null;
+	ArrayList<String> words_h = null;
+	ArrayList<String> words_i = null;
+	ArrayList<String> words_j = null;
+	ArrayList<String> words_k = null;
+	ArrayList<String> words_l = null;
+	ArrayList<String> words_m = null;
+	ArrayList<String> words_n = null;
+	ArrayList<String> words_o = null;
+	ArrayList<String> words_p = null;
+	ArrayList<String> words_q = null;
+	ArrayList<String> words_r = null;
+	ArrayList<String> words_s = null;
+	ArrayList<String> words_t = null;
+	ArrayList<String> words_u = null;
+	ArrayList<String> words_v = null;
+	ArrayList<String> words_w = null;
+	ArrayList<String> words_x = null;
+	ArrayList<String> words_y = null;
+	ArrayList<String> words_z = null;
+	
  
-	Type type = new TypeToken<SortedSet<String>>() {}.getType();
+	Type type = new TypeToken<ArrayList<String>>() {}.getType();
 	Context context;
 	
 	
@@ -64,31 +94,31 @@ public class WordService {
 		this.loadList(startWith);
  	
 		if (startWith.equals("a")){ return this.words_a.contains(word); }
-		if (startWith.equals("b")){ return this.words_b.contains(word); }
-		if (startWith.equals("c")){ return this.words_c.contains(word); }
-		if (startWith.equals("d")){ return this.words_d.contains(word); }
-		if (startWith.equals("e")){ return this.words_e.contains(word); }
-		if (startWith.equals("f")){ return this.words_f.contains(word); }
-		if (startWith.equals("g")){ return this.words_g.contains(word); }
-		if (startWith.equals("h")){ return this.words_h.contains(word); }
-		if (startWith.equals("i")){ return this.words_i.contains(word); }
-		if (startWith.equals("j")){ return this.words_j.contains(word); }
-		if (startWith.equals("k")){ return this.words_k.contains(word); }
-		if (startWith.equals("l")){ return this.words_l.contains(word); }
-		if (startWith.equals("m")){ return this.words_m.contains(word); }
-		if (startWith.equals("n")){ return this.words_n.contains(word); }
-		if (startWith.equals("o")){ return this.words_o.contains(word); }
-		if (startWith.equals("p")){ return this.words_p.contains(word); }
-		if (startWith.equals("q")){ return this.words_q.contains(word); }
-		if (startWith.equals("r")){ return this.words_r.contains(word); }
-		if (startWith.equals("s")){ return this.words_s.contains(word); }
-		if (startWith.equals("t")){ return this.words_t.contains(word); }
-		if (startWith.equals("u")){ return this.words_u.contains(word); }
-		if (startWith.equals("v")){ return this.words_v.contains(word); }
-		if (startWith.equals("w")){ return this.words_w.contains(word); }
-		if (startWith.equals("x")){ return this.words_x.contains(word); }
-		if (startWith.equals("y")){ return this.words_y.contains(word); }
-		if (startWith.equals("z")){ return this.words_z.contains(word); }
+		else if (startWith.equals("b")){ return this.words_b.contains(word); }
+		else if (startWith.equals("c")){ return this.words_c.contains(word); }
+		else if (startWith.equals("d")){ return this.words_d.contains(word); }
+		else if (startWith.equals("e")){ return this.words_e.contains(word); }
+		else if (startWith.equals("f")){ return this.words_f.contains(word); }
+		else if (startWith.equals("g")){ return this.words_g.contains(word); }
+		else if (startWith.equals("h")){ return this.words_h.contains(word); }
+		else if (startWith.equals("i")){ return this.words_i.contains(word); }
+		else if (startWith.equals("j")){ return this.words_j.contains(word); }
+		else if (startWith.equals("k")){ return this.words_k.contains(word); }
+		else if (startWith.equals("l")){ return this.words_l.contains(word); }
+		else if (startWith.equals("m")){ return this.words_m.contains(word); }
+		else if (startWith.equals("n")){ return this.words_n.contains(word); }
+		else if (startWith.equals("o")){ return this.words_o.contains(word); }
+		else if (startWith.equals("p")){ return this.words_p.contains(word); }
+		else if (startWith.equals("q")){ return this.words_q.contains(word); }
+		else if (startWith.equals("r")){ return this.words_r.contains(word); }
+		else if (startWith.equals("s")){ return this.words_s.contains(word); }
+		else if (startWith.equals("t")){ return this.words_t.contains(word); }
+		else if (startWith.equals("u")){ return this.words_u.contains(word); }
+		else if (startWith.equals("v")){ return this.words_v.contains(word); }
+		else if (startWith.equals("w")){ return this.words_w.contains(word); }
+		else if (startWith.equals("x")){ return this.words_x.contains(word); }
+		else if (startWith.equals("y")){ return this.words_y.contains(word); }
+		else if (startWith.equals("z")){ return this.words_z.contains(word); }
 
 		return false;
 	}
@@ -134,175 +164,175 @@ public class WordService {
 			}
 			return;
 		}	
-		if (letter.equals("b")){
+		else if (letter.equals("b")){
 			if (this.words_b == null){ 
 				Logger.d(TAG, "letter=" + letter);
 				this.words_b = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_b)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_b), this.type);
 			}
 			return;
 		}
-		if (letter.equals("c")){
+		else if (letter.equals("c")){
 			if (this.words_c == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_c = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_c)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_c), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("d")){
+		else if (letter.equals("d")){
 			if (this.words_d == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_d = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_d)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_d), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("e")){ 
+		else if (letter.equals("e")){ 
 			if (this.words_e == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_e = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_e)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_e), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("f")) {
+		else if (letter.equals("f")) {
 			if (this.words_f == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_f = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_f)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_f), this.type);  
 			}
 			return;
 		}
-		if (letter.equals("g")){ 
+		else if (letter.equals("g")){ 
 			if (this.words_g == null){ 
 				Logger.d(TAG, "letter=" + letter);
 				this.words_g = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_g)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_g), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("h")){ 
+		else if (letter.equals("h")){ 
 			if (this.words_h == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_h = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_h)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_h), this.type);  
 			}
 			return;
 		}
-		if (letter.equals("i")) { 
+		else if (letter.equals("i")) { 
 			if (this.words_i == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_i = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_i)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_i), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("j")) { 
+		else if (letter.equals("j")) { 
 			if (this.words_j == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_j = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_j)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_j), this.type);  
 			}
 			return;
 		}
-		if (letter.equals("k")){ 
+		else if (letter.equals("k")){ 
 			if (this.words_k == null){ 
 				Logger.d(TAG, "letter=" + letter);
 				this.words_k = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_k)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_k), this.type);  
 			}
 			return;
 		}
-		if (letter.equals("l")) { 
+		else if (letter.equals("l")) { 
 			if (this.words_l == null){ 
 				Logger.d(TAG, "letter=" + letter);
 				this.words_l = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_l)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_l), this.type);
 			}
 			return;
 		}
-		if (letter.equals("m")) { 
+		else if (letter.equals("m")) { 
 			if (this.words_m == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_m = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_m)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_m), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("n")) { 
+		else if (letter.equals("n")) { 
 			if (this.words_n == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_n = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_n)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_n), this.type);
 			}
 			return;
 		}
-		if (letter.equals("o")){ 
+		else if (letter.equals("o")){ 
 			if (this.words_o == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_o = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_o)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_o), this.type);
 			}
 			return;
 		}
-		if (letter.equals("p")) { 
+		else if (letter.equals("p")) { 
 			if (this.words_p == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_p = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_p)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_p), this.type);
 			}
 			return;
 		}
-		if (letter.equals("q")) { 
+		else if (letter.equals("q")) { 
 			if (this.words_q == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_q = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_q)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_q), this.type);  
 			}
 			return;
 		}
-		if (letter.equals("r")) { 
+		else if (letter.equals("r")) { 
 			if (this.words_r == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_r = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_r)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_r), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("s")) { 
+		else if (letter.equals("s")) { 
 			if (this.words_s == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_s = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_s)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_s), this.type);
 			}
 			return;
 		}
-		if (letter.equals("t")) { 
+		else if (letter.equals("t")) { 
 			if (this.words_t == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_t = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_t)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_t), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("u")) { 
+		else if (letter.equals("u")) { 
 			if (this.words_u == null){ 
 				Logger.d(TAG, "letter=" + letter);
 				this.words_u = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_u)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_u), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("v")) { 
+		else if (letter.equals("v")) { 
 			if (this.words_v == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_v = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_v)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_v), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("w")) { 
+		else if (letter.equals("w")) { 
 			if (this.words_w == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_w = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_w)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_w), this.type);
 			}
 			return;
 		}
-		if (letter.equals("x")) { 
+		else if (letter.equals("x")) { 
 			if (this.words_x == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_x = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_x)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_x), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("y")) { 
+		else if (letter.equals("y")) { 
 			if (this.words_y == null){
 				Logger.d(TAG, "letter=" + letter);
 				this.words_y = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_y)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_y), this.type); 
 			}
 			return;
 		}
-		if (letter.equals("z")) { 
+		else if (letter.equals("z")) { 
 			if (this.words_z == null){ 
 				Logger.d(TAG, "letter=" + letter);
 				this.words_z = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_z)), this.type);//(FileUtils.ReadRawTextFile(context, R.raw.words_z), this.type); 

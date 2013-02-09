@@ -420,6 +420,9 @@ public class GameService {
 			GameService.updateLastGameListCheckTime(ctx);
  			GameService.putGameToLocal(ctx, game);
 		}
+		else {
+			GameService.moveGameToCompletedList(ctx, game);
+		}
 		return game;
 	}
 	
@@ -887,9 +890,14 @@ public class GameService {
 					List<com.riotapps.word.ui.TrayTile> trayTiles, AlphabetService alphabetService, WordService wordService,
 					boolean bypassValidWordCheck) throws DesignByContractException{
 		
+		long runningTime = System.nanoTime();
+		
 		PlacedResult placedResult = new PlacedResult();
 		
 		List<GameTile> placedTiles = getGameTiles(boardTiles);
+	 
+	     Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "getGameTiles", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
 		
 		//check to see if user is skipping, if so just return empty placedResult
 		if (placedTiles.size() == 0){
@@ -901,33 +909,49 @@ public class GameService {
 			Logger.d(TAG, "tile original=" + tile.getOriginalLetter() + " placed=" + tile.getPlacedLetter());
 			Check.Require(!tile.getOriginalLetter().equals(tile.getPlacedLetter()),  context.getString(R.string.game_play_invalid_overlay));
 		}
-		
+		 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "placedTiles", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
 		
 		List<PlayedTile> playedTiles = game.getPlayedTiles();
 		
 		//let's get these collections in the tileId order for certain
 		Collections.sort(placedTiles, new GameTileComparator());
 		Collections.sort(game.getPlayedTiles(), new PlayedTileComparator());
+		
+		 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "sorts", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
 		//determine how to differentiate between rule checks that require action vs confirmation
 		
 		//is the player skipping this turn on purpose? let's confirm it with the player
 	//	if(placedTiles.size() == 0) {
 	//		return R.string.game_play_confirm_skip;
 	//	}
- 
-		//the first turn must have more than one letter played (every word must be at least two letters long
-	 	Check.Require(game.getTurn() > 1 || game.getTurn() == 1 && placedTiles.size() > 1, context.getString(R.string.game_play_too_few_letters));
-	//	if (game.getTurn() == 1 && placedTiles.size() == 1){
-	//		return R.string.game_play_too_few_letters;
-	//	}
 		
-	 	Check.Require(isMoveInValidStartPosition(layout, game, placedTiles), context.getString(R.string.game_play_invalid_start_position));
+		boolean isFirstPlayedWord = false;
+		if (game.getTurn() == 1 || game.getPlayedTiles().size() == 0){
+			isFirstPlayedWord = true;
+		}
+		 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "check 1 starting", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
+ 
+		//the first turn (that plays letters) must have more than one letter played (every word must be at least two letters long
+	 	Check.Require(game.getTurn() > 1 || isFirstPlayedWord && placedTiles.size() > 1, context.getString(R.string.game_play_too_few_letters));
+	 	//Check.Require(game.getTurn() > 1 || game.getTurn() == 1 && placedTiles.size() > 1, context.getString(R.string.game_play_too_few_letters));
+ 
+		 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isMoveInValidStartPosition starting", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
+	     
+	 	Check.Require(isMoveInValidStartPosition(layout, game, placedTiles, isFirstPlayedWord), context.getString(R.string.game_play_invalid_start_position));
 	//	if (!this.isMoveInValidStartPosition(layout, game, placedTiles)){
 	//		return R.string.game_play_invalid_start_position;
 	//	}
-	 	
+		 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isMoveInValidStartPosition ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
 	 	//see which axis the tiles were played on, x = horizontal, y = vertical
 	 	String axis = getPlacedAxis(placedTiles);
+	 	
+	 	 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "getPlacedAxis", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
 	 	
 	 	Check.Require(axis == "x" || axis == "y", context.getString(R.string.game_play_invalid_axis));
 	 	
@@ -942,13 +966,27 @@ public class GameService {
        	 placedSet.add(tile.getId());
         }
 	 	
+	 	 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isMoveFreeOfGaps starting", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
+	     
         Check.Require(isMoveFreeOfGaps(axis, playedSet, placedSet), context.getString(R.string.game_play_invalid_gaps));
         
 
-        Check.Require(game.getTurn() == 1 || isWordConnectedToPlayedWords(placedTiles, playedTiles), context.getString(R.string.game_play_invalid_gaps_placed_words));
- 
+	 	 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isMoveFreeOfGaps ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
+        
+        Check.Require(isFirstPlayedWord || isWordConnectedToPlayedWords(placedTiles, playedTiles), context.getString(R.string.game_play_invalid_gaps_placed_words));
+       // Check.Require(game.getTurn() == 1 || isWordConnectedToPlayedWords(placedTiles, playedTiles), context.getString(R.string.game_play_invalid_gaps_placed_words));
+        
+        Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isWordConnectedToPlayedWords ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
+        
+        
         //determine the words that have been played
         List<PlacedWord> words = getWords(layout, axis, placedTiles, playedTiles, alphabetService, context);
+        
+        Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "getWords ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
 	 	
         //make sure that at least one placedTiles is connected to played tiles
         Boolean isConnected = false;
@@ -985,9 +1023,17 @@ public class GameService {
             	}
             }
         }
+        
+        
+        Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "getTotalPoints ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
+	 
 
         Check.Require(invalidWords.size() == 0, getInvalidWordsMessage(context, invalidWords));
 
+        Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "getInvalidWordsMessage ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
+	     runningTime = System.nanoTime();
+        
         //check for a smasher...its worth 40 bonus points
         if (placedTiles.size() == 7){
         	totalPoints += Constants.SMASHER_BONUS_POINTS;
@@ -1037,10 +1083,11 @@ public class GameService {
 		}
 	}
 	
-	private static boolean isMoveInValidStartPosition(TileLayout layout, Game game, List<GameTile> placedTiles){
+	private static boolean isMoveInValidStartPosition(TileLayout layout, Game game, List<GameTile> placedTiles, boolean isFirstPlayedWord){
 		
-		//this rule only affects the first turn
-		if (game.getTurn() > 1) {return true;}
+		//this rule only affects the first played word
+		if (!isFirstPlayedWord) {return true;}
+	//	if (game.getTurn() > 1) {return true;}
 		
 		for(GameTile tile : placedTiles){
 			if (TileLayoutService.getDefaultTile(tile.getId(), layout) == TileLayoutService.eDefaultTile.Starter){
@@ -1479,4 +1526,49 @@ public class GameService {
 	    editor.commit();  
 	}
 
+	private static void moveGameToCompletedList(Context ctx, Game game){
+  		//in this scenario, player has just played a turn and game is not over, and we and updating the local game lists
+  		//by removing the game from the player's turn list and moving it to opponent's turn list
+  		
+  		Player player = PlayerService.getPlayerFromLocal();
+  		
+  		int numActiveGames = player.getActiveGamesYourTurn().size();
+  		for(int i = 0; i < numActiveGames; i++){
+  			if (game.getId().equals(player.getActiveGamesYourTurn().get(i).getId())){
+  				player.getActiveGamesYourTurn().remove(i);
+  				break;
+  			}
+  		}
+
+  		//remove it from opponents list just in case it was clicked on in that list and main
+  		//landing had not been refreshed
+  		int numOpponentGames = player.getActiveGamesOpponentTurn().size();
+  		for(int i = 0; i < numOpponentGames; i++){
+  			if (game.getId().equals(player.getActiveGamesOpponentTurn().get(i).getId())){
+  				player.getActiveGamesOpponentTurn().remove(i);
+  				break;
+  			}
+  		}
+  		
+  		//now add it to the completed games 
+  		//make sure this game is not already in the completed list
+  		boolean add = true;
+  		for (Game g : player.getCompletedGames()){
+  			if (g.getId().equals(game.getId())){
+  				add = false;
+  			}
+  		}
+  		if (add){
+  			player.getCompletedGames().add(0, game);
+  		}
+  		Gson gson = new Gson();  
+	        
+        //update player to shared preferences
+	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+ 
+	    editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+	    editor.commit();  
+	}
+  	
 }

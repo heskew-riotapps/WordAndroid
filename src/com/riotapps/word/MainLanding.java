@@ -140,34 +140,40 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			this.player = PlayerService.getPlayerFromLocal();
 		}
 		 
+		this.setupTimer(Constants.GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS);
 		//if (!this.getIntent().getBooleanExtra(name, false)){
 		//	//((Activity) context).runOnUiThread(new handleGameListCheck());
-			this.loadLists();
-		//}
+	//		this.loadLists();
+		//} 
 	}
     
     private void setupTimer(){
+		this.setupTimer(Constants.GAME_LIST_CHECK_START_IN_MILLISECONDS);
+	}
+	
+    private void setupTimer(long delay){
 		Logger.d(TAG, "setupTimer");
-    	timer = new Timer();  
-    	updateListTask updateList = new updateListTask();
-    	timer.scheduleAtFixedRate(updateList, Constants.GAME_LIST_CHECK_START_IN_MILLISECONDS, Constants.GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS);
-    			//updateList, 300000, 300000);
+		if (this.timer == null){
+			this.timer = new Timer();  
+			updateListTask updateList = new updateListTask();
+			this.timer.scheduleAtFixedRate(updateList, delay, Constants.GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS);
+		}
+    }
+    
+    private void stopTimer(){
+    	Logger.d(TAG, "stopTimer called");
+    	if (this.timer != null) {
+    		this.timer.cancel();
+    		this.timer = null;
+    	}
+    
     }
     
     private class updateListTask extends TimerTask {
-    	  // Ball myBall;
-
+ 
     	   public void run() {
     		   ((Activity) context).runOnUiThread(new handleGameListCheck());
-    		 /*  try { 
-   				String json = PlayerService.setupGameListCheck(context, player.getAuthToken(), player.getLastRefreshDate());
-   				//this will bring back the players games too
-   				new NetworkTask((MainLanding) context, RequestType.POST, context.getString(R.string.progress_syncing), json, false).execute(Constants.REST_GAME_LIST_CHECK);
-	   			} catch (DesignByContractException e) {
-	   				//this should never happen unless there is some tampering
-	   				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
-	   			}
-	   			*/
+ 
     	   }
     }
     
@@ -190,9 +196,9 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		super.onResume();
 		
 		Logger.d(TAG, "onResume is timer null=" + (timer == null));
-		if (this.timer == null){
-			this.setupTimer();
-		}
+	 
+		this.setupTimer();
+	 
 	}
 
  
@@ -200,10 +206,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		if (this.timer != null){
-			this.timer.cancel();
-			this.timer = null;
-		}
+		this.stopTimer();
 		this.player = null;
 
 	}
@@ -513,10 +516,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	  	if (this.runningTask != null){
 	  		this.runningTask.cancel(true);
 	  	}
-		if (this.timer != null){
-			this.timer.cancel();
-			this.timer = null;
-		}
+	  	this.stopTimer();
 
 		super.onPause();
 	}

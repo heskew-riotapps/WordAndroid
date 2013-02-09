@@ -27,6 +27,7 @@ public class Constants {
  	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 4000;
  	public static final long LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS = 300000;//5 minutes in milliseconds
  	public static final long LOCAL_GAME_LIST_STORAGE_DURATION_IN_MILLISECONDS = 300000; //5 minutes in milliseconds
+ 	public static final long WORD_LOADER_SERVICE_SLEEP_BETWEEN_LETTERS = 500; //5 minutes in milliseconds
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm"; 
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
@@ -40,6 +41,7 @@ public class Constants {
 	public static final long GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS = 300000;// = 300000;
 	public static final long GAME_SURFACE_CHECK_START_IN_MILLISECONDS = 30000;// 300000;
 	public static final long GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS = 30000;// = 300000;
+	public static final long GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS = 2000;// 2 seconds;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
