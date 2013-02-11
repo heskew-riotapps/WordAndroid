@@ -59,6 +59,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	ImageFetcher imageLoader;
 	NetworkTask runningTask = null;
 	Timer timer = null;
+	boolean callingIntent = false;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,13 +134,13 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     
     @Override
 	protected void onRestart() {
-		//Log.w(TAG, "onRestart called");
+		//Log.w(TAG, "onRestart called"); 
 		super.onRestart();
 		
 		if (this.player == null){
 			this.player = PlayerService.getPlayerFromLocal();
 		}
-		 
+		this.callingIntent = false; 
 		this.setupTimer(Constants.GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS);
 		//if (!this.getIntent().getBooleanExtra(name, false)){
 		//	//((Activity) context).runOnUiThread(new handleGameListCheck());
@@ -179,15 +180,17 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     
     private class handleGameListCheck implements Runnable {
 		    public void run() {
-		    	 try { 
-		    		 Logger.d(TAG, "handleGameListCheck");
-	   				String json = PlayerService.setupGameListCheck(context, player.getAuthToken(), player.getLastRefreshDate());
-	   				//this will bring back the players games too
-	   				new NetworkTask((MainLanding) context, RequestType.POST, context.getString(R.string.progress_syncing), json, false).execute(Constants.REST_GAME_LIST_CHECK);
-		   			} catch (DesignByContractException e) {
-		   				//this should never happen unless there is some tampering
-		   				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
-		   			}
+				 if (!callingIntent){   
+					 try { 
+			    		 Logger.d(TAG, "handleGameListCheck");
+		   				String json = PlayerService.setupGameListCheck(context, player.getAuthToken(), player.getLastRefreshDate());
+		   				//this will bring back the players games too
+		   				new NetworkTask((MainLanding) context, RequestType.POST, context.getString(R.string.progress_syncing), json, false).execute(Constants.REST_GAME_LIST_CHECK);
+			   			} catch (DesignByContractException e) {
+			   				//this should never happen unless there is some tampering
+			   				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
+			   			}
+		    	 }
 		    }
 	  }
     
@@ -483,6 +486,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     public void onClick(View v) {
     	Intent intent;
     	
+		 this.callingIntent = true;
+			    
     	//stop running task if one is active
     	if (this.runningTask != null){
 	  		this.runningTask.cancel(true);

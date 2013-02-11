@@ -17,6 +17,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 public class AsyncNetworkRequest extends AsyncTask<String, Void, NetworkTaskResult> {
+
+
 	private static final String TAG = AsyncNetworkRequest.class.getSimpleName();
 	Context ctx = null;
 	RequestType requestType;
@@ -208,6 +210,12 @@ public class AsyncNetworkRequest extends AsyncTask<String, Void, NetworkTaskResu
 			 progress.dismiss();
 		 }
 	 }
- 
+	 
+	@Override
+	protected void onCancelled() {
+		// TODO Auto-generated method stub
+		super.onCancelled();
+		this.dismiss();
+	}
 	 
 }//end class RequestSentToServerAsyncTask

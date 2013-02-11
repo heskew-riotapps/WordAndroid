@@ -35,13 +35,14 @@ public class Constants {
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 20000;
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 1000;
 	public static final int REGISTERED_FB_FRIENDS_CACHE_DURATION = 604800000; //a week of milliseconds
-	public static final int SPLASH_ACTIVITY_TIMEOUT = 1500;
+	public static final int SPLASH_ACTIVITY_TIMEOUT = 500;
 	public static final int NETWORK_CONNECTIVITY_CHECK_DURATION = 2000;
 	public static final long GAME_LIST_CHECK_START_IN_MILLISECONDS = 300000;// 300000;
 	public static final long GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS = 300000;// = 300000;
 	public static final long GAME_SURFACE_CHECK_START_IN_MILLISECONDS = 30000;// 300000;
 	public static final long GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS = 30000;// = 300000;
 	public static final long GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS = 2000;// 2 seconds;
+	public static final long GAME_SURFACE_INTERSTITIAL_AD_CHECK_IN_MILLISECONDS = 7000;// = 7 seconds;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;

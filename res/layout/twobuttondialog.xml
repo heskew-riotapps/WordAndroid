@@ -61,7 +61,8 @@
     >
 	    <LinearLayout
 	        style="@style/FormButtonAreaStyle"
-	        android:layout_below="@+id/inner_form" >
+	        android:layout_below="@+id/inner_form"
+	        >
 		 
 		<com.riotapps.word.utils.TypefaceButton 
 	  	    style="@style/ButtonStyle"

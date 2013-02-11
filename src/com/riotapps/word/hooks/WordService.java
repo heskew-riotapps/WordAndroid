@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -50,6 +51,7 @@ public class WordService {
 	SortedSet<String> words_z = null;
 	
 	*/
+	/*
 	ArrayList<String> words_a = null;
 	ArrayList<String> words_b = null;
 	ArrayList<String> words_c = null;
@@ -76,9 +78,38 @@ public class WordService {
 	ArrayList<String> words_x = null;
 	ArrayList<String> words_y = null;
 	ArrayList<String> words_z = null;
+	*/
+	
+	HashSet<String> words_a = null;
+	HashSet<String> words_b = null;
+	HashSet<String> words_c = null;
+	HashSet<String> words_d = null;
+	HashSet<String> words_e = null;
+	HashSet<String> words_f = null;
+	HashSet<String> words_g = null;
+	HashSet<String> words_h = null;
+	HashSet<String> words_i = null;
+	HashSet<String> words_j = null;
+	HashSet<String> words_k = null;
+	HashSet<String> words_l = null;
+	HashSet<String> words_m = null;
+	HashSet<String> words_n = null;
+	HashSet<String> words_o = null;
+	HashSet<String> words_p = null;
+	HashSet<String> words_q = null;
+	HashSet<String> words_r = null;
+	HashSet<String> words_s = null;
+	HashSet<String> words_t = null;
+	HashSet<String> words_u = null;
+	HashSet<String> words_v = null;
+	HashSet<String> words_w = null;
+	HashSet<String> words_x = null;
+	HashSet<String> words_y = null;
+	HashSet<String> words_z = null;
 	
  
-	Type type = new TypeToken<ArrayList<String>>() {}.getType();
+//	Type type = new TypeToken<ArrayList<String>>() {}.getType();
+	Type type = new TypeToken<HashSet<String>>() {}.getType();
 	Context context;
 	
 	

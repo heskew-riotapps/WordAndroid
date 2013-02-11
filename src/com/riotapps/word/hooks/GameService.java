@@ -417,12 +417,12 @@ public class GameService {
 		if (game.getStatus() == 1){ //if game is still active
 			//update local storage game lists
 			GameService.moveActiveGameYourTurnToOpponentsTurn(ctx, game);
-			GameService.updateLastGameListCheckTime(ctx);
- 			GameService.putGameToLocal(ctx, game);
+			GameService.updateLastGameListCheckTime(ctx);	
 		}
 		else {
 			GameService.moveGameToCompletedList(ctx, game);
 		}
+		GameService.putGameToLocal(ctx, game);
 		return game;
 	}
 	

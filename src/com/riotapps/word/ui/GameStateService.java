@@ -29,6 +29,7 @@ public class GameStateService {
 		Type type = new TypeToken<GameState>() {}.getType();
 		gameState = gson.fromJson(gameStatejson, type);
 		
+		gson = null;
 		//just in case
 		gameState.setGameId(gameId);
 		 return gameState;
@@ -44,11 +45,11 @@ public class GameStateService {
 		 editor.putString(gameId, gson.toJson(gameState));
 		 editor.commit();
 		 
+		 gson = null;
 		 return gameState;
 	}
 	
 	public static void removeGameState(Context context, String gameId){
-		 Gson gson = new Gson();
 		 GameState gameState = new GameState();
 		 gameState.setGameId(gameId);
 		 
@@ -56,6 +57,8 @@ public class GameStateService {
 		 SharedPreferences.Editor editor = settings.edit();
 		 editor.remove(gameId);
 		 editor.commit();
+		 
+		 
 
 	}
 	
@@ -68,6 +71,7 @@ public class GameStateService {
 			 SharedPreferences.Editor editor = settings.edit();
 			 editor.putString(gameState.getGameId(), gson.toJson(gameState));
 			 editor.commit();
+			 gson = null; 
 		}
 	}
 }

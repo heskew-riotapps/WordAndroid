@@ -580,7 +580,7 @@ public class PlayerService {
 			for (Game game : player.getActiveGames()) {
 				Boolean isYourTurn = false;
 				for (PlayerGame pg : game.getPlayerGames()){
-					if (pg.getPlayerId() == player.getId() && pg.isTurn()){
+					if (pg.getPlayerId().equals(player.getId()) && pg.isTurn()){
 						yourTurn.add(game);
 						isYourTurn = true;
 						break;

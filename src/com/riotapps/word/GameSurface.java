@@ -83,7 +83,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 Button bShuffle;
 	 boolean isButtonActive = false;
 	 boolean isNetworkTaskActive = false;
+	 boolean isRestartFromInterstitialAd = false;
+	 boolean isAdStarted = false;
+	 
+	 
 	 Timer timer = null;
+	 Timer runawayAdTimer = null;
 	// CustomProgressDialog spinner = null;
 	
 	 private com.google.ads.InterstitialAd interstitial;
@@ -283,7 +288,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     }
 	
 	private void setupGame(){
-		Logger.d(TAG,"setupGame game turn=" + this.game.getTurn());
+		//Logger.d(TAG,"setupGame game turn=" + this.game.getTurn());
 		this.contextPlayerGame = GameService.loadScoreboard(this, this.game, this.player);
 	 	
 		//if (!this.game.isCompleted()){
@@ -370,7 +375,13 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 }
 	 
 	 public void setPointsAfterPlayView(){
-		 context.runOnUiThread(new handlePointsViewRunnable(this.currentPoints, 2));
+		 if (this.game.getStatus() == 1) {
+			 context.runOnUiThread(new handlePointsViewRunnable(this.currentPoints, 2));
+		 }
+		 else {
+			 //hide points view since the game is over
+			 context.runOnUiThread(new handlePointsViewRunnable(0, 2));
+		 }
 	 }
 	 
 	 private class handlePointsViewRunnable implements Runnable {
@@ -620,7 +631,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 	}
 		 	
 	 	}
-	 	else if(this.game.getStatus() == 3 || this.game.getStatus() == 4){
+	 	else if(this.game.isCompleted()){  
 	 		bRecall.setVisibility(View.GONE);
 	 		bSwap.setVisibility(View.GONE);
 	 		bSkip.setVisibility(View.GONE);
@@ -719,6 +730,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		Logger.d(TAG, "onStop called");
 		this.stopTimer();
+		this.stopRunawayAdTimer();
 		this.gameSurfaceView.onStop();
 	//	if (this.wordLoaderThread != null){
 	//		this.wordLoaderThread.interrupt();
@@ -745,6 +757,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     	}
 		Logger.d(TAG, "onPause - stop timer about to be called");
 		this.stopTimer();
+		this.stopRunawayAdTimer();
 
 	//	try{
 	//		this.spinner.dismiss();
@@ -837,18 +850,26 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		//Log.w(TAG, "onRestart called");
 		super.onRestart();
 		this.gameSurfaceView.onRestart(); 
-		
 		Logger.d(TAG, "onRestart buttonsLoaded=" + buttonsLoaded);  
 		
-		if (buttonsLoaded){ 
-			//reset buttons
-			this.game = GameService.getGameFromLocal(game.getId());
-			this.fillGameState();
-			this.setupButtons();
-			this.gameSurfaceView.setInitialButtonStates();
-			this.isButtonActive = false;
+		if (this.isRestartFromInterstitialAd){
+			Logger.d(TAG, "onRestart from InterstitialAd");  
+
+			this.handlePostTurnFinalAction(this.postTurnAction);
+			this.isRestartFromInterstitialAd = false;
 		}
-		this.setupTimer(Constants.GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS);
+		else {
+
+			if (buttonsLoaded){ 
+				//reset buttons
+				this.game = GameService.getGameFromLocal(game.getId());
+				this.fillGameState();
+				this.setupButtons();
+				this.gameSurfaceView.setInitialButtonStates();
+				this.isButtonActive = false;
+			}
+			this.setupTimer(Constants.GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS);
+		}
 	}
 
 	
@@ -1600,6 +1621,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			
     	 		//refresh game board
     	 		game = GameService.handleGamePlayResponse(context, result);
+    	 		
+    	 		Logger.d(TAG,"handlePostTurn result=" + result);
     	 		if (game.isCompleted()){
     	 			Logger.d(TAG, "handlePostTurn game isCompleted");
     	 			GameStateService.clearGameState(context, this.game.getId());
@@ -1664,12 +1687,62 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			this.preInterstitialSpinner = new CustomProgressDialog(this);
 	 			this.preInterstitialSpinner.setMessage(this.getString(R.string.progress_updating));
 	 			this.preInterstitialSpinner.show();
+	 		    this.isAdStarted = false;
+	 			this.setupRunawayAdTimer();
+
 	 			this.loadInterstitialAd();
  			}
 	    }
 	    
+	    private void setupRunawayAdTimer(){
+	    	Logger.d(TAG, "setupRunawayAdTimer called");
+	    	//interstitial sometimes gets in a funky state, and always does when ad blovkers are present
+	    	//so let stop the load of the ad after 10 seconds, if it has not been displayed yet
+	    	 
+			this.captureTime("setupTimer starting");
+	    	if (this.runawayAdTimer == null){
+	    		this.runawayAdTimer = new Timer();  
+	    	}
+	    	checkRunawayAdTask checkRunawayAd = new checkRunawayAdTask();
+	    	this.runawayAdTimer.schedule(checkRunawayAd, Constants.GAME_SURFACE_INTERSTITIAL_AD_CHECK_IN_MILLISECONDS);
+	    	this.captureTime("setupRunawayAdTimer ended");
+ 
+	    }
+	    
+	    private void stopRunawayAdTimer(){
+	    	Logger.d(TAG, "stopRunawayAdTimer called");
+	    	if (this.runawayAdTimer != null) {
+	    		this.runawayAdTimer.cancel();
+	    		this.runawayAdTimer = null;
+	    	}
+	    
+	    }
+	    
+	    private class checkRunawayAdTask extends TimerTask {
+    	   public void run() {
+    		   if (!isAdStarted){
+    				((Activity) context).runOnUiThread(new checkRunawayAdTaskRunnable());
+    		   }
+    	   }
+	    }
+	    
+	    private class checkRunawayAdTaskRunnable implements Runnable {
+		    public void run() {
+		    	try { 
+		    		interstitial.stopLoading();
+  				    interstitial = null;
+  				      
+		    		if (preInterstitialSpinner != null){
+	    				preInterstitialSpinner.dismiss();
+	    			}
+	    			handlePostTurnFinalAction(postTurnAction);
+				} catch (Exception e) {
+					 Logger.d(TAG, "checkRunawayAdTaskRunnable error=" + e.toString());
+				}
+		    }
+	   }
 	    private void handlePostTurnFinalAction(GameActionType action){
-
+	    	 Logger.d(TAG, "handlePostTurnFinalAction called");
 	    	switch(action){
     	 	case CANCEL_GAME:
 	 			if (player.getTotalNumLocalGames() == 0){
@@ -1743,22 +1816,26 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		public void onDismissScreen(Ad ad) {
 			// TODO Auto-generated method stub
 			Logger.d(TAG, "interstitial onDismissScreen called");
+			this.isAdStarted = true;
 			this.preInterstitialSpinner.dismiss();
-			this.handlePostTurnFinalAction(this.postTurnAction);
+			this.isRestartFromInterstitialAd = true;
+			//this.handlePostTurnFinalAction(this.postTurnAction); //this will be handled by restart
 		}
 
 		@Override
 		public void onFailedToReceiveAd(Ad ad, ErrorCode arg1) {
 			Logger.d(TAG, "interstitial onFailedToReceiveAd called");
+			this.isAdStarted = true;
 			this.preInterstitialSpinner.dismiss();
 			this.handlePostTurnFinalAction(this.postTurnAction);
 		}
 
 		@Override
 		public void onLeaveApplication(Ad ad) {
+			this.isAdStarted = true;
 			Logger.d(TAG, "interstitial onLeaveApplication called");
 			 //not sure what this needs here
-			this.handlePostTurnFinalAction(this.postTurnAction);
+		//	this.handlePostTurnFinalAction(this.postTurnAction);
 			
 		}
 
@@ -1770,9 +1847,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		@Override
 		public void onReceiveAd(Ad ad) {
 			Logger.d(TAG, "interstitial onReceiveAd called");
-		  if (ad == interstitial) {
-		    interstitial.show();
-		  }
+			this.isAdStarted = true;
+			  if (ad == interstitial) {
+			    interstitial.show();
+			  }
 		}
 
 }

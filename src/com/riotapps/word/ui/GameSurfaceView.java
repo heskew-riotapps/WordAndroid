@@ -1413,16 +1413,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
              }
              this.previousTouchMotion = this.currentTouchMotion;
          	 this.previousTouchTime = currentTouchTime;
-         	 
-
-         			 
+         	       			 
              return true;
          }
 
 	 }
-	 
-	 
-	 
+
 	 private void handleDropOnTray(){
 		 
 		 Logger.d(TAG, "handleDropOnTray called");
@@ -2389,8 +2385,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
      				 this.parent.getGame().getRandomConsonants().get(0),
      				 this.parent.getGame().getRandomConsonants().get(1),
      				 this.parent.getGame().getRandomConsonants().get(2),
-     				 this.parent.getGame().getRandomVowels().get(0),
-     				 this.parent.getGame().getRandomVowels().get(1));
+     				 this.parent.getGame().getRandomConsonants().get(3),
+     				 this.parent.getGame().getRandomVowels().get(0));
+
      		 
      		 Paint pRandom = new Paint();
      		 pRandom.setColor(Color.parseColor(this.parent.getString(R.color.game_board_full_view_upper_gap_text)));
@@ -2591,8 +2588,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.LoadTiles();
 	   	this.LoadTray();
 	    this.setInitialButtonStates();
-	    this.resetPointsView();
-	   
+	    if (this.parent.getGame().isCompleted()){
+	    	this.parent.setPointsView(0);
+	    }
+	    else {
+	    	this.resetPointsView();
+	    }
 	 
 	   
 	   // this.afterPlayRedraw = true; ??
@@ -2622,6 +2623,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	   	this.LoadTray();
 	    this.setInitialButtonStates();
 	   
+	    //if game ends between turns, make sure to zoom out
+	    if (this.parent.getGame().isCompleted()){
+	    	this.isZoomed = false;
+	    }
 	    this.afterPlayRedraw = true;
 		this.readyToDraw = true;
 		
