@@ -697,7 +697,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 this.appContext.setBg2LZoomed(this.bg2LZoomed);
 		 }
 		 else {
-			 this.bg2LZoomed = this.appContext.getBg2LZoomed();
+			 this.bg2LZoomed = this.appContext.getBg2LZoomed();   
 		 }
 		
 		 //Logger.d(TAG, "decodeSampledBitmapFromResource 2L actual zoomed size=" + this.bg2LZoomed.getHeight() );

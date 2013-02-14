@@ -254,8 +254,9 @@ public class ConnectToFacebook  extends FragmentActivity{
 	            		 intent = new Intent(context, com.riotapps.word.MainLanding.class);
 	            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 	            	 }
-					spinner.dismiss();
+					
 		     	    context.startActivity(intent);
+		     	   spinner.dismiss();
 					
 				} catch (FacebookError e) {
 					DialogManager.SetupAlert(context, context.getString(R.string.sorry), e.getMessage());  

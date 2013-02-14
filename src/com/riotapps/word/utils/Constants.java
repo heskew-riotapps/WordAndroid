@@ -40,7 +40,7 @@ public class Constants {
 	public static final long GAME_LIST_CHECK_START_IN_MILLISECONDS = 300000;// 300000;
 	public static final long GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS = 300000;// = 300000;
 	public static final long GAME_SURFACE_CHECK_START_IN_MILLISECONDS = 30000;// 300000;
-	public static final long GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS = 30000;// = 300000;
+	public static final long GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS = 120000;// = 2 minutes
 	public static final long GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS = 2000;// 2 seconds;
 	public static final long GAME_SURFACE_INTERSTITIAL_AD_CHECK_IN_MILLISECONDS = 7000;// = 7 seconds;
 	

@@ -35,23 +35,23 @@
         style="@style/ContentAreaTextStyle"
         android:text="@string/gravatar_text" 
         />
-   
+
 	 <RelativeLayout
         style="@style/FormButtonAreaStyle"
-        android:layout_below="@+id/inner_form"
-		android:paddingBottom="0dp"
-		android:paddingTop="0dp"
-		android:layout_height="45dp"
-         >
+        android:layout_below="@+id/inner_form" >
+
+		<com.riotapps.word.utils.TypefaceButton 
+	  	    style="@style/ButtonStyle"
+	  	    android:id="@+id/bGravatar"
+	        android:layout_width="250dp" 
+	          android:layout_centerHorizontal="true"
+	        android:text="@string/gravatar_setup_button"
+	    />
+
+	</RelativeLayout>
 	 
-	<com.riotapps.word.utils.TypefaceButton 
-  	    style="@style/ButtonStyle"
-  	    android:id="@+id/bGravatar"
-        android:text="@string/gravatar_setup_button"
-    />
-    
-    </RelativeLayout>
-  
+	 
+	 
    </LinearLayout>
    </LinearLayout>
    
@@ -68,22 +68,23 @@
         style="@style/ContentAreaTextTopStyle"
         android:text="@string/gravatar_refresh_text" 
         />
-   
-	<RelativeLayout
-        style="@style/FormButtonAreaStyle"
-     
-		android:paddingBottom="0dp"
-		android:paddingTop="0dp"
-		android:layout_height="45dp"
-         >
-	 
-	<com.riotapps.word.utils.TypefaceButton 
-  	    style="@style/ButtonStyle"
-  	    android:id="@+id/bGravatarRefresh"
-        android:text="@string/gravatar_refresh_button"
-    />
+
     
-    </RelativeLayout>
+	 <RelativeLayout
+        style="@style/FormButtonAreaStyle"
+        android:layout_below="@+id/inner_form" >
+
+		<com.riotapps.word.utils.TypefaceButton 
+	  	    style="@style/ButtonStyle"
+	  	    android:id="@+id/bGravatarRefresh"
+	        android:layout_width="250dp" 
+	          android:layout_centerHorizontal="true"
+	        android:text="@string/gravatar_refresh_button"
+	    />
+
+	</RelativeLayout>
+	
+	
     </LinearLayout>
  
    </LinearLayout>

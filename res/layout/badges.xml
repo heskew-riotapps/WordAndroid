@@ -135,7 +135,7 @@
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_90_99" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_90_99"
         />
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
@@ -201,7 +201,7 @@
     <com.riotapps.word.ui.MainFontTextView
         style="@style/BadgeLineStyle"
         android:text="@string/badges_500_or_more" 
-		android:drawableLeft="@drawable/badge_0"
+		android:drawableLeft="@drawable/badge_500_599"
         />
      
      </LinearLayout>

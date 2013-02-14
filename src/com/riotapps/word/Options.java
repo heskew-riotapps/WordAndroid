@@ -10,6 +10,7 @@ import com.riotapps.word.hooks.ErrorService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.Error.ErrorType;
+import com.riotapps.word.ui.CustomButtonDialog;
 import com.riotapps.word.ui.CustomDialog;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
@@ -111,7 +112,11 @@ public class Options extends FragmentActivity implements View.OnClickListener{
         }  
 	    
 	    private void handleLogout(){
-	    	final CustomDialog dialog = new CustomDialog(this, this.getString(R.string.dialog_title_are_you_sure), this.getString(R.string.dialog_text_logout));
+	    	//final CustomDialog dialog = new CustomDialog(this, this.getString(R.string.dialog_title_are_you_sure), this.getString(R.string.dialog_text_logout));
+	    	
+	    	final CustomButtonDialog dialog = new CustomButtonDialog(this, 
+	    			this.getString(R.string.dialog_title_are_you_sure), 
+	    			this.getString(R.string.dialog_text_logout));
 	    	
 	    	dialog.setOnOKClickListener(new View.OnClickListener() {
 		 		@Override

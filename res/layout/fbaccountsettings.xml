@@ -49,7 +49,7 @@
 					     />
 						<EditText 
 						    android:id="@+id/tNickname"
-						    android:layout_width="300dp"
+						    android:layout_width="260dp"
 					        android:layout_height="40dp"
 					        android:hint="@string/enter_nickname"
 					  	    android:layout_centerHorizontal="true"

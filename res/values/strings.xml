@@ -54,7 +54,7 @@
 	<string name="line_item_invited">invited, but not registered yet</string>
 	<string name="line_item_1_win">1 win</string>
 	<string name="line_item_num_wins">%s wins</string>
-	<string name="never_share_email">(will never be shared)</string>
+	<string name="never_share_email">(will never be shared, not ever)</string>
 	<string name="msg_no_local_player">WordSmash cannot find the player Id that should be stored on this device.</string>
 	<string name="msg_no_local_player_token">WordSmash cannot find the complete player Id that should be stored on this device.</string>
 	
@@ -77,7 +77,7 @@
 	<string name="validation_404_error">The server could not be found.  Please try again later.</string>
 	<string name="validation_token_not_found">The auth token could not be found.</string>	
 	<string name="validation_new_password_not_provided">Please enter the new password.</string>	
-	<string name="validation_password_too_short">Please enter a password that is at least 6 characters long.</string>
+	<string name="validation_password_too_short">Please enter a password that is at least 4 characters long.</string>
 	<string name="validation_password_confirmation_failed">Please reconfirm your new password.</string>		
 	<string name="validation_unauthorized">This action is unauthorized.</string>	
 	<string name="validation_nickname_not_supplied">Please enter a nickname.</string>
@@ -129,10 +129,10 @@
                    Letters must be placed on the board in a single axis, either horizontally or vertically.  As you win more games, 
                    you\'ll earn new badges.</string>
    	<string name="full_rules_2">To start the game, the letters of the first word must placed on at least one of the smiley faces.  All words must contain 2 or more letters. 
-                       The players alternate turns. Each turn after the first must 
+                       The players alternate turns. Each turn after the first (with the exception of skips and swaps) must 
                        place at least one letter next to a previously placed letter on the board, either to the left or right or above or below, OR overlaying 
                        a previously played letter.</string>                
- 	<string name="full_rules_3">Overlays are letters that are played over a letter that was placed on the 
+ 	<string name="full_rules_3">An overlay is a letter that is played on top of a letter that was placed on the 
                        board in any previous turn.  Just remember that a player must overlay a letter with a different letter.  In other words, one 
                        cannot overlay an \"A\" with another \"A\".  The letters must be different.</string>  
  	<string name="full_rules_4">A player can skip a turn or swap letters.  
@@ -153,17 +153,17 @@
     <string name="full_rules_scoring_bonus_2w">the value of the word is multiplied by 2. </string>	
     <string name="full_rules_scoring_bonus_3w">the value of the word is multiplied by 3. </string>
     <string name="full_rules_scoring_5">If an overlay is placed on a bonus tile the bonus does not count.  Only the overlay\'s letter value counts.  Other bonus tiles in the same turn 
-                                count normally, just not overlays. An overlays\'s letter values are are calculated as part of the value of the word if 
+                                count normally, just not overlays. Just like any other letter, an overlay\'s letter value is calculated as part of the value of the word if 
                                 another letter is placed on a 2W or 3W.</string>  
     <string name="full_rules_scoring_6">If more than one word is formed during a turn, bonus tiles values are only assigned to the word that contained the bonus tiles.</string>
-    <string name="full_rules_scoring_7">Letter multipliers are calculated before word multipliers when the score is calculated for a turn.
-                                If a word lands on more than one word multiplier bonus tile, each bonus multipliers is used to determine the final score.</string>                            
+    <string name="full_rules_scoring_7">Letter multipliers are calculated before word multipliers when the points are calculated for a turn.
+                                If a word lands on more than one word multiplier bonus tile, each bonus multiplier is used to determine the final score.</string>                            
     <string name="full_rules_scoring_smasher_1">Smashers</string>
     <string name="full_rules_scoring_smasher_2">Another way to earn points is to use all 7 letters in your tray in a single turn. If you use 7 letters in a single turn,
                             you\'ve played a smasher, which is worth 40 bonus points.</string>
     <string name="full_rules_finish_1">Win, Lose, or Draw</string>                        
     <string name="full_rules_finish_2">Normally, the game ends when a player uses all of the letters in his or her tray after the hopper has been emptied. 
-                            The first person to finish the letters gets a bonus value added to his or her score.
+                            The first player to finish his or her letters gets a bonus value added to his or her score.
                             The bonus is equal to the accumulated value of all of the letters left in all of the opponents\' trays.  For instance, in a two-player game, if a player finished out the 
                             letters (and the hopper was empty) and the opponent still had a "K", a "U", and a "B" left in the tray, a bonus of 15 points would be awarded
                             to the player in addition to the points that the turn earned.  The player with the most points after the bonus is awarded is declared the 
@@ -320,7 +320,7 @@
  	<string name="gameboard_swap_dialog_button_text">swap letters</string>
  	<string name="gameboard_swap_dialog_title_text">tap the letter(s) to swap</string>
  	<string name="gameboard_swap_dialog_please_choose_text">please choose the letters to swap or tap cancel</string>
- 	<string name="find_player">enter your opponent\'s nickname:</string>
+ 	<string name="find_player">enter your opponent\'s nickname</string>
  	<string name="find_player_button_text">find opponent</string>
  	<string name="find_player_results_button_text">add this opponent to game</string>
  	<string name="find_player_opponent_not_found">Sorry, we couldn\'t find a player with that nickname.</string>

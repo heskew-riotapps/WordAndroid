@@ -42,38 +42,42 @@
 	 			/>
 	 			</ScrollView> 
 
-			    <RelativeLayout
+    			
+			    <TableLayout 
 			        style="@style/FormButtonAreaStyle"
-			      
-			        android:layout_alignParentBottom="true"
-			        android:layout_width="fill_parent"
-			 	 
-			        android:layout_height="45dp"
-			      
-			      >
- 			    <EditText
-			        android:id="@+id/etText"
-			        
-			        android:layout_width="220dp"
-		 		  	android:layout_centerVertical="true"
-			          android:layout_alignParentLeft="true"
-			         
-			   />     
-				<com.riotapps.word.utils.TypefaceButton 
-			  	    style="@style/ButtonStyle"
-			  	    android:id="@+id/bSave"
-			        android:layout_width="60dp" 
-			        android:text="@string/send"
-			        android:gravity="center"
-			   
-			        android:layout_marginLeft="5dp"
-			 		android:layout_toRightOf="@id/etText"
-			 		android:layout_marginTop="0dp"
-			 		android:layout_centerVertical="true"
-			 	 
- 			    />
-    
-    			</RelativeLayout>
+			         android:layout_alignParentBottom="true"
+			        android:layout_height="50dp"
+					android:layout_width="fill_parent"
+					android:paddingBottom="3dp"
+					>
+					<TableRow 
+					android:layout_height="fill_parent"
+					android:layout_width="fill_parent"
+					android:paddingBottom="4dp">
+					  <EditText
+				        android:id="@+id/etText"
+				        android:layout_height="38dp"
+				        android:layout_width="0dp"
+				     	android:gravity="center_vertical"
+				        android:layout_weight="0.8"
+				        android:singleLine="true"
+
+			   			/>
+					  <com.riotapps.word.utils.TypefaceButton 
+				  	    style="@style/ButtonStyle"
+				  	    android:id="@+id/bSave"
+				         android:layout_width="0dp"
+				        android:layout_weight="0.2"
+				        android:text="@string/send"
+				        android:gravity="center"
+				   	 
+				        android:layout_marginLeft="5dp"
+				        android:layout_gravity="center_vertical"
+				        android:paddingLeft="0dp"
+				 	 android:paddingRight="0dp"
+ 			   		 />     
+					</TableRow>
+					</TableLayout>
 		     </RelativeLayout>
 				 
 		    </LinearLayout>

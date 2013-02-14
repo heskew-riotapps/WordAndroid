@@ -31,19 +31,20 @@
         android:text="@string/gravatar_refreshed_text" 
   	    android:id="@+id/tvRefreshed"
         />
-   <LinearLayout
+
+     <RelativeLayout
         style="@style/FormButtonAreaStyle"
-          >
-	 
-	<com.riotapps.word.utils.TypefaceButton 
-  	    style="@style/ButtonStyle"
-  	    android:id="@+id/bOK"
-        android:layout_width="0dp" 
-        android:layout_weight="1.0"
-        android:text="@string/ok"
-    />
-    
-    </LinearLayout>
+        android:layout_below="@+id/inner_form" >
+
+		<com.riotapps.word.utils.TypefaceButton 
+	  	    style="@style/ButtonStyle"
+	  	    android:id="@+id/bOK"
+	        android:layout_width="250dp" 
+	          android:layout_centerHorizontal="true"
+	        android:text="@string/ok"
+	    />
+
+	</RelativeLayout>
   
    </LinearLayout>
    </LinearLayout>

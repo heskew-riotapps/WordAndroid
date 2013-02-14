@@ -341,7 +341,7 @@ public class PlayerService {
 	  
 	 	Check.Require(player.getAuthToken().length() > 0, ctx.getString(R.string.validation_email_required));
 		Check.Require(password.trim().length() > 0, ctx.getString(R.string.validation_new_password_not_provided));
-		Check.Require(password.trim().length() >= 6, ctx.getString(R.string.validation_password_too_short));
+		Check.Require(password.trim().length() >= 4, ctx.getString(R.string.validation_password_too_short));
 		Check.Require(password.equals(passwordConfirm), ctx.getString(R.string.validation_password_confirmation_failed));
 	 
 		TransportPasswordChange pwdChg = new TransportPasswordChange();

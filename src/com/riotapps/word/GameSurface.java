@@ -348,23 +348,32 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 	}
 		 
 		    public void run() {
-		    	switch (this.activeButton){
-			    	case 1:
-			    		bRecall.setVisibility(View.GONE);
-					 	bShuffle.setVisibility(View.VISIBLE);
-			    		break;
-			    	case 2:
-			    		bRecall.setVisibility(View.VISIBLE);
-					 	bShuffle.setVisibility(View.GONE);
-			    		break;
-			    	case 3:
-			    		bPlay.setVisibility(View.VISIBLE);
-					 	bSkip.setVisibility(View.GONE);
-			    		break;
-			    	case 4:
-			    		bPlay.setVisibility(View.GONE);
-			    		bSkip.setVisibility(View.VISIBLE);
-			    		break;
+		    	if (game.isCompleted()){
+		    		bRecall.setVisibility(View.GONE);
+				 	bShuffle.setVisibility(View.GONE);
+		    		bPlay.setVisibility(View.GONE);
+				 	bSkip.setVisibility(View.GONE);
+					bRecall.setVisibility(View.GONE);
+		    	}
+		    	else{
+			    	switch (this.activeButton){
+				    	case 1:
+				    		bRecall.setVisibility(View.GONE);
+						 	bShuffle.setVisibility(View.VISIBLE);
+				    		break;
+				    	case 2:
+				    		bRecall.setVisibility(View.VISIBLE);
+						 	bShuffle.setVisibility(View.GONE);
+				    		break;
+				    	case 3:
+				    		bPlay.setVisibility(View.VISIBLE);
+						 	bSkip.setVisibility(View.GONE);
+				    		break;
+				    	case 4:
+				    		bPlay.setVisibility(View.GONE);
+				    		bSkip.setVisibility(View.VISIBLE);
+				    		break;
+			    	}
 		    	}
 		    }
 	  }
@@ -784,17 +793,33 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	//	this.captureTime("onResume starting");
 		super.onResume();
 	//	this.captureTime("unfreezeButtons starting");
-		this.unfreezeButtons();
-	//	this.captureTime("gameSurfaceview resume starting");
-		this.gameSurfaceView.onResume();
-	//	this.captureTime("setup timer_ starting");
-	
-		Logger.d(TAG,"onResume - setup timer about to be called");
-		this.setupTimer();
-		if (this.runningTask != null){
-			this.runningTask.dismiss();
+
+		GameActionType lastAction = this.postTurnAction;
+		if (lastAction == null){
+			lastAction = GameActionType.NO_TRANSLATION;
 		}
-		 
+		
+		switch (lastAction){
+			case CANCEL_GAME:
+			case DECLINE_GAME:
+			case RESIGN:
+				//do nothing for these options
+				break;
+			default:
+				this.unfreezeButtons();
+				//	this.captureTime("gameSurfaceview resume starting");
+					this.gameSurfaceView.onResume();
+				//	this.captureTime("setup timer_ starting");
+				
+					Logger.d(TAG,"onResume - setup timer about to be called");
+					this.setupTimer();
+					if (this.runningTask != null){
+						this.runningTask.dismiss();
+					}
+
+		
+		}
+			 
 		
 		
 	}
