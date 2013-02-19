@@ -14,7 +14,8 @@ public class Constants {
 	public static final String SCOREBOARD_BUTTON_FONT = "fonts/Asap_Bold.ttf"; 
 	public static final String EMPTY_JSON = "{}";
 	public static final String EMPTY_JSON_ARRAY = "[]";
-	public static final String DEFAULT_COMPLETED_GAMES_DATE = "10/6/2012";
+	public static final String DEFAULT_COMPLETED_GAMES_DATE = "6/10/2012";
+	public static final String DEFAULT_LAST_ALERT_ACTIVATION_DATE = "6/10/2012";
  	public static final String WN_KEY = "48f31f368d20791114b01067e1d05b68ca177aabdbab4150b";
  	public static final String DRAWABLE_LOCATION = "com.riotapps.word:drawable/";
  	public static final String CONTENT_AREA_BACKGROUND_COLOR = "content_area_background_color";
@@ -27,7 +28,7 @@ public class Constants {
  	public static final int DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS = 4000;
  	public static final long LOCAL_GAME_STORAGE_DURATION_IN_MILLISECONDS = 300000;//5 minutes in milliseconds
  	public static final long LOCAL_GAME_LIST_STORAGE_DURATION_IN_MILLISECONDS = 300000; //5 minutes in milliseconds
- 	public static final long WORD_LOADER_SERVICE_SLEEP_BETWEEN_LETTERS = 500; //5 minutes in milliseconds
+ 	public static final long WORD_LOADER_SERVICE_SLEEP_BETWEEN_LETTERS = 250; //5 minutes in milliseconds
  	
  	public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?r=pg&s=75&d=mm"; 
  	public static final String FACEBOOK_IMAGE_URL = "http://graph.facebook.com/%s/picture?r=1&type=square";		
@@ -41,7 +42,7 @@ public class Constants {
 	public static final long GAME_LIST_CHECK_INTERVAL_IN_MILLISECONDS = 300000;// = 300000;
 	public static final long GAME_SURFACE_CHECK_START_IN_MILLISECONDS = 30000;// 300000;
 	public static final long GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS = 120000;// = 2 minutes
-	public static final long GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS = 2000;// 2 seconds;
+	public static final long GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS = 18000;// 2 seconds;
 	public static final long GAME_SURFACE_INTERSTITIAL_AD_CHECK_IN_MILLISECONDS = 7000;// = 7 seconds;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
@@ -60,6 +61,7 @@ public class Constants {
 	public static final String EXTRA_GCM_GAME_ID = "id";
 	public static final String EXTRA_GCM_MESSAGE = "msg";
 	public static final String NOTIFICATION_ID = "___com.riotapps.word";
+	public static final String EXTRA_IS_GAME_UPDATED = "game_u";
 	 	
  	/**============================================
 	 * storage
@@ -79,6 +81,8 @@ public class Constants {
  	public static final String USER_PREFS_GCM_REGISTRATION_ID = "gcm";
 	public static final String USER_PREFS_GAME_ALERT_CHECK = "game_alert_check_%s";
 	public static final String USER_PREFS_FIRST_TIME_GAME_SURFACE_ALERT_CHECK = "f_t_g_s";
+	public static final String USER_PREFS_ALERT_CHECK = "alert_check_";
+	public static final String USER_PREFS_ALERT_CHECK_DATE = "alert_check_date";
 	public static final String USER_PREFS_GAME_CHAT_CHECK = "game_chat_check_%s";
  	public static final String USER_PREFS_LATEST_COMPLETED_GAME_DATE = "cg_date";
  	public static final String GAME_STATE = "game_state";

@@ -62,6 +62,8 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	private String prevPlayerId = "";
 	private String prevTimeSince = "";
 	
+	private boolean isGameUpdated = false; 
+	
 	//private ChatArrayAdapter adapter = null;
 	
 //	ListView lvChat;
@@ -93,13 +95,26 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	 	this.checkGameStatus();
 	}
 
-	/*
+	 
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		super.onBackPressed();
+	//	if (!this.isGameUpdated){
+	//	super.onBackPressed();
+	//	Logger.d(TAG, "onBackPressed");
+	//	}
+	//	else {
+			//during this chat view we have added a chat and pulled the game into local
+			//set this extra so that the game surface will be updated properly
+			Intent intent = new Intent(this.context,  GameSurface.class);
+			intent.putExtra(Constants.EXTRA_IS_GAME_UPDATED, this.isGameUpdated);
+			//this.context.startActivity(intent);
+			this.setResult(Activity.RESULT_OK, intent);
+			 this.finish();
+	//	}
+	    
 	}
-*/
+ 
 
 
 
@@ -147,56 +162,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 			 }
 		 }
 	 }
-	/*
-	private void loadList(){ 
-		
-		//Collections.reverse(this.game.getChats());
- 
-		ChatArrayAdapter adapter = new ChatArrayAdapter(this, this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
-		adapter.hasStableIds();
 
-		this.chatPlayer1Id = "";
-		this.chatPlayer2Id = "";
-		this.chatPlayer3Id = "";
-		this.chatPlayer4Id = "";
-		this.prevPlayerId = "";
-		lvChat = (ListView) findViewById(R.id.lvChat);
-		lvChat.setAdapter(adapter); 
-		 
-		
-		lvChat.post(new Runnable(){
-			  public void run() {
-				  lvChat.setSelection(lvChat.getCount() - 1);
-			  }});
-	//	this.lvChat.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-	//	this.lvChat.setStackFromBottom(true);
-	 
-	}
-	 
-	
-	private void reloadList(){
-	//	this.lvChat = null;
-	//	this.adapter = null;
-		
-		this.loadList();
-		
-	//	this.adapter.reloadList( this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
-	//	this.lvChat.invalidateViews();
-		//this.adapter.clear();
-		//this.adapter.addAll(this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
-		
-		//this.adapter.setList( this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
-		//this.adapter.reloadList( this.game.getChats().toArray(new Chat[this.game.getChats().size()]));
-		//this.adapter.notifyDataSetChanged();
-		 
-		//lvChat.post(new Runnable(){
-		//	  public void run() {
-		//		  lvChat.setSelection(lvChat.getCount() - 1);
-		//	  }});
-			  
-			   
-	}
-*/
 	public View getChatView(Chat chat) {
 		View view = LayoutInflater.from(this).inflate(R.layout.gamechatitem, null);
 		  
@@ -218,11 +184,6 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	    		  chatPlayer4Id = chat.getPlayerId(); 
 	    	  }
 		  }
-    	  
-		 // Logger.d(TAG, "getChatView chatPlayer1Id=" + chatPlayer1Id);
-		//  Logger.d(TAG, "getChatView chatPlayer2Id=" + chatPlayer2Id);
-		//  Logger.d(TAG, "getChatView chatPlayer3Id=" + chatPlayer3Id);
-		//  Logger.d(TAG, "getChatView chatPlayer4Id=" + chatPlayer4Id);
 		  
     	   TextView tvChat = (TextView) view.findViewById(R.id.tvChat);
     	   TextView tvPlayerName = (TextView) view.findViewById(R.id.tvPlayerName);
@@ -359,43 +320,8 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 	    		   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
 	    		   imageLoader.loadImage(player.getImageUrl(), ivPlayer);
 	    		   
-	    		/*   
-	    		   Logger.d(TAG, "ChatArrayAdapter prevPlayerId=" + prevPlayerId + " prevSequentialCount=" + prevSequentialCount);
-		    	   if (this.prevPlayerId != chat.getPlayerId() || (this.prevPlayerId == chat.getPlayerId() && this.prevSequentialCount >= 4) ){
-		    		   this.prevSequentialCount = 0;
-		    		   Player player = context.game.getPlayerById(chat.getPlayerId());
-		    	   
-		    		   imageLoader.loadImage(player.getImageUrl(), ivPlayer);
-		    		   ivPlayer.setVisibility(View.VISIBLE);
-		    	   }
-		    	   else{ 
-		    		   ivPlayer.setVisibility(View.INVISIBLE);
-		    		   this.prevSequentialCount += 1;
-		    	   }
-		    	   
-		    	    */
 		    	   tvChat.setText(chat.getText());
-		    	   
-		    	  //  this.prevPlayerId = chat.getPlayerId(); 
-		    	   
-		 
-		    	//   Logger.d(TAG, "adapter position=" + position + " count=" + this.wordCount); 
-		    	//   LinearLayout llBottomBorder = (LinearLayout)rowView.findViewById(R.id.llBottomBorder);
-		    	 
-		    	    
-		    	  /* if (position == this.wordCount - 1){ //last item
-		    		   Logger.d(TAG, "position=wordCount");
-			   			RelativeLayout rlLineItem = (RelativeLayout)rowView.findViewById(R.id.rlItem);
-			   			int bgLineItem = context.getResources().getIdentifier("com.riotapps.word:drawable/text_selector_bottom", null, null);
-			   			rlLineItem.setBackgroundResource(bgLineItem);
-			   			//LinearLayout llBottomBorder = (LinearLayout)rowView.findViewById(R.id.llBottomBorder);
-			   			llBottomBorder.setVisibility(View.INVISIBLE);
-		    	   }
-		    	   else{
-		    		   llBottomBorder.setVisibility(View.VISIBLE);
-		    	   }
-		    	  */
-		    	   
+
 		    	   return rowView;
 	    	  } 
 	} 	
@@ -470,17 +396,19 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
     		             case 200:  
     		             case 201:   
 		            	   
-		            	 		//refresh game board
-		            	 		game = GameService.handleGameChatResponse(context, result.getResult());
-		            	 		
-		            	 		//refresh the list
-		            			etText.setText("");
-		            			
-		            			loadLayout();
-		            			GameService.checkGameChatAlert(context, game, true);
-		            	 		
-		            	 		break;
-		            	 		//end of case 200 & 201 
+    		            	 //Logger.d(TAG, "result=" + result.getResult());
+		            	    isGameUpdated = true;
+	            	 		//refresh game board
+	            	 		game = GameService.handleGameChatResponse(context, result.getResult());
+	            	 		
+	            	 		//refresh the list
+	            			etText.setText("");
+	            			
+	            			loadLayout();
+	            			GameService.checkGameChatAlert(context, game, true);
+	            	 		
+	            	 		break;
+	            	 		//end of case 200 & 201 
     		           
     		             case 401:
     			             //case Status code == 422

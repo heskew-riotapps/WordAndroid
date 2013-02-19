@@ -11,6 +11,9 @@ public class TransportAuthTokenWithGame {
 	@SerializedName("c_g_d")
 	private Date completedGameDate;
 	
+	@SerializedName("a_a_d")
+	private String lastAlertActivationDate;
+	
 	@SerializedName("r_id")
 	private String gcmRegistrationId;
 	
@@ -49,5 +52,11 @@ public class TransportAuthTokenWithGame {
 	public void setGameId(String gameId) {
 		this.gameId = gameId;
 	}
-	
+	public String getLastAlertActivationDate() {
+		return lastAlertActivationDate;
+	}
+
+	public void setLastAlertActivationDate(String lastAlertActivationDate) {
+		this.lastAlertActivationDate = lastAlertActivationDate;
+	}
 }

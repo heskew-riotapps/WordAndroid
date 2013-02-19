@@ -9,6 +9,7 @@
     <string name="admob_pub_id_game_played_words">a150e7b549b5cb3</string>
     <string name="admob_pub_id_options">a150e7b841d7e88</string>
     <string name="gcm_sender_id">505875093616</string>
+    <string name="wordnik_apiKey">48f31f368d20791114b01067e1d05b68ca177aabdbab4150b</string>
        
     <string name="app_name">WordSmash</string>
     <string name="join_via_facebook">connect with facebook</string>
@@ -520,4 +521,6 @@
 		<string name="game_surface_rematch_with_3">rematch with\n%1$s\n%2$s\n%3$s</string>
 		<string name="game_surface_first_time_alert_title">quick tips</string>
 		<string name="game_surface_first_time_alert_message">welcome to WordSmash, %s!\n\nto zoom in or out, just single tap the game board.\n\ndrag letters from the tray onto the board to form words in a single axis.\n\nthe first played word must be played on at least one smiley.\n\nletters can be played on top of previously played letters.\n\ngood luck!</string>
+		<string name="alert_default_title">WordSmash</string>
+		
 </resources>

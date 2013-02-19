@@ -58,6 +58,8 @@ public class Game implements Parcelable, Comparable<Game> {
 	private List<String> randomConsonants;
 	
 	private boolean showCompletionAlert;
+	private boolean refreshedFromChat;
+
 	
 	
 	private Player _lastTurnPlayer;

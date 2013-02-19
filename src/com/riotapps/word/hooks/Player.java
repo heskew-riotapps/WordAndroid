@@ -49,6 +49,10 @@ public class Player implements Parcelable{
 	@SerializedName("n_d")
 	private int numDraws = 0; //num draws
 	
+	@SerializedName("alerts")
+	private List<Alert> latestAlerts = new ArrayList(); //the latest communication alert 
+
+
 	@SerializedName("game_")
 	private Game notificationGame = null; //the game associated with notification via gcmIntent
 	
@@ -162,6 +166,13 @@ public class Player implements Parcelable{
 	}
 	
  
+	public List<Alert> getLatestAlerts() {
+		return latestAlerts;
+	}
+	public void setLatestAlerts(List<Alert> latestAlerts) {
+		this.latestAlerts = latestAlerts;
+	}
+	
 	public Game getNotificationGame() {
 		return notificationGame;
 	}

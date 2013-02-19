@@ -1,12 +1,9 @@
 package com.riotapps.word;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
  
 import com.riotapps.word.hooks.Game;
@@ -22,7 +19,6 @@ import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.NetworkTaskResult;
-import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.utils.Enums.RequestType;
 
@@ -32,18 +28,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 public class MainLanding extends FragmentActivity implements View.OnClickListener{
@@ -130,7 +121,18 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//	this.loadLists();
 		//}
 		this.setupTimer();
+		
+		this.checkAlert();
     }
+    
+    private void checkAlert(){
+    	if (this.player.getLatestAlerts().size() > 0){
+	    	 if (!PlayerService.checkAlertAlreadyShown(this, this.player.getLatestAlerts().get(0).getId(), this.player.getLatestAlerts().get(0).getActivationDateString())) {	
+				 DialogManager.SetupAlert(this, this.player.getLatestAlerts().get(0).getTitle() == "" ? this.player.getLatestAlerts().get(0).getTitle() : this.getString(R.string.alert_default_title), this.player.getLatestAlerts().get(0).getText());
+			 }
+    	}
+    }
+    
     
     @Override
 	protected void onRestart() {

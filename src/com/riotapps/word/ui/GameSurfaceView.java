@@ -61,7 +61,6 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	ApplicationContext appContext;
 	int absoluteTop = 0;
 	int absoluteLeft = 0;
-	int onDrawCounter = 0;
 	
 	GameSurfaceView me = this;
 	Context context;
@@ -77,6 +76,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     private int fullHeight;
     private int fullViewTileWidth;
     private boolean isTablet = false;
+    private int onDrawCounter = 0;
     //private int trayAreaTop = 0;
     
     private boolean trayTileTapped = false;
@@ -928,8 +928,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 @Override
 	 public boolean onTouchEvent(MotionEvent event) {
 		 
-		 //if game is over, do not allow movement
-		 if (this.parent.getGame().getStatus() == 3 || this.parent.getGame().getStatus() == 4 ){
+		 //if game is over, do not allow movement (or if game board has yet to be drawn the first time)
+		 if (this.onDrawCounter == 0 || this.parent.getGame().getStatus() == 3 || this.parent.getGame().getStatus() == 4 ){
 			 this.readyToDraw = false;
 			 return true;
 		 }
@@ -953,7 +953,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
          Logger.w(TAG,  "onTouchEvent event=" + event.toString());
          Logger.w(TAG,  "onTouchEvent currentX=" + this.currentX + " currentY=" + this.currentY + " x=" + event.getX() + " y=" + event.getY() + " rawX=" + event.getRawX() + " rawY=" + event.getRawY());
  
-
+         boolean setToReadyDraw = false;
     	 
 	     synchronized (this.gameThread.getSurfaceHolder()) {
              switch (event.getAction()) {
@@ -1065,7 +1065,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		            			 Logger.d(TAG, "onTouch ACTION_DOWN currentTrayTile letter after loop=" + this.getCurrentTrayTile().getCurrentLetter());
 
 		            			 Logger.d(TAG, "onTouchEvent cur tile.isdragging" + this.getCurrentTrayTile().isDragging());
-		            			 this.readyToDraw = true;
+		            			 //this.readyToDraw = true;
+		            			 this.setReadyToDrawFromOnTouch(currentTouchTime);
 		            		 }
 	            		 }
             		 }
@@ -1078,6 +1079,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	  break;
 
              case MotionEvent.ACTION_UP: //1
+            	 
+            	
             	 //includes a check to ignore double taps
             	 //  Log.w(getClass().getSimpleName() + "onTouchEvent ActionUP ", this.tapCheck + " " + currentTouchTime + " " + this.readyToDraw);
             	 this.parent.captureTime(TAG + " ACTION_UP");
@@ -1108,7 +1111,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
                 			 this.getCurrentTrayTile().removeDrag();
                 			 this.clearCurrentTrayTile();
                 			 this.trayTileTapped = true;
-                			 this.readyToDraw = true;
+                			 //this.readyToDraw = true;
+                			 setToReadyDraw = true;
                 		 }
             			 //check for a single tap
             			 //and make sure to ignore double tap events
@@ -1142,8 +1146,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             						 this.clearDraggingTile();
             					 }
             					 this.isZoomed = !this.isZoomed;
-            					 this.readyToDraw = true;
+            					 //this.readyToDraw = true;
             					 this.isSingleTap = true;
+            					 setToReadyDraw = true;
+            					 
             				 }
             				 Logger.d(TAG, "onTouchEvent isSingleTap=true");
             				 this.dblTapCheck = currentTouchTime;
@@ -1154,7 +1160,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             			 }
             			 
             		 }
-            	
+            		 
             		// else {
             		//	 //if previous action was not a down, don't draw
             		//	 this.readyToDraw = false;
@@ -1215,7 +1221,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         					 this.parent.captureTime(TAG + " setGameState starting");
         					 
         					 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
-        					 GameStateService.setGameState(this.context, this.parent.getGameState());
+        					/// GameStateService.setGameState(this.context, this.parent.getGameState());
         					// this.resetPointsView();
     						 
         					 this.parent.captureTime(TAG + " setGameState ended");
@@ -1232,11 +1238,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         					 }
     						// Logger.d(TAG, "ACTION_UP this.alreadyInZoomedState=" + this.alreadyInZoomedState);
     						 this.trayTileDropped = true;
-    						 this.readyToDraw = true;
+    						 //this.readyToDraw = true;
     						 
     						 this.parent.captureTime(TAG + " resetPointsView starting");
     						 
     						 this.resetPointsView();
+    						 setToReadyDraw = true;
     						 
     						 this.parent.captureTime(TAG + " resetPointsView ended");
     						 
@@ -1257,8 +1264,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         						 //this.handleDropOnTray(trayDropTargetTile, this.currentTrayTile);
         						 this.handleDropOnTray();
         						 this.parent.getGameState().resetLettersFromCurrent(tiles, trayTiles);
-        						 GameStateService.setGameState(this.context, this.parent.getGameState());
-        						 this.readyToDraw = true;
+        						/// GameStateService.setGameState(this.context, this.parent.getGameState());
+        						 //this.readyToDraw = true;
+        						 setToReadyDraw = true;
         						 this.trayTileDropTarget = true;
         					 }
         							 
@@ -1331,7 +1339,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 						        Log.w(TAG, "onTouchEvent: ACTION_UP xDistance=" + this.xDistance + "  yDistance=" + this.yDistance + " speed=" + speed); 
 						        
 						        this.isMomentum = true;
-		    					this.readyToDraw = true;
+						        setToReadyDraw = true;
+		    					//this.readyToDraw = true;
 	    				    }
 	    					else {
 	    						 Log.w(TAG, "onTouchEvent: ACTION_UP threshold of movement not met to trigger momentum scrolling"); 
@@ -1345,6 +1354,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 this.previousY = 0;
             	 this.isMoving = false;
             	 this.tapCheck = 0;
+            	 if (setToReadyDraw) {this.setReadyToDrawFromOnTouch(currentTouchTime);}
             	 break;
              case MotionEvent.ACTION_MOVE:
             	 
@@ -1363,12 +1373,14 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 }
             	 //check to see if a board tile is being dragged
             	 else if (this.getDraggingTile() != null){
-            		 this.readyToDraw = true;
+            		 //this.readyToDraw = true;
+            		 setToReadyDraw = true;
             	 }
             	 //check to see if a tray tile is being dragged
             	 //else if (this.currentTrayTile != null && this.currentTrayTile.isDragging()){
             	 else if (this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()){
-            		 this.readyToDraw = true;
+            		 //this.readyToDraw = true;
+            		 setToReadyDraw = true;
             	 }
             	 else{
 	            	 if (!this.isZoomed){
@@ -1389,15 +1401,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	            		 this.readyToDraw = false;
 	            	}
 	            	else {
-	            		 this.readyToDraw = true;
+
+	            		 //this.readyToDraw = true;
 	            		 
 	            		 //keep latest 30 coordinates in context, last 10 will be used to calculate momentum and direction for scrolling
-	            		 //hainvg 30 determines if action_up triggers momentum scrolling logic
+	            		 //having 30 determines if action_up triggers momentum scrolling logic
 	            		 this.coordinates.add(new Coordinate(this.currentX, this.currentY, currentTouchTime));
 	            		 //quick loop to remove first in coordinates over 30, normally should only ever remove one, but just in case, we'll loop it
 	            		 while (this.coordinates.size() > NUMBER_OF_COORDINATES_TO_TRIGGER_MOMENTUM_SCROLLING){
 	            			 this.coordinates.remove(0);
 	            		 }
+	            		 
+	            		 setToReadyDraw = true;
 	            		 Log.w(TAG,"onTouchEvent: coodinates size" + this.coordinates.size());
 	            	}
 	            	// this.readyToDraw = false;
@@ -1406,17 +1421,27 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	            		
 	            	 }
             	 }
+            	 
+            	 if (setToReadyDraw) {this.setReadyToDrawFromOnTouch(currentTouchTime);}
             	 //  Log.w(getClass().getSimpleName() + "onTouchEvent ACTION_MOVE ", this.previousX + " " + this.currentX + " " + this.readyToDraw);
             	 break; 
              default:
             	 this.readyToDraw = false;
              }
-             this.previousTouchMotion = this.currentTouchMotion;
-         	 this.previousTouchTime = currentTouchTime;
+             //this.previousTouchMotion = this.currentTouchMotion;
+         	 //this.previousTouchTime = currentTouchTime;
          	       			 
+         	 this.parent.captureTime("ONTOUCH EVENT ENDED, ONDRAW SHOULD BE NEXT" );
+         	 
              return true;
          }
 
+	 }
+	 
+	 private void setReadyToDrawFromOnTouch(long currentTouchTime){
+		 this.previousTouchMotion = this.currentTouchMotion;
+     	 this.previousTouchTime = currentTouchTime;	 
+     	 this.readyToDraw = true;
 	 }
 
 	 private void handleDropOnTray(){
@@ -1802,7 +1827,6 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			// canvas.drawColor(0, Mode.CLEAR); ///clears out the previous drawing on the canvas
 		 
 			 //}
-			 int tileFontSize;
 			 this.readyToDraw = false; 
 			 
 			 if (this.isZoomed == false || this.isZoomAllowed == false){
@@ -1829,7 +1853,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 //these actions just mean the board should be redrawn as is
 					 this.drawBoardOnMove(canvas, 0, 0);
 					 this.shuffleRedraw = false;
-					 this.recallLettersRedraw = false;
+				//	 this.recallLettersRedraw = false;
 					 this.afterPlayRedraw = false;
 					 this.trayTileTapped = false;
 				 }
@@ -1887,6 +1911,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    this.drawTray(canvas);
 		    
 		    this.drawDraggingTile(canvas);
+		   
+		    //on a drop event (action_up) check to determine if shuffle and recall buttons need to be switched
+		    if (this.currentTouchMotion == MotionEvent.ACTION_UP || this.recallLettersRedraw){
+		    	Logger.d(TAG, "onDraw MotionEvent.ACTION_UP about to call this.setButtonStates");
+		    	this.setButtonStates();
+		    }
 		    
 		    if (this.shuffleRedraw || this.recallLettersRedraw || this.afterPlayRedraw || this.trayTileTapped){
 		    	this.shuffleRedraw = false;
@@ -1897,15 +1927,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    	
 		    }
 		    
-		    //on a drop event (action_up) check to determine if shuffle and recall buttons need to be switched
-		    if (this.currentTouchMotion == MotionEvent.ACTION_UP){
-		    	this.setButtonStates();
-		    }
+		   
 		 } 
 		 this.onDrawCounter += 1;
 		 if (this.onDrawCounter == 1){
 			 this.parent.onInitialRenderComplete();
 		 }
+		
 		 this.parent.captureTime("onDraw ended");
 	 }
    
@@ -2544,7 +2572,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		}
 		
 		//this.parent.getGameState().resetLettersFromOriginal(tiles, trayTiles);
-		GameStateService.setGameState(this.context, this.parent.getGameState());
+		///GameStateService.setGameState(this.context, this.parent.getGameState());
 		this.LoadTray(); //reloads from the latest game state
 		
 		this.recallLettersRedraw = true;
@@ -2557,24 +2585,33 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		//if a letter drops on the board, hide the shuffle button and display recall button
 		//
 		//first check says "if the recall button is showing yet the try is not not full after an ACTION_UP event, switch to recall
+		
+		Logger.d(TAG, "setButtonStates called isButtonStateInShuffle=" + this.isButtonStateInShuffle + " this.isTrayFull=" + this.isTrayFull());
+		
 		if (this.isButtonStateInShuffle && !this.isTrayFull()){
 			this.parent.switchToRecall();
 			this.parent.switchToPlay();
 			this.isButtonStateInShuffle = false;
+			Logger.d(TAG, "setButtonStates switchToRecall called isButtonStateInShuffle=" + this.isButtonStateInShuffle);
 		}
 		else if (!this.isButtonStateInShuffle && this.isTrayFull()){
 			this.parent.switchToShuffle();
 			this.parent.switchToSkip();
 			this.isButtonStateInShuffle = true;
+			Logger.d(TAG, "setButtonStates switchToShuffle called isButtonStateInShuffle=" + this.isButtonStateInShuffle);
 		}
 	}
 	
 	public void setInitialButtonStates(){
 		//gameSurface class will default the button to shuffle.
 		//we just need to change it here if the tray is not full
+		
+		Logger.d(TAG, "setInitialButtonStates called isButtonStateInShuffle=" + this.isButtonStateInShuffle + " this.isTrayFull=" + this.isTrayFull());
+		
 		if (!this.isTrayFull()){
 			this.parent.switchToRecall();
 			this.parent.switchToPlay();
+			this.isButtonStateInShuffle = false;
 		}
 	
 	}
@@ -2765,7 +2802,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 		this.parent.getGameState().shuffleLetters();
 	
-		GameStateService.setGameState(this.context, this.parent.getGameState());
+		///GameStateService.setGameState(this.context, this.parent.getGameState());
 
 		this.LoadTray();
 		this.shuffleRedraw = true;

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="2dp"
+    android:id="@+id/progress_root"
+    style="@style/DialogStyle"
+    android:background="@drawable/dialog_background"
+	>
+ <RelativeLayout  
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/progress_inner_background"
+    android:padding="20dp"
+	>
+	
+  <ProgressBar
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+		android:background="@drawable/custom_progress"
+         android:id="@+id/progress_spinner"
+         style="@android:style/Widget.ProgressBar.Small"
+         android:indeterminate="true"
+         />
+    <com.riotapps.word.ui.MainFontTextView
+         android:id="@+id/dialog_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:textColor="#ffffff"
+		android:textSize="16dp"
+	 
+		android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/progress_spinner"
+    />
+   </RelativeLayout>
+ </RelativeLayout>

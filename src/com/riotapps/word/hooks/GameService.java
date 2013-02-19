@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
  
  
+@SuppressLint("NewApi")
 public class GameService {
 	private static final String TAG = GameService.class.getSimpleName();
 	
@@ -71,7 +74,15 @@ public class GameService {
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, Utils.convertNanosecondsToMilliseconds(System.nanoTime()));
-		editor.commit();
+		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 }
 	}
 	
 	public static boolean checkGameAlertAlreadyShown(Context context, String gameId){
@@ -79,7 +90,15 @@ public class GameService {
 		if (settings.getBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId), false) == false) { 
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId),true);
-			editor.commit();
+			// Check if we're running on GingerBread or above
+			 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			     // If so, call apply()
+			     editor.apply();
+			 // if not
+			 } else {
+			     // Call commit()
+			     editor.commit();
+			 }
 			return false;
 		}
 		else{
@@ -101,7 +120,15 @@ public class GameService {
 			SharedPreferences.Editor editor = settings.edit();
 				
 			editor.putLong(String.format(Constants.USER_PREFS_GAME_CHAT_CHECK, game.getId()),gameChatTime);
-			editor.commit();
+			// Check if we're running on GingerBread or above
+			 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			     // If so, call apply()
+			     editor.apply();
+			 // if not
+			 } else {
+			     // Call commit()
+			     editor.commit();
+			 }
 		}
 		//Logger.d(TAG, "checkGameChatAlert about to return " + (gameChatTime != localChatTime)); 
 			 
@@ -113,7 +140,15 @@ public class GameService {
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, 0);
-		editor.commit();
+		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 }
 	}
 	
 	public static long getLastGameListCheckTime(Context context){ 
@@ -378,7 +413,15 @@ public class GameService {
 	 //   Logger.w(TAG, "game=" + gson.toJson(game));
 	   
 	    editor.putString(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()), gson.toJson(game));
-	    editor.commit(); 
+		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 } 
 	}
 	
 	
@@ -396,7 +439,15 @@ public class GameService {
 	    SharedPreferences.Editor editor = settings.edit();
 	 
 	    editor.remove(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()));
-	    editor.commit(); 
+		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 } 
 	}
 	
 
@@ -504,7 +555,15 @@ public class GameService {
         		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
      	         SharedPreferences.Editor editor = settings.edit();
         		 editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
-        		 editor.commit();  
+        			// Check if we're running on GingerBread or above
+        		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+        		     // If so, call apply()
+        		     editor.apply();
+        		 // if not
+        		 } else {
+        		     // Call commit()
+        		     editor.commit();
+        		 }  
         	 }
          }
          
@@ -1523,7 +1582,15 @@ public class GameService {
 	    SharedPreferences.Editor editor = settings.edit();
  
 	    editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
-	    editor.commit();  
+		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 }  
 	}
 
 	private static void moveGameToCompletedList(Context ctx, Game game){
@@ -1568,7 +1635,15 @@ public class GameService {
 	    SharedPreferences.Editor editor = settings.edit();
  
 	    editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
-	    editor.commit();  
+		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 } 
 	}
   	
 }

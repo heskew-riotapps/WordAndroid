@@ -13,6 +13,7 @@ import org.json.JSONException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -127,11 +128,12 @@ public class PlayerService {
 		 
 		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+	    String lastAlertActivationDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_LAST_ALERT_ACTIVATION_DATE);
 		TransportAuthToken player = new TransportAuthToken();
 		player.setToken(authToken);
 		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
 		player.setCompletedGameDate(new Date(completedDate));
-
+		player.setLastAlertActivationDate(lastAlertActivationDate);
 		
 		return gson.toJson(player);
 	}
@@ -148,13 +150,14 @@ public class PlayerService {
 		 
 		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
 	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+	    String lastAlertActivationDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_LAST_ALERT_ACTIVATION_DATE);
 	    TransportAuthTokenWithGame player = new TransportAuthTokenWithGame();
 		player.setToken(authToken);
 		player.setGameId(gameId);
 		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
 		player.setCompletedGameDate(new Date(completedDate));
+		player.setLastAlertActivationDate(lastAlertActivationDate);
 
-		
 		return gson.toJson(player);
 	}
 	
@@ -219,13 +222,53 @@ public class PlayerService {
 		return gson.toJson(updateAccount);
 	}
 	
+	public static boolean checkAlertAlreadyShown(Context context, String alertId, String alertActivationDate){
+		Gson gson = new Gson();
+		
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		String json = settings.getString(Constants.USER_PREFS_ALERT_CHECK, "[]"); 
+		
+		Type type = new TypeToken<List<String>>() {}.getType();
+		List<String> alerts = gson.fromJson(json, type);
+		
+		if (alerts.contains(alertId)){
+			return true;
+		}
+		else {
+			alerts.add(alertId);
+			
+			json = gson.toJson(alerts, type);
+			
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString(Constants.USER_PREFS_ALERT_CHECK, json);
+			editor.putString(Constants.USER_PREFS_ALERT_CHECK_DATE, alertActivationDate);
+			// Check if we're running on GingerBread or above
+			 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			     // If so, call apply()
+			     editor.apply();
+			 // if not
+			 } else {
+			     // Call commit()
+			     editor.commit();
+			 }
+			return false;
+		}	
+	}
 	
 	public static boolean checkFirstTimeGameSurfaceAlertAlreadyShown(Context context){
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
 		if (settings.getBoolean(Constants.USER_PREFS_FIRST_TIME_GAME_SURFACE_ALERT_CHECK, false) == false) { 
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(Constants.USER_PREFS_FIRST_TIME_GAME_SURFACE_ALERT_CHECK,true);
-			editor.commit();
+			// Check if we're running on GingerBread or above
+			 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			     // If so, call apply()
+			     editor.apply();
+			 // if not
+			 } else {
+			     // Call commit()
+			     editor.commit();
+			 }
 			Logger.d(TAG, "checkFirstTimeAlertAlreadyShown=false");
 			return false;
 		}
@@ -240,7 +283,15 @@ public class PlayerService {
 		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(Constants.USER_PREFS_GCM_REGISTRATION_ID, gcmRegistrationId);
-		editor.commit();
+		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+			 editor.commit();
+		 }
 	}
 	
 	public static String getRegistrationId(Context context){
@@ -281,7 +332,15 @@ public class PlayerService {
 	    editor.putString(Constants.USER_PREFS_FRIENDS_JSON, friendJSON);
 	    
 	 
-	    editor.commit(); 
+		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()		
+			  editor.commit();
+		 }
 	    
 	   // String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
 	    
@@ -704,7 +763,15 @@ public class PlayerService {
 	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
 	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
-	        editor.commit();  
+	    	// Check if we're running on GingerBread or above
+			 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			     // If so, call apply()
+			     editor.apply();
+			 // if not
+			 } else {
+			     // Call commit()
+			     editor.commit();
+			 } 
 	         
 	        Logger.d(TAG, "handlePlayerResponse numOpponents=" + player.getOpponents().size() );
 	        //Logger.w(TAG, "player=" + gson.toJson(player));
@@ -766,7 +833,15 @@ public class PlayerService {
         editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
         editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
         editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
-        editor.commit();  
+    	// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 } 
        
         Logger.d(TAG,"updateAuthToken");
         
@@ -816,7 +891,15 @@ public class PlayerService {
         editor.putLong(Constants.USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME, Utils.convertNanosecondsToMilliseconds(System.nanoTime()));
    	    editor.putString(Constants.USER_PREFS_FRIENDS_JSON, gson.toJson(friends));
         
-     	editor.commit();  
+   		// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 }
      	
      	return friends;
        
