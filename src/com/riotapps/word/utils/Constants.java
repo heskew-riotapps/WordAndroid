@@ -62,6 +62,7 @@ public class Constants {
 	public static final String EXTRA_GCM_MESSAGE = "msg";
 	public static final String NOTIFICATION_ID = "___com.riotapps.word";
 	public static final String EXTRA_IS_GAME_UPDATED = "game_u";
+	public static final String EXTRA_WORD_LOOKUP = "_wlu";
 	 	
  	/**============================================
 	 * storage
@@ -103,9 +104,19 @@ public class Constants {
 	//public static final int PAGE_EDIT = 301; 	   
 
 	/**=============================================
-	 * the web
+	 * ad networks 
 	 *==============================================*/  
-	public static final boolean HIDE_ALL_ADS = false;          
+	public static final boolean HIDE_ALL_ADS = false; 
+	public static final boolean INTERSTITIAL_ADMOB = false; 
+	public static final boolean INTERSTITIAL_CHARTBOOST = false;
+	public static final boolean INTERSTITIAL_REVMOB = true;
+	public static final boolean BANNERS_REVMOB = false;
+	public static final boolean BANNERS_ADMOB = true;
+	
+
+	/**=============================================
+	 * the web 
+	 *==============================================*/  
 	public static final String REST_URL_SITE = "http://smash.riotapps.com/en/";        
 	//public static final String REST_URL_SITE = "http://10.0.2.2:3000/en/";      
 	public static final String FACEBOOK_API_ID = "314938401925933"; 
@@ -133,6 +144,8 @@ public class Constants {
 	public static final String REST_GAME_CHAT = REST_URL_SITE + "games/chat";
 	public static final String REST_GAME_RESIGN = REST_URL_SITE + "games/resign";
 	public static final String REST_GAME_DECLINE = REST_URL_SITE + "games/decline";
+	public static final String GRAVATAR_SITE_URL = "http://en.gravatar.com";
+	public static final String WORDNIK_WORD_URL = "http://www.wordnik.com/word/%s";
 	
 	/**=============================================
 	 * rails

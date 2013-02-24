@@ -128,7 +128,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     private void checkAlert(){
     	if (this.player.getLatestAlerts().size() > 0){
 	    	 if (!PlayerService.checkAlertAlreadyShown(this, this.player.getLatestAlerts().get(0).getId(), this.player.getLatestAlerts().get(0).getActivationDateString())) {	
-				 DialogManager.SetupAlert(this, this.player.getLatestAlerts().get(0).getTitle() == "" ? this.player.getLatestAlerts().get(0).getTitle() : this.getString(R.string.alert_default_title), this.player.getLatestAlerts().get(0).getText());
+				 DialogManager.SetupAlert(this, !this.player.getLatestAlerts().get(0).getTitle().equals("") ? this.player.getLatestAlerts().get(0).getTitle() : this.getString(R.string.alert_default_title), this.player.getLatestAlerts().get(0).getText());
 			 }
     	}
     }

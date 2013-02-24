@@ -8,10 +8,11 @@
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="13" />
  
     
-    <uses-permission android:name="android.permission.INTERNET" ></uses-permission> 
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> 
+    <uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
  
-
 	<permission android:name="com.riotapps.word.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 	<uses-permission android:name="com.riotapps.word.permission.C2D_MESSAGE" /> 
 	
@@ -87,13 +88,18 @@
 		<activity android:name=".FBAccountSettings" android:label="@string/app_name" android:screenOrientation="portrait"/>
 		<activity android:name=".GameChat" android:label="@string/app_name" android:screenOrientation="portrait"  />
 	 	<activity android:name=".GameHistory" android:label="@string/app_name" android:screenOrientation="portrait"/>
+	 	<activity android:name=".GameLookup" android:label="@string/app_name" android:screenOrientation="portrait"/>
 	 	<activity android:name=".InterstitialAd" android:label="@string/app_name" android:screenOrientation="portrait"/>
 	 	
 	 	<activity android:name="com.facebook.LoginActivity" android:label="@string/app_name" android:screenOrientation="portrait"/>
-	 	
+	 	 <activity android:name="com.chartboost.sdk.CBImpressionActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:excludeFromRecents="true" />
 	 	 <activity android:name="com.google.ads.AdActivity"
               android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
 	 	<meta-data android:value="@string/app_id" android:name="com.facebook.sdk.ApplicationId"/>
+	 	<activity
+            android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+            android:configChanges="keyboardHidden|orientation" >
+    	</activity>
     </application>
 
 </manifest>

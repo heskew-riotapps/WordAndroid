@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+     xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    >
+    
+    	<com.google.ads.AdView  
+          android:id="@+id/adView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           ads:adUnitId="@string/admob_pub_id_game_word_definition" 
+           android:layout_centerHorizontal="true" 
+           ads:adSize="BANNER"
+           ads:testDevices="TEST_EMULATOR"
+           ads:loadAdOnCreate="true"/>
+		<LinearLayout
+		 android:layout_above="@id/adView" 
+		    style="@style/LayoutStyle" 
+		    android:orientation="vertical">
+		<include android:id="@+id/topAreaLayout" layout="@layout/scoreboardlayout" />
+		<LinearLayout 
+           style="@style/LayoutFormStyle"
+           android:layout_height="fill_parent"
+           > 
+		 <LinearLayout
+				style="@style/FormBackgroundStyle"
+				android:layout_marginTop="5dp"
+				 android:layout_marginBottom="5dp"
+				 android:orientation="vertical"
+				 android:layout_width="fill_parent"
+				 android:layout_height="fill_parent"
+			>
+			<com.riotapps.word.ui.MainFontTextView
+		        style="@style/ContentAreaTextTopStyle"
+		        />
+		    <com.riotapps.word.ui.MainFontTextView
+		 		android:layout_marginTop="-32dp"
+		        android:background="@drawable/form_item_top"
+		        android:textSize="14dp"
+		        android:text="@string/game_lookup_title" 
+		        android:id="@+id/header"
+		        android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/button_text_color"
+	 
+				android:paddingBottom="5dp"
+				android:paddingLeft="16dp"
+				android:paddingRight="16dp"
+				android:paddingTop="5dp"
+		        />
+	 			<RelativeLayout
+	 			    android:layout_height="fill_parent"
+	 			    android:layout_width="fill_parent"
+	 			    style="@style/ContentAreaTextBottomStyle"
+	 			    android:drawablePadding="0dp"
+	 			    android:paddingLeft="5dp"
+					android:paddingRight="5dp"
+					android:orientation="vertical"
+	 			>    
+	 			<com.riotapps.word.ui.ScoreboardFontTextView
+				         style="@style/TextStyle"
+				         android:textSize="18dp"
+				     	android:id="@+id/tvWord"
+				     	android:layout_marginLeft="2.0dip"
+				     	android:layout_marginBottom="3.0dip"
+				        android:layout_width="fill_parent"
+				        android:layout_height="wrap_content" />
+	 			
+	 			    <ImageView 
+					   	android:layout_width="wrap_content"
+				   		android:layout_height="wrap_content"
+					    android:id="@+id/ivWordnik"	
+					    android:src="@drawable/wordnik_badge_a1"
+					    android:layout_alignParentRight="true"
+					 />
+	 				  <com.riotapps.word.ui.MainFontTextView 
+					     style="@style/TextStyle"
+					     android:textSize="16dp"
+					  	 android:id="@+id/tvNotFound"
+					     android:layout_width="fill_parent"
+					     android:layout_height="wrap_content"
+					     android:layout_below="@id/tvWord"
+					     
+					     />	 
+		    		  <ScrollView   
+				    	android:layout_below="@id/tvWord"
+				    	android:layout_width="fill_parent"
+				    	android:layout_height="fill_parent" 
+				    	android:fadingEdge="none"
+				    	 >
+				   
+				    	 <LinearLayout
+						    android:layout_width="fill_parent"
+				    		android:layout_height="wrap_content" 
+				    		android:orientation="vertical"
+				    		android:id="@+id/llDefs"
+						    > 
+						    
+				    	   </LinearLayout>  
+		    		  </ScrollView>
+		     </RelativeLayout>
+				 
+		    </LinearLayout>
+	</LinearLayout>   
+</LinearLayout>
+</RelativeLayout>

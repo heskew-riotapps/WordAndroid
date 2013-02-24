@@ -2,6 +2,7 @@ package com.riotapps.word.ui;
 
 import java.lang.reflect.Type;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -13,6 +14,7 @@ import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.FileUtils;
 import com.riotapps.word.utils.Logger;
 
+@TargetApi(9)
 public class GameStateService {
 	private static final String TAG = GameStateService.class.getSimpleName();
 	

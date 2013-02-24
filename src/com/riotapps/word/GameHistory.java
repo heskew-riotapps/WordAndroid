@@ -38,6 +38,7 @@ public class GameHistory extends FragmentActivity{
 	private Player player;
 	private ImageFetcher imageLoader;
 	private ListView lvWords;
+	private Context context = this;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,15 +81,19 @@ private void loadList(){
 	this.lvWords = (ListView) findViewById(R.id.lvWords);
 	this.lvWords.setAdapter(adapter); 
 	
-/*	lvWords.setOnItemClickListener(new OnItemClickListener() {
+ 
+	lvWords.setOnItemClickListener(new OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                 long id) {
         	//this will eventually call wordnik for definition lookup
-        	 
+        	Intent intent = new Intent(context, GameLookup.class);
+        	intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
+        	intent.putExtra(Constants.EXTRA_WORD_LOOKUP, view.getTag().toString());
+			startActivity(intent);
         }
     });
-*/
+
 }
 
 private class PlayedWordArrayAdapter extends ArrayAdapter<PlayedWord> {
@@ -144,7 +149,7 @@ private class PlayedWordArrayAdapter extends ArrayAdapter<PlayedWord> {
 	    		   llBottomBorder.setVisibility(View.VISIBLE);
 	    	   }
 	    	  */
-	    	   
+	    	   rowView.setTag(word.getWord());
 	    	   return rowView;
     	  } 
 } 		  

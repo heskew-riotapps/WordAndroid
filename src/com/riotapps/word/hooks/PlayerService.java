@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.json.JSONException;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +42,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
  
 ////make this class static
+@SuppressLint({ "NewApi"})
 public class PlayerService {
 	private static final String TAG = PlayerService.class.getSimpleName();
 /*

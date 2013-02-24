@@ -157,6 +157,9 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			            	 	case NICKNAME_IN_USE:
 			            	 		errorMessage = this.context.getString(R.string.validation_nickname_already_taken);
 			            	 		break;
+			            	 	case FB_USER_EMAIL_ALREADY_IN_USE:
+			            	 		errorMessage = this.context.getString(R.string.validation_email_connected_via_fb);
+			            	 		break;
 			            	 		
 			            	 	default:
 			            	 		errorMessage = this.context.getString(R.string.validation_unauthorized);

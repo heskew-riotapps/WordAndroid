@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"    
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:id="@+id/lookup_item_id"
+    android:orientation="vertical"
+    >
+<RelativeLayout 
+    style="@style/ContentAreaTextStyle" 
+    android:layout_marginBottom="2dp" 
+    android:paddingLeft="2dp" 
+    android:id="@+id/rlItem" >
+	 <com.riotapps.word.ui.ScoreboardFontTextView
+         style="@style/TextStyle"
+         android:textSize="14dp"
+     	android:id="@+id/tvNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        />
+     <com.riotapps.word.ui.ScoreboardFontTextView 
+	     style="@style/TextStyle"
+	     android:textSize="14dp"
+	  	 android:id="@+id/tvDefinition"
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:layout_marginLeft="2dp"
+	     android:layout_toRightOf="@id/tvNum"
+	     />
+      <com.riotapps.word.ui.ScoreboardFontTextView 
+	     style="@style/TextStyle"
+	     android:textSize="11dp"
+	  	 android:id="@+id/tvAttribution"
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:layout_below="@id/tvDefinition"
+	     android:layout_alignLeft="@id/tvDefinition"
+	 
+	     />
+</RelativeLayout>
+ 
+</LinearLayout>
+ 

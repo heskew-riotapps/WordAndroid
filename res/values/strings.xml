@@ -7,10 +7,18 @@
     <string name="admob_pub_id_full_rules">a150e7b398d7ec4</string>
     <string name="admob_pub_id_condensed_rules">a150e7b4dc8b49f</string>
     <string name="admob_pub_id_game_played_words">a150e7b549b5cb3</string>
-    <string name="admob_pub_id_options">a150e7b841d7e88</string>
+    <string name="admob_pub_id_game_word_definition">a15124d73407724</string>
+    <string name="admob_pub_id_options">a150e7b841d7e88</string>   
     <string name="gcm_sender_id">505875093616</string>
     <string name="wordnik_apiKey">48f31f368d20791114b01067e1d05b68ca177aabdbab4150b</string>
-       
+    <string name="chartboost_app_id">5126a10716ba477b0e000019</string>
+    <string name="chartboost_app_signature">cc41971b1b681903b94c7c666f88d83d7da43762</string>
+    <string name="rev_mob_app_id">5128d7dbffe6c2180000000b</string>
+    <string name="rev_mob_main_landing_banner">5128d84decad1a100000003c</string>
+    <string name="rev_mob_main_between_play">5128d816f95d861800000069</string>
+    <string name="rev_mob_main_landing_banner">5128d816f95d861800000069</string>
+    <string name="rev_mob_main_landing_banner">5128d816f95d861800000069</string>
+    
     <string name="app_name">WordSmash</string>
     <string name="join_via_facebook">connect with facebook</string>
 	<string name="join_via_native">connect with your email address</string>
@@ -74,6 +82,7 @@
 	<string name="validation_email_already_taken">This email is already in use by another player.</string>
 	<string name="validation_email_not_supplied">Please enter an email address.</string>
 	<string name="validation_incorrect_password">The password is incorrect.</string>
+	<string name="validation_email_connected_via_fb">This email has already been connected via Facebook.  Please choose another email address or connect with Facebook.</string>
 	<string name="validation_unspecified_error">The error could not be determined.  Please try again later.</string>
 	<string name="validation_404_error">The server could not be found.  Please try again later.</string>
 	<string name="validation_token_not_found">The auth token could not be found.</string>	
@@ -106,6 +115,7 @@
  	<string name="start_game_prev_opponents">choose from previous opponents</string>
  	<string name="start_game_by_nickname">find opponent by nickname</string>
  	<string name="start_game_by_random">add a random opponent</string>
+ 	<string name="progress_looking_up">looking up&#8230;</string>
  	<string name="progress_loading">loading&#8230;</string>
  	<string name="progress_sending">sending&#8230;</string>
  	<string name="progress_saving">saving&#8230;</string>
@@ -316,7 +326,7 @@
  	<string name="gameboard_decline_button_text">decline</string>
  	<string name="gameboard_skip_button_text">skip</string>
  	<string name="gameboard_cancel_button_text">cancel</string>
- 	<string name="gameboard_played_words_button_text">played\nwords</string>
+ 	<string name="gameboard_played_words_button_text">look up\nwords</string>
  	<string name="gameboard_swap_button_text">swap</string>
  	<string name="gameboard_swap_dialog_button_text">swap letters</string>
  	<string name="gameboard_swap_dialog_title_text">tap the letter(s) to swap</string>
@@ -490,7 +500,8 @@
    		<string name="game_play_16_words">%1$s\n%2$s\n%3$s\n%4$s\n%5$s\n%6$s\n%7$s\n%8$s\n%9$s\n%10$s\n%11$s\n%12$s\n%13$s\n%14$s\n%15$s\n%16$s\n\nAre you sure?</string>   												
 
 		<string name="game_history_turn_info">played by %1$s in turn %2$s for %3$s points</string>
-		<string name="game_history_title">played words</string>
+		<string name="game_history_title">look up words</string>
+		<string name="game_lookup_title">word definition</string>
 		<string name="unknown_player_name">unknown</string>
 		<string name="message_chat_text_empty">Please enter the text.</string>
 		
@@ -522,5 +533,7 @@
 		<string name="game_surface_first_time_alert_title">quick tips</string>
 		<string name="game_surface_first_time_alert_message">welcome to WordSmash, %s!\n\nto zoom in or out, just single tap the game board.\n\ndrag letters from the tray onto the board to form words in a single axis.\n\nthe first played word must be played on at least one smiley.\n\nletters can be played on top of previously played letters.\n\ngood luck!</string>
 		<string name="alert_default_title">WordSmash</string>
-		
+		<string name="lookup_definition_num">%s.</string>
+		<string name="lookup_definition">(%1$s) %2$s</string>
+		<string name="lookup_definition_not_found">Sorry, we couldn\'t find the definition.</string>
 </resources>
