@@ -1,0 +1,81 @@
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    style="@style/LayoutStyle"
+    android:orientation="vertical" >
+ 
+
+	<com.google.ads.AdView  
+          android:id="@+id/adView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           ads:adUnitId="@string/admob_pub_id_condensed_rules" 
+           ads:adSize="BANNER"
+           ads:testDevices="TEST_EMULATOR"
+           ads:loadAdOnCreate="true"/>
+<LinearLayout 
+    android:layout_above="@id/adView" 
+    style="@style/LayoutStyle"
+    android:orientation="vertical" >
+   
+     <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
+   <ScrollView   
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" 
+    	android:fadingEdge="none"
+    	
+    	 >
+   <LinearLayout
+         style="@style/LayoutFormStyle"
+        
+         >
+	<LinearLayout
+		style="@style/FormBackgroundStyle"
+		android:layout_marginTop="5dp"
+	>
+	<RelativeLayout
+		style="@style/FormHeaderWrapperStyle"
+		android:id="@+id/header"
+	>
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/FormHeaderAreaTextStyle"
+        android:text="@string/about_title" 
+        />
+    </RelativeLayout>
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/ContentAreaTextStyle"
+        android:text="@string/about_main"
+        android:textSize="14dp" 
+        />
+   <com.riotapps.word.ui.MainFontTextView
+        style="@style/ContentAreaTextStyle" 
+        android:id="@+id/tvVersion"
+        android:textSize="14dp"
+        />
+   
+    <com.riotapps.word.ui.MainFontTextView
+        style="@style/ContentAreaTextStyle"
+        android:id="@+id/tvBuildNumber"
+        android:textSize="14dp"
+        />
+     <com.riotapps.word.ui.MainFontTextView
+        style="@style/ContentAreaTextStyle"
+        android:text="@string/about_support" 
+        android:id="@+id/tvSupportText"
+        android:textSize="14dp"
+        />
+     <com.riotapps.word.ui.MainFontTextView
+        style="@style/ContentAreaTextStyle"
+        android:id="@+id/tvSupportLink"
+        android:text="@string/about_support_link" 
+         android:background="@drawable/text_selector_bottom"
+        android:textSize="14dp"
+        />
+  
+   </LinearLayout>
+   </LinearLayout>
+   </ScrollView>
+</LinearLayout>
+</RelativeLayout>

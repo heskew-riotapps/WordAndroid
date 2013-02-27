@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="version">.9</string>
+    <string name="build">101</string>
+    
+    
     <string name="app_id">314938401925933</string>
     <string name="admob_pub_id_main_landing">a150e5e3748e238</string>
     <string name="admob_pub_id_interstitial">a150e6e3f4832b4</string>
@@ -134,6 +138,7 @@
  	<string name="quick_rules_4">If it\'s your turn, you can also skip the turn or swap letters.</string>
  	<string name="quick_rules_5">Keep it up until all the letters are used.  The player with the highest score wins.</string>	
  	<string name="full_rules_option">full game rules</string>
+ 	<string name="about_option">about WordSmash</string>
  	<string name="full_rules_title">full set of rules</string>
  	<string name="full_rules_subtitle">all the details</string>
  	<string name="full_rules_1">The idea is to score more points than your opponent (or opponents) by forming valid words out of the letters in your tray. 
@@ -500,7 +505,7 @@
    		<string name="game_play_16_words">%1$s\n%2$s\n%3$s\n%4$s\n%5$s\n%6$s\n%7$s\n%8$s\n%9$s\n%10$s\n%11$s\n%12$s\n%13$s\n%14$s\n%15$s\n%16$s\n\nAre you sure?</string>   												
 
 		<string name="game_history_turn_info">played by %1$s in turn %2$s for %3$s points</string>
-		<string name="game_history_title">look up words</string>
+		<string name="game_history_title">tap to look up definition</string>
 		<string name="game_lookup_title">word definition</string>
 		<string name="unknown_player_name">unknown</string>
 		<string name="message_chat_text_empty">Please enter the text.</string>
@@ -536,4 +541,11 @@
 		<string name="lookup_definition_num">%s.</string>
 		<string name="lookup_definition">(%1$s) %2$s</string>
 		<string name="lookup_definition_not_found">Sorry, we couldn\'t find the definition.</string>
+		<string name="about_title">about WordSmash</string>
+		<string name="about_main">WordSmash by RiotApps</string>
+		<string name="about_version">version: %s</string>		
+		<string name="about_build_number">build: %s</string>		
+		<string name="about_support">Need support? Have comments? Want to report a bug?</string>	 
+		<string name="about_support_link">http://www.getsatisfaction.com/wordsmash</string>	 
+		
 </resources>

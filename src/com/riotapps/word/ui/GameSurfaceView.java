@@ -928,6 +928,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 @Override
 	 public boolean onTouchEvent(MotionEvent event) {
 		 
+		 if (this.parent == null){
+			 this.readyToDraw = false;
+			 return true;
+		 }
+			 
 		 //if game is over, do not allow movement (or if game board has yet to be drawn the first time)
 		 if (this.onDrawCounter == 0 || this.parent.getGame().getStatus() == 3 || this.parent.getGame().getStatus() == 4 ){
 			 this.readyToDraw = false;

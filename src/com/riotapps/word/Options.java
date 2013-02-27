@@ -40,6 +40,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 		TextView tvQuickRules;
 		TextView tvFullRules;
 		TextView tvGravatar;
+		TextView tvAbout;
 		Button bLogout;
 		
 		final FragmentActivity context = this;
@@ -52,6 +53,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 
 	        Player player = PlayerService.getPlayerFromLocal();		
 	        
+	        tvAbout = (TextView) findViewById(R.id.tvAbout);
 	        tvFBAccountSettings = (TextView) findViewById(R.id.tvFBAccountSettings);
 	        tvAccountSettings = (TextView) findViewById(R.id.tvAccountSettings);
 	        tvGravatar = (TextView) findViewById(R.id.tvGravatar);
@@ -69,6 +71,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	        tvQuickRules.setOnClickListener(this); 
 	        tvFullRules = (TextView) findViewById(R.id.tvFullRules);
 	        tvFullRules.setOnClickListener(this); 
+	        tvAbout.setOnClickListener(this);
 	        
 	        bLogout = (Button) findViewById(R.id.bLogout);
 	        bLogout.setOnClickListener(this); 
@@ -106,7 +109,10 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	        	intent = new Intent(this, Gravatar.class);
 				startActivity(intent);
 				break;
-
+	        case R.id.tvAbout:  
+	        	intent = new Intent(this, About.class);
+				startActivity(intent);
+				break;
     	}
 	    	
         }  

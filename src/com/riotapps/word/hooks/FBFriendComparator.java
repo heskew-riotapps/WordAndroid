@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 public class FBFriendComparator  implements Comparator<FBFriend> {
 
+	/*
 	@Override
 	public int compare(FBFriend fbFriend1, FBFriend fbFriend2) {
 		  int value1 = fbFriend2.isRegisteredPlayer().compareTo(fbFriend1.isRegisteredPlayer());// .campus.compareTo(o2.campus);
@@ -16,6 +17,12 @@ public class FBFriendComparator  implements Comparator<FBFriend> {
 	            }
 	        }
 	        return value1;
+		}
+	*/
+	@Override
+	public int compare(FBFriend fbFriend1, FBFriend fbFriend2) {
+		  return fbFriend1.getName().compareTo(fbFriend2.getName());
+
 		}
 
 }

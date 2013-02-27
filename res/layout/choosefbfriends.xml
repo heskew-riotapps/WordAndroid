@@ -52,6 +52,12 @@
  			    android:paddingLeft="0dp"
 				android:paddingRight="0dp"
  			>
+	    <AutoCompleteTextView 
+	        android:id="@+id/acFriends"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:completionThreshold="1"
+		/>
     	<ListView 
     	    android:id="@+id/lvFBFriends"
     	    android:layout_below="@id/header"

@@ -36,13 +36,17 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AlphabetIndexer;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -53,7 +57,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ChooseFBFriends extends FragmentActivity implements View.OnClickListener{
+public class ChooseFBFriends extends FragmentActivity implements View.OnClickListener, TextWatcher{
 	
 	private static final String TAG = ChooseFBFriends.class.getSimpleName();
 	 
@@ -67,6 +71,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 //	int itemBGSelectedColor;
 	FBFriends friends;
 	Button bAddFBFriends;
+	AutoCompleteTextView acFriends;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,6 +123,15 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	this.loadListPrep();
     	
 
+    	 acFriends = (AutoCompleteTextView)findViewById(R.id.acFriends);
+         
+    	 String item[]={
+    			  "January", "February", "March", "April",
+    			  "May", "June", "July", "August",
+    			  "September", "October", "November", "December"
+    			};
+    	 acFriends.addTextChangedListener(this);
+    	 acFriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, item));
     	
         //bAddFBFriends.setOnClickListener(this);
            
@@ -250,6 +264,10 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     
     private void loadList(FBFriend[] fbFriends){
     	FBFriendArrayAdapter adapter = new FBFriendArrayAdapter(context, fbFriends);
+    	
+    	FBFriendAutoCompleteArrayAdapter acAdapter = new FBFriendAutoCompleteArrayAdapter(context, fbFriends);
+    	this.acFriends.setAdapter(acAdapter);
+      //  this.acFriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, item));
     
     	ListView lvFBFriends = (ListView) findViewById(R.id.lvFBFriends);
     	lvFBFriends.setAdapter(adapter); 
@@ -319,12 +337,15 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 	   	  private final ChooseFBFriends context;
 	   	  private final FBFriend[] values;
 	   	  LayoutInflater inflater;
+	   	//  AlphabetIndexer indexer;
 	   	//  public ArrayList<Integer> selectedIds = new ArrayList<Integer>();
 	
 	   	  public FBFriendArrayAdapter(ChooseFBFriends context, FBFriend[] values) {
 	   	    super(context, R.layout.choosefbfrienditem, values);
 	    	    this.context = context;
 	    	    this.values = values;
+	    	//    this.indexer = new AlphabetIndexer(c, NAME_COLUMN_INDEX,
+	        //            " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	    	    
 	    	    this.inflater = (LayoutInflater) context
 		    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -407,7 +428,87 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
    // 		  }
 	    }
   
+    private class FBFriendAutoCompleteArrayAdapter extends ArrayAdapter<FBFriend> {
+	   	  private final ChooseFBFriends context;
+	   	  private final FBFriend[] values;
+	   	  LayoutInflater inflater;
+	   	//  AlphabetIndexer indexer;
+	   	//  public ArrayList<Integer> selectedIds = new ArrayList<Integer>();
+	
+	   	  public FBFriendAutoCompleteArrayAdapter(ChooseFBFriends context, FBFriend[] values) {
+	   	    super(context, R.layout.choosefbfrienditem, values);
+	    	    this.context = context;
+	    	    this.values = values;
+	    	//    this.indexer = new AlphabetIndexer(c, NAME_COLUMN_INDEX,
+	        //            " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	    	    
+	    	    this.inflater = (LayoutInflater) context
+		    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    	  }
+	
+	    	  @Override
+	    	  public View getView(int position, View rowView, ViewGroup parent) {
+	    		 
+	    		  if ( rowView == null ) {
+	    			  rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
+	    		  }
+	    	    
+	    	   // View rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
+	    		  RelativeLayout rlItem = (RelativeLayout) rowView.findViewById(R.id.rlItem);
+	    		  
+	    		   rlItem.setBackgroundColor(selectedIds.contains(position) ? Color.parseColor(context.getString(R.color.content_area_background_selected_color)) : Color.parseColor(context.getString(R.color.content_area_background_color)));  
+	    	    
+	    		 // rlItem.setBackgroundResource(selectedIds.contains(position) ? itemBGSelectedColor : itemBGColor);
+	    		  
+		    	  FBFriend friend = values[position];
+		    	 
+		    	   TextView tvInvitationWillBeSent = (TextView) rowView.findViewById(R.id.tvInvitationWillBeSent);
+		    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
+		    	   tvPlayerName.setText(friend.getAdjustedName(23));
+		    	   ImageView ivBadge = (ImageView)rowView.findViewById(R.id.ivPlayerBadge);
+		    	   TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
+		    	   
+		    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
+		    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
+		    	   
+		    		
+		    	   if (friend.isRegisteredPlayer()){
+		    		   int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + friend.getBadgeDrawable(), null, null);
+		    		   
+			    		
 
+		   				Logger.d(TAG, "FBFriendArrayAdapter friend drawable=" + friend.getName() + " " + friend.getBadgeDrawable() + " badge=" + badgeId + " " + (ivBadge == null));
+		   				
+			   			ivBadge.setImageResource(badgeId);
+			   			
+			   			
+						if (friend.getNumWins() == 1){
+							tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
+						}
+						else if (friend.getNumWins() == -1){
+							tvPlayerWins.setText(context.getString(R.string.line_item_invited)); 
+						}
+						else{
+							tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
+						}
+						
+						tvInvitationWillBeSent.setVisibility(View.GONE);
+						ivBadge.setVisibility(View.VISIBLE);
+						tvPlayerWins.setVisibility(View.VISIBLE);
+						  
+		    	   }
+		    	   else{
+		    		   tvInvitationWillBeSent.setVisibility(View.VISIBLE);
+						ivBadge.setVisibility(View.GONE);
+						tvPlayerWins.setVisibility(View.GONE);
+		    	   }
+		    	   
+		    	   rowView.setTag(friend.getId());
+		    	   return rowView;
+	    	  }
+	    		  
+ 
+	    }
     
 private class NetworkTask extends AsyncNetworkRequest{
 		
@@ -475,5 +576,28 @@ private class NetworkTask extends AsyncNetworkRequest{
 		
  
 	}
+
+
+
+@Override
+public void afterTextChanged(Editable arg0) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+@Override
+public void beforeTextChanged(CharSequence s, int start, int count,
+		  int after) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+@Override
+public void onTextChanged(CharSequence s, int start, int before, int count) {
+	// TODO Auto-generated method stub
+	
+}
 }
         

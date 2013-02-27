@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.os.Binder;
+import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -16,6 +18,8 @@ import com.riotapps.word.utils.Logger;
 
 public class GCMIntentService extends GCMBaseIntentService {
 	private static final String TAG = GCMIntentService.class.getSimpleName();
+	
+	public String gameId = "";
 	
 	//Called when the device tries to register or unregister, but GCM returned an error. 
 	//Typically, there is nothing to be done other than evaluating the error 
@@ -34,7 +38,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onMessage(Context context, Intent intent) {
 		Logger.d(TAG, "onMessage called. data=" + intent.getStringExtra("data")  + "gameId=" + intent.getStringExtra(Constants.EXTRA_GCM_GAME_ID) + " msg=" + intent.getStringExtra(Constants.EXTRA_GCM_MESSAGE));		
 		
-	  
+	    this.gameId = intent.getStringExtra(Constants.EXTRA_GCM_GAME_ID);
 		this.sendMessage(context, intent.getStringExtra(Constants.EXTRA_GCM_GAME_ID), intent.getStringExtra(Constants.EXTRA_GCM_MESSAGE));
 	}
 
@@ -56,6 +60,27 @@ public class GCMIntentService extends GCMBaseIntentService {
 		
 	}
 	
+    /**
+     * Class for clients to access.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with
+     * IPC.
+     
+    public class LocalBinder extends Binder {
+    	GCMIntentService getService() {
+            return GCMIntentService.this;
+        }
+    }
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    // This is the object that receives interactions from clients.  See
+    // RemoteService for a more complete example.
+    private final IBinder mBinder = new LocalBinder();
+
+	
 	//Called when the device tries to register or unregister, but the GCM servers are unavailable. 
 	//The GCM library will retry the operation using exponential backup,
 	//unless this method is overridden and returns false. This method is optional and should be overridden 
@@ -66,10 +91,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 		return true;
 	}
 	
-	
+	*/ 
 	private void sendMessage(Context context, String gameId, String message){
 		//"message_text"
 		//only send message if user is connected to wordsmash
+	
 		
 		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, 0);
 	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
@@ -112,6 +138,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 				mNotificationManager.notify(1, mBuilder.build());
 			}
 	    }
+	    
+		
+		Intent intent = new Intent(Constants.INTENT_GCM_MESSAGE_RECEIVED);
+		intent.putExtra(Constants.EXTRA_GAME_ID, gameId);
+	    this.sendBroadcast(intent);
 	}
 	
 }

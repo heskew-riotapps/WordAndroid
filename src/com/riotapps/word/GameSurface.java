@@ -1,10 +1,7 @@
 package com.riotapps.word;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-
 import org.apache.http.conn.ConnectTimeoutException;
 
 import com.google.ads.Ad;
@@ -45,15 +42,20 @@ import com.riotapps.word.utils.Utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -75,7 +77,6 @@ import java.util.TimerTask;
 //Import the Chartboost SDK
 import com.chartboost.sdk.Chartboost;
 import com.chartboost.sdk.ChartboostDelegate;
-import com.chartboost.sdk.Analytics.CBAnalytics;
 
 //import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -106,6 +107,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 private RevMobAdsListener revmobListener;
 	 private RevMobFullscreen revMobFullScreen;
 	 private boolean hasFinalPostTurnRun = false;
+	 private boolean isBoundToGCMService = false;
 	 
 	 private Timer timer = null;
 	 private Timer runawayAdTimer = null;
@@ -259,43 +261,67 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		this.checkGameStatus();
 	 	this.captureTime("checkGameStatus ended");
 	 	this.checkFirstTimeStatus();
-	 	this.setupTimer();
+	 	//this.setupTimer();
 	 	this.setupAdServer();
+	 	this.setupGCMReceiver();
 	 }
+	
+	private void setupGCMReceiver(){
+		this.registerReceiver(new BroadcastReceiver() {
+		    @Override
+		    public void onReceive(Context context, Intent intent) {
+		    	 
+				String messageGameId = intent.getStringExtra(Constants.EXTRA_GAME_ID);
+		    	
+				//refresh the game if its not the user's turn and a message is received from gcm.
+				//determine logic difference between incoming comment message and played turn message
+				if (messageGameId.equals(GameSurface.this.game.getId()) && !GameSurface.this.game.isContextPlayerTurn(GameSurface.this.player)){
+					((Activity) context).runOnUiThread(new handleGameRefresh());
+				}
+		    	// Toast.makeText(GameSurface.this, (messageGameId.equals(GameSurface.this.game.getId()) ? "true" : "false"),
+			     //           Toast.LENGTH_LONG).show();
+		    }
+		}, new IntentFilter(Constants.INTENT_GCM_MESSAGE_RECEIVED));
+		
+	}
 
 	private void setupAdServer(){
+		Logger.d(TAG, "setupAdServer called");
+		
 	 	boolean isAdMob = Constants.INTERSTITIAL_ADMOB;
 	 	boolean isChartBoost = Constants.INTERSTITIAL_CHARTBOOST;
 		boolean isRevMob = Constants.INTERSTITIAL_REVMOB;
+		final int useRevMob = 0;
 		
 	 	if (!Constants.HIDE_ALL_ADS)
 	 	{
-	 		//assign either chartboost or revmob
+	 		//assign either chartboost or revmob randomly
 	 		if (isChartBoost && isRevMob){
-				Random r = new Random();
-				int i1=r.nextInt(3-1) + 1;
-				 			
-				if (i1 == 1){
-					isChartBoost = false;
+	 			
+	 			int coinFlip = (int)(Math.random() * 2);
+ 
+	 			if (coinFlip == useRevMob ){
+		 			isChartBoost = false;
 				}
 				else{
-					isRevMob = false;
+		 			isRevMob = false;
 				}
 			}
 
 	 		if (isRevMob){
+	 			Logger.d(TAG, "setupAdServer isRevMob=true");
+	 			
+	 			
 		 		this.isRevMobActive = true;
 		 		this.revmob = RevMob.start(this, this.getString(R.string.rev_mob_app_id));
 	 		}
 	 		else if (isChartBoost){
+	 			Logger.d(TAG, "setupAdServer isCharBoost=true");
+	 			
 		 		this.isChartBoostActive = true;
-				this.cb = Chartboost.sharedChartboost();
-				this.cb.onCreate(this, this.getString(R.string.chartboost_app_id), this.getString(R.string.chartboost_app_signature), this.chartBoostDelegate);
-				this.cb.setImpressionsUseActivities(true);
-				this.cb.startSession();
-				this.cb.cacheInterstitial();
+		 		this.setupChartBoost();
 	 		}
-	 		else if(Constants.INTERSTITIAL_ADMOB){
+	 		else if (isAdMob){
 	 			this.isAdMobActive = true;
 	 		}
 	 	}
@@ -303,30 +329,15 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 		this.hideInterstitialAd = true;
 	 	}
 	 		 		
-/*
-	 	
-	 	if (this.player.isNoInterstitialAdsOption() || Constants.HIDE_ALL_ADS){
-	 		this.hideInterstitialAd = true;
-	 	}
-	 	if (!this.hideInterstitialAd && Constants.INTERSTITIAL_CHARTBOOST){
-	 		this.isChartBoostActive = true;
-			this.cb = Chartboost.sharedChartboost();
-			this.cb.onCreate(this, this.getString(R.string.chartboost_app_id), this.getString(R.string.chartboost_app_signature), this.chartBoostDelegate);
-			this.cb.setImpressionsUseActivities(true);
-			this.cb.startSession();
-			this.cb.cacheInterstitial();
-	 	}
-	 	else if (!this.hideInterstitialAd && Constants.INTERSTITIAL_ADMOB){
-	 		this.isAdMobActive = true;
-	 	}
-	 	else if (!this.hideInterstitialAd && Constants.INTERSTITIAL_REVMOB){
-	 		this.isRevMobActive = true;
-	 		this.revmob = RevMob.start(this, this.getString(R.string.rev_mob_app_id));
-	 	}
+	}
+	
+	private void setupChartBoost(){
+		this.cb = Chartboost.sharedChartboost();
+		this.cb.onCreate(this, this.getString(R.string.chartboost_app_id), this.getString(R.string.chartboost_app_signature), this.chartBoostDelegate);
+		this.cb.setImpressionsUseActivities(true);
+		this.cb.startSession();
+		this.cb.cacheInterstitial();
 
-	*/ 	
-	 	
-	 	
 	}
 	
 	public void captureTime(String text){
@@ -335,7 +346,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	     this.runningTime = this.captureTime;
 
 	}
-	
+	/*
 	private void setupTimer(){
 		this.setupTimer(Constants.GAME_SURFACE_CHECK_START_IN_MILLISECONDS);
 	}
@@ -375,7 +386,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     		   }
     	   }
     }
-	
+	*/
 	private void setupGame(){
 		 Logger.d(TAG,"setupGame game turn=" + this.game.getTurn());
 		this.contextPlayerGame = GameService.loadScoreboard(this, this.game, this.player);
@@ -832,6 +843,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	//	}
 		
 		super.onDestroy();
+		//doUnbindService();
 	}
 
 	@Override
@@ -842,7 +854,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			GameStateService.setGameState(this, this.getGameState());
 		}
 		
-		this.stopTimer();
+	///	this.stopTimer();
 		this.stopRunawayAdTimer();
 		this.gameSurfaceView.onStop();
 	//	if (this.wordLoaderThread != null){
@@ -858,8 +870,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		
 		if (this.isChartBoostActive){
 			this.cb.onStop(this);
+			this.cb = null;
 		}
 		
+		if (this.isRevMobActive){
+			this.revMobFullScreen = null;
+			this.revmobListener = null;
+			this.revmob = null;			
+		}
 		
 	}
 
@@ -877,7 +895,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			GameStateService.setGameState(this, this.getGameState());
 		}
 		
-		this.stopTimer();
+	///	this.stopTimer();
 		this.stopRunawayAdTimer();
 
 	//	try{
@@ -924,15 +942,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				//	this.captureTime("setup timer_ starting");
 			
 				Logger.d(TAG,"onResume - setup timer about to be called");
-				this.setupTimer();
+				//this.setupTimer();
 				if (this.runningTask != null){
 					this.runningTask.dismiss();
 				}
 
 		}
 			 
-		
-		
+
 	}
 
 	
@@ -1022,7 +1039,13 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	protected void onStart() {
 		super.onStart();
 		
+		Logger.d(TAG, "onStart isChartBoostActive=" + isChartBoostActive + " isRevMobActive=" + isRevMobActive);
+		//Toast.makeText(this, "onstart cb=" + isChartBoostActive + " rm="  + isRevMobActive, Toast.LENGTH_SHORT).show();
+		
 		if (this.isChartBoostActive) {
+			if (this.cb == null) {
+				this.setupChartBoost();	
+			}
 			this.cb.onStart(this);
 		}
 		
@@ -1068,9 +1091,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 					
 				}
 	        };
+	        if (this.revmob == null){
+	        	this.revmob = RevMob.start(this, this.getString(R.string.rev_mob_app_id));	
+	        }
 	        this.revMobFullScreen = revmob.createFullscreen(this, this.getString(R.string.rev_mob_main_between_play), this.revmobListener);
 		}
-		
+		//this.doBindService();
 		
 	}
 	
@@ -1114,7 +1140,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				this.gameSurfaceView.setInitialButtonStates();
 				this.isButtonActive = false;
 			}
-			this.setupTimer(Constants.GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS);
+			///this.setupTimer(Constants.GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS);
 		}
 	}
 
@@ -1552,9 +1578,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    			 	 			 gameSurfaceView.resetGameAfterRefresh();
 	    			 	 			 
 	    			 	 			 if (context.isRevMobActive){
-	    			 	 				 
+	    			 	 				GameSurface.this.revMobFullScreen = GameSurface.this.revmob.createFullscreen(GameSurface.this, GameSurface.this.getString(R.string.rev_mob_main_between_play), GameSurface.this.revmobListener);
 	    			 	 			 }
-	    			 	 			 setupTimer();
+	    			 	 			 ///setupTimer();
 	    		            	 }
 	    		            	 else {
 	    		            		 context.handlePostTurn(this.actionType, result.getResult());
@@ -2130,7 +2156,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				 			setupGame();
 				 			checkGameStatus();
 				 			gameSurfaceView.resetGameAfterPlay();
-				 			this.setupTimer();
+				 			///this.setupTimer();
 			
 				 			break;
 			    	 	case SKIP:
@@ -2139,7 +2165,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				 			setupGame();
 				 			checkGameStatus();
 				 			gameSurfaceView.resetGameAfterPlay();
-				 			this.setupTimer();
+				 		///this.setupTimer();
 				 			break;
 			    	 	case SWAP:
 			
@@ -2147,7 +2173,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			    	 		Logger.d(TAG,"handlePostTurnFinalAction SWAP");
 				 			setupGame();
 				 			gameSurfaceView.resetGameAfterPlay();
-				 			this.setupTimer();
+				 			//this.setupTimer();
 			    	 		break;
 				    	}	
 		    	 }
@@ -2527,6 +2553,58 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				return true;
 			}
 		};
-		
 
+		
+		
+		
+		
+		/*
+		//let's bind to the GCM Service so that when player is in the context of a game, and an alert
+		//for that specific game is detected, we will run a refresh of the game to get latest
+		//doing this will allow the removal of the refresh timer
+		private GCMIntentService mBoundService;
+
+		private ServiceConnection mConnection = new ServiceConnection() {
+		    public void onServiceConnected(ComponentName className, IBinder service) {
+		        // This is called when the connection with the service has been
+		        // established, giving us the service object we can use to
+		        // interact with the service.  Because we have bound to a explicit
+		        // service that we know is running in our own process, we can
+		        // cast its IBinder to a concrete class and directly access it.
+		        mBoundService = ((GCMIntentService.LocalBinder)service).getService();
+
+		        // Tell the user about this for our demo.
+		        Toast.makeText(GameSurface.this, mBoundService.gameId,
+		                Toast.LENGTH_LONG).show();
+		    }
+
+		    public void onServiceDisconnected(ComponentName className) {
+		        // This is called when the connection with the service has been
+		        // unexpectedly disconnected -- that is, its process crashed.
+		        // Because it is running in our same process, we should never
+		        // see this happen.
+		        mBoundService = null;
+		        Toast.makeText(GameSurface.this, "disconnected",
+		                Toast.LENGTH_LONG).show();
+		    }
+		};
+
+		void doBindService() {
+		    // Establish a connection with the service.  We use an explicit
+		    // class name because we want a specific service implementation that
+		    // we know will be running in our own process (and thus won't be
+		    // supporting component replacement by other applications).
+		    bindService(new Intent(GameSurface.this, 
+		    		GCMIntentService.class), mConnection, Context.BIND_AUTO_CREATE);
+		    isBoundToGCMService = true;
+		}
+		
+		void doUnbindService() {
+			if (isBoundToGCMService) {
+				// Detach our existing connection.
+				unbindService(mConnection); 
+				isBoundToGCMService = false;
+				}
+			}
+ 	*/
 }

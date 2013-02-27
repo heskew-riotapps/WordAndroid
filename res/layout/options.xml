@@ -80,6 +80,12 @@
         style="@style/TextLineItemCenteredStyle"
         android:text="@string/full_rules_option" 
         android:id="@+id/tvFullRules"
+        
+        />
+      <com.riotapps.word.ui.MainFontTextView
+        style="@style/TextLineItemCenteredStyle"
+        android:text="@string/about_option" 
+        android:id="@+id/tvAbout"
             android:background="@drawable/text_selector_bottom"
         />
           </LinearLayout>

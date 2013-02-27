@@ -888,6 +888,8 @@ public class PlayerService {
 
      	//friends.getFriends().get(40).setPlayerId("123");
      	
+     	//adding AlphabetIndexer, so do not sort already registered users to the top
+     	//these users may be displayed in separate UI at some point
      	Collections.sort(friends.getFriends(), new FBFriendComparator());
         
         editor.putLong(Constants.USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME, Utils.convertNanosecondsToMilliseconds(System.nanoTime()));
