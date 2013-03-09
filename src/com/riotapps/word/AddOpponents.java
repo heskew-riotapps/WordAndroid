@@ -45,6 +45,7 @@ import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -83,16 +84,14 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
         setContentView(R.layout.addopponents);
-        
-       // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
-
+  
         Logger.d(TAG, "AddOpponents onCreate called");
         player = PlayerService.getPlayerFromLocal();
     	PlayerService.loadPlayerInHeader(this);
    
     	Intent i = getIntent();
     	this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
-    	settings = this.getSharedPreferences(Constants.USER_PREFS, MODE_PRIVATE); //getPreferences(MO
+    	settings = this.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS); //getPreferences(MO
  
     	Button bStartGame = (Button)findViewById(R.id.bStartGame); 
     	Button bCancelGame = (Button)findViewById(R.id.bCancelGame); 

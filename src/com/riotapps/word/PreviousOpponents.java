@@ -47,9 +47,7 @@ public class PreviousOpponents extends FragmentActivity implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.previousopponents);
-        
-       // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
-
+ 
         Logger.d(TAG, "PreviousOpponents onCreate called");
         
         this.imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);

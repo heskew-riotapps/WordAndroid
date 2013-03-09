@@ -30,7 +30,7 @@ public class SessionStore {
     
     public static boolean save(Facebook session, Context context) {
         Editor editor =
-            context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();
+            context.getSharedPreferences(KEY, Context.MODE_MULTI_PROCESS).edit();
         editor.putString(TOKEN, session.getAccessToken());
         editor.putLong(EXPIRES, session.getAccessExpires());
         return editor.commit();
@@ -38,7 +38,7 @@ public class SessionStore {
 
     public static boolean restore(Facebook session, Context context) {
         SharedPreferences savedSession =
-            context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+            context.getSharedPreferences(KEY, Context.MODE_MULTI_PROCESS);
         session.setAccessToken(savedSession.getString(TOKEN, null));
         session.setAccessExpires(savedSession.getLong(EXPIRES, 0));
         return session.isSessionValid();
@@ -46,7 +46,7 @@ public class SessionStore {
 
     public static void clear(Context context) {
         Editor editor = 
-            context.getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();
+            context.getSharedPreferences(KEY, Context.MODE_MULTI_PROCESS).edit();
         editor.clear();
         editor.commit();
     }

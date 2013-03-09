@@ -1,12 +1,8 @@
 package com.riotapps.word;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import com.facebook.Session;
@@ -15,9 +11,7 @@ import com.riotapps.word.hooks.FBFriends;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
-import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
-import com.riotapps.word.ui.CustomDialog;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
@@ -26,14 +20,15 @@ import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.NetworkTaskResult;
-import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -44,42 +39,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AlphabetIndexer;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ChooseFBFriends extends FragmentActivity implements View.OnClickListener, TextWatcher{
-	
+public class ChooseFBFriends extends FragmentActivity implements View.OnClickListener{
+
 	private static final String TAG = ChooseFBFriends.class.getSimpleName();
-	 
-	Player player;
-	ChooseFBFriends context = this;
-	Game game;
-	int maxAvailable;
-	ImageFetcher imageLoader;
-	ArrayList<Integer> selectedIds = new ArrayList<Integer>();
-//	int itemBGColor;
-//	int itemBGSelectedColor;
-	FBFriends friends;
-	Button bAddFBFriends;
-	AutoCompleteTextView acFriends;
+
+	private Player player;
+	private ChooseFBFriends context = this;
+	private Game game;
+	private int maxAvailable;
+	private ImageFetcher imageLoader;
+	private ArrayList<Integer> selectedIds = new ArrayList<Integer>();
+	private FBFriends friends;
+	private Button bAddFBFriends;
+	private EditText etSearch;
+	//private FBFriend[] fullArray;
+	//private FBFriend[] workingArray;
 	
+	private List<FBFriend> fullList;
+	private List<FBFriend> workingList;
+	private List<FBFriend> searchList = new ArrayList<FBFriend>();
+	private FBFriendArrayAdapter adapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choosefbfriends);
         
-       // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
-
+     
         Logger.d(TAG, "ChooseFBFriends onCreate called");
         
         this.imageLoader = new ImageFetcher(this, Constants.DEFAULT_AVATAR_SIZE, Constants.DEFAULT_AVATAR_SIZE, 0);
@@ -122,16 +117,9 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	
     	this.loadListPrep();
     	
-
-    	 acFriends = (AutoCompleteTextView)findViewById(R.id.acFriends);
-         
-    	 String item[]={
-    			  "January", "February", "March", "April",
-    			  "May", "June", "July", "August",
-    			  "September", "October", "November", "December"
-    			};
-    	 acFriends.addTextChangedListener(this);
-    	 acFriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, item));
+    	this.etSearch = (EditText)this.findViewById(R.id.etSearch);
+    	 
+    	this.etSearch.addTextChangedListener(new EditTextWatcher(this.etSearch));
     	
         //bAddFBFriends.setOnClickListener(this);
            
@@ -144,7 +132,62 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 		//	}
 
     }
-  
+    private class EditTextWatcher implements TextWatcher {
+        private EditText editText;
+
+        public EditTextWatcher(EditText e) { 
+        	editText = e;
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        public void afterTextChanged(Editable s) {
+        	//Toast.makeText(context, editText.getText(), Toast.LENGTH_LONG).show();
+        	//context.fullArray = context.friends.getFriends(). 
+        	
+        	String term = editText.getText().toString().trim();
+             
+//       	 Logger.d(TAG, "term=" + term);
+             if (term.length() > 0)
+             { 
+            	 context.workingList = new ArrayList<FBFriend>();
+            	// Logger.d(TAG, "context.fullList=" + context.fullList.size() );
+            	//context.searchList.clear();
+           	 //Logger.d(TAG, "context.fullList=" + context.fullList.size() );
+
+                for (FBFriend f : context.fullList) {
+                    if (f.nameStartsWith(term)) {
+                    	context.workingList.add(f);
+                    }
+                 }
+             }
+             else {
+            	// Logger.d(TAG, "term.length=0 context.fullList=" + context.fullList.size() );
+            	 context.loadWorkingListFromFull();
+             }
+             
+           //  Logger.d(TAG, "afterTextChanged matches=" + context.workingList.size());
+   	             
+        	//context.adapter.clear();
+        	//context.adapter.addAll(context.workingList);
+
+        	// notify the list that the underlying model has changed
+            context.adapter.updateList(context.workingList); 
+        	context.adapter.notifyDataSetChanged();
+        }
+    }
+    
+    private void loadWorkingListFromFull(){
+     
+    	this.workingList = new ArrayList<FBFriend>();
+    	for (FBFriend fb : this.fullList){
+    		this.workingList.add(fb);
+    	}
+    }
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -195,10 +238,10 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 	    	this.bAddFBFriends.setVisibility(View.VISIBLE);
     	}
     }
-	
-	
+
+
     private void addPlayers(){
-		
+
 		try 
 		{
 			if (this.selectedIds.size() == 0){
@@ -208,7 +251,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 				DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.validation_too_many_players), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
 			}
 			else{
-				
+
 				for(int i = 0; i < this.selectedIds.size(); i++){
 					FBFriend friend = friends.getFriends().get(selectedIds.get(i));
 					Logger.d(TAG, "addPlayers friend.getPlayerId()=" + friend.getPlayerId() );
@@ -219,7 +262,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 					opponent.setFirstName(friend.getName());
 					this.game = GameService.addPlayerToGame(this, this.game, opponent);
 				}
-	
+
 				Intent intent = new Intent(this, com.riotapps.word.AddOpponents.class);
 	       	    intent.putExtra(Constants.EXTRA_GAME, this.game);
 	    	    this.startActivity(intent);
@@ -236,38 +279,43 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	
     	String json;
 		try {
-			
-			SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+
+			SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 			long currentTime = Utils.convertNanosecondsToMilliseconds(System.nanoTime());
 			long lastCheckTime = settings.getLong(Constants.USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME, 0);
-			
+
 			if (lastCheckTime == 0 || currentTime - lastCheckTime > Constants.REGISTERED_FB_FRIENDS_CACHE_DURATION){
 
 				json = PlayerService.setupFindPlayersByFB(context);
 				//fetch fb friends (which is already stored locally) that are registered with wordsmash already
 			//	Logger.d(TAG, "loadListPrep json=" + json);
-				
+
 		    	new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_syncing)).execute(Constants.REST_FIND_REGISTERED_FB_FRIENDS);
 			}
 			else {
 				 this.friends = PlayerService.getLocalFBFriends(this.context);
-            	 loadList(this.friends.getArray());
+				 this.fullList = this.friends.getFriends();
+				 this.loadWorkingListFromFull();
+				 loadList();
+            	 
+            	 Logger.d(TAG, "loadListPrep numFriends=" + this.friends.getFriends().size());
+             	//Toast.makeText(context, this.friends.getArray().length, Toast.LENGTH_LONG).show();
+
 			}
-		
+
 		} catch (DesignByContractException e) {
 			DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage(), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
 		}
-		
+
 		//if we already have the friends list stored locally just load the list 
 		//this.loadList();
     }
     
-    private void loadList(FBFriend[] fbFriends){
-    	FBFriendArrayAdapter adapter = new FBFriendArrayAdapter(context, fbFriends);
+    private void loadList(){
+    	//this.fullArray = fbFriends;
     	
-    	FBFriendAutoCompleteArrayAdapter acAdapter = new FBFriendAutoCompleteArrayAdapter(context, fbFriends);
-    	this.acFriends.setAdapter(acAdapter);
-      //  this.acFriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, item));
+    	
+    	this.adapter = new FBFriendArrayAdapter(context, this.workingList); //bFriends);
     
     	ListView lvFBFriends = (ListView) findViewById(R.id.lvFBFriends);
     	lvFBFriends.setAdapter(adapter); 
@@ -335,58 +383,76 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     
     private class FBFriendArrayAdapter extends ArrayAdapter<FBFriend> {
 	   	  private final ChooseFBFriends context;
-	   	  private final FBFriend[] values;
+	   	 // private final FBFriend[] values;
+	   	  private List<FBFriend> values;
 	   	  LayoutInflater inflater;
-	   	//  AlphabetIndexer indexer;
 	   	//  public ArrayList<Integer> selectedIds = new ArrayList<Integer>();
-	
-	   	  public FBFriendArrayAdapter(ChooseFBFriends context, FBFriend[] values) {
-	   	    super(context, R.layout.choosefbfrienditem, values);
+
+	   	  public FBFriendArrayAdapter(ChooseFBFriends context, List<FBFriend> friends){ // FBFriend[] values) {
+	   	    super(context, R.layout.choosefbfrienditem, friends);
 	    	    this.context = context;
-	    	    this.values = values;
-	    	//    this.indexer = new AlphabetIndexer(c, NAME_COLUMN_INDEX,
-	        //            " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	    	    
-	    	    this.inflater = (LayoutInflater) context
-		    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    	    this.values = friends;
+
+	    	    this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    	  }
-	
+
+	   	     @SuppressLint("NewApi")
+			public void updateList(List<FBFriend> friends){ 
+		   	    	Logger.d(TAG, "adapter before friends=" + friends.size());
+	   	    	 this.values = friends;
+		   	    	Logger.d(TAG, "adapter after friends=" + friends.size());
+		   	    	Logger.d(TAG, "adapter before super.getCount()" + super.getCount());
+	   	    	 super.clear();
+	   	    	 
+	   	    	 //add all not available until api 11
+	   	    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	   	    		super.addAll(friends);
+	   	    	} 
+	   	    	else {
+	   	    	 
+		   	    	for (FBFriend f : friends) {
+		   	    		super.add(f);
+		   	    	}
+	   	    	}
+	   	    	Logger.d(TAG, "adapter after super.getCount()" + super.getCount());
+	   	     }
+	   	  
 	    	  @Override
 	    	  public View getView(int position, View rowView, ViewGroup parent) {
-	    		 
+
 	    		  if ( rowView == null ) {
 	    			  rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
 	    		  }
-	    	    
+
 	    	   // View rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
 	    		  RelativeLayout rlItem = (RelativeLayout) rowView.findViewById(R.id.rlItem);
-	    		  
+
 	    		   rlItem.setBackgroundColor(selectedIds.contains(position) ? Color.parseColor(context.getString(R.color.content_area_background_selected_color)) : Color.parseColor(context.getString(R.color.content_area_background_color)));  
-	    	    
+
 	    		 // rlItem.setBackgroundResource(selectedIds.contains(position) ? itemBGSelectedColor : itemBGColor);
-	    		  
-		    	  FBFriend friend = values[position];
-		    	 
+
+		    	  FBFriend friend = values.get(position);// values[position];
+
 		    	   TextView tvInvitationWillBeSent = (TextView) rowView.findViewById(R.id.tvInvitationWillBeSent);
 		    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
 		    	   tvPlayerName.setText(friend.getAdjustedName(23));
 		    	   ImageView ivBadge = (ImageView)rowView.findViewById(R.id.ivPlayerBadge);
 		    	   TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
-		    	   
+
 		    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
 		    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
-		    	   
-		    		
+
+
 		    	   if (friend.isRegisteredPlayer()){
 		    		   int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + friend.getBadgeDrawable(), null, null);
-		    		   
-			    		
 
-		   				Logger.d(TAG, "FBFriendArrayAdapter friend drawable=" + friend.getName() + " " + friend.getBadgeDrawable() + " badge=" + badgeId + " " + (ivBadge == null));
-		   				
+
+
+		   				//Logger.d(TAG, "FBFriendArrayAdapter friend drawable=" + friend.getName() + " " + friend.getBadgeDrawable() + " badge=" + badgeId + " " + (ivBadge == null));
+
 			   			ivBadge.setImageResource(badgeId);
-			   			
-			   			
+
+
 						if (friend.getNumWins() == 1){
 							tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
 						}
@@ -396,22 +462,22 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
 						else{
 							tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
 						}
-						
+
 						tvInvitationWillBeSent.setVisibility(View.GONE);
 						ivBadge.setVisibility(View.VISIBLE);
 						tvPlayerWins.setVisibility(View.VISIBLE);
-						  
+
 		    	   }
 		    	   else{
 		    		   tvInvitationWillBeSent.setVisibility(View.VISIBLE);
 						ivBadge.setVisibility(View.GONE);
 						tvPlayerWins.setVisibility(View.GONE);
 		    	   }
-		    	   
+
 		    	   rowView.setTag(friend.getId());
 		    	   return rowView;
 	    	  }
-	    		  
+
     	//	  @Override
     	//	  public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 //
@@ -428,92 +494,12 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
    // 		  }
 	    }
   
-    private class FBFriendAutoCompleteArrayAdapter extends ArrayAdapter<FBFriend> {
-	   	  private final ChooseFBFriends context;
-	   	  private final FBFriend[] values;
-	   	  LayoutInflater inflater;
-	   	//  AlphabetIndexer indexer;
-	   	//  public ArrayList<Integer> selectedIds = new ArrayList<Integer>();
-	
-	   	  public FBFriendAutoCompleteArrayAdapter(ChooseFBFriends context, FBFriend[] values) {
-	   	    super(context, R.layout.choosefbfrienditem, values);
-	    	    this.context = context;
-	    	    this.values = values;
-	    	//    this.indexer = new AlphabetIndexer(c, NAME_COLUMN_INDEX,
-	        //            " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	    	    
-	    	    this.inflater = (LayoutInflater) context
-		    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    	  }
-	
-	    	  @Override
-	    	  public View getView(int position, View rowView, ViewGroup parent) {
-	    		 
-	    		  if ( rowView == null ) {
-	    			  rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
-	    		  }
-	    	    
-	    	   // View rowView = inflater.inflate(R.layout.choosefbfrienditem, parent, false);
-	    		  RelativeLayout rlItem = (RelativeLayout) rowView.findViewById(R.id.rlItem);
-	    		  
-	    		   rlItem.setBackgroundColor(selectedIds.contains(position) ? Color.parseColor(context.getString(R.color.content_area_background_selected_color)) : Color.parseColor(context.getString(R.color.content_area_background_color)));  
-	    	    
-	    		 // rlItem.setBackgroundResource(selectedIds.contains(position) ? itemBGSelectedColor : itemBGColor);
-	    		  
-		    	  FBFriend friend = values[position];
-		    	 
-		    	   TextView tvInvitationWillBeSent = (TextView) rowView.findViewById(R.id.tvInvitationWillBeSent);
-		    	   TextView tvPlayerName = (TextView) rowView.findViewById(R.id.tvPlayerName);
-		    	   tvPlayerName.setText(friend.getAdjustedName(23));
-		    	   ImageView ivBadge = (ImageView)rowView.findViewById(R.id.ivPlayerBadge);
-		    	   TextView tvPlayerWins = (TextView)rowView.findViewById(R.id.tvPlayerWins);
-		    	   
-		    	   ImageView ivPlayer = (ImageView)rowView.findViewById(R.id.ivPlayer);
-		    	   imageLoader.loadImage(friend.getImageUrl(), ivPlayer);  
-		    	   
-		    		
-		    	   if (friend.isRegisteredPlayer()){
-		    		   int badgeId = getResources().getIdentifier("com.riotapps.word:drawable/" + friend.getBadgeDrawable(), null, null);
-		    		   
-			    		
 
-		   				Logger.d(TAG, "FBFriendArrayAdapter friend drawable=" + friend.getName() + " " + friend.getBadgeDrawable() + " badge=" + badgeId + " " + (ivBadge == null));
-		   				
-			   			ivBadge.setImageResource(badgeId);
-			   			
-			   			
-						if (friend.getNumWins() == 1){
-							tvPlayerWins.setText(context.getString(R.string.line_item_1_win)); 
-						}
-						else if (friend.getNumWins() == -1){
-							tvPlayerWins.setText(context.getString(R.string.line_item_invited)); 
-						}
-						else{
-							tvPlayerWins.setText(String.format(context.getString(R.string.line_item_num_wins),friend.getNumWins())); 
-						}
-						
-						tvInvitationWillBeSent.setVisibility(View.GONE);
-						ivBadge.setVisibility(View.VISIBLE);
-						tvPlayerWins.setVisibility(View.VISIBLE);
-						  
-		    	   }
-		    	   else{
-		    		   tvInvitationWillBeSent.setVisibility(View.VISIBLE);
-						ivBadge.setVisibility(View.GONE);
-						tvPlayerWins.setVisibility(View.GONE);
-		    	   }
-		    	   
-		    	   rowView.setTag(friend.getId());
-		    	   return rowView;
-	    	  }
-	    		  
- 
-	    }
     
 private class NetworkTask extends AsyncNetworkRequest{
-		
+
 	ChooseFBFriends context;
-		
+
 		public NetworkTask(ChooseFBFriends ctx, RequestType requestType,
 				String json,
 				String shownOnProgressDialog) {
@@ -526,10 +512,10 @@ private class NetworkTask extends AsyncNetworkRequest{
 		protected void onPostExecute(NetworkTaskResult result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			
+
 			this.handleResponse(result);
-			
-			
+
+
 		}
  
 		private void handleResponse(NetworkTaskResult result){  
@@ -540,11 +526,13 @@ private class NetworkTask extends AsyncNetworkRequest{
 		         switch(result.getStatusCode()){  
 		             case 200:  
 		             case 201: {
-		            	 
+
 		            	// Logger.d(TAG, "handleResponse result=" + result.getResult());
-		            	 
+
 		            	 friends = PlayerService.findRegisteredFBFriendsResponse(this.context, result.getResult());
-		            	 loadList(friends.getArray());
+		            	 fullList = friends.getFriends();
+		            	 loadWorkingListFromFull();
+		            	 loadList();
 		                 break;  
 
 		             }//end of case 200 & 201 
@@ -573,31 +561,9 @@ private class NetworkTask extends AsyncNetworkRequest{
 
 		     }//end of else  
 		}
-		
+
  
 	}
-
-
-
-@Override
-public void afterTextChanged(Editable arg0) {
-	// TODO Auto-generated method stub
-	
+ 
 }
-
-
-@Override
-public void beforeTextChanged(CharSequence s, int start, int count,
-		  int after) {
-	// TODO Auto-generated method stub
-	
-}
-
-
-@Override
-public void onTextChanged(CharSequence s, int start, int before, int count) {
-	// TODO Auto-generated method stub
-	
-}
-}
-        
+   

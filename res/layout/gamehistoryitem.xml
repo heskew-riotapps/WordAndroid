@@ -29,7 +29,7 @@
         android:layout_height="wrap_content" 
         android:layout_toRightOf="@id/ivPlayer"/>
  
-     <com.riotapps.word.ui.MainFontTextView 
+     <com.riotapps.word.ui.ScoreboardFontTextView 
         style="@style/TextStyle"
         android:textSize="12dp"
      	android:id="@+id/tvTurnInfo"

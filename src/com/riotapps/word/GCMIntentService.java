@@ -97,7 +97,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		//only send message if user is connected to wordsmash
 	
 		
-		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
 	       	    
 	    if (storedToken.length() > 0){

@@ -1,29 +1,21 @@
 package com.riotapps.word;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
-import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Logger;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class StartGame extends FragmentActivity implements View.OnClickListener{
 	
@@ -36,10 +28,7 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startgame);
-        
-       // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
-
-        
+         
         player = PlayerService.getPlayerFromLocal();
     	PlayerService.loadPlayerInHeader(this);
         

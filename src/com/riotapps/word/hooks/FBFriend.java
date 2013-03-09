@@ -3,10 +3,12 @@ package com.riotapps.word.hooks;
 import java.util.Comparator;
 
 import com.google.gson.annotations.SerializedName;
+import com.riotapps.word.ChooseFBFriends;
 import com.riotapps.word.utils.Constants;
+import com.riotapps.word.utils.Logger;
 
 public class FBFriend{
-	
+	private static final String TAG = FBFriend.class.getSimpleName();
 	public FBFriend(){}
 	
 	private String id;
@@ -63,6 +65,24 @@ public class FBFriend{
 		return PlayerService.getBadgeDrawable(this.numWins);
 	}
 		
+	public boolean nameStartsWith(String s){
+		if (this.name.length() == 0) {return false;}
+		else{
+			String[] parts = this.name.split(" ");
+			
+			//Logger.d(TAG, "nameStartsWith s=" + s);
+			
+			for (int x = 0;x < parts.length; x++){
+				//Logger.d(TAG, "nameStartsWith parts=" + parts[x].toLowerCase());
+				if (parts[x].toLowerCase().startsWith(s.toLowerCase())) {
+				//	Logger.d(TAG, "nameStartsWith parts=" + parts[x].toLowerCase() + " TRUE!!!!!");
+					return true;
+				}
+			}			
+			return false;
+		}
+	}
+	
 	public String getAdjustedName(int max){
 		if (this.name.length() <= max) {return this.name;}
 		else{

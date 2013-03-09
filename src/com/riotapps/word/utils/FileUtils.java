@@ -1,13 +1,8 @@
 package com.riotapps.word.utils;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import com.riotapps.word.Splash;
-
 import android.content.Context;
 
 public class FileUtils {

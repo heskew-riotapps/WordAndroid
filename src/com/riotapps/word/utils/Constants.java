@@ -44,6 +44,7 @@ public class Constants {
 	public static final long GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS = 120000;// = 2 minutes
 	public static final long GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS = 18000;// 2 seconds;
 	public static final long GAME_SURFACE_INTERSTITIAL_AD_CHECK_IN_MILLISECONDS = 7000;// = 7 seconds;
+	public static final long BACKGROUND_GAME_LIST_DELAY_IN_MILLISECONDS = 3000;// = 300000;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;
@@ -64,6 +65,7 @@ public class Constants {
 	public static final String EXTRA_IS_GAME_UPDATED = "game_u";
 	public static final String EXTRA_WORD_LOOKUP = "_wlu";
 	public static final String INTENT_GCM_MESSAGE_RECEIVED = "GCM_mr";
+	public static final String INTENT_GAME_LIST_REFRESHED = "GL_rf";
 	 	
  	/**============================================
 	 * storage
@@ -124,25 +126,26 @@ public class Constants {
 	public static final String REST_CREATE_PLAYER_URL = REST_URL_SITE + "players.json";
 	public static final String REST_GET_PLAYER_URL = REST_URL_SITE + "players/%s.json";
 	public static final String REST_FIND_PLAYER_BY_NICKNAME = REST_URL_SITE + "players/find.json?n_n=%s";
-	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN = REST_URL_SITE + "players/auth_via_token.json";
-	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN_WITH_GAME = REST_URL_SITE + "players/auth_via_token_with_game.json";
-	public static final String REST_GET_PLAYER_BY_TOKEN = REST_URL_SITE + "players/get_via_token.json";
-	public static final String REST_GAME_LIST_CHECK = REST_URL_SITE + "players/game_list_check.json";
+	public static final String REST_AUTHENTICATE_PLAYER = REST_URL_SITE + "players/auth.json";
+	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN = REST_URL_SITE + "players/auth_with_payload.json";
+	public static final String REST_AUTHENTICATE_PLAYER_BY_TOKEN_WITH_GAME = REST_URL_SITE + "players/auth_with_game.json";
+	public static final String REST_GET_PLAYER_BY_TOKEN = REST_URL_SITE + "players/get_with_payload.json";
+	public static final String REST_GAME_LIST_CHECK = REST_URL_SITE + "players/game_list_refresh.json";
 	public static final String REST_PLAYER_LOGOUT = REST_URL_SITE + "players/log_out.json";
 	public static final String REST_PLAYER_CHANGE_PASSWORD = REST_URL_SITE + "players/change_password.json";
 	public static final String REST_PLAYER_UPDATE_ACCOUNT = REST_URL_SITE + "players/update_account.json";
 	public static final String REST_PLAYER_UPDATE_FB_ACCOUNT = REST_URL_SITE + "players/update_fb_account.json";
 	public static final String REST_PLAYER_GET_GAMES = REST_URL_SITE + "games/get_active_games.json";
 	public static final String REST_PLAYER_GCM_REGISTER = REST_URL_SITE + "games/gcm_register.json";
-	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "games.json";
-	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get.json";
-	public static final String REST_GAME_REFRESH_URL = REST_URL_SITE + "games/refresh.json";
+	public static final String REST_CREATE_GAME_URL = REST_URL_SITE + "/games/create_.json";
+	public static final String REST_GET_GAME_URL = REST_URL_SITE + "games/get_.json";
+	public static final String REST_GAME_REFRESH_URL = REST_URL_SITE + "games/refresh_.json";
 	public static final String REST_FIND_REGISTERED_FB_FRIENDS = REST_URL_SITE + "players/find_all_by_fb";
 	public static final String REST_GAME_CANCEL = REST_URL_SITE + "games/cancel";
-	public static final String REST_GAME_PLAY = REST_URL_SITE + "games/play";
-	public static final String REST_GAME_SKIP = REST_URL_SITE + "games/skip";
-	public static final String REST_GAME_SWAP = REST_URL_SITE + "games/swap";
-	public static final String REST_GAME_CHAT = REST_URL_SITE + "games/chat";
+	public static final String REST_GAME_PLAY = REST_URL_SITE + "games/play_.json";
+	public static final String REST_GAME_SKIP = REST_URL_SITE + "games/skip_.json";
+	public static final String REST_GAME_SWAP = REST_URL_SITE + "games/swap_.json";
+	public static final String REST_GAME_CHAT = REST_URL_SITE + "games/chat_.json";
 	public static final String REST_GAME_RESIGN = REST_URL_SITE + "games/resign";
 	public static final String REST_GAME_DECLINE = REST_URL_SITE + "games/decline";
 	public static final String GRAVATAR_SITE_URL = "http://en.gravatar.com";

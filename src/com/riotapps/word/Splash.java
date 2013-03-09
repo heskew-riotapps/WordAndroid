@@ -1,27 +1,18 @@
 package com.riotapps.word;
 
-import java.io.IOException;
-import java.io.InputStream;
-import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-
-import com.google.android.gcm.GCMRegistrar;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
+import com.riotapps.word.services.BackgroundService;
 import com.riotapps.word.services.WordLoaderService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.*;
@@ -40,7 +31,7 @@ public class Splash  extends FragmentActivity {
 	public long runningTime = System.nanoTime();
 	public long captureTime = System.nanoTime();
     
-    public void test(){}
+   // public void test(){}
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,10 +42,13 @@ public class Splash  extends FragmentActivity {
         this.captureTime("onCreate starting");
         this.gameId = this.getIntent().getStringExtra(Constants.EXTRA_GAME_ID);
         
-       //Intent i = new Intent(this, WordLoaderService.class);
-         this.startService(new Intent(this, WordLoaderService.class));
-        //sendMessage(this, "123", "message from Wordsmash");
         
+       //  this.startService(new Intent(this, WordLoaderService.class));
+       //  this.captureTime("WordLoaderService ended");
+         this.startService(new Intent(this, BackgroundService.class));
+         this.captureTime("BackgroundService ended");
+        //sendMessage(this, "123", "message from Wordsmash");
+        /*
         this.captureTime("GCMRegistrar starting");
         try{
         	Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
@@ -71,7 +65,7 @@ public class Splash  extends FragmentActivity {
         	 Logger.w(TAG, "onCreated GCMRegistrar error=" + e.toString());
         }
         this.captureTime("GCMRegistrar ended");
-        
+        */
         if (this.gameId != null){
         	try{
         	//cancel notification
@@ -84,9 +78,14 @@ public class Splash  extends FragmentActivity {
         	}
         }
 	 	
-        this.captureTime("handlePreProcessing starting");
-        this.handlePreProcessing();
-        this.captureTime("handlePreProcessing ended");
+        this.captureTime("CheckConnectivityTask starting");
+      //  this.handlePreProcessing();
+       
+        Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token_1");
+        this.captureTime("check connectivity task starting");
+        new CheckConnectivityTask().execute("");
+        
+        this.captureTime("onCreate ended");
      }
     
     public void captureTime(String text){
@@ -95,40 +94,60 @@ public class Splash  extends FragmentActivity {
 	     this.runningTime = this.captureTime;
 
 	}
-    private void handlePreProcessing(){
-		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, 0);
-	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
-	       
-	    Logger.w(TAG, "handlePreProcessing called.");
+    private void handleProcessing(){
+    	captureTime("handleProcessing starting");
+	    String storedToken = PlayerService.getAuthTokenFromLocal();
+	    captureTime("PlayerService.getAuthTokenFromLocal ended");
+	   // Logger.w(TAG, "handleProcessing called.");
+	    
+		Intent intent;
+	    //perhaps determine if player is stored locally
 	    
 	    if (storedToken.length() > 0){
 	    	String json = "";
-			try {
-		        this.captureTime("steup authtoken check starting");
+			 
 				if (this.gameId == null){
-					json = PlayerService.setupAuthTokenCheck(this, storedToken);
+					try{
+						//Player player = PlayerService.getPlayerFromLocal(); 
+						
+						 captureTime("NetworkTask mainlanding intent starting");
+	            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+	            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+	            		 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+	            		 this.startActivity(intent); 
+					}
+					catch (Exception e){
+						//assumed here that the player's locally stored record is corrupted somehow
+						PlayerService.clearLocalStorageAndCache(this);
+						
+						//start over at connect activity
+						intent = new Intent(this, com.riotapps.word.Welcome.class);
+			        	intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			 	      	this.startActivity(intent); 
+					}
 				}
 				else{
-					json = PlayerService.setupAuthTokenCheckWithGame(this, storedToken, this.gameId);
+					try{
+						json = PlayerService.setupAuthTokenCheckWithGame(this, storedToken, this.gameId);
+						
+						this.captureTime("setupAuthTokenCheckWithGame starting");
+						this.runningTask = new NetworkTask(this, RequestType.POST, json);
+						this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN_WITH_GAME);
+					}
+					catch (DesignByContractException e) {
+						 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
+					}
 				}
-			} catch (DesignByContractException e) {
-				//this should never happen unless there is some tampering
-				 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
-			}
- 
-	        this.captureTime("rest_authenticate_player starting");
-			this.runningTask = new NetworkTask(this, RequestType.POST, json);
-			if (this.gameId == null){
-				this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
-			}
-			else{
-				this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN_WITH_GAME);
-			}
+      
 	    }
 	    else{
-	    	 Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token_1");
-	         this.captureTime("check connectivity task starting");
-	    	new CheckConnectivityTask().execute("");
+	    	// Logger.w(TAG, "about to execute CheckConnectivityTask, no auth token_1");
+	         this.captureTime("route to welcome starting");
+	    	//new CheckConnectivityTask().execute("");
+	    	
+	      	intent = new Intent(this, com.riotapps.word.Welcome.class);
+        	intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+ 	      	this.startActivity(intent); 
 	     
 	    }
     }
@@ -205,10 +224,12 @@ public class Splash  extends FragmentActivity {
 	   	 Logger.w(TAG, " processTaskResults" );  
 		 if (connected == true) 
 	        {
-        	 captureTime("processConnectivityResults starting intent");
-	        	Intent intent = new Intent(this, com.riotapps.word.Welcome.class);
-	        	intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-	 	      	this.startActivity(intent); 	
+			 captureTime("handleProcessing starting intent");
+			 handleProcessing();
+        	 
+	        //	Intent intent = new Intent(this, com.riotapps.word.Welcome.class);
+	        //	intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+	 	     // 	this.startActivity(intent); 	
 	        }
 		 else{
 			 DialogManager.SetupAlert(context, getString(R.string.oops), getString(R.string.msg_not_connected), true, 0);
@@ -252,11 +273,11 @@ public class Splash  extends FragmentActivity {
 		             case 200:  
 		            	// try{
 		    	       	 captureTime("NetworkTask plauyerservice handleauthtokenresponse starting");
-		            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, result.getResult());
+		            		 Player player = PlayerService.handleAuthResponse(this.context, result.getResult());
 			    	       	 captureTime("NetworkTask plauyerservice handleauthtokenresponse ended");	
 			            	 //default time in which to leave splash up
-		            		/* timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
-			            	 if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
+		            		 timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
+			            	/* if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
 			            		 try {
 									Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
 								} catch (InterruptedException e) {
@@ -265,6 +286,9 @@ public class Splash  extends FragmentActivity {
 								}
 			            	 }
 		            		 */
+		            		 Logger.d(TAG, "game returned in " + timeDiff + " milliseconds");
+		            		 
+		            		 
 		            		 if (gameId != null){
 		            			 GameService.putGameToLocal(context, player.getNotificationGame());
 		            			 

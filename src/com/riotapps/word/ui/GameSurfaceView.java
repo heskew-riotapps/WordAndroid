@@ -673,7 +673,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 this.appContext.setBg3WZoomed(this.bg3WZoomed);
 		 }
 		 else {
-			 this.bg3WZoomed = this.appContext.getBg3WZoomed();
+			 this.bg3WZoomed = this.appContext.getBg3WZoomed(); 
 		 }
 		 
 		 if (this.appContext.getBg3WScaled() == null) {
@@ -2413,12 +2413,13 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     //this is a hack because for some reason the vertical origin is going up in direction as opposed to down
 	     int textTop = textVerticalMidpoint + (bounds.height() / 3);
 	     
+	     //only checks for length of consonants so that very old games (that only had 3 consonants and 2 vowels) wont break
 	     if (this.parent.getGame().isCompleted()){
      		 String randoms = String.format(this.parent.getString(R.string.upper_gap_randoms),
      				 this.parent.getGame().getRandomConsonants().get(0),
      				 this.parent.getGame().getRandomConsonants().get(1),
      				 this.parent.getGame().getRandomConsonants().get(2),
-     				 this.parent.getGame().getRandomConsonants().get(3),
+     				 (this.parent.getGame().getRandomConsonants().size() > 3 ? this.parent.getGame().getRandomConsonants().get(3) : this.parent.getGame().getRandomVowels().get(0)),
      				 this.parent.getGame().getRandomVowels().get(0));
 
      		 
@@ -2456,8 +2457,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
      	     //int textTopRandom = textVerticalMidpoint + 2 + (boundsRandom.height() / 2);
      	     int textTopRandom = textVerticalSecondThird + (boundsRandom.height() / 2);
      	     
-     	     canvas.drawText(randoms, textLeftRandom, textTopRandom, pRandom);
+     	     canvas.drawText(randoms, textLeftRandom, textTopRandom, pRandom); 
      	     
+     	     pRandom.setColor(Color.parseColor(this.parent.getString(R.color.game_board_full_view_upper_gap_front_text)));	     
+    	    
+     	     canvas.drawText(randoms, textLeftRandom - 1, textTopRandom - 1, pRandom);
+    	    
      	     //re-adjust last action text to handle second line for randoms
      	    // = textVerticalMidpoint - 2 - (bounds.height() / 2 );
      	     textTop = textVerticalFirstThird +  (bounds.height() / 4);
@@ -2472,6 +2477,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     
 	     
 	     canvas.drawText(lastActionText, textLeft, textTop, p);
+     	 p.setColor(Color.parseColor(this.parent.getString(R.color.game_board_full_view_upper_gap_front_text)));	     
+	    
+     	 canvas.drawText(lastActionText, textLeft - 1, textTop - 1, p);
 	     //canvas.drawBitmap(this.logo, textLeft, 10, null); ///do not use 10,,,figure out math
 	     //Yes. If you want to use the colour definition in the res/colors.xml file with the ID R.color.black, then you can't just use the ID. 
 	     //If you want to get the actual colour value from the resources, use paint.setColor(getResources().getColor(R.color.black)); – Matt Gibson Dec 7 '11 at 20:49
@@ -2689,11 +2697,23 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			this.parent.captureTime("onPlayClick checkPlayRules starting");
 			final PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService, false);
 
-			this.parent.captureTime("onPlayClick checkPlayRules ended");
-			this.parent.setPointsView(placedResult.getTotalPoints());
+			this.parent.onFinishPlayNoErrors(placedResult);
 			
-			if (placedResult.getPlacedTiles().size() == 0){
-				
+		 
+		
+		}
+		catch (DesignByContractException e){
+			this.parent.onFinishPlayErrors(e.getMessage());
+			//this.parent.openAlertDialog(this.parent.getString(R.string.sorry), e.getMessage());
+			//this.parent.unfreezeButtons();
+		}
+	}
+	
+	public void postPlayNoErrors(final PlacedResult placedResult ){
+		this.parent.setPointsView(placedResult.getTotalPoints());
+		
+		if (placedResult.getPlacedTiles().size() == 0){
+			
 			/*	View view = getLayoutInflater().inflate(R.layout.custom_dialog, null);
 				Button btn = (Button)view.findViewById(R.id.the_id_of_the_button);
 				btn.setOnClickListener(blah blah);
@@ -2721,6 +2741,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					public void onClick(View v) {
 			 			dialog.dismiss(); 
 			 			parent.unfreezeButtons();
+			 			
 			 		}
 				});
 		    	
@@ -2733,7 +2754,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					}
 				});
 				 
-	
+		    	
 		    	dialog.show();
 
 			}
@@ -2768,14 +2789,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 						
 					}
 				});
-				 
+		    	
 		    	dialog.show();
 			}
-		}
-		catch (DesignByContractException e){
-			this.parent.openAlertDialog(this.parent.getString(R.string.sorry), e.getMessage());
-			this.parent.unfreezeButtons();
-		}
 	}
 	
 	private void onBoardClear(){

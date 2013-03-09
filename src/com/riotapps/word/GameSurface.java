@@ -97,7 +97,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 private boolean isButtonActive = false;
 	 private boolean isNetworkTaskActive = false;
 	 private boolean isRestartFromInterstitialAd = false;
-	 private boolean isAdStarted = false;
+	 private boolean isAdStarted = false; 
 	 private boolean isGameReloaded = false;
 	 private boolean hideInterstitialAd = false;
 	 private boolean isChartBoostActive = false;
@@ -138,7 +138,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	private Player player;
 	private TextView tvNumPoints;
 	public PlayerGame contextPlayerGame;
-	
+	private BroadcastReceiver gcmReceiver;
 	private WordLoaderThread wordLoaderThread = null;
  
 
@@ -267,22 +267,24 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 }
 	
 	private void setupGCMReceiver(){
-		this.registerReceiver(new BroadcastReceiver() {
-		    @Override
-		    public void onReceive(Context context, Intent intent) {
-		    	 
-				String messageGameId = intent.getStringExtra(Constants.EXTRA_GAME_ID);
-		    	
-				//refresh the game if its not the user's turn and a message is received from gcm.
-				//determine logic difference between incoming comment message and played turn message
-				if (messageGameId.equals(GameSurface.this.game.getId()) && !GameSurface.this.game.isContextPlayerTurn(GameSurface.this.player)){
-					((Activity) context).runOnUiThread(new handleGameRefresh());
-				}
-		    	// Toast.makeText(GameSurface.this, (messageGameId.equals(GameSurface.this.game.getId()) ? "true" : "false"),
-			     //           Toast.LENGTH_LONG).show();
-		    }
-		}, new IntentFilter(Constants.INTENT_GCM_MESSAGE_RECEIVED));
-		
+		if (this.gcmReceiver == null){
+			this.gcmReceiver = new BroadcastReceiver() {
+			    @Override
+			    public void onReceive(Context context, Intent intent) {
+			    	 
+					String messageGameId = intent.getStringExtra(Constants.EXTRA_GAME_ID);
+			    	
+					//refresh the game if its not the user's turn and a message is received from gcm.
+					//determine logic difference between incoming comment message and played turn message
+					if (messageGameId.equals(GameSurface.this.game.getId()) && !GameSurface.this.game.isContextPlayerTurn(GameSurface.this.player)){
+						((Activity) context).runOnUiThread(new handleGameRefresh());
+					}
+			    	// Toast.makeText(GameSurface.this, (messageGameId.equals(GameSurface.this.game.getId()) ? "true" : "false"),
+				     //           Toast.LENGTH_LONG).show();
+			    }
+			};
+			this.registerReceiver(this.gcmReceiver, new IntentFilter(Constants.INTENT_GCM_MESSAGE_RECEIVED));
+		}
 	}
 
 	private void setupAdServer(){
@@ -842,8 +844,16 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	//		this.wordLoaderThread = null;
 	//	}
 		
+		
+		if (this.isChartBoostActive){
+			
+			this.cb.onDestroy(this);
+			this.cb = null;
+		}
+		
 		super.onDestroy();
 		//doUnbindService();
+	 
 	}
 
 	@Override
@@ -869,14 +879,22 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		super.onStop();
 		
 		if (this.isChartBoostActive){
+			
+			if (this.cb.hasCachedInterstitial()){ this.cb.clearCache(); }
 			this.cb.onStop(this);
-			this.cb = null;
+		 
+			//this.cb = n//ull;
 		}
 		
 		if (this.isRevMobActive){
 			this.revMobFullScreen = null;
 			this.revmobListener = null;
-			this.revmob = null;			
+			this.revmob = null;		
+		}
+		
+		if (this.gcmReceiver != null) {
+			this.unregisterReceiver(this.gcmReceiver);
+			this.gcmReceiver = null;
 		}
 		
 	}
@@ -1105,6 +1123,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		//Log.w(TAG, "onRestart called");
 		super.onRestart();
 		this.gameSurfaceView.onRestart(); 
+		
+		this.setupGCMReceiver();
 		Logger.d(TAG, "onRestart buttonsLoaded=" + buttonsLoaded);  
 		
 		if (this.isRestartFromInterstitialAd){
@@ -1179,7 +1199,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			        	this.unfreezeButtons();
 						break;
 			        case R.id.bPlay:
-			        	this.gameSurfaceView.onPlayClick();
+			        	//this.loadPlaySpinner();
+			        	v.post(new Runnable() {
+		                    public void run() {
+		                        // Your job here
+		                     gameSurfaceView.onPlayClick();
+		                    }
+		                });
+			        	//this.gameSurfaceView.onPlayClick();
 						break;
 			       case R.id.bSkip:
 			        	this.gameSurfaceView.onPlayClick();
@@ -1200,6 +1227,51 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	}	
 	 }
 	
+	 private void loadPlaySpinner(){
+		// Toast.makeText(this, "checking spinner loading", Toast.LENGTH_LONG).show();
+			this.spinner = new CustomProgressDialog(this);
+			this.spinner.setMessage(this.getString(R.string.progress_checking));
+			this.spinner.show();
+	 }
+	 
+	 public void unloadPlaySpinner(){
+		 if (spinner != null){
+				spinner.dismiss();
+			}
+	 }
+	 
+	 public void onFinishPlayNoErrors(final PlacedResult placedResult) {
+		    runOnUiThread(new Runnable() {
+		        public void run() {
+		            // use data here
+		        //	unloadPlaySpinner();
+		            gameSurfaceView.postPlayNoErrors(placedResult);
+		        }
+		    });
+		}
+	 
+	 public void onFinishPlayErrors(final String message) {
+		    runOnUiThread(new Runnable() {
+		        public void run() {
+		            // use data here
+		        	//unloadPlaySpinner();
+		        	openAlertDialog(context.getString(R.string.sorry), message);
+					unfreezeButtons();
+		        }
+		    });
+		}
+	  /*  private class handleFinishPlay implements Runnable {
+		    public void run() {
+		    	try { 
+		    		if (spinner != null){
+	    				spinner.dismiss();
+	    			}
+	    			//handlePostTurnFinalAction(postTurnAction);
+				} catch (Exception e) {
+					 Logger.d(TAG, "handleFinishPlay error=" + e.toString());
+				}
+		    }
+	   }*/
 	 
 	    private void handleCancel(){
 	    	final CustomButtonDialog dialog = new CustomButtonDialog(this, 
@@ -1984,7 +2056,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     	 			Logger.d(TAG, "handlePostTurn game isCompleted");
     	 			GameStateService.clearGameState(context, this.game.getId());
     	 		}
-    	 		
+    	 		this.setupButtons();
     	 		//Logger.d(TAG, "handleResponse game=" + gson.toJson(game));
     	 		
     	 		this.handlePostTurnOption(action);
@@ -2001,6 +2073,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     	 		GameStateService.clearGameState(context, this.game.getId());
     	 		
     	 		Logger.d(TAG, "handleResponse SKIP game=" + gson.toJson(game));
+    	 		this.setupButtons();
+
     	 		
     	 		this.handlePostTurnOption(action);
 	 			
@@ -2015,7 +2089,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     	 		game = GameService.handleGamePlayResponse(context, result);
     	 		//GameStateService.clearGameState(context, this.game.getId());
     	 		this.gameSurfaceView.clearPlacedTiles();
-    	
+    	 		this.setupButtons();
     	 		//Logger.d(TAG, "handleResponse SWAP result=" + result);
     	 		Logger.d(TAG, "handleResponse SWAP game=" + gson.toJson(game));
     	 		
@@ -2236,7 +2310,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		}
 
 		
-		private ChartboostDelegate chartBoostDelegate = new ChartboostDelegate() {
+		private ChartboostDelegate chartBoostDelegate = new ChartboostDelegate() { 
 
 			/*
 			 * Chartboost delegate methods

@@ -64,14 +64,14 @@ public class GameService {
 //	public static List<Game> getGamesFromLocal(){
 //		 Gson gson = new Gson(); 
 //		 Type type = new TypeToken<List<Game>>() {}.getType();
-//	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);
+//	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 //	     List<Game> games = gson.fromJson(settings.getString(Constants.USER_PREFS_ACTIVE_GAMES, Constants.EMPTY_JSON_ARRAY), type);
 //	     return games;
 //	}
 	
 	public static void updateLastGameListCheckTime(Context context){
 		
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, Utils.convertNanosecondsToMilliseconds(System.nanoTime()));
 		// Check if we're running on GingerBread or above
@@ -86,7 +86,7 @@ public class GameService {
 	}
 	
 	public static boolean checkGameAlertAlreadyShown(Context context, String gameId){
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 		if (settings.getBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId), false) == false) { 
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId),true);
@@ -109,7 +109,7 @@ public class GameService {
 	public static boolean checkGameChatAlert(Context context, Game game, boolean update){
 		
 		long gameChatTime = game.getLastChatDate() != null ? game.getLastChatDate().getTime() : 0;
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 		long localChatTime = settings.getLong(String.format(Constants.USER_PREFS_GAME_CHAT_CHECK, game.getId()), 0);
 		
 		//Logger.d(TAG, "checkGameChatAlert gameChatTime=" + gameChatTime + " localChatTime=" + localChatTime);
@@ -137,7 +137,7 @@ public class GameService {
 	
 	public static void clearLastGameListCheckTime(Context context){
 		
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, 0);
 		// Check if we're running on GingerBread or above
@@ -152,7 +152,7 @@ public class GameService {
 	}
 	
 	public static long getLastGameListCheckTime(Context context){ 
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 		return settings.getLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, 0);
 	}
 		
@@ -194,7 +194,7 @@ public class GameService {
 		Player player = PlayerService.getPlayerFromLocal();
 		
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 
 		TransportCancelGame game = new TransportCancelGame();
@@ -216,7 +216,7 @@ public class GameService {
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 
 		TransportDeclineGame game = new TransportDeclineGame();
@@ -238,7 +238,7 @@ public class GameService {
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 		
 		TransportResignGame game = new TransportResignGame();
@@ -391,7 +391,7 @@ public class GameService {
 //		
 //	//	  String shownOnProgressDialog = "progress test";//ctx.getString(R.string.progressDialogMessageSplashScreenRetrievingUserListing);
 //		   
-//		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+//		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 //		SharedPreferences.Editor editor = settings.edit();
 //		editor.putString(Constants.USER_PREFS_PWD, player.getPassword());
 //		editor.putString(Constants.USER_PREFS_EMAIL, player.getEmail());
@@ -405,7 +405,7 @@ public class GameService {
 	 
 	public static void putGameToLocal(Context ctx,Game game){
 		Gson gson = new Gson(); 
-	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 	    SharedPreferences.Editor editor = settings.edit();
 	    
 	    game.setLocalStorageDate(System.nanoTime());
@@ -428,14 +428,14 @@ public class GameService {
 	public static Game getGameFromLocal(String gameId){
 		 Gson gson = new Gson(); 
 		 Type type = new TypeToken<Game>() {}.getType();
-	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, 0);
+	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 	     Game game = gson.fromJson(settings.getString(String.format(Constants.USER_PREFS_GAME_JSON, gameId), Constants.EMPTY_JSON), type);
 	     return game;
 	}
 	
 	public static void removeGameFromLocal(Context ctx,Game game){
 		Gson gson = new Gson(); 
-	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 	    SharedPreferences.Editor editor = settings.edit();
 	 
 	    editor.remove(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()));
@@ -465,12 +465,15 @@ public class GameService {
 
 	public static Game handleGamePlayResponse(final Context ctx, String result){// InputStream iStream){
 		Game game = handleGameResponse(ctx, result); 
+		Logger.d(TAG, "handleGamePlayResponse result=" + result);
 		if (game.getStatus() == 1){ //if game is still active
 			//update local storage game lists
+			Logger.d(TAG, "handleGamePlayResponse game is active");
 			GameService.moveActiveGameYourTurnToOpponentsTurn(ctx, game);
 			GameService.updateLastGameListCheckTime(ctx);	
 		}
 		else {
+			Logger.d(TAG, "handleGamePlayResponse game is completed");
 			GameService.moveGameToCompletedList(ctx, game);
 		}
 		GameService.putGameToLocal(ctx, game);
@@ -552,7 +555,7 @@ public class GameService {
         	 }
         	 if (resavePlayer){
         		// Logger.d(TAG,"createGame opponentLoop playerid NOT exists PLAYER will be saved locally");
-        		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+        		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
      	         SharedPreferences.Editor editor = settings.edit();
         		 editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
         			// Check if we're running on GingerBread or above
@@ -1075,7 +1078,8 @@ public class GameService {
         {
             totalPoints += word.getTotalPoints();
             if (!bypassValidWordCheck){
-            	if (appContext.getWordService().isWordValid(word.getWord().toLowerCase()) == false)
+            	//if (appContext.getWordService().isWordValid(word.getWord().toLowerCase()) == false)
+            	if (WordService.isWordValid(word.getWord().toLowerCase()) == false)
             	{
             	//	Logger.d(TAG, "checkPlayRules invalid word=" + word.getWord());
             		invalidWords.add(word);
@@ -1578,7 +1582,7 @@ public class GameService {
   		Gson gson = new Gson();  
 	        
         //update player to shared preferences
-	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 	    SharedPreferences.Editor editor = settings.edit();
  
 	    editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
@@ -1631,7 +1635,7 @@ public class GameService {
   		Gson gson = new Gson();  
 	        
         //update player to shared preferences
-	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, 0);
+	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 	    SharedPreferences.Editor editor = settings.edit();
  
 	    editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));

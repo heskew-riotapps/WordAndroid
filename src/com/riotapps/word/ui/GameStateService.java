@@ -21,7 +21,7 @@ public class GameStateService {
 	public static GameState getGameState(Context context, String gameId){
 		Logger.d(TAG, "getGameState called gameId=" + gameId);
 		
-		SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, 0);
+		SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS);
 	    String gameStatejson = settings.getString(gameId, "");  
 	    
 	    GameState gameState;
@@ -49,7 +49,7 @@ public class GameStateService {
 		 GameState gameState = new GameState();
 		 gameState.setGameId(gameId);
 		 
-		 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, 0);
+		 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS);
 		 SharedPreferences.Editor editor = settings.edit();
 		 editor.putString(gameId, gson.toJson(gameState));
 	 
@@ -74,7 +74,7 @@ public class GameStateService {
 		 GameState gameState = new GameState();
 		 gameState.setGameId(gameId);
 		 
-		 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, 0);
+		 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS);
 		 SharedPreferences.Editor editor = settings.edit();
 		 editor.remove(gameId);
 			// Check if we're running on GingerBread or above
@@ -98,7 +98,7 @@ public class GameStateService {
 		if (gameState != null && gameState.getGameId().length() > 0){
 			 Gson gson = new Gson();
 			 
-			 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, 0);
+			 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS);
 			 SharedPreferences.Editor editor = settings.edit();
 			 editor.putString(gameState.getGameId(), gson.toJson(gameState));
 				// Check if we're running on GingerBread or above

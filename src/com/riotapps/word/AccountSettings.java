@@ -85,7 +85,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 			} 
 			catch (DesignByContractException e) {
 				//e.printStackTrace();
-				DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage(), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);  
+				DialogManager.SetupAlert(this.context, getString(R.string.oops), e.getMessage());  
 			}
 	    }
     

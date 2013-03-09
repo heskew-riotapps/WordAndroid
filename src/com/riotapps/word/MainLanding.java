@@ -5,7 +5,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.conn.ConnectTimeoutException;
- 
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -23,8 +22,10 @@ import com.riotapps.word.utils.Utils;
 import com.riotapps.word.utils.Enums.RequestType;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -36,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainLanding extends FragmentActivity implements View.OnClickListener{
 	private static final String TAG = MainLanding.class.getSimpleName();
@@ -49,16 +51,16 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	Player player;
 	ImageFetcher imageLoader;
 	NetworkTask runningTask = null;
-	Timer timer = null;
+	//Timer timer = null;
 	boolean callingIntent = false;
+	private BroadcastReceiver gcmReceiver;
+	private BroadcastReceiver backgroundReceiver;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainlanding);
-        
-       // SharedPreferences settings = getSharedPreferences(Constants.USER_PREFS, 0);
-
+    
         //PlayerService playerSvc = new PlayerService();
         //Player player = PlayerService.getPlayerFromLocal();
         
@@ -82,7 +84,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		this.player = PlayerService.getPlayerFromLocal();
 		PlayerService.loadPlayerInHeader(this);
 		
-		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, 0);
+		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
 	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 
 	    
@@ -95,6 +97,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		
 	 	this.loadLists();
 	 	
+	 	/*
 	 	long lastPlayerCheckTime = GameService.getLastGameListCheckTime(this);
 		if (!isGameListPrefetched && Utils.convertNanosecondsToMilliseconds(System.nanoTime()) - lastPlayerCheckTime > Constants.LOCAL_GAME_LIST_STORAGE_DURATION_IN_MILLISECONDS){
 			//fetch games
@@ -112,6 +115,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		else if (isGameListPrefetched){
 			GameService.updateLastGameListCheckTime(this);
 		}
+		*/
 		//no games yet, send player to StartGame to get started
 	//	else if (this.player.getTotalNumLocalGames() == 0){
      //   	Intent intent = new Intent(getApplicationContext(), StartGame.class);
@@ -120,9 +124,11 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//else {
 		//	this.loadLists();
 		//}
-		this.setupTimer();
+		//this.setupTimer();
 		
 		this.checkAlert();
+		this.setupGCMReceiver();
+		this.setupBackgroundReceiver();
     }
     
     private void checkAlert(){
@@ -133,7 +139,47 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	}
     }
     
-    
+
+	private void setupGCMReceiver(){
+		//unregister receiver onStop
+		
+		//perhaps only do this if it not context player's turn 
+		//(but what about comments that can be received?)
+		if (this.gcmReceiver == null){
+			this.gcmReceiver = new BroadcastReceiver() {
+			    @Override
+			    public void onReceive(Context context, Intent intent) {
+			    	 
+			    	
+			    	
+					//String messageGameId = intent.getStringExtra(Constants.EXTRA_GAME_ID);
+						((Activity) context).runOnUiThread(new handleGameListCheck());
+			    }
+			};
+		}
+		
+		this.registerReceiver(this.gcmReceiver,new IntentFilter(Constants.INTENT_GCM_MESSAGE_RECEIVED));
+	}
+	
+	private void setupBackgroundReceiver(){
+		//unregister receiver onStop
+		
+		//perhaps only do this if it not context player's turn 
+		//(but what about comments that can be received?)
+		if (this.backgroundReceiver == null){
+			this.backgroundReceiver = new BroadcastReceiver() {
+			    @Override
+			    public void onReceive(Context context, Intent intent) {
+			    	 Logger.d(TAG, "setupBackgroundReceiver loadlist about to be called");
+					//String messageGameId = intent.getStringExtra(Constants.EXTRA_GAME_ID);
+						((Activity) context).runOnUiThread(new handleLoadList());
+			    }
+			};
+		}
+		
+		this.registerReceiver(this.backgroundReceiver,new IntentFilter(Constants.INTENT_GAME_LIST_REFRESHED));
+	}
+	
     @Override
 	protected void onRestart() {
 		//Log.w(TAG, "onRestart called"); 
@@ -143,13 +189,16 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			this.player = PlayerService.getPlayerFromLocal();
 		}
 		this.callingIntent = false; 
-		this.setupTimer(Constants.GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS);
+		
+		this.setupGCMReceiver();
+		this.setupBackgroundReceiver();
+		//this.setupTimer(Constants.GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS);
 		//if (!this.getIntent().getBooleanExtra(name, false)){
 		//	//((Activity) context).runOnUiThread(new handleGameListCheck());
 	//		this.loadLists();
 		//} 
 	}
-    
+  /*  
     private void setupTimer(){
 		this.setupTimer(Constants.GAME_LIST_CHECK_START_IN_MILLISECONDS);
 	}
@@ -179,7 +228,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
  
     	   }
     }
-    
+    */
     private class handleGameListCheck implements Runnable {
 		    public void run() {
 				 if (!callingIntent){   
@@ -196,13 +245,27 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		    }
 	  }
     
+    private class handleLoadList implements Runnable {
+	    public void run() {
+			 if (!callingIntent){   
+				// Toast.makeText(context, "return from background svc", Toast.LENGTH_LONG);
+				 //reload player
+				 Logger.d(TAG, "handleLoadList");
+				player = PlayerService.getPlayerFromLocal();
+				
+				checkAlert();
+				loadLists();
+	    	 }
+	    }
+  }
+    
     @Override
 	protected void onResume() {
 		super.onResume();
 		
-		Logger.d(TAG, "onResume is timer null=" + (timer == null));
+		//Logger.d(TAG, "onResume is timer null=" + (timer == null));
 	 
-		this.setupTimer();
+		//this.setupTimer();
 	 
 	}
 
@@ -211,8 +274,17 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		this.stopTimer();
+		//this.stopTimer();
 		this.player = null;
+		
+		if (this.gcmReceiver != null) {
+			this.unregisterReceiver(this.gcmReceiver);
+			this.gcmReceiver = null;
+		}
+		if (this.backgroundReceiver != null) {
+			this.unregisterReceiver(this.backgroundReceiver);
+			this.backgroundReceiver = null;
+		}
 
 	}
 
@@ -228,7 +300,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 
 	private void loadLists(){
  
-    	 Logger.d(TAG, "loadLists started");
+    	 Logger.d(TAG, "loadLists started active games=" + this.player.getActiveGamesYourTurn().size() + " opp games=" + this.player.getActiveGamesOpponentTurn().size());
 		LinearLayout llCompletedGames = (LinearLayout)findViewById(R.id.llCompletedGames);
     	LinearLayout llYourTurn = (LinearLayout)findViewById(R.id.llYourTurn);
     	LinearLayout llOpponentsTurn = (LinearLayout)findViewById(R.id.llOpponentsTurn);
@@ -251,7 +323,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     		tvWaiting.setVisibility(View.GONE);
     		
 	        for (Game g : this.player.getActiveGamesYourTurn()){
-	        	Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() game=" +g.getId() );
+	        	//Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() game=" +g.getId() );
 
 	        	
 	        	 llYourTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesYourTurn().size() == i));
@@ -278,7 +350,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	
     		
 	        for (Game g : this.player.getActiveGamesOpponentTurn()){
-	        	Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() game=" + g.getId() );
+	        	//Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() game=" + g.getId() );
 	        	
 	        	llOpponentsTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesOpponentTurn().size() == i));
 	        	 i += 1;
@@ -294,7 +366,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	i = 1;
     	if (this.player.getCompletedGames().size() > 0){
 	        for (Game g : this.player.getCompletedGames()){
-	        	Logger.w(TAG, "loadLists this.player.getCompletedGames() game=" + g.getId() );
+	        	//Logger.w(TAG, "loadLists this.player.getCompletedGames() game=" + g.getId() );
 	        	
 	        	llCompletedGames.addView(getGameYourTurnView(g, i == 1, this.player.getCompletedGames().size() == i));
 	        	 i += 1;
@@ -523,8 +595,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	  	if (this.runningTask != null){
 	  		this.runningTask.cancel(true);
 	  	}
-	  	this.stopTimer();
-
+	//  	this.stopTimer();
+ 
 		super.onPause();
 	}
 

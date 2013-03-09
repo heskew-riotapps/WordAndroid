@@ -5,6 +5,7 @@
 	<color name="game_board_full_view_upper_gap_bg">#eec591</color>
 	<color name="game_board_full_view_board_bg">#eec591</color>
 	<color name="game_board_full_view_upper_gap_text">#ffffff</color>
+	<color name="game_board_full_view_upper_gap_front_text">#1874CD</color>
 	<color name="game_board_full_view_lower_gap_bg">#eec591</color>
 	<color name="game_board_tray_border">#eec591</color>
 	<color name="game_board_tray_tile_letter">#080808</color>
