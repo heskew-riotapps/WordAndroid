@@ -296,7 +296,7 @@ public class ConnectToFacebook  extends FragmentActivity{
  
 		public NetworkTask(ConnectToFacebook ctx, RequestType requestType,
 				String shownOnProgressDialog, String jsonPost) {
-			super(ctx, requestType, shownOnProgressDialog, jsonPost);
+			super(ConnectToFacebook.this, requestType, shownOnProgressDialog, jsonPost);
 			this.context = ctx;
 		}
 
@@ -317,7 +317,7 @@ public class ConnectToFacebook  extends FragmentActivity{
 		             case 201: {   
 		            	 	//update local player context
 		            	 Logger.d(TAG, "handleResponse about to call PlayerService.handleCreatePlayerResponse");
-		            	 player = PlayerService.handleCreatePlayerResponse(this.context, result.getResult());
+		            	 player = PlayerService.handleCreatePlayerResponse(result.getResult());
 		            		
 	            		 Logger.d(TAG, "handleResponse about to call fetchFriends");
 	            		 //go get user's friends 
@@ -331,7 +331,7 @@ public class ConnectToFacebook  extends FragmentActivity{
 		            	 String errorMessage;
 
 		            	 try{
-			            	 ErrorType errorType = ErrorService.translateError(context, result.getResult());
+			            	 ErrorType errorType = ErrorService.translateError(result.getResult());
 			            	 
 			            	 switch (errorType){
 			            	 	case INCORRECT_PASSWORD:

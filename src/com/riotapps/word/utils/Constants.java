@@ -66,10 +66,16 @@ public class Constants {
 	public static final String EXTRA_WORD_LOOKUP = "_wlu";
 	public static final String INTENT_GCM_MESSAGE_RECEIVED = "GCM_mr";
 	public static final String INTENT_GAME_LIST_REFRESHED = "GL_rf";
+	public static final String INTENT_GAME_LIST_REFRESHED_TO_BRIDGE = "GL_rf_b";
+	public static final String EXTRA_PLAYER_AUTH_RESULT = "ex_p_a_r";
+	public static final String EXTRA_PLAYER_TOKEN = "ex_token";
+	public static final String EXTRA_PLAYER_COMPLETED_DATE = "ex_c_d";
+	public static final String EXTRA_PLAYER_LAST_ALERT_ACTIVATION_DATE = "ex_l_a_a_d";
 	 	
  	/**============================================
 	 * storage
 	 *=============================================*/
+ 	public static final String SHARED_PREFERENCE_PREFIX = "com.riotapps.word.utils_";
  	public static final String USER_PREFS = "user_";
  	public static final String USER_PREFS_USER_ID = "user_uid";
  	public static final String USER_PREFS_AUTH_TOKEN = "user_at";

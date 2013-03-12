@@ -27,6 +27,7 @@ import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
 import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.Storage;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.GameTile;
 import com.riotapps.word.ui.GameTileComparator;
@@ -41,37 +42,11 @@ import com.google.gson.reflect.TypeToken;
 @SuppressLint("NewApi")
 public class GameService {
 	private static final String TAG = GameService.class.getSimpleName();
+
 	
-//	public static void GetPlayerGameFromServer(Context ctx, String id, Class<?> goToClass){
-//		//retrieve player from server
-//		//convert using gson
-//		//return player to caller
-//		String url = String.format(Constants.REST_GET_PLAYER_URL,id);
-//		new AsyncNetworkRequest(ctx, RequestType.GET, ResponseHandlerType.GET_GAME, ctx.getString(R.string.progress_syncing)).execute(url);
-//	}
-	
-	
-//	public Game SaveGame(String id){
-//		//retrieve player from server
-//		//convert using gson
-//		//return player to caller
-//		
-//		//check validations here
-//		
-//		return new Game();
-//	}
-	
-//	public static List<Game> getGamesFromLocal(){
-//		 Gson gson = new Gson(); 
-//		 Type type = new TypeToken<List<Game>>() {}.getType();
-//	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
-//	     List<Game> games = gson.fromJson(settings.getString(Constants.USER_PREFS_ACTIVE_GAMES, Constants.EMPTY_JSON_ARRAY), type);
-//	     return games;
-//	}
-	
-	public static void updateLastGameListCheckTime(Context context){
+	public static void updateLastGameListCheckTime(){
 		
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings =  Storage.getSharedPreferences();
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, Utils.convertNanosecondsToMilliseconds(System.nanoTime()));
 		// Check if we're running on GingerBread or above
@@ -86,7 +61,7 @@ public class GameService {
 	}
 	
 	public static boolean checkGameAlertAlreadyShown(Context context, String gameId){
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		if (settings.getBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId), false) == false) { 
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(String.format(Constants.USER_PREFS_GAME_ALERT_CHECK, gameId),true);
@@ -109,7 +84,7 @@ public class GameService {
 	public static boolean checkGameChatAlert(Context context, Game game, boolean update){
 		
 		long gameChatTime = game.getLastChatDate() != null ? game.getLastChatDate().getTime() : 0;
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings =  Storage.getSharedPreferences();
 		long localChatTime = settings.getLong(String.format(Constants.USER_PREFS_GAME_CHAT_CHECK, game.getId()), 0);
 		
 		//Logger.d(TAG, "checkGameChatAlert gameChatTime=" + gameChatTime + " localChatTime=" + localChatTime);
@@ -135,9 +110,9 @@ public class GameService {
 		return gameChatTime != localChatTime;
 	}
 	
-	public static void clearLastGameListCheckTime(Context context){
+	public static void clearLastGameListCheckTime(){
 		
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, 0);
 		// Check if we're running on GingerBread or above
@@ -151,17 +126,18 @@ public class GameService {
 		 }
 	}
 	
-	public static long getLastGameListCheckTime(Context context){ 
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	public static long getLastGameListCheckTime(){ 
+		SharedPreferences settings = Storage.getSharedPreferences();
 		return settings.getLong(Constants.USER_PREFS_GAME_LIST_CHECK_TIME, 0);
 	}
 		
-	public static String setupStartGame(Context ctx, Game game) throws DesignByContractException{
+	public static String setupStartGame(Game game) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupStartGame");
 		Gson gson = new Gson();
 		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 		Check.Require(game.getPlayerGames().size() > 1 && game.getPlayerGames().size() < 5, ctx.getString(R.string.validation_must_have_between_2_and_4_players));
@@ -182,19 +158,20 @@ public class GameService {
 		return gson.toJson(newGame);
 	}
 	
-	public static String setupCancelGame(Context ctx, String gameId) throws DesignByContractException{
+	public static String setupCancelGame(String gameId) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupCancelGame");
 		Gson gson = new Gson();
+		Context ctx = ApplicationContext.getAppContext();
 		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 
 		TransportCancelGame game = new TransportCancelGame();
@@ -205,18 +182,18 @@ public class GameService {
 		return gson.toJson(game);
 	}
 	
-	public static String setupDeclineGame(Context ctx, String gameId) throws DesignByContractException{
+	public static String setupDeclineGame(String gameId) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupDeclineGame");
 		Gson gson = new Gson();
-		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 
 		TransportDeclineGame game = new TransportDeclineGame();
@@ -227,18 +204,18 @@ public class GameService {
 		return gson.toJson(game);
 	}
 	
-	public static String setupResignGame(Context ctx, String gameId) throws DesignByContractException{
+	public static String setupResignGame(String gameId) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupResignGame");
 		Gson gson = new Gson();
-		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	
 		Player player = PlayerService.getPlayerFromLocal();
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 		
 		TransportResignGame game = new TransportResignGame();
@@ -249,12 +226,12 @@ public class GameService {
 		return gson.toJson(game);
 	}
 	
-	public static String setupGameTurn(Context ctx, Game game, PlacedResult placedResult) throws DesignByContractException{
+	public static String setupGameTurn(Game game, PlacedResult placedResult) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGameTurn");
 		Gson gson = new Gson();
-		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	
@@ -277,12 +254,12 @@ public class GameService {
 		return gson.toJson(turn);
 	}
 	
-	public static String setupGameSkip(Context ctx, Game game) throws DesignByContractException{
+	public static String setupGameSkip(Game game) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGameSkip");
 		Gson gson = new Gson();
-		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	
@@ -296,12 +273,12 @@ public class GameService {
 		return gson.toJson(turn);
 	}
 	
-	public static String setupGameChat(Context ctx, Game game, String text) throws DesignByContractException{
+	public static String setupGameChat(Game game, String text) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGameChat");
 		Gson gson = new Gson();
-		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	Check.Require(text != null && text.length() > 0, ctx.getString(R.string.message_chat_text_empty));
@@ -317,12 +294,12 @@ public class GameService {
 	}
 	
 	
-	public static String setupGameSwap(Context ctx, Game game, List<String> swappedLetters) throws DesignByContractException{
+	public static String setupGameSwap(Game game, List<String> swappedLetters) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGameSkip");
 		Gson gson = new Gson();
-		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	
@@ -337,12 +314,12 @@ public class GameService {
 		return gson.toJson(turn);
 	}
 	
-	public static String setupGameCheck(Context ctx, String gameId, int turn) throws DesignByContractException{
+	public static String setupGameCheck(String gameId, int turn) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGameCheck");
 		Gson gson = new Gson();
-		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	
@@ -356,12 +333,12 @@ public class GameService {
 		return gson.toJson(game);
 	}
 	
-	public static String setupGetGame(Context ctx, String gameId) throws DesignByContractException{
+	public static String setupGetGame(String gameId) throws DesignByContractException{
 		 
 		Logger.d(TAG, "setupGetGame");
 		Gson gson = new Gson();
-		
-		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		Context ctx = ApplicationContext.getAppContext();
+		NetworkConnectivity connection = new NetworkConnectivity(ctx);
 		//are we connected to the web?
 	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
 	 	
@@ -373,39 +350,11 @@ public class GameService {
 		
 		return gson.toJson(game);
 	}
-//	public static void CreateGame(Context ctx, String email, String nickname, String password, Class<?> goToClass) throws DesignByContractException{
-//
-//		Gson gson = new Gson();
-//		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
-//		//are we connected to the web?
-//		Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
-//		Check.Require(email.length() > 0, ctx.getString(R.string.validation_email_required));
-//		Check.Require(Validations.validateEmail(email) == true, ctx.getString(R.string.validation_email_invalid));
-//	 
-//		Player player = new Player();
-//		player.setEmail(email);
-//		player.setNickname(nickname);
-//		player.setPassword(password);
-//		
-//		String json = gson.toJson(player);
-//		
-//	//	  String shownOnProgressDialog = "progress test";//ctx.getString(R.string.progressDialogMessageSplashScreenRetrievingUserListing);
-//		   
-//		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
-//		SharedPreferences.Editor editor = settings.edit();
-//		editor.putString(Constants.USER_PREFS_PWD, player.getPassword());
-//		editor.putString(Constants.USER_PREFS_EMAIL, player.getEmail());
-//		editor.commit();
-//		
-//		//ok lets call the server now
-//		new AsyncNetworkRequest(ctx, RequestType.POST, ResponseHandlerType.CREATE_PLAYER, ctx.getString(R.string.progress_saving), json, goToClass).execute(Constants.REST_CREATE_PLAYER_URL);
-		
-//		//return player;
-//	}
+
 	 
-	public static void putGameToLocal(Context ctx,Game game){
+	public static void putGameToLocal(Game game){
 		Gson gson = new Gson(); 
-	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	    SharedPreferences settings = Storage.getSharedPreferences();
 	    SharedPreferences.Editor editor = settings.edit();
 	    
 	    game.setLocalStorageDate(System.nanoTime());
@@ -428,14 +377,14 @@ public class GameService {
 	public static Game getGameFromLocal(String gameId){
 		 Gson gson = new Gson(); 
 		 Type type = new TypeToken<Game>() {}.getType();
-	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	     SharedPreferences settings = Storage.getSharedPreferences();
 	     Game game = gson.fromJson(settings.getString(String.format(Constants.USER_PREFS_GAME_JSON, gameId), Constants.EMPTY_JSON), type);
 	     return game;
 	}
 	
-	public static void removeGameFromLocal(Context ctx,Game game){
+	public static void removeGameFromLocal(Game game){
 		Gson gson = new Gson(); 
-	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	    SharedPreferences settings = Storage.getSharedPreferences();
 	    SharedPreferences.Editor editor = settings.edit();
 	 
 	    editor.remove(String.format(Constants.USER_PREFS_GAME_JSON, game.getId()));
@@ -451,52 +400,52 @@ public class GameService {
 	}
 	
 
-	public static Player handleCancelGameResponse(final Context ctx, String result){// InputStream iStream){
-		return PlayerService.handleAuthByTokenResponse(ctx, result);
+	public static Player handleCancelGameResponse(String result){// InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(result);
 	}
 	
-	public static Player handleDeclineGameResponse(final Context ctx, String result){// InputStream iStream){
-		return PlayerService.handleAuthByTokenResponse(ctx, result);
+	public static Player handleDeclineGameResponse(String result){// InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(result);
 	}
 	
-	public static Player handleResignGameResponse(final Context ctx, String result){// InputStream iStream){
-		return PlayerService.handleAuthByTokenResponse(ctx, result);
+	public static Player handleResignGameResponse(String result){// InputStream iStream){
+		return PlayerService.handleAuthByTokenResponse(result);
 	}
 
-	public static Game handleGamePlayResponse(final Context ctx, String result){// InputStream iStream){
-		Game game = handleGameResponse(ctx, result); 
+	public static Game handleGamePlayResponse(String result){// InputStream iStream){
+		Game game = handleGameResponse(result); 
 		Logger.d(TAG, "handleGamePlayResponse result=" + result);
 		if (game.getStatus() == 1){ //if game is still active
 			//update local storage game lists
 			Logger.d(TAG, "handleGamePlayResponse game is active");
-			GameService.moveActiveGameYourTurnToOpponentsTurn(ctx, game);
-			GameService.updateLastGameListCheckTime(ctx);	
+			GameService.moveActiveGameYourTurnToOpponentsTurn(game);
+			GameService.updateLastGameListCheckTime();	
 		}
 		else {
 			Logger.d(TAG, "handleGamePlayResponse game is completed");
-			GameService.moveGameToCompletedList(ctx, game);
+			GameService.moveGameToCompletedList(game);
 		}
-		GameService.putGameToLocal(ctx, game);
+		GameService.putGameToLocal(game);
 		return game;
 	}
 	
 	public static Game handleGameChatResponse(final Context ctx, String result){// InputStream iStream){
-		Game game = handleGameResponse(ctx, result); 
-		GameService.updateLastGameListCheckTime(ctx);
-		GameService.putGameToLocal(ctx, game);
+		Game game = handleGameResponse(result); 
+		GameService.updateLastGameListCheckTime();
+		GameService.putGameToLocal(game);
 		
 		return game;
 	}
 	
-	public static Game handleCreateGameResponse(final Context ctx, String result){// InputStream iStream){
-		return handleGameResponse(ctx, result); 
+	public static Game handleCreateGameResponse(String result){// InputStream iStream){
+		return handleGameResponse(result); 
 	}
 	
-	public static Game handleGetGameResponse(final Context ctx, String result){// InputStream iStream){
-        return handleGameResponse(ctx, result); 
+	public static Game handleGetGameResponse(String result){// InputStream iStream){
+        return handleGameResponse(result); 
 	}
 	
-	private static Game handleGameResponse(final Context ctx, String result){// InputStream iStream){
+	private static Game handleGameResponse(String result){// InputStream iStream){
 		 Gson gson = new Gson(); //wrap json return into a single call that takes a type
     	 
 		// Logger.w(TAG, "handleGameResponse incoming json=" + IOHelper.streamToString(iStream));
@@ -555,7 +504,7 @@ public class GameService {
         	 }
         	 if (resavePlayer){
         		// Logger.d(TAG,"createGame opponentLoop playerid NOT exists PLAYER will be saved locally");
-        		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+        		 SharedPreferences settings = Storage.getSharedPreferences();
      	         SharedPreferences.Editor editor = settings.edit();
         		 editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
         			// Check if we're running on GingerBread or above
@@ -1078,8 +1027,8 @@ public class GameService {
         {
             totalPoints += word.getTotalPoints();
             if (!bypassValidWordCheck){
-            	//if (appContext.getWordService().isWordValid(word.getWord().toLowerCase()) == false)
-            	if (WordService.isWordValid(word.getWord().toLowerCase()) == false)
+            	if (appContext.getWordService().isWordValid(word.getWord().toLowerCase()) == false)
+            	//if (WordService.isWordValid(word.getWord().toLowerCase()) == false)
             	{
             	//	Logger.d(TAG, "checkPlayRules invalid word=" + word.getWord());
             		invalidWords.add(word);
@@ -1552,7 +1501,7 @@ public class GameService {
 		}
 	}
   	
-  	private static void moveActiveGameYourTurnToOpponentsTurn(Context ctx, Game game){
+  	private static void moveActiveGameYourTurnToOpponentsTurn(Game game){
   		//in this scenario, player has just played a turn and game is not over, and we and updating the local game lists
   		//by removing the game from the player's turn list and moving it to opponent's turn list
   		
@@ -1582,7 +1531,7 @@ public class GameService {
   		Gson gson = new Gson();  
 	        
         //update player to shared preferences
-	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	    SharedPreferences settings = Storage.getSharedPreferences();
 	    SharedPreferences.Editor editor = settings.edit();
  
 	    editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
@@ -1597,7 +1546,7 @@ public class GameService {
 		 }  
 	}
 
-	private static void moveGameToCompletedList(Context ctx, Game game){
+	private static void moveGameToCompletedList(Game game){
   		//in this scenario, player has just played a turn and game is not over, and we and updating the local game lists
   		//by removing the game from the player's turn list and moving it to opponent's turn list
   		
@@ -1635,7 +1584,7 @@ public class GameService {
   		Gson gson = new Gson();  
 	        
         //update player to shared preferences
-	    SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	    SharedPreferences settings = Storage.getSharedPreferences();
 	    SharedPreferences.Editor editor = settings.edit();
  
 	    editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));

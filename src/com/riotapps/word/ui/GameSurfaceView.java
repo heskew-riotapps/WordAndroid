@@ -2764,7 +2764,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    			context.getString(R.string.game_play_title), 
 		    			GameService.getPlacedWordsMessage(context, placedResult.getPlacedWords()),
 		    			context.getString(R.string.yes),
-		    			context.getString(R.string.no));
+		    			context.getString(R.string.no),
+		    			R.layout.played_word_dialog);
 		    	
 		    	dialog.setOnOKClickListener(new View.OnClickListener() {
 			 		@Override

@@ -22,6 +22,7 @@ import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
+import com.riotapps.word.utils.Storage;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.ui.GameStateService;
@@ -41,7 +42,7 @@ public class PlayerService {
 	private static final String TAG = PlayerService.class.getSimpleName();
 
 	public static String getAuthTokenFromLocal(){
-		SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
 	    
 	    settings = null;
@@ -107,10 +108,30 @@ public class PlayerService {
 	 
 		Check.Require(authToken.length() > 0, ctx.getString(R.string.validation_auth_token_required));
 		 
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 	    String lastAlertActivationDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_LAST_ALERT_ACTIVATION_DATE);
-		TransportAuthToken player = new TransportAuthToken();
+	//	TransportAuthToken player = new TransportAuthToken();
+	//	player.setToken(authToken);
+	//	player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
+	//	player.setCompletedGameDate(new Date(completedDate));
+	//	player.setLastAlertActivationDate(lastAlertActivationDate);
+		
+		//return gson.toJson(player);
+		
+		return setupAuthTokenCheck(ctx, authToken, completedDate, lastAlertActivationDate);
+	}
+	
+	public static String setupAuthTokenCheck(Context ctx, String authToken, String completedDate, String lastAlertActivationDate) throws DesignByContractException{
+		Gson gson = new Gson();
+	
+		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
+		//are we connected to the web?
+	 	Check.Require(connection.checkNetworkConnectivity() == true, ctx.getString(R.string.msg_not_connected));
+	 
+		Check.Require(authToken.length() > 0, ctx.getString(R.string.validation_auth_token_required));
+		 
+ 		TransportAuthToken player = new TransportAuthToken();
 		player.setToken(authToken);
 		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
 		player.setCompletedGameDate(new Date(completedDate));
@@ -119,7 +140,7 @@ public class PlayerService {
 		return gson.toJson(player);
 	}
 	
-
+	
 	public static String setupAuthTokenCheckWithGame(Context ctx, String authToken, String gameId) throws DesignByContractException{
 		Gson gson = new Gson();
 	
@@ -129,7 +150,7 @@ public class PlayerService {
 	 
 		Check.Require(authToken.length() > 0, ctx.getString(R.string.validation_auth_token_required));
 		 
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 	    String lastAlertActivationDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_LAST_ALERT_ACTIVATION_DATE);
 	    TransportAuthTokenWithGame player = new TransportAuthTokenWithGame();
@@ -151,7 +172,7 @@ public class PlayerService {
 	 
 		Check.Require(authToken.length() > 0, ctx.getString(R.string.validation_auth_token_required));
 
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 
 	    TransportGameListCheck player = new TransportGameListCheck();
@@ -206,7 +227,7 @@ public class PlayerService {
 	public static boolean checkAlertAlreadyShown(Context context, String alertId, String alertActivationDate){
 		Gson gson = new Gson();
 		
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		String json = settings.getString(Constants.USER_PREFS_ALERT_CHECK, "[]"); 
 		
 		Type type = new TypeToken<List<String>>() {}.getType();
@@ -237,7 +258,7 @@ public class PlayerService {
 	}
 	
 	public static boolean checkFirstTimeGameSurfaceAlertAlreadyShown(Context context){
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		if (settings.getBoolean(Constants.USER_PREFS_FIRST_TIME_GAME_SURFACE_ALERT_CHECK, false) == false) { 
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(Constants.USER_PREFS_FIRST_TIME_GAME_SURFACE_ALERT_CHECK,true);
@@ -261,7 +282,7 @@ public class PlayerService {
 	
 	public static void updateRegistrationId(Context context, String gcmRegistrationId){ 
 		
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(Constants.USER_PREFS_GCM_REGISTRATION_ID, gcmRegistrationId);
 		// Check if we're running on GingerBread or above
@@ -276,7 +297,7 @@ public class PlayerService {
 	}
 	
 	public static String getRegistrationId(Context context){
-		SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 		return settings.getString(Constants.USER_PREFS_GCM_REGISTRATION_ID, "");
 	}
 	
@@ -304,7 +325,7 @@ public class PlayerService {
 	//	gson.toJson(foo, fooType);
 		String friendJSON = gson.toJson(friendsList, FBFriends.class);
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 	    SharedPreferences.Editor editor = settings.edit();
 	        
 	  //  Logger.w(TAG, "saveFacebookFriendsFromJSONResponse fbFriends=" + friendJSON.length());
@@ -346,7 +367,7 @@ public class PlayerService {
 		fbFriends.setToken(player.getAuthToken());
 		
 
-		 SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		 SharedPreferences settings = Storage.getSharedPreferences();
 	     String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
 		 
 	   //  friendsLocal.
@@ -419,8 +440,8 @@ public class PlayerService {
 	
 	public static void clearLocalStorageAndCache(FragmentActivity context){
 
-		context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS).edit().clear().commit();
-		context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS).edit().clear().commit();
+		Storage.getSharedPreferences().edit().clear().commit();
+		Storage.getSharedPreferences(Constants.GAME_STATE).edit().clear().commit();
 		
 		clearImageCache(context);
 		
@@ -497,35 +518,33 @@ public class PlayerService {
 	public static Player getPlayerFromLocal(){
 		 Gson gson = new Gson(); 
 		 Type type = new TypeToken<Player>() {}.getType();
-	     SharedPreferences settings = ApplicationContext.getAppContext().getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	     SharedPreferences settings = Storage.getSharedPreferences();
 	     
 	    // Logger.w(TAG, "getPlayerFromLocal player=" + settings.getString(Constants.USER_PREFS_PLAYER_JSON, Constants.EMPTY_JSON));
 	     Player player = gson.fromJson(settings.getString(Constants.USER_PREFS_PLAYER_JSON, Constants.EMPTY_JSON), type);
 	     return player;
 	}
 	
-	public static Player handleCreatePlayerResponse(final Context ctx, String result){// InputStream iStream){
-	   return handlePlayerResponse(ctx, result);
+	public static Player handleCreatePlayerResponse(String result){// InputStream iStream){
+	   return handlePlayerResponse(result);
 	}
 	
-	public static Player handleChangePasswordResponse(final Context ctx, String result){// InputStream iStream){
-       return handlePlayerResponse(ctx, result);
+	public static Player handleChangePasswordResponse(String result){// InputStream iStream){
+       return handlePlayerResponse(result);
 	}
 	
-	public static Player handleUpdateAccountResponse(final Context ctx, String result){// InputStream iStream){
-	       return handlePlayerResponse(ctx, result);
+	public static Player handleUpdateAccountResponse(String result){// InputStream iStream){
+	       return handlePlayerResponse(result);
 	}
 
-	public static Player handleAuthByTokenResponse(final Context ctx, String result){// InputStream iStream){
-	       return handlePlayerResponse(ctx, result);
+	public static Player handleAuthByTokenResponse(String result){// InputStream iStream){
+	       return handlePlayerResponse(result);
 	}
 	
-	private static Player handlePlayerResponse(final Context ctx, String result){//InputStream iStream){
+	private static Player handlePlayerResponse(String result){//InputStream iStream){
     	Gson gson = new Gson(); //wrap json return into a single call that takes a type
 	        
-          //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
-	       // Reader reader = new InputStreamReader(iStream); //serverResponseObject.response.getEntity().getContent());
-	        
+    	 
     		Logger.d(TAG, "handlePlayerResponse result=" + result.length() + " " + result);
 
 	        Player storedPlayer = getPlayerFromLocal();
@@ -541,7 +560,7 @@ public class PlayerService {
 	        
 	        ///save player info to shared preferences
 	        //userId and auth_token ...email and password should have been stored before this call
-	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	        SharedPreferences settings = Storage.getSharedPreferences();
 	        SharedPreferences.Editor editor = settings.edit();
 	        
 	   
@@ -611,7 +630,7 @@ public class PlayerService {
 	        
 	        //remove game state for completed games
 	        for (Game game : player.getCompletedGames()){
-	        	GameStateService.clearGameState(ctx, game.getId());
+	        	GameStateService.clearGameState(game.getId());
 	        }
 	        
 	        //now set activegames by turn
@@ -767,7 +786,7 @@ public class PlayerService {
 
 	}
 	
-	public static Player handleAuthResponse(final Context ctx, String result){//InputStream iStream){
+	public static Player handleAuthResponse(String result){//InputStream iStream){
     	Gson gson = new Gson(); //wrap json return into a single call that takes a type
 	        
           //Logger.w(TAG, "handlePlayerResponse incoming json=" + IOHelper.streamToString(iStream));
@@ -782,7 +801,7 @@ public class PlayerService {
 	        
 	        ///save player info to shared preferences
 	        //userId and auth_token ...email and password should have been stored before this call
-	        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+	        SharedPreferences settings = Storage.getSharedPreferences();
 	        SharedPreferences.Editor editor = settings.edit();
 	        
 	   
@@ -870,7 +889,7 @@ public class PlayerService {
 	
 	public static Player updateAuthToken(final Context ctx, String authToken){
 		Gson gson = new Gson();
-        SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+        SharedPreferences settings = Storage.getSharedPreferences();
         SharedPreferences.Editor editor = settings.edit();	        
 
         Player player = getPlayerFromLocal();
@@ -907,7 +926,7 @@ public class PlayerService {
  		//	Logger.d(TAG, "findRegisteredFBFriendsResponse name=" + player.getFirstName() + "fb=" + player.getFB());
  	//	}
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
         SharedPreferences.Editor editor = settings.edit();	
         
    	 	String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
@@ -959,7 +978,7 @@ public class PlayerService {
 	public static FBFriends getLocalFBFriends(Context ctx){
 		Gson gson = new Gson();
 		
-		SharedPreferences settings = ctx.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
    	 	String friendsLocal = settings.getString(Constants.USER_PREFS_FRIENDS_JSON, Constants.EMPTY_JSON_ARRAY);
  
         return gson.fromJson(friendsLocal, FBFriends.class);

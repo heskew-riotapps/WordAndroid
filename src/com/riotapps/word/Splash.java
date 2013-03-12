@@ -1,19 +1,20 @@
 package com.riotapps.word;
 
 import org.apache.http.conn.ConnectTimeoutException;
-
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import com.google.android.gcm.GCMRegistrar;
+import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.services.BackgroundService;
-import com.riotapps.word.services.WordLoaderService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.*;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -30,6 +31,8 @@ public class Splash  extends FragmentActivity {
     String gameId = null; 
 	public long runningTime = System.nanoTime();
 	public long captureTime = System.nanoTime();
+	private GCMTask gcmTask;
+	private String storedToken;
     
    // public void test(){}
     
@@ -45,27 +48,14 @@ public class Splash  extends FragmentActivity {
         
        //  this.startService(new Intent(this, WordLoaderService.class));
        //  this.captureTime("WordLoaderService ended");
-         this.startService(new Intent(this, BackgroundService.class));
-         this.captureTime("BackgroundService ended");
+        
+        this.storedToken = PlayerService.getAuthTokenFromLocal();
+        
+        this.startBackgroundService();
         //sendMessage(this, "123", "message from Wordsmash");
-        /*
-        this.captureTime("GCMRegistrar starting");
-        try{
-        	Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
-	        GCMRegistrar.checkDevice(this);
-	        GCMRegistrar.checkManifest(this);
-	        final String regId = GCMRegistrar.getRegistrationId(this);
-	        if (regId.equals("")) {
-	        	GCMRegistrar.register(this, this.getString(R.string.gcm_sender_id));
-	        } else {
-	        	Logger.w(TAG, "onCreated gcm already registered regId=" + regId);
-	  			PlayerService.updateRegistrationId(context, regId);
-	        }
-        } catch(Exception e){
-        	 Logger.w(TAG, "onCreated GCMRegistrar error=" + e.toString());
-        }
-        this.captureTime("GCMRegistrar ended");
-        */
+        
+        this.processGCM();
+         
         if (this.gameId != null){
         	try{
         	//cancel notification
@@ -88,6 +78,93 @@ public class Splash  extends FragmentActivity {
         this.captureTime("onCreate ended");
      }
     
+    private void startBackgroundService(){
+    	 Intent backgroundIntent = new Intent(this, BackgroundService.class);
+         backgroundIntent.putExtra(Constants.EXTRA_PLAYER_TOKEN, this.storedToken);
+         
+         SharedPreferences settings = Storage.getSharedPreferences();
+         String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+ 	     String lastAlertActivationDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_LAST_ALERT_ACTIVATION_DATE);
+ 	    
+ 	      backgroundIntent.putExtra(Constants.EXTRA_PLAYER_COMPLETED_DATE, completedDate);
+ 	      backgroundIntent.putExtra(Constants.EXTRA_PLAYER_LAST_ALERT_ACTIVATION_DATE, lastAlertActivationDate);
+          this.startService(backgroundIntent);
+          this.captureTime("BackgroundService ended");
+    }
+   
+    private void processGCM(){
+    	this.gcmTask = new GCMTask();
+    	this.gcmTask.execute("");
+    	
+    	/*
+	    Thread thread = new Thread()
+	    {
+	        @Override
+	        public void run() {
+	            try {
+	                captureTime("GCMRegistrar starting");
+	                	Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
+	        	        GCMRegistrar.checkDevice(Splash.this);
+	        	        GCMRegistrar.checkManifest(Splash.this);
+	        	        final String regId = GCMRegistrar.getRegistrationId(Splash.this);
+	        	        if (regId.equals("")) {
+	        	        	GCMRegistrar.register(Splash.this, Splash.this.getString(R.string.gcm_sender_id));
+	        	        } else {
+	        	        	Logger.w(TAG, "onCreated gcm already registered regId=" + regId);
+	        	  			PlayerService.updateRegistrationId(context, regId);
+	        	        }
+	            } 
+	            catch(Exception e){
+	                	 Logger.w(TAG, "onCreated GCMRegistrar error=" + e.toString());
+	            }
+	            
+	            captureTime("GCMRegistrar ended");
+	            
+	        }
+	    };
+    
+    thread.start();
+    */
+	}
+    
+	 private class GCMTask extends AsyncTask<String, Void, String> {
+
+         @Override
+         protected String doInBackground(String... params) {
+        	   
+             try {
+	                captureTime("GCMRegistrar starting");
+	                	Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
+	        	        GCMRegistrar.checkDevice(Splash.this);
+	        	        GCMRegistrar.checkManifest(Splash.this);
+	        	        final String regId = GCMRegistrar.getRegistrationId(Splash.this);
+	        	        if (regId.equals("")) {
+	        	        	GCMRegistrar.register(Splash.this, Splash.this.getString(R.string.gcm_sender_id));
+	        	        } else {
+	        	        	Logger.w(TAG, "onCreated gcm already registered regId=" + regId);
+	        	  			PlayerService.updateRegistrationId(context, regId);
+	        	        }
+	            } 
+	            catch(Exception e){
+	                	 Logger.w(TAG, "onCreated GCMRegistrar error=" + e.toString());
+	            }
+	            
+	            captureTime("GCMRegistrar ended");
+               return "Executed";
+         }      
+
+         @Override
+         protected void onPostExecute(String result) {
+        	  
+        	 stopGCMTask();
+         }
+
+   }
+	 
+		private void stopGCMTask(){
+			this.gcmTask = null;
+		}
+    
     public void captureTime(String text){
 	     this.captureTime = System.nanoTime();
 	     Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", text, Utils.convertNanosecondsToMilliseconds(this.captureTime - this.runningTime)));
@@ -96,7 +173,7 @@ public class Splash  extends FragmentActivity {
 	}
     private void handleProcessing(){
     	captureTime("handleProcessing starting");
-	    String storedToken = PlayerService.getAuthTokenFromLocal();
+	    //String storedToken = PlayerService.getAuthTokenFromLocal();
 	    captureTime("PlayerService.getAuthTokenFromLocal ended");
 	   // Logger.w(TAG, "handleProcessing called.");
 	    
@@ -128,11 +205,18 @@ public class Splash  extends FragmentActivity {
 				}
 				else{
 					try{
-						json = PlayerService.setupAuthTokenCheckWithGame(this, storedToken, this.gameId);
-						
-						this.captureTime("setupAuthTokenCheckWithGame starting");
+						json = GameService.setupGetGame(gameId);
+						this.captureTime("REST_GET_GAME_URL starting");
+						//this will bring back the players games too
 						this.runningTask = new NetworkTask(this, RequestType.POST, json);
-						this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN_WITH_GAME);
+						this.runningTask.execute(Constants.REST_GET_GAME_URL);
+						
+						
+					//	json = PlayerService.setupAuthTokenCheckWithGame(this, storedToken, this.gameId);
+					//	
+					//	this.captureTime("setupAuthTokenCheckWithGame starting");
+					//	this.runningTask = new NetworkTask(this, RequestType.POST, json);
+					//	this.runningTask.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN_WITH_GAME);
 					}
 					catch (DesignByContractException e) {
 						 DialogManager.SetupAlert(context, getString(R.string.oops), e.getLocalizedMessage(), true, 0);
@@ -244,7 +328,7 @@ public class Splash  extends FragmentActivity {
 		
 		public NetworkTask(Splash ctx, RequestType requestType,
 				String jsonPost) {
-			super(ctx, requestType, "", jsonPost);
+			super(Splash.this, requestType, "", jsonPost);
 			this.context = ctx;
 		    Logger.w(TAG, "NetworkTask called with jsonPost=" + jsonPost);
 		 
@@ -272,11 +356,7 @@ public class Splash  extends FragmentActivity {
 		         switch(result.getStatusCode()){  
 		             case 200:  
 		            	// try{
-		    	       	 captureTime("NetworkTask plauyerservice handleauthtokenresponse starting");
-		            		 Player player = PlayerService.handleAuthResponse(this.context, result.getResult());
-			    	       	 captureTime("NetworkTask plauyerservice handleauthtokenresponse ended");	
-			            	 //default time in which to leave splash up
-		            		 timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
+		    	     
 			            	/* if (timeDiff < Constants.SPLASH_ACTIVITY_TIMEOUT){
 			            		 try {
 									Thread.sleep(Constants.SPLASH_ACTIVITY_TIMEOUT - timeDiff);
@@ -288,24 +368,49 @@ public class Splash  extends FragmentActivity {
 		            		 */
 		            		 Logger.d(TAG, "game returned in " + timeDiff + " milliseconds");
 		            		 
-		            		 
+		            		 //if we are in game context (from gcm notification), re-route to GameSurface
 		            		 if (gameId != null){
+		            			 captureTime("NetworkTaskhandleCreateGameResponse starting");
+		            		 	 Game game = GameService.handleCreateGameResponse(result.getResult());
+		            		 	 captureTime("NetworkTaskhandleCreateGameResponse ended");
+				            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
+				            	 //was not working and driving me crazy
+				            	 GameService.putGameToLocal(game);
+				            	 
+				            	 intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
+				            	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
+				            	 
+				            	 game = null;
+				      	      	 this.context.startActivity(intent);
+		            			 
+		            			 /*
 		            			 GameService.putGameToLocal(context, player.getNotificationGame());
 		            			 
 		            			 intent = new Intent(context, com.riotapps.word.GameSurface.class);
 		 			             intent.putExtra(Constants.EXTRA_GAME_ID, gameId);
+		 			             */
 		            		 }
-		            		 else if (player.getTotalNumLocalGames() == 0){
-			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
-			            	 }
-			            	 else {
-				    	       	 captureTime("NetworkTask mainlanding intent starting");
-			            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
-			            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
-			            	 }
+		            		 else{
+		            			 
+		            		  	 captureTime("NetworkTask plauyerservice handleauthtokenresponse starting");
+			            		 Player player = PlayerService.handleAuthResponse(result.getResult());
+				    	       	 captureTime("NetworkTask plauyerservice handleauthtokenresponse ended");	
+				            	 //default time in which to leave splash up
+			            		 timeDiff = Utils.convertNanosecondsToMilliseconds(currentTime -  context.startTime);
+		            			 
+			            		 if (player.getTotalNumLocalGames() == 0){
+			            		
+				            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
+				            	 }
+				            	 else {
+					    	       	 captureTime("NetworkTask mainlanding intent starting");
+				            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+				            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+				            	 }
 		            		// Intent intent = new Intent( this, com.riotapps.word.MainLanding.class);
 		            		// intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 				     	     context.startActivity(intent);
+		            		 }
 		            	// }
 		            //	 catch(Exception e){
 		           // /		 Logger.w(TAG, e.getStackTrace());

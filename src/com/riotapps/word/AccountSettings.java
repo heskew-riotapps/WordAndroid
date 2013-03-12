@@ -113,7 +113,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 	    	boolean isPasswordChange = false;
 			
 			public NetworkTask(AccountSettings ctx, RequestType requestType, String shownOnProgressDialog, String jsonPost, boolean isPasswordChange) {
-				super(ctx, requestType, shownOnProgressDialog, jsonPost);
+				super(AccountSettings.this, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
 				this.isPasswordChange = isPasswordChange;
 			 
@@ -139,7 +139,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 			             case 201: {   
 			                //update text
 			            	 if (this.isPasswordChange){
-			            		Player player = PlayerService.handleChangePasswordResponse(this.context, result.getResult());
+			            		Player player = PlayerService.handleChangePasswordResponse(result.getResult());
 			            		 
 			            		EditText tConfirmPassword = (EditText) findViewById(R.id.tConfirmPassword);
 			     				EditText tPassword = (EditText) findViewById(R.id.tPassword);
@@ -150,7 +150,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 						           
 			            	 }
 			            	 else{
-			            		 Player player = PlayerService.handleUpdateAccountResponse(this.context, result.getResult());
+			            		 Player player = PlayerService.handleUpdateAccountResponse(result.getResult());
 			            		 
 			            		 //clear image cache just in case email was changed.
 			            		 PlayerService.clearImageCache(this.context);
@@ -162,7 +162,7 @@ public class AccountSettings extends FragmentActivity implements View.OnClickLis
 
 			             }//end of case 200 & 201 
 			             case 401:
-			            	 ErrorType errorType = ErrorService.translateError(this.context, result.getResult());
+			            	 ErrorType errorType = ErrorService.translateError(result.getResult());
 			            	 
 			            	 String errorMessage;
 			            	 

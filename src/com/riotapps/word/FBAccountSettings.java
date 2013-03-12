@@ -85,7 +85,7 @@ public class FBAccountSettings extends FragmentActivity implements View.OnClickL
 			
 			public NetworkTask(FBAccountSettings ctx, RequestType requestType,
 					String shownOnProgressDialog, String jsonPost) {
-				super(ctx, requestType, shownOnProgressDialog, jsonPost);
+				super(FBAccountSettings.this, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
 			}
 
@@ -106,14 +106,14 @@ public class FBAccountSettings extends FragmentActivity implements View.OnClickL
 			             case 201: {   
 			                //update text
 			            	 
-		            		 Player player = PlayerService.handleUpdateAccountResponse(this.context, result.getResult());
+		            		 Player player = PlayerService.handleUpdateAccountResponse(result.getResult());
 			     			 DialogManager.SetupAlert(this.context, this.context.getString(R.string.success), this.context.getString(R.string.fb_account_changed_successfully), true);
 	 
 			                 break;  
 
 			             }//end of case 200 & 201 
 			             case 401:
-			            	 ErrorType errorType = ErrorService.translateError(this.context, result.getResult());
+			            	 ErrorType errorType = ErrorService.translateError(result.getResult());
 			            	 
 			            	 String errorMessage;
 			            	 

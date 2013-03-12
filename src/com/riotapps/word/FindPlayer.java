@@ -93,7 +93,7 @@ public class FindPlayer extends FragmentActivity implements View.OnClickListener
 		
 		public NetworkTask(FindPlayer ctx, RequestType requestType,
 				String shownOnProgressDialog) {
-			super(ctx, requestType, shownOnProgressDialog);
+			super(FindPlayer.this, requestType, shownOnProgressDialog);
 			this.context = ctx;
 			// TODO Auto-generated constructor stub
 		}

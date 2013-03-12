@@ -94,7 +94,7 @@ public class Settings extends FragmentActivity implements View.OnClickListener{
 			
 			public NetworkTask(Settings ctx, RequestType requestType,
 					String shownOnProgressDialog, String jsonPost) {
-				super(ctx, requestType, shownOnProgressDialog, jsonPost);
+				super(Settings.this, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
 			 
 			}
@@ -118,7 +118,7 @@ public class Settings extends FragmentActivity implements View.OnClickListener{
 			             case 200:  
 			             case 201: {   
 			                //update text
-			            	 Player player = PlayerService.handleCreatePlayerResponse(this.context, result.getResult());
+			            	 Player player = PlayerService.handleCreatePlayerResponse(result.getResult());
 
 			                 // Toast t = Toast.makeText(this.context, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 			         	    // t.show();
@@ -129,7 +129,7 @@ public class Settings extends FragmentActivity implements View.OnClickListener{
 
 			             }//end of case 200 & 201 
 			             case 401:
-			            	 ErrorType errorType = ErrorService.translateError(this.context, result.getResult());
+			            	 ErrorType errorType = ErrorService.translateError(result.getResult());
 			            	 
 			            	 String errorMessage;
 			            	 

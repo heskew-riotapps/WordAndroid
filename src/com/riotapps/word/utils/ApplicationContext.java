@@ -42,7 +42,7 @@ public class ApplicationContext extends Application{
     public void onCreate(){
         super.onCreate();
         ApplicationContext.context = getApplicationContext();
-        this.wordService = new WordService(getApplicationContext());
+        this.wordService = new WordService();
         
        // new Thread(new Runnable() {
        //     public void run() {

@@ -29,7 +29,7 @@
     
     <application  
          
-        android:name="com.riotapps.word.utils.ApplicationContext"
+        android:name="com.riotapps.word.utils.ApplicationContext" 
         android:icon="@drawable/icon_launcher"
         android:label="@string/app_name"  
         android:theme="@style/MainStyle" >
@@ -43,7 +43,7 @@
 		</receiver>
 
 	    <service android:enabled="true" android:name="com.riotapps.word.services.BackgroundService"  android:process=":bkgdSvc"/>
-        <service android:enabled="true" android:name="com.riotapps.word.services.WordLoaderService"  android:process=":bkgdLoader"/>
+    <!--    <service android:enabled="false" android:name="com.riotapps.word.services.WordLoaderService"  android:process=":bkgdLoader"/> -->
         <service android:name=".GCMIntentService" />
         
        <activity android:name=".Splash" android:label="@string/app_name" android:screenOrientation="portrait">

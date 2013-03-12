@@ -153,7 +153,7 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	    	//CustomDialog dialog;
 			
 			public NetworkTask(FragmentActivity ctx, RequestType requestType, String shownOnProgressDialog, String jsonPost) {
-				super(ctx, requestType, shownOnProgressDialog, jsonPost);
+				super(Options.this, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
 				//this.dialog = dialog;
 			 

@@ -27,6 +27,7 @@ public class CustomButtonDialog extends AlertDialog{
 		private boolean onCancelClickFinishActivity;
 		private View.OnClickListener onCancel = null;
 		private View.OnClickListener onOK = null;
+		private int layoutId = R.layout.twobuttondialog;
 
 	  
 	 // public void SetText(String text){
@@ -39,15 +40,24 @@ public class CustomButtonDialog extends AlertDialog{
 	//    }
 
 		public CustomButtonDialog(Context ctx, String dialogTitle, String dialogText, String okText, String cancelText) {
-			this(ctx, dialogTitle, dialogText, false, okText, cancelText, null, null);
+			this(ctx, dialogTitle, dialogText, false, okText, cancelText, null, null, R.layout.twobuttondialog);
 		}
 		
+		public CustomButtonDialog(Context ctx, String dialogTitle, String dialogText, String okText, String cancelText, int layoutId ) {
+			this(ctx, dialogTitle, dialogText, false, okText, cancelText, null, null, layoutId);
+		}
+		
+		
 		public CustomButtonDialog(Context ctx, String dialogTitle, String dialogText) {
-			this(ctx, dialogTitle, dialogText, false, ctx.getString(R.string.ok), ctx.getString(R.string.cancel), null, null);
+			this(ctx, dialogTitle, dialogText, false, ctx.getString(R.string.ok), ctx.getString(R.string.cancel), null, null, R.layout.twobuttondialog);
+		}
+		
+		public CustomButtonDialog(Context ctx, String dialogTitle, String dialogText, int layoutId ) {
+			this(ctx, dialogTitle, dialogText, false, ctx.getString(R.string.ok), ctx.getString(R.string.cancel), null, null, layoutId);
 		}
 	 
 		public CustomButtonDialog(Context ctx, String dialogTitle, String dialogText, Boolean onCancelClickFinishActivity, 
-				String okText, String cancelText, View.OnClickListener onOK, View.OnClickListener onCancel) {
+				String okText, String cancelText, View.OnClickListener onOK, View.OnClickListener onCancel, int layoutId) {
 			super(ctx);
 			
 			this.context = ctx;
@@ -58,6 +68,7 @@ public class CustomButtonDialog extends AlertDialog{
 			this.onCancel = onCancel;
 			this.onOK = onOK;
 			this.okText = okText;
+			this.layoutId = layoutId;
 		}
 		
 	@Override
@@ -75,7 +86,7 @@ public class CustomButtonDialog extends AlertDialog{
 		super.onStart();
 	 
 		LayoutInflater inflater = getLayoutInflater();//(LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        this.layout = inflater.inflate(R.layout.twobuttondialog, 
+        this.layout = inflater.inflate(layoutId, 
                                         (ViewGroup) findViewById(R.id.progress_root));
 
 		TextView title = (TextView) layout.findViewById(R.id.alert_title);  

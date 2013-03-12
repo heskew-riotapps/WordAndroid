@@ -4,6 +4,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.riotapps.word.R;
+import com.riotapps.word.Splash;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
@@ -31,9 +32,15 @@ public class BackgroundService extends Service {
 	private Player player;
 	private NetworkTask task;
 	private boolean isProcessed = false;
-	private MainTask runningTask;
+//	private MainTask runningTask;
 	private LoadWordsTask wordLoaderTask;
-	
+	private String storedToken = null;
+	//private Thread wordListThread;
+	private boolean isWordLoaderCompleted = false;
+	private boolean isGameFetcherCompleted = false;
+	private String completedDate;
+	private String lastAlertActivationDate;
+	 
    @Override
    public IBinder onBind(Intent intent) {
       return null;
@@ -51,7 +58,7 @@ public class BackgroundService extends Service {
       //code to execute when the service is shutting down
 	   this.player = null;
 	   this.task = null;
-	   this.runningTask = null;
+	   //this.runningTask = null;
 	   this.wordLoaderTask = null;
 	   
    }
@@ -61,17 +68,22 @@ public class BackgroundService extends Service {
       //code to execute when the service is starting up
 	   Logger.d(TAG, "onStartCommand called");
 	   if (!this.isProcessed){
-		   this.player = PlayerService.getPlayerFromLocal();
+		   //this.player = PlayerService.getPlayerFromLocal();
+		   this.storedToken = intent.getStringExtra(Constants.EXTRA_PLAYER_TOKEN);  //PlayerService.getAuthTokenFromLocal();
+		   this.lastAlertActivationDate = intent.getStringExtra(Constants.EXTRA_PLAYER_LAST_ALERT_ACTIVATION_DATE); 
+		   this.completedDate = intent.getStringExtra(Constants.EXTRA_PLAYER_COMPLETED_DATE); 
 		   
 		   context = (ApplicationContext) ApplicationContext.getAppContext(); // (ApplicationContext)this.getApplicationContext();
 		 
-		   this.runningTask = new MainTask();
-		   this.runningTask.execute("");
+		  // this.runningTask = new MainTask();
+		  // this.runningTask.execute("");
 		   
 		   this.wordLoaderTask = new LoadWordsTask();
 		   this.wordLoaderTask.execute("");
 		   
-		   this.getGameList();
+		   if (storedToken.length() > 0){
+			   this.getGameList();
+		   }
 	   }
 	   
 	 
@@ -82,7 +94,7 @@ public class BackgroundService extends Service {
 	   
 //       this.captureTime("GCMRegistrar starting");
        try{
-       	Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
+       	    Logger.w(TAG, "GCMRegistrar.checkDevice about to be called");
 	        GCMRegistrar.checkDevice(this);
 	        GCMRegistrar.checkManifest(this);
 	        final String regId = GCMRegistrar.getRegistrationId(this);
@@ -113,13 +125,6 @@ public class BackgroundService extends Service {
        
        }
 
-       @Override
-       protected void onPreExecute() {
-       }
-
-       @Override
-       protected void onProgressUpdate(Void... values) {
-       }
  }
    
    
@@ -140,9 +145,9 @@ public class BackgroundService extends Service {
 		*/
 		   
   		 Logger.d(TAG, "getGameList");
-				String json = PlayerService.setupAuthTokenCheck(context, player.getAuthToken());
+				String json = PlayerService.setupAuthTokenCheck(context, this.storedToken, this.completedDate, this.lastAlertActivationDate);
 				//this will bring back the players games too
-				this.task = new NetworkTask(context, RequestType.POST, json, false);
+				this.task = new NetworkTask(RequestType.POST, json, false);
 				this.task.execute(Constants.REST_GAME_LIST_CHECK);
  			} catch (DesignByContractException e) {
  				//this should never happen unless there is some tampering
@@ -161,11 +166,11 @@ public class BackgroundService extends Service {
    
    private class NetworkTask extends AsyncNetworkRequest{
 
-		ApplicationContext context;
+		//ApplicationContext context;
  
-		public NetworkTask(ApplicationContext ctx, RequestType requestType, String jsonPost, boolean fetchGame) {
-			super(ctx, requestType, "", jsonPost);
-			this.context = ctx;
+		public NetworkTask(RequestType requestType, String jsonPost, boolean fetchGame) {
+			super(null, requestType, "", jsonPost);
+			//this.context = ctx;
 
 		}
 
@@ -188,14 +193,16 @@ public class BackgroundService extends Service {
 	             case 200:  
 	            	 try{
 	            		 	isProcessed = true;
-	            			 Logger.d(TAG, "handleAuthByTokenResponse after timer");
-		            		 Player player = PlayerService.handleAuthByTokenResponse(this.context, result.getResult());
-		            		 
-		            	   	 Logger.d(TAG, "handleResponse active games=" + player.getActiveGamesYourTurn().size() + " opp games=" + player.getActiveGamesOpponentTurn().size());
+	            		//	 Logger.d(TAG, "handleAuthByTokenResponse after timer");
+		            	//	 Player player = PlayerService.handleAuthByTokenResponse(result.getResult());
+		            	//	 
+		            	 //  	 Logger.d(TAG, "handleResponse active games=" + player.getActiveGamesYourTurn().size() + " opp games=" + player.getActiveGamesOpponentTurn().size());
 
-		            		 GameService.updateLastGameListCheckTime(this.context);
+		            	//	 GameService.updateLastGameListCheckTime();
 		            		 
-		            			Intent intent = new Intent(Constants.INTENT_GAME_LIST_REFRESHED);
+	            		 	//send intent to process bridge
+		            			Intent intent = new Intent(Constants.INTENT_GAME_LIST_REFRESHED_TO_BRIDGE);
+		            			intent.putExtra(Constants.EXTRA_PLAYER_AUTH_RESULT, result.getResult());
 		            		    this.sendBroadcast(intent);
 	            		 
 	            		 }
@@ -237,112 +244,131 @@ public class BackgroundService extends Service {
 	         Logger.d("in ResponseHandler -> in handleResponse -> in  else ", "response and exception both are null");  
 
 	     }//end of else  
+	     
+	     this.task = null;
+	     this.isGameFetcherCompleted = true;
+	     this.handleCompleted();
 	}
 	
 	 private class LoadWordsTask extends AsyncTask<String, Void, String> {
 
          @Override
          protected String doInBackground(String... params) {
-        	   ApplicationContext appContext = (ApplicationContext)getApplicationContext();
-        	   try{
-        		   WordService.isWordValid("aaa");     			  
-        		   captureTime("letter a - loaded");
-        		   
-        		   WordService.isWordValid("bbb");
-        		   captureTime("letter b - loaded");
-        		   
-        		   WordService.isWordValid("ccc");     			  
-        		   captureTime("letter c - loaded");
-        		   
-        		   WordService.isWordValid("ddd");
-        		   captureTime("letter d - loaded");
-        		   
-        		   WordService.isWordValid("eee");     			  
-        		   captureTime("letter e - loaded");
-        		   
-        		   WordService.isWordValid("fff");
-        		   captureTime("letter f - loaded");
-        		   
-        		   WordService.isWordValid("ggg");     			  
-        		   captureTime("letter g - loaded");
-        		   
-        		   WordService.isWordValid("hhh");
-        		   captureTime("letter h - loaded");
-        		   
-        		   WordService.isWordValid("iii");     			  
-        		   captureTime("letter i - loaded");
-        		   
-        		   WordService.isWordValid("jjj");
-        		   captureTime("letter j - loaded");
-        		   
-        		   WordService.isWordValid("kkk");     			  
-        		   captureTime("letter k - loaded");
-        		   
-        		   WordService.isWordValid("lll");
-        		   captureTime("letter l - loaded");
-        		   
-        		   WordService.isWordValid("mmm");     			  
-        		   captureTime("letter m - loaded");
-        		   
-        		   WordService.isWordValid("nnn");
-        		   captureTime("letter n - loaded");
-        		   
-        		   WordService.isWordValid("ooo");     			  
-        		   captureTime("letter o - loaded");
-        		   
-        		   WordService.isWordValid("ppp");
-        		   captureTime("letter p - loaded");
-        		   
-        		   WordService.isWordValid("qqq");     			  
-        		   captureTime("letter q - loaded");
-        		   
-        		   WordService.isWordValid("rrr");
-        		   captureTime("letter r - loaded");
-        		   
-        		   WordService.isWordValid("sss");     			  
-        		   captureTime("letter s - loaded");
-        		   
-        		   WordService.isWordValid("ttt");
-        		   captureTime("letter t - loaded");
-        		   
-        		   WordService.isWordValid("uuu");     			  
-        		   captureTime("letter u - loaded");
-        		   
-        		   WordService.isWordValid("vvv");
-        		   captureTime("letter v - loaded");
-         		   
-        		   WordService.isWordValid("www");
-        		   captureTime("letter w - loaded");
-        		   
-        		   WordService.isWordValid("xxx");     			  
-        		   captureTime("letter x- loaded");
-        		   
-        		   WordService.isWordValid("yyy");
-        		   captureTime("letter y - loaded");
-        		   
-        		   WordService.isWordValid("zzz");     			  
-        		   captureTime("letter z - loaded");  		   
         	   
-        	   }
-        	   catch (Exception e){
-        		   Logger.d(TAG, e.toString());
-        	   }
-        	   Logger.d(TAG, "all words loaded");
+        	  processWordList();
                return "Executed";
          }      
 
          @Override
          protected void onPostExecute(String result) {
         	  
-        	 stopSelf();
+        	 stopWordLoaderTask();
          }
 
-         @Override
-         protected void onPreExecute() {
-         }
-
-         @Override
-         protected void onProgressUpdate(Void... values) {
-         }
    }
+
+ 
+	private void processWordList(){
+		   ApplicationContext appContext = (ApplicationContext)getApplicationContext();
+    	   try{
+
+    		   appContext.getWordService().isWordValid("aaa");     			  
+    		   captureTime("letter a - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("bbb");
+    		   captureTime("letter b - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("ccc");     			  
+    		   captureTime("letter c - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("ddd");
+    		   captureTime("letter d - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("eee");     			  
+    		   captureTime("letter e - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("fff");
+    		   captureTime("letter f - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("ggg");     			  
+    		   captureTime("letter g - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("hhh");
+    		   captureTime("letter h - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("iii");     			  
+    		   captureTime("letter i - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("jjj");
+    		   captureTime("letter j - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("kkk");     			  
+    		   captureTime("letter k - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("lll");
+    		   captureTime("letter l - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("mmm");     			  
+    		   captureTime("letter m - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("nnn");
+    		   captureTime("letter n - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("ooo");     			  
+    		   captureTime("letter o - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("ppp");
+    		   captureTime("letter p - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("qqq");     			  
+    		   captureTime("letter q - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("rrr");
+    		   captureTime("letter r - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("sss");     			  
+    		   captureTime("letter s - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("ttt");
+    		   captureTime("letter t - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("uuu");     			  
+    		   captureTime("letter u - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("vvv");
+    		   captureTime("letter v - loaded");
+     		   
+    		   appContext.getWordService().isWordValid("www");
+    		   captureTime("letter w - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("xxx");     			  
+    		   captureTime("letter x- loaded");
+    		   
+    		   appContext.getWordService().isWordValid("yyy");
+    		   captureTime("letter y - loaded");
+    		   
+    		   appContext.getWordService().isWordValid("zzz");     			  
+    		   captureTime("letter z - loaded");  		   
+    	   
+    		  
+    	   }
+    	   catch (Exception e){
+    		   Logger.d(TAG, e.toString());
+    	   }
+    	   Logger.d(TAG, "all words loaded");
+	
+	 
+	}
+	
+	private void stopWordLoaderTask(){
+		this.wordLoaderTask = null;
+		this.isWordLoaderCompleted = true;
+		this.handleCompleted();
+	}
+	
+	private void handleCompleted(){
+		if (this.isGameFetcherCompleted && this.isWordLoaderCompleted){
+			this.stopSelf();
+		}
+	}
 }

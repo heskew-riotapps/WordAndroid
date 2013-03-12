@@ -43,6 +43,7 @@ import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.NetworkTaskResult;
 import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
+import com.riotapps.word.utils.Storage;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -91,7 +92,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
    
     	Intent i = getIntent();
     	this.game =  (Game) i.getParcelableExtra(Constants.EXTRA_GAME);
-    	settings = this.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS); //getPreferences(MO
+    	settings = Storage.getSharedPreferences();
  
     	Button bStartGame = (Button)findViewById(R.id.bStartGame); 
     	Button bCancelGame = (Button)findViewById(R.id.bCancelGame); 
@@ -273,7 +274,7 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	//don't forget to sign up for google web services notifications!!!!!! 
 		String json;
 		try {
-			json = GameService.setupStartGame(context, this.game);
+			json = GameService.setupStartGame(this.game);
 			
 			//kick off thread
 		    new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_starting_game)).execute(Constants.REST_CREATE_GAME_URL);
@@ -502,7 +503,7 @@ private class NetworkTask extends AsyncNetworkRequest{
 		public NetworkTask(AddOpponents ctx, RequestType requestType,
 				String json,
 				String shownOnProgressDialog) {
-			super(ctx, requestType, shownOnProgressDialog, json);
+			super(AddOpponents.this, requestType, shownOnProgressDialog, json);
 			this.context = ctx;
 			// TODO Auto-generated constructor stub
 		}
@@ -527,12 +528,12 @@ private class NetworkTask extends AsyncNetworkRequest{
 		             case 200:  
 		             case 201: {
 		            	 
-		            	 Game game = GameService.handleCreateGameResponse(this.context, result.getResult());
+		            	 Game game = GameService.handleCreateGameResponse(result.getResult());
 		            //	 handleResponseFromIOThread(game);
 		            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
 		            	 //was not working and driving me crazy
-		            	 GameService.putGameToLocal(this.context, game);
-		            	 GameService.clearLastGameListCheckTime(this.context);
+		            	 GameService.putGameToLocal(game);
+		            	 GameService.clearLastGameListCheckTime();
 		            	 
 		            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
 		            	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());

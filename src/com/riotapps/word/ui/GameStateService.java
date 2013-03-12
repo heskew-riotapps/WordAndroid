@@ -7,12 +7,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 
-import com.facebook.android.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.riotapps.word.utils.Constants;
-import com.riotapps.word.utils.FileUtils;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.Storage;
 
 @TargetApi(9)
 public class GameStateService {
@@ -21,7 +20,7 @@ public class GameStateService {
 	public static GameState getGameState(Context context, String gameId){
 		Logger.d(TAG, "getGameState called gameId=" + gameId);
 		
-		SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences(Constants.GAME_STATE); 
 	    String gameStatejson = settings.getString(gameId, "");  
 	    
 	    GameState gameState;
@@ -42,14 +41,14 @@ public class GameStateService {
 		 return gameState;
 	}
 	
-	public static GameState clearGameState(Context context, String gameId){
+	public static GameState clearGameState(String gameId){
 		Logger.d(TAG, "clearGameState called gameId=" + gameId);
 		
 		 Gson gson = new Gson();
 		 GameState gameState = new GameState();
 		 gameState.setGameId(gameId);
 		 
-		 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS);
+		 SharedPreferences settings = Storage.getSharedPreferences(Constants.GAME_STATE);
 		 SharedPreferences.Editor editor = settings.edit();
 		 editor.putString(gameId, gson.toJson(gameState));
 	 
@@ -67,14 +66,14 @@ public class GameStateService {
 		 return gameState;
 	}
 	
-	public static void removeGameState(Context context, String gameId){
+	public static void removeGameState(String gameId){
 		
 		Logger.d(TAG, "removeGameState called gameId=" + gameId);
 		
 		 GameState gameState = new GameState();
 		 gameState.setGameId(gameId);
 		 
-		 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS);
+		 SharedPreferences settings = Storage.getSharedPreferences(Constants.GAME_STATE);
 		 SharedPreferences.Editor editor = settings.edit();
 		 editor.remove(gameId);
 			// Check if we're running on GingerBread or above
@@ -91,14 +90,14 @@ public class GameStateService {
 
 	}
 	
-	public static void setGameState(Context context, GameState gameState){
+	public static void setGameState(GameState gameState){
 		
 		Logger.d(TAG, "setGameState called gameId=" + gameState.getGameId());
 		
 		if (gameState != null && gameState.getGameId().length() > 0){
 			 Gson gson = new Gson();
 			 
-			 SharedPreferences settings = context.getSharedPreferences(Constants.GAME_STATE, Context.MODE_MULTI_PROCESS);
+			 SharedPreferences settings = Storage.getSharedPreferences(Constants.GAME_STATE);
 			 SharedPreferences.Editor editor = settings.edit();
 			 editor.putString(gameState.getGameId(), gson.toJson(gameState));
 				// Check if we're running on GingerBread or above

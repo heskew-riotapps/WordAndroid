@@ -331,6 +331,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 		this.hideInterstitialAd = true;
 	 	}
 	 		 		
+	 	
+	 	Logger.d(TAG, "revMob=" + this.isRevMobActive + " chartBoost=" + this.isChartBoostActive);
 	}
 	
 	private void setupChartBoost(){
@@ -782,7 +784,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 
 		 //if the game state is dated, clear it out
 		 if (this.game.getContextPlayerTrayVersion(this.player) != this.gameState.getTrayVersion()){
-			 this.gameState = GameStateService.clearGameState(context, this.game.getId());
+			 this.gameState = GameStateService.clearGameState(this.game.getId());
 		 }
 		 
 	 
@@ -861,7 +863,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		Logger.d(TAG, "onStop called");
 		if (this.getGameState() != null){
-			GameStateService.setGameState(this, this.getGameState());
+			GameStateService.setGameState(this.getGameState());
 		}
 		
 	///	this.stopTimer();
@@ -910,7 +912,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     	}
 		Logger.d(TAG, "onPause - stop timer about to be called");
 		if (this.getGameState() != null){
-			GameStateService.setGameState(this, this.getGameState());
+			GameStateService.setGameState(this.getGameState());
 		}
 		
 	///	this.stopTimer();
@@ -1017,7 +1019,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		}
 		
 		if (this.getGameState() != null){
-			GameStateService.setGameState(this, this.getGameState());
+			GameStateService.setGameState(this.getGameState());
 		}
 		
 		this.gameSurfaceView.onStop();
@@ -1440,7 +1442,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	//stop thread first
 	    	this.gameSurfaceView.onStop();
 	    	try { 
-				String json = GameService.setupCancelGame(context, this.game.getId());
+				String json = GameService.setupCancelGame(this.game.getId());
 				
 				//kick off thread to cancel game on server
 				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_cancelling), GameActionType.CANCEL_GAME);
@@ -1455,7 +1457,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		    	 try { 
 		    		 if (isNetworkTaskActive == false && game != null){
 			    		 Logger.d(TAG, "handleGameRefresh");
-			    		 String json = GameService.setupGameCheck(context, game.getId(), game.getTurn());
+			    		 String json = GameService.setupGameCheck(game.getId(), game.getTurn());
 			
 						runningTask = new NetworkTask(context, RequestType.POST, json, getString(R.string.progress_syncing), GameActionType.REFRESH);
 						runningTask.execute(Constants.REST_GAME_REFRESH_URL);
@@ -1471,7 +1473,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	//stop thread first
 	    	this.gameSurfaceView.onStop();
 	    	try { 
-				String json = GameService.setupDeclineGame(context, this.game.getId());
+				String json = GameService.setupDeclineGame(this.game.getId());
 				
 				//kick off thread to cancel game on server
 				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.DECLINE_GAME);
@@ -1486,7 +1488,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	//stop thread first
 	    	this.gameSurfaceView.onStop();
 	    	try { 
-				String json = GameService.setupResignGame(context, this.game.getId());
+				String json = GameService.setupResignGame(this.game.getId());
 				
 				//kick off thread to cancel game on server
 				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_sending), GameActionType.RESIGN);
@@ -1508,7 +1510,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		    		newGame =  GameService.addPlayerToGame(this, newGame, opponent);
 		    	}
 
-				String json = GameService.setupStartGame(context, newGame);
+				String json = GameService.setupStartGame(newGame);
 				
 				//kick off thread to start game on server
 				runningTask = new NetworkTask(context, RequestType.POST, json,  getString(R.string.progress_starting_game), GameActionType.REMATCH);
@@ -1526,7 +1528,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	//DialogManager.SetupAlert(context, "played", "clicked");
  	    	this.gameSurfaceView.stopThreadLoop();
 	    	try { 
-				String json = GameService.setupGameTurn(context, this.game, placedResult);
+				String json = GameService.setupGameTurn(this.game, placedResult);
 				
 				Logger.d(TAG, "handleGamePlayOnClick json=" + json);
 				//kick off thread to cancel game on server
@@ -1547,7 +1549,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	//DialogManager.SetupAlert(context, "played", "clicked");
  	    	this.gameSurfaceView.stopThreadLoop();
 	    	try { 
-				String json = GameService.setupGameSkip(context, this.game);
+				String json = GameService.setupGameSkip(this.game);
 				
 				Logger.d(TAG, "handleGameSkipOnClick json=" + json);
 				//kick off thread to cancel game on server
@@ -1584,7 +1586,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	//DialogManager.SetupAlert(context, "played", "clicked");
  	    	this.gameSurfaceView.stopThreadLoop();
 	    	try { 
-				String json = GameService.setupGameSwap(context, this.game, swappedLetters);
+				String json = GameService.setupGameSwap(this.game, swappedLetters);
 				
 				Logger.d(TAG, "handleGameSkipOnClick json=" + json);
 				//kick off thread to cancel game on server
@@ -1608,7 +1610,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    				String json,
 	    				String shownOnProgressDialog,
 	    				GameActionType actionType) {
-	    			super(ctx, requestType, shownOnProgressDialog, json);
+	    			super(GameSurface.this, requestType, shownOnProgressDialog, json);
 	    			this.context = ctx;
 	    			this.actionType = actionType;
 	    			isNetworkTaskActive = true;
@@ -1641,10 +1643,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		             case 200:  
 	    		             case 201: 
 	    		            	 if (this.actionType == GameAction.GameActionType.REFRESH){
-	    		            		 game = GameService.handleCreateGameResponse(this.context, result.getResult());
+	    		            		 game = GameService.handleCreateGameResponse(result.getResult());
 	    		     			    
-	    			            	 GameService.putGameToLocal(context, game);
-	    			            	 gameState = GameStateService.clearGameState(context, game.getId());
+	    			            	 GameService.putGameToLocal(game);
+	    			            	 gameState = GameStateService.clearGameState(game.getId());
 	    			            	 setupGame();
 	    			 	 			 checkGameStatus();
 	    			 	 			 gameSurfaceView.resetGameAfterRefresh();
@@ -2012,33 +2014,33 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
     	 	case CANCEL_GAME:
     	 		 
  				//remove game from local storage
-	 			GameService.removeGameFromLocal(context, context.game);
+	 			GameService.removeGameFromLocal(context.game);
 	 			
 	 			//refresh player's game list with response from server
-	 			player = GameService.handleCancelGameResponse(context, result);
-	 			GameService.updateLastGameListCheckTime(this.context);
+	 			player = GameService.handleCancelGameResponse(result);
+	 			GameService.updateLastGameListCheckTime();
 	 			
     	 		this.handlePostTurnOption(action);
     	 			
     	 		break;
     	 	case DECLINE_GAME:
     	 		//remove game from local storage
-	 			GameService.removeGameFromLocal(context, context.game);
+	 			GameService.removeGameFromLocal(context.game);
 	 			
 	 			//refresh player's game list with response from server
-	 			player = GameService.handleDeclineGameResponse(context, result);
-	 			GameService.updateLastGameListCheckTime(this.context);
+	 			player = GameService.handleDeclineGameResponse(result);
+	 			GameService.updateLastGameListCheckTime();
 	 			
     	 		this.handlePostTurnOption(action);
 
     	 		break;
     	 	case RESIGN:
     	 		//remove game from local storage
-	 			GameService.removeGameFromLocal(context, context.game);
+	 			GameService.removeGameFromLocal(context.game);
 	 			
 	 			//refresh player's game list with response from server
-	 			player = GameService.handleResignGameResponse(context, result);
-	 			GameService.updateLastGameListCheckTime(this.context);
+	 			player = GameService.handleResignGameResponse(result);
+	 			GameService.updateLastGameListCheckTime();
 	 			
     	 		this.handlePostTurnOption(action);
 	 
@@ -2049,12 +2051,12 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			//refresh player's game list with response from server
 	 			
     	 		//refresh game board
-    	 		game = GameService.handleGamePlayResponse(context, result);
+    	 		game = GameService.handleGamePlayResponse(result);
     	 		
     	 		Logger.d(TAG,"handlePostTurn result=" + result);
     	 		if (game.isCompleted()){
     	 			Logger.d(TAG, "handlePostTurn game isCompleted");
-    	 			GameStateService.clearGameState(context, this.game.getId());
+    	 			GameStateService.clearGameState(this.game.getId());
     	 		}
     	 		this.setupButtons();
     	 		//Logger.d(TAG, "handleResponse game=" + gson.toJson(game));
@@ -2069,8 +2071,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			//refresh player's game list with response from server
 	 			
     	 		//refresh game board
-    	 		game = GameService.handleGamePlayResponse(context, result);
-    	 		GameStateService.clearGameState(context, this.game.getId());
+    	 		game = GameService.handleGamePlayResponse(result);
+    	 		GameStateService.clearGameState(this.game.getId());
     	 		
     	 		Logger.d(TAG, "handleResponse SKIP game=" + gson.toJson(game));
     	 		this.setupButtons();
@@ -2086,7 +2088,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 			//refresh player's game list with response from server
 	 			
     	 		//refresh game board
-    	 		game = GameService.handleGamePlayResponse(context, result);
+    	 		game = GameService.handleGamePlayResponse(result);
     	 		//GameStateService.clearGameState(context, this.game.getId());
     	 		this.gameSurfaceView.clearPlacedTiles();
     	 		this.setupButtons();
@@ -2097,10 +2099,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
     	 		break;
     	 	case REMATCH:
-    	 		Game newGame = GameService.handleCreateGameResponse(this.context, result);
+    	 		Game newGame = GameService.handleCreateGameResponse(result);
 
-            	 GameService.putGameToLocal(this.context, newGame);
-            	 GameService.clearLastGameListCheckTime(this.context);
+            	 GameService.putGameToLocal(newGame);
+            	 GameService.clearLastGameListCheckTime();
             	 
             	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
             	 intent.putExtra(Constants.EXTRA_GAME_ID, newGame.getId());

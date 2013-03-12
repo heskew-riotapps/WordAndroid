@@ -18,6 +18,7 @@ import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.NetworkTaskResult;
+import com.riotapps.word.utils.Storage;
 import com.riotapps.word.utils.Utils;
 import com.riotapps.word.utils.Enums.RequestType;
 
@@ -84,7 +85,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		this.player = PlayerService.getPlayerFromLocal();
 		PlayerService.loadPlayerInHeader(this);
 		
-		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 
 	    
@@ -614,11 +615,11 @@ private void handleGameClick(String gameId){
 		   if (game.getId().equals(gameId)){
 			   long localStorageDuration = (System.nanoTime() / 1000000) - game.getLocalStorageDateInMilliseconds();
 			   
-			   Logger.d(TAG, "handleGameClick called this.player.getLastPlayedDateFromGameList(gameId)=" + this.player.getLastPlayedDateFromGameList(gameId));
-			   Logger.d(TAG, "handleGameClick called  game.getLocalStorageLastTurnDate()=" + game.getLocalStorageLastTurnDate());
-			   Logger.d(TAG, "handleGameClick called  localStorageDuration=" + localStorageDuration);
-			   Logger.d(TAG, "handleGameClick called  game.getLocalStorageDateInMilliseconds()=" + game.getLocalStorageDateInMilliseconds());
-			   Logger.d(TAG, "handleGameClick called  System.nanoTime() / 1000000=" + (System.nanoTime() / 1000000));
+//			   Logger.d(TAG, "handleGameClick called this.player.getLastPlayedDateFromGameList(gameId)=" + this.player.getLastPlayedDateFromGameList(gameId));
+//			   Logger.d(TAG, "handleGameClick called  game.getLocalStorageLastTurnDate()=" + game.getLocalStorageLastTurnDate());
+//			   Logger.d(TAG, "handleGameClick called  localStorageDuration=" + localStorageDuration);
+//			   Logger.d(TAG, "handleGameClick called  game.getLocalStorageDateInMilliseconds()=" + game.getLocalStorageDateInMilliseconds());
+//			   Logger.d(TAG, "handleGameClick called  System.nanoTime() / 1000000=" + (System.nanoTime() / 1000000));
 			   
 			   //also compare lastturndate from list and local storage..if list is later, refresh game from server 
 			   //if (this.player.getLastPlayedDateFromGameList(gameId) > game.getLocalStorageLastTurnDate()){
@@ -638,7 +639,7 @@ private void handleGameClick(String gameId){
 				   }
 			   }
 		   }
-			String json = GameService.setupGetGame(this, gameId);
+			String json = GameService.setupGetGame(gameId);
 			 Logger.w(TAG, "handleGameClick game not Found with local storage duration. starting server fetch");
 			//this will bring back the players games too
 			this.runningTask = new NetworkTask(this, RequestType.POST, getString(R.string.progress_loading), json, true);
@@ -658,7 +659,7 @@ private void handleGameClick(String gameId){
 		
 		
 		public NetworkTask(MainLanding ctx, RequestType requestType, String shownOnProgressDialog, String jsonPost, boolean fetchGame) {
-			super(ctx, requestType, shownOnProgressDialog, jsonPost);
+			super(MainLanding.this, requestType, shownOnProgressDialog, jsonPost);
 			this.context = ctx;
 			this.fetchGame = fetchGame;
 		 
@@ -682,11 +683,11 @@ private void handleGameClick(String gameId){
 	            	 try{
 	            		 if (fetchGame){
 			            	 
-			            	 Game game = GameService.handleCreateGameResponse(this.context, result.getResult());
+			            	 Game game = GameService.handleCreateGameResponse(result.getResult());
 			    
 			            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
 			            	 //was not working and driving me crazy
-			            	 GameService.putGameToLocal(context, game);
+			            	 GameService.putGameToLocal(game);
 			            	 
 			            	 Intent intent = new Intent(this.context, com.riotapps.word.GameSurface.class);
 			            	 intent.putExtra(Constants.EXTRA_GAME_ID, game.getId());
@@ -696,8 +697,8 @@ private void handleGameClick(String gameId){
 	            		 }
 	            		 else{	 //this is the same as authenticating, so this is ok
 	            			 Logger.d(TAG, "handleAuthByTokenResponse after timer");
-		            		 player = PlayerService.handleAuthByTokenResponse(this.context, result.getResult());
-		            		 GameService.updateLastGameListCheckTime(this.context);
+		            		 player = PlayerService.handleAuthByTokenResponse(result.getResult());
+		            		 GameService.updateLastGameListCheckTime();
 		            		 
 		            		 if (player.getTotalNumLocalGames() == 0){
 		            			 Intent intent = new Intent( context, com.riotapps.word.StartGame.class);

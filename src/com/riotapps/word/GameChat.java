@@ -343,7 +343,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
 		try { 
 			if ( this.etText.getText().toString().length() > 0) {
 		
-				String json = GameService.setupGameChat(context, this.game, etText.getText().toString());
+				String json = GameService.setupGameChat(this.game, etText.getText().toString());
 				
 				//kick off thread to cancel game on server
 				runningTask = new NetworkTask(this, RequestType.POST, json,  getString(R.string.progress_sending));
@@ -372,7 +372,7 @@ public class GameChat extends FragmentActivity implements  View.OnClickListener{
     		public NetworkTask(GameChat ctx, RequestType requestType,
     				String json,
     				String shownOnProgressDialog) {
-    			super(ctx, requestType, shownOnProgressDialog, json);
+    			super(GameChat.this, requestType, shownOnProgressDialog, json);
     			this.context = ctx;
     		 
     		}

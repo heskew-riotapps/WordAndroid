@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.os.Binder;
-import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -15,6 +13,7 @@ import com.google.android.gcm.GCMBaseIntentService;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.Logger;
+import com.riotapps.word.utils.Storage;
 
 public class GCMIntentService extends GCMBaseIntentService {
 	private static final String TAG = GCMIntentService.class.getSimpleName();
@@ -97,7 +96,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		//only send message if user is connected to wordsmash
 	
 		
-		SharedPreferences settings = this.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+		SharedPreferences settings = Storage.getSharedPreferences();
 	    String storedToken = settings.getString(Constants.USER_PREFS_AUTH_TOKEN, "");
 	       	    
 	    if (storedToken.length() > 0){

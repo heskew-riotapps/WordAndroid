@@ -70,14 +70,14 @@ public class WordLoaderService extends Service {
         		  // appContext.getWordService().loadList("a");
         		  // appContext.getWordService().isWordValid("aaa");
         		   
-        		   WordService.isWordValid("aaa");
+        		   //WordService.isWordValid("aaa");
         			  
         		   captureTime("letter a - loaded");
         		   //Thread.sleep(Constants.WORD_LOADER_SERVICE_SLEEP_BETWEEN_LETTERS);
         		   
         		   //appContext.getWordService().loadList("b");
         		   //appContext.getWordService().isWordValid("bbb");
-        		   WordService.isWordValid("bbb");
+        		   //WordService.isWordValid("bbb");
 
         		   captureTime("letter b - loaded");
         		   //Thread.sleep(Constants.WORD_LOADER_SERVICE_SLEEP_BETWEEN_LETTERS);

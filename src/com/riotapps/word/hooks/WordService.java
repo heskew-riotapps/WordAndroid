@@ -14,7 +14,7 @@ import com.riotapps.word.utils.Logger;
 public class WordService {
 	private static final String TAG = WordService.class.getSimpleName();
 	
-	
+	/*
 	private static HashSet<String> words_a = null;
 	private static HashSet<String> words_b = null;
 	private static HashSet<String> words_c = null;
@@ -42,7 +42,7 @@ public class WordService {
 	private static HashSet<String> words_y = null;
 	private static HashSet<String> words_z = null;
 	
-	
+	*/
 	boolean isLoaded = false;
 	/*
 	 SortedSet<String> words_a = null;
@@ -101,7 +101,7 @@ public class WordService {
 	ArrayList<String> words_y = null;
 	ArrayList<String> words_z = null;
 	*/
-	/*
+	 
 	HashSet<String> words_a = null;
 	HashSet<String> words_b = null;
 	HashSet<String> words_c = null;
@@ -128,19 +128,19 @@ public class WordService {
 	HashSet<String> words_x = null;
 	HashSet<String> words_y = null;
 	HashSet<String> words_z = null;
-	*/
+	 
  
 //	Type type = new TypeToken<ArrayList<String>>() {}.getType();
 	Type type = new TypeToken<HashSet<String>>() {}.getType();
-	Context context;
+	//Context context;
 	
 	
-	public WordService(Context context){
-		this.context = context;
+	public WordService(){
+		//this.context = context;
 	}
 	
 
-	public static boolean isWordValid(String word){
+	public  boolean isWordValid(String word){
 		word = word.toLowerCase();
 		String startWith = (word.substring(0, 1));
 		
@@ -209,188 +209,190 @@ public class WordService {
 		this.isLoaded = true;
 	}
 	*/
-	public static void loadList(String letter){
+	
+	
+	public void loadList(String letter){
 		Context context = ApplicationContext.getAppContext();
 		Type type = new TypeToken<HashSet<String>>() {}.getType();
 		
 		if (letter.equals("a")){
 			if (words_a == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_a = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_a)), type);//FileUtils.ReadRawTextFile(context, R.raw.words_a), type);
 			}
 			return;
 		}	
 		else if (letter.equals("b")){
 			if (words_b == null){ 
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_b = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_b)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_b), type);
 			}
 			return;
 		}
 		else if (letter.equals("c")){
 			if (words_c == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_c = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_c)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_c), type); 
 			}
 			return;
 		}
 		else if (letter.equals("d")){
 			if (words_d == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_d = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_d)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_d), type); 
 			}
 			return;
 		}
 		else if (letter.equals("e")){ 
 			if (words_e == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_e = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_e)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_e), type); 
 			}
 			return;
 		}
 		else if (letter.equals("f")) {
 			if (words_f == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_f = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_f)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_f), type);  
 			}
 			return;
 		}
 		else if (letter.equals("g")){ 
 			if (words_g == null){ 
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_g = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_g)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_g), type); 
 			}
 			return;
 		}
 		else if (letter.equals("h")){ 
 			if (words_h == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_h = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_h)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_h), type);  
 			}
 			return;
 		}
 		else if (letter.equals("i")) { 
 			if (words_i == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_i = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_i)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_i), type); 
 			}
 			return;
 		}
 		else if (letter.equals("j")) { 
 			if (words_j == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_j = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_j)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_j), type);  
 			}
 			return;
 		}
 		else if (letter.equals("k")){ 
 			if (words_k == null){ 
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_k = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_k)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_k), type);  
 			}
 			return;
 		}
 		else if (letter.equals("l")) { 
 			if (words_l == null){ 
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_l = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_l)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_l), type);
 			}
 			return;
 		}
 		else if (letter.equals("m")) { 
 			if (words_m == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_m = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_m)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_m), type); 
 			}
 			return;
 		}
 		else if (letter.equals("n")) { 
 			if (words_n == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_n = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_n)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_n), type);
 			}
 			return;
 		}
 		else if (letter.equals("o")){ 
 			if (words_o == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_o = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_o)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_o), type);
 			}
 			return;
 		}
 		else if (letter.equals("p")) { 
 			if (words_p == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_p = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_p)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_p), type);
 			}
 			return;
 		}
 		else if (letter.equals("q")) { 
 			if (words_q == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_q = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_q)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_q), type);  
 			}
 			return;
 		}
 		else if (letter.equals("r")) { 
 			if (words_r == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_r = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_r)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_r), type); 
 			}
 			return;
 		}
 		else if (letter.equals("s")) { 
 			if (words_s == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_s = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_s)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_s), type);
 			}
 			return;
 		}
 		else if (letter.equals("t")) { 
 			if (words_t == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_t = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_t)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_t), type); 
 			}
 			return;
 		}
 		else if (letter.equals("u")) { 
 			if (words_u == null){ 
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_u = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_u)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_u), type); 
 			}
 			return;
 		}
 		else if (letter.equals("v")) { 
 			if (words_v == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_v = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_v)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_v), type); 
 			}
 			return;
 		}
 		else if (letter.equals("w")) { 
 			if (words_w == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_w = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_w)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_w), type);
 			}
 			return;
 		}
 		else if (letter.equals("x")) { 
 			if (words_x == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_x = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_x)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_x), type); 
 			}
 			return;
 		}
 		else if (letter.equals("y")) { 
 			if (words_y == null){
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_y = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_y)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_y), type); 
 			}
 			return;
 		}
 		else if (letter.equals("z")) { 
 			if (words_z == null){ 
-				Logger.d(TAG, "letter=" + letter);
+				Logger.d(TAG, "loading from disk letter=" + letter);
 				words_z = new Gson().fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.words_z)), type);//(FileUtils.ReadRawTextFile(context, R.raw.words_z), type); 
 			}
 		}

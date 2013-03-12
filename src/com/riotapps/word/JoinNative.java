@@ -101,7 +101,7 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			
 			public NetworkTask(JoinNative ctx, RequestType requestType,
 					String shownOnProgressDialog, String jsonPost) {
-				super(ctx, requestType, shownOnProgressDialog, jsonPost);
+				super(JoinNative.this, requestType, shownOnProgressDialog, jsonPost);
 				this.context = ctx;
 			 
 			}
@@ -126,7 +126,7 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 			             case 200:   
 			             case 201: {  
 			          
-			            	 Player player = PlayerService.handleCreatePlayerResponse(this.context, result.getResult());
+			            	 Player player = PlayerService.handleCreatePlayerResponse(result.getResult());
 			            	 Intent intent;
 			            	 if (player.getTotalNumLocalGames() == 0){
 			            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
@@ -143,7 +143,7 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 
 			             }//end of case 200 & 201 
 			             case 401:  
-			            	 ErrorType errorType = ErrorService.translateError(this.context, result.getResult());
+			            	 ErrorType errorType = ErrorService.translateError(result.getResult());
 			            	 
 			            	 String errorMessage;
 			            	 

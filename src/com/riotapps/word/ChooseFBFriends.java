@@ -20,6 +20,7 @@ import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.NetworkTaskResult;
+import com.riotapps.word.utils.Storage;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Utils;
 
@@ -280,7 +281,7 @@ public class ChooseFBFriends extends FragmentActivity implements View.OnClickLis
     	String json;
 		try {
 
-			SharedPreferences settings = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_MULTI_PROCESS);
+			SharedPreferences settings = Storage.getSharedPreferences();
 			long currentTime = Utils.convertNanosecondsToMilliseconds(System.nanoTime());
 			long lastCheckTime = settings.getLong(Constants.USER_PREFS_FRIENDS_LAST_REGISTERED_CHECK_TIME, 0);
 
@@ -503,7 +504,7 @@ private class NetworkTask extends AsyncNetworkRequest{
 		public NetworkTask(ChooseFBFriends ctx, RequestType requestType,
 				String json,
 				String shownOnProgressDialog) {
-			super(ctx, requestType, shownOnProgressDialog, json);
+			super(ChooseFBFriends.this, requestType, shownOnProgressDialog, json);
 			this.context = ctx;
 			// TODO Auto-generated constructor stub
 		}
