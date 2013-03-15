@@ -11,6 +11,7 @@ import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerGame;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.ui.DialogManager;
+import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
@@ -67,6 +68,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
         
        // Toast t = Toast.makeText(this, "Hello " + player.getNickname(), Toast.LENGTH_LONG);  
 	   // t.show();
+        
+        ApplicationContext.captureTime(TAG, "onCreate started");
         
         Logger.d(TAG, "onCreate called");
         
@@ -128,8 +131,14 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//this.setupTimer();
 		
 		this.checkAlert();
+		ApplicationContext.captureTime(TAG, "checkAlert ended");
+		
 		this.setupGCMReceiver();
+		ApplicationContext.captureTime(TAG, "setupGCMReceiver ended");
+		
 		this.setupBackgroundReceiver();
+		
+		ApplicationContext.captureTime(TAG, "onCreate ended");
     }
     
     private void checkAlert(){
@@ -506,13 +515,14 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		if (opponentGames.size() == 1){
 			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 5);
 			textSize = Utils.convertDensityPixelsToPixels(context, 14);
-			tvOpponent_1.setTextSize(14);
+			tvOpponent_1.setTextSize(16);
 			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
 		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_1.setLayoutParams(rlp);
 		    
 			layoutLastAction.addRule(RelativeLayout.RIGHT_OF, rlAvatars.getId());	
 			layoutLastAction.addRule(RelativeLayout.BELOW, rlPlayer_1.getId());
+			layoutLastAction.setMargins(3, 0, 0, 0);
 			//layoutLastAction.setMargins(left, top, right, bottom); 
 			llLastAction.setLayoutParams(layoutLastAction);
 			
@@ -524,10 +534,10 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		else if (opponentGames.size() == 2){
 		
 			
-			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 4);
+			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 5);
 			textSize = Utils.convertDensityPixelsToPixels(context, 12);
-			tvOpponent_1.setTextSize(13);
-			tvOpponent_2.setTextSize(13);	
+			tvOpponent_1.setTextSize(15);
+			tvOpponent_2.setTextSize(15);	
 			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
 		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_2.setLayoutParams(rlp);
@@ -538,13 +548,31 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			//tvLastAction.setLayoutParams(layoutLastAction);
 			
 			RelativeLayout.LayoutParams layoutOpponent2  = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			layoutOpponent2.setMargins(0, 4, 0, 0);
+			layoutOpponent2.setMargins(5, 4, 0, 0);
 			layoutOpponent2.addRule(RelativeLayout.RIGHT_OF, rlAvatars.getId());	
 			layoutOpponent2.addRule(RelativeLayout.BELOW, rlPlayer_1.getId());
 			rlPlayer_2.setLayoutParams(layoutOpponent2);
 
 		}
 		else{
+			
+			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 2);
+			textSize = Utils.convertDensityPixelsToPixels(context, 11);
+			tvOpponent_1.setTextSize(11);
+			tvOpponent_2.setTextSize(11);	
+			tvOpponent_3.setTextSize(11);
+			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
+		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
+		    ivOpponentBadge_3.setLayoutParams(rlp);
+		    ivOpponentBadge_2.setLayoutParams(rlp);
+		    ivOpponentBadge_1.setLayoutParams(rlp);
+		    
+			//RelativeLayout.LayoutParams layoutOpponent2  = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			//layoutOpponent2.setMargins(0, 4, 0, 0);
+			//layoutOpponent2.addRule(RelativeLayout.RIGHT_OF, rlAvatars.getId());	
+			//layoutOpponent2.addRule(RelativeLayout.BELOW, rlPlayer_1.getId());
+			//rlPlayer_2.setLayoutParams(layoutOpponent2);
+			
 			layoutLastAction.addRule(RelativeLayout.BELOW, rlAvatars.getId());
 			llLastAction.setLayoutParams(layoutLastAction);
 			//tvLastAction.setLayoutParams(layoutLastAction);

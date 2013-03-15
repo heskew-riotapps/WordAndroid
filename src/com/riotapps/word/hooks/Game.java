@@ -687,7 +687,8 @@ public class Game implements Parcelable, Comparable<Game> {
 			 if (contextPlayerGame.isWinner()){
 				 message = String.format(context.getString(R.string.game_alert_game_over_2_player_context),
 						 contextPlayerGame.getScore(),
-						 singleOpponent.getScore());
+						 singleOpponent.getScore(),
+						 contextPlayerGame.getWinNum());
 			 }
 			 else if (contextPlayerGame.isDraw()){ 
 				 message = String.format(context.getString(R.string.game_alert_game_over_2_player_draw),
@@ -704,7 +705,8 @@ public class Game implements Parcelable, Comparable<Game> {
 		 }
 		 else{
 			 if (contextPlayerGame.isWinner()){
-				 message = context.getString(R.string.game_alert_game_over_multi_player_context);
+				 message = String.format(context.getString(R.string.game_alert_game_over_multi_player_context),
+						 contextPlayerGame.getWinNum());
 			 }
 			 else if (contextPlayerGame.isDraw()){ 
 				 message = context.getString(R.string.game_alert_game_over_multi_player_draw);
@@ -815,7 +817,7 @@ public class Game implements Parcelable, Comparable<Game> {
 						List<PlayedWord> words = this.getLastPlayedWords();
 						int numWordsPlayed = words.size();
 	
-						Logger.d(TAG, "words played size =" + words.size());
+						//Logger.d(TAG, "words played size =" + words.size());
 						switch (numWordsPlayed){
 						case 1:
 							if (isContext){

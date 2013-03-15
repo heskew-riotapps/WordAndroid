@@ -40,6 +40,7 @@ public class BackgroundService extends Service {
 	private boolean isGameFetcherCompleted = false;
 	private String completedDate;
 	private String lastAlertActivationDate;
+	private String registrationId;
 	 
    @Override
    public IBinder onBind(Intent intent) {
@@ -72,6 +73,11 @@ public class BackgroundService extends Service {
 		   this.storedToken = intent.getStringExtra(Constants.EXTRA_PLAYER_TOKEN);  //PlayerService.getAuthTokenFromLocal();
 		   this.lastAlertActivationDate = intent.getStringExtra(Constants.EXTRA_PLAYER_LAST_ALERT_ACTIVATION_DATE); 
 		   this.completedDate = intent.getStringExtra(Constants.EXTRA_PLAYER_COMPLETED_DATE); 
+		   this.registrationId = intent.getStringExtra(Constants.EXTRA_PLAYER_GCM_RID); 
+		   
+		   Logger.d(TAG, "onStartCommand storedToken=" + this.storedToken);
+		   Logger.d(TAG, "onStartCommand lastAlertActivationDate=" + this.lastAlertActivationDate);
+		   Logger.d(TAG, "onStartCommand completedDate=" + this.completedDate);
 		   
 		   context = (ApplicationContext) ApplicationContext.getAppContext(); // (ApplicationContext)this.getApplicationContext();
 		 
@@ -145,10 +151,11 @@ public class BackgroundService extends Service {
 		*/
 		   
   		 Logger.d(TAG, "getGameList");
-				String json = PlayerService.setupAuthTokenCheck(context, this.storedToken, this.completedDate, this.lastAlertActivationDate);
+				String json = PlayerService.setupAuthTokenCheck(context, this.storedToken, this.completedDate, 
+							this.lastAlertActivationDate, this.registrationId);
 				//this will bring back the players games too
 				this.task = new NetworkTask(RequestType.POST, json, false);
-				this.task.execute(Constants.REST_GAME_LIST_CHECK);
+				this.task.execute(Constants.REST_AUTHENTICATE_PLAYER_BY_TOKEN);
  			} catch (DesignByContractException e) {
  				//this should never happen unless there is some tampering
  				Logger.d(TAG, "getGameList error=" + e.getLocalizedMessage());
@@ -158,9 +165,10 @@ public class BackgroundService extends Service {
    
 
 	private void captureTime(String text){
-	     this.captureTime = System.nanoTime();
-	     Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", text, Utils.convertNanosecondsToMilliseconds(this.captureTime - this.runningTime)));
-	     this.runningTime = this.captureTime;
+		ApplicationContext.captureTime(TAG, text);
+	    // this.captureTime = System.nanoTime();
+	    // Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", text, Utils.convertNanosecondsToMilliseconds(this.captureTime - this.runningTime)));
+	    // this.runningTime = this.captureTime;
 
 	}
    
@@ -201,6 +209,8 @@ public class BackgroundService extends Service {
 		            	//	 GameService.updateLastGameListCheckTime();
 		            		 
 	            		 	//send intent to process bridge
+	            		 	
+	            		 	
 		            			Intent intent = new Intent(Constants.INTENT_GAME_LIST_REFRESHED_TO_BRIDGE);
 		            			intent.putExtra(Constants.EXTRA_PLAYER_AUTH_RESULT, result.getResult());
 		            		    this.sendBroadcast(intent);

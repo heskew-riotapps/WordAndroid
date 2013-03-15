@@ -15,6 +15,7 @@ import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.services.BackgroundService;
+import com.riotapps.word.services.ProcessBridge;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.*;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -79,6 +80,9 @@ public class Splash  extends FragmentActivity {
      }
     
     private void startBackgroundService(){
+    	Intent bridgeIntent = new Intent(this, ProcessBridge.class);
+    	this.startService(bridgeIntent);
+    	
     	 Intent backgroundIntent = new Intent(this, BackgroundService.class);
          backgroundIntent.putExtra(Constants.EXTRA_PLAYER_TOKEN, this.storedToken);
          
@@ -88,6 +92,7 @@ public class Splash  extends FragmentActivity {
  	    
  	      backgroundIntent.putExtra(Constants.EXTRA_PLAYER_COMPLETED_DATE, completedDate);
  	      backgroundIntent.putExtra(Constants.EXTRA_PLAYER_LAST_ALERT_ACTIVATION_DATE, lastAlertActivationDate);
+ 	      backgroundIntent.putExtra(Constants.EXTRA_PLAYER_GCM_RID, PlayerService.getRegistrationId());
           this.startService(backgroundIntent);
           this.captureTime("BackgroundService ended");
     }
@@ -166,9 +171,10 @@ public class Splash  extends FragmentActivity {
 		}
     
     public void captureTime(String text){
-	     this.captureTime = System.nanoTime();
-	     Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", text, Utils.convertNanosecondsToMilliseconds(this.captureTime - this.runningTime)));
-	     this.runningTime = this.captureTime;
+    	ApplicationContext.captureTime(TAG, text);
+	 //    this.captureTime = System.nanoTime();
+	 //    Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", text, Utils.convertNanosecondsToMilliseconds(this.captureTime - this.runningTime)));
+	 //    this.runningTime = this.captureTime;
 
 	}
     private void handleProcessing(){

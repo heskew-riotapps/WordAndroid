@@ -424,6 +424,34 @@ public class GameService {
 		else {
 			Logger.d(TAG, "handleGamePlayResponse game is completed");
 			GameService.moveGameToCompletedList(game);
+			
+			//also update win Totals for the winner
+			boolean isWinner = false;
+			Player player = PlayerService.getPlayerFromLocal();
+			for (PlayerGame pg : game.getPlayerGames()){
+				if (pg.isWinner() && pg.getPlayerId().equals(player.getId())){
+					if(pg.getWinNum() > player.getNumWins()) {
+						player.setNumWins(pg.getWinNum());
+						isWinner = true;
+					}
+				}
+				else if (pg.isWinner()){
+					isWinner = true;
+					for (Opponent o : player.getOpponents()){
+						if (o.getPlayer().getId().equals(pg.getPlayerId())){
+							if(pg.getWinNum() > o.getPlayer().getNumWins()){
+								o.getPlayer().setNumWins(pg.getWinNum());
+							}
+						}
+					}
+					
+				}
+		     }
+			 if (isWinner){
+				 //save player to local
+				 PlayerService.putPlayerToLocal(player);
+			 }
+			
 		}
 		GameService.putGameToLocal(game);
 		return game;

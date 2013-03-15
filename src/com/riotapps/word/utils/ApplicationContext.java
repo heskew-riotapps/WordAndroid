@@ -38,6 +38,15 @@ public class ApplicationContext extends Application{
 	private Bitmap bgTrayEmptyScaled = null;
 	private Bitmap bgTrayBaseDragging = null;
 	private Bitmap bgTrayBackground = null;
+	
+	public static long runningTime = 0;
+	public static long captureTime = 0;
+	
+	public static void captureTime(String TAG, String text){
+	     captureTime = System.nanoTime();
+	     Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", text, Utils.convertNanosecondsToMilliseconds(captureTime - runningTime)));
+	     runningTime = captureTime;
+	}
 
     public void onCreate(){
         super.onCreate();

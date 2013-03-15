@@ -71,7 +71,7 @@ public class PlayerService {
 		TransportCreatePlayer player = new TransportCreatePlayer();
 		player.setEmail(email);
 		player.setNickname(nickname);
-		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
+		player.setGcmRegistrationId(PlayerService.getRegistrationId());
 		player.setPassword(password);
 		
 		return gson.toJson(player);
@@ -91,7 +91,7 @@ public class PlayerService {
 		TransportCreateFBPlayer player = new TransportCreateFBPlayer();
 		player.setEmail(email);
 		player.setFb(fb);
-		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
+		player.setGcmRegistrationId(PlayerService.getRegistrationId());
 		player.setFirstName(firstName);
 		player.setLastName(lastName);
 		
@@ -119,10 +119,11 @@ public class PlayerService {
 		
 		//return gson.toJson(player);
 		
-		return setupAuthTokenCheck(ctx, authToken, completedDate, lastAlertActivationDate);
+		return setupAuthTokenCheck(ctx, authToken, completedDate, lastAlertActivationDate, PlayerService.getRegistrationId());
 	}
 	
-	public static String setupAuthTokenCheck(Context ctx, String authToken, String completedDate, String lastAlertActivationDate) throws DesignByContractException{
+	public static String setupAuthTokenCheck(Context ctx, String authToken, String completedDate, 
+			String lastAlertActivationDate, String registrationId) throws DesignByContractException{
 		Gson gson = new Gson();
 	
 		NetworkConnectivity connection = new NetworkConnectivity(ApplicationContext.getAppContext());
@@ -133,7 +134,7 @@ public class PlayerService {
 		 
  		TransportAuthToken player = new TransportAuthToken();
 		player.setToken(authToken);
-		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
+		player.setGcmRegistrationId(registrationId);
 		player.setCompletedGameDate(new Date(completedDate));
 		player.setLastAlertActivationDate(lastAlertActivationDate);
 		
@@ -156,7 +157,7 @@ public class PlayerService {
 	    TransportAuthTokenWithGame player = new TransportAuthTokenWithGame();
 		player.setToken(authToken);
 		player.setGameId(gameId);
-		player.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
+		player.setGcmRegistrationId(PlayerService.getRegistrationId());
 		player.setCompletedGameDate(new Date(completedDate));
 		player.setLastAlertActivationDate(lastAlertActivationDate);
 
@@ -201,7 +202,7 @@ public class PlayerService {
 		updateAccount.setEmail(email);
 		updateAccount.setNickname(nickname);
 		updateAccount.setToken(player.getAuthToken());
-		updateAccount.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
+		updateAccount.setGcmRegistrationId(PlayerService.getRegistrationId());
 		return gson.toJson(updateAccount);
 	}
 
@@ -220,7 +221,7 @@ public class PlayerService {
 		TransportFBUpdateAccount updateAccount = new TransportFBUpdateAccount();
 		updateAccount.setNickname(nickname);
 		updateAccount.setToken(player.getAuthToken());
-		updateAccount.setGcmRegistrationId(PlayerService.getRegistrationId(ctx));
+		updateAccount.setGcmRegistrationId(PlayerService.getRegistrationId());
 		return gson.toJson(updateAccount);
 	}
 	
@@ -296,7 +297,7 @@ public class PlayerService {
 		 }
 	}
 	
-	public static String getRegistrationId(Context context){
+	public static String getRegistrationId(){
 		SharedPreferences settings = Storage.getSharedPreferences();
 		return settings.getString(Constants.USER_PREFS_GCM_REGISTRATION_ID, "");
 	}
@@ -514,6 +515,24 @@ public class PlayerService {
 		player = null;
 	}
 	
+	public static void putPlayerToLocal(Player player){
+		 Gson gson = new Gson(); 
+	     SharedPreferences settings = Storage.getSharedPreferences();
+	     SharedPreferences.Editor editor = settings.edit();
+	     editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+    	// Check if we're running on GingerBread or above
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		     // If so, call apply()
+		     editor.apply();
+		 // if not
+		 } else {
+		     // Call commit()
+		     editor.commit();
+		 } 
+
+		gson = null;	 	
+			 
+	}
 	
 	public static Player getPlayerFromLocal(){
 		 Gson gson = new Gson(); 

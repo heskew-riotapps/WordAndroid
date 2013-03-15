@@ -42,7 +42,7 @@
 		/>
     <com.riotapps.word.ui.MainFontTextView
         style="@style/TextStyle"
-		android:textSize="12dp"
+		android:textSize="16dp"
      	android:id="@+id/alert_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

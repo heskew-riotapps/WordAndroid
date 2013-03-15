@@ -513,10 +513,10 @@
 		<string name="message_chat_text_empty">Please enter the text.</string>
 		
 		<string name="game_alert_game_over_title">game over</string>
-		<string name="game_alert_game_over_2_player_context">you won!\n%1$s - %2$s</string>
+		<string name="game_alert_game_over_2_player_context">you won!\n%1$s - %2$s\n\nCongratulations on win number %3$s!</string>
 		<string name="game_alert_game_over_2_player">%3$s won!\n%1$s - %2$s</string>
 		<string name="game_alert_game_over_2_player_draw">it\'s a draw!\n%1$s - %2$s</string>
-		<string name="game_alert_game_over_multi_player_context">you won!</string>
+		<string name="game_alert_game_over_multi_player_context">you won!\n\nCongratulations on win number %1$s!</string>
 		<string name="game_alert_game_over_multi_player">%1$s won!</string>
 		<string name="game_alert_game_over_multi_player_draw">it\'s a draw!</string>
  

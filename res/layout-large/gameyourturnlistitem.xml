@@ -24,7 +24,6 @@
 		   		android:layout_height="54dp"
 			    android:id="@+id/ivOpponent1"	
 			    android:background="@drawable/image_border"
-			    android:layout_marginRight="5dp"
 			    android:paddingTop="1dp"
 		        android:scaleType="fitXY"    
 			 />
@@ -33,7 +32,7 @@
 		   		android:layout_height="54dp"
 			    android:id="@+id/ivOpponent2"	
 			    android:background="@drawable/image_border"
-			    android:layout_marginRight="5dp"
+			    android:layout_marginLeft="-1dp"
 			    android:paddingTop="1dp"
 		        android:scaleType="fitXY"
 		        android:layout_toRightOf="@id/ivOpponent1"	  
@@ -43,7 +42,7 @@
 		   		android:layout_height="54dp"
 			    android:id="@+id/ivOpponent3"	
 			    android:background="@drawable/image_border"
-			    android:layout_marginRight="5dp"
+			    android:layout_marginLeft="-1dp"
 			    android:paddingTop="1dp"
 		        android:scaleType="fitXY"  
 		        android:layout_toRightOf="@id/ivOpponent2"	    
@@ -54,6 +53,7 @@
 	   			android:layout_height="wrap_content"
 	   			android:id="@+id/rlPlayer_1"
 	   			android:layout_toRightOf="@id/rlAvatars"
+	   			android:layout_marginLeft="3dp"
 	         >
         <ImageView  
 		    android:id="@+id/ivOpponentBadge_1"
@@ -74,6 +74,7 @@
 	   			android:id="@+id/rlPlayer_2"
 	   			android:layout_toRightOf="@id/rlAvatars"
 	   			android:layout_below="@id/rlPlayer_1"
+	   			android:layout_marginLeft="3dp"
 	         >        
 	       
 	       <ImageView  
@@ -96,6 +97,7 @@
 	   			android:id="@+id/rlPlayer_3"
 	   			android:layout_toRightOf="@id/rlAvatars"
 	   			android:layout_below="@id/rlPlayer_2"
+	   			android:layout_marginLeft="3dp"
 	         >
 	        <ImageView  
 			    android:id="@+id/ivOpponentBadge_3"
@@ -116,6 +118,7 @@
  			    android:id="@+id/llLastAction"	
  			    android:layout_width="wrap_content"
 			   	android:layout_height="wrap_content"
+			   	android:layout_marginLeft="3dp"
  			    >
 			  <ImageView 
 				   	android:layout_width="wrap_content"
@@ -127,7 +130,7 @@
 		            android:paddingTop="4dp"
 			        android:scaleType="fitXY"    
 				 />
-	 			 <com.riotapps.word.ui.ScoreboardFontTextView
+	 			 <com.riotapps.word.ui.MainFontTextView
 		            android:id="@+id/tvLastAction"
 		            style="@style/SubTextStyle"
 		            android:textSize="15dp"

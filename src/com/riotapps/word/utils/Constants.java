@@ -5,7 +5,7 @@ public class Constants {
 	/**============================================
 	 * misc
 	 *=============================================*/
- 	public static final String MAIN_FONT =  "fonts/FullDeceSans1.0.ttf";
+ 	public static final String MAIN_FONT =  "fonts/mplus_2c_bold.ttf"; //"fonts/Capriola-Regular.ttf"; //"fonts/FullDeceSans1.0.ttf";
  	//public static final String GAME_BOARD_FONT = "fonts/Asap_Bold.ttf";//"fonts/banksia.ttf"; 
  	public static final String GAME_BOARD_FONT = "fonts/Asap_Bold.ttf";//"fonts/banksia.ttf"; //"fonts/Crushed.ttf";//"fonts/MILFCD_B.ttf";  //"fonts/Vegur_B_0.602.otf";
  	public static final String GAME_LETTER_FONT = "fonts/Asap_Bold.ttf"; //"fonts/Vegur_B_0.602.otf"; //Asap_Bold
@@ -71,6 +71,7 @@ public class Constants {
 	public static final String EXTRA_PLAYER_TOKEN = "ex_token";
 	public static final String EXTRA_PLAYER_COMPLETED_DATE = "ex_c_d";
 	public static final String EXTRA_PLAYER_LAST_ALERT_ACTIVATION_DATE = "ex_l_a_a_d";
+	public static final String EXTRA_PLAYER_GCM_RID = "ex_rid";
 	 	
  	/**============================================
 	 * storage

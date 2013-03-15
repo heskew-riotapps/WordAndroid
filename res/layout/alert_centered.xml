@@ -40,7 +40,7 @@
         android:paddingRight="3dp"
         android:paddingTop="3dp"
 		/>
-    <com.riotapps.word.ui.MainFontTextView
+    <com.riotapps.word.ui.ScoreboardFontTextView
         style="@style/TextStyle"
 		android:textSize="16dp"
      	android:id="@+id/alert_text"
