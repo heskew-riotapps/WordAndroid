@@ -1,15 +1,23 @@
 package com.riotapps.word.utils;
 
+import com.playtomic.android.api.Playtomic;
+import com.riotapps.word.GameSurface;
+import com.riotapps.word.R;
+import com.riotapps.word.hooks.Player;
+import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.WordService;
 
+import android.R.integer;
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 
 public class ApplicationContext extends Application{
-
+	private static final String TAG = ApplicationContext.class.getSimpleName();
     private static Context context;
     private WordService wordService;
     
@@ -38,9 +46,66 @@ public class ApplicationContext extends Application{
 	private Bitmap bgTrayEmptyScaled = null;
 	private Bitmap bgTrayBaseDragging = null;
 	private Bitmap bgTrayBackground = null;
+	private static Typeface mainFontTypeface;
+	private static Typeface scoreboardFontTypeface;
+	private static Typeface scoreboardButtonFontTypeface;
+	private static Typeface bonusTypeface;
+	private static Typeface letterTypeface; 
+	private static Typeface letterValueTypeface; 
+	
+	private Playtomic playtomic = null;
+	
+	private Player player = null;
 	
 	public static long runningTime = 0;
 	public static long captureTime = 0;
+
+	public static Typeface getBonusTypeface(){
+		if (bonusTypeface == null){
+			bonusTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_BOARD_FONT);
+		}
+		
+		return bonusTypeface;
+	}
+	
+	public static Typeface getLetterTypeface(){
+		if (letterTypeface == null){
+			letterTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_FONT);
+		}
+		
+		return letterTypeface;
+	}
+	public static Typeface getLetterValueTypeface(){
+		if (letterValueTypeface == null){
+			letterValueTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_VALUE_FONT);
+		}
+		
+		return letterValueTypeface;
+	}
+	
+	public static Typeface getMainFontTypeface(){
+		if (mainFontTypeface == null){
+			mainFontTypeface = Typeface.createFromAsset(context.getAssets(), Constants.MAIN_FONT);
+		}
+		
+		return mainFontTypeface;
+	}
+	
+	public static Typeface getScoreboardFontTypeface(){
+		if (scoreboardFontTypeface == null){
+			scoreboardFontTypeface = Typeface.createFromAsset(context.getAssets(), Constants.SCOREBOARD_FONT);
+		}
+		
+		return scoreboardFontTypeface;
+	}
+	
+	public static Typeface getScoreboardButtonFontTypeface(){
+		if (scoreboardButtonFontTypeface == null){
+			scoreboardButtonFontTypeface = Typeface.createFromAsset(context.getAssets(), Constants.SCOREBOARD_BUTTON_FONT);
+		}
+		
+		return scoreboardButtonFontTypeface;
+	}
 	
 	public static void captureTime(String TAG, String text){
 	     captureTime = System.nanoTime();
@@ -48,11 +113,35 @@ public class ApplicationContext extends Application{
 	     runningTime = captureTime;
 	}
 
-    public void onCreate(){
+    public Player getPlayer() {
+    	if (player == null){
+    		player = PlayerService.getPlayerFromLocal();
+    	}
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public void onCreate(){
         super.onCreate();
         ApplicationContext.context = getApplicationContext();
         this.wordService = new WordService();
-        
+    /*    try {
+			playtomic = Playtomic.getInstance(
+					this.getResources().getInteger(R.integer.playtomics_game_id), 
+			        this.getString(R.string.playtomics_guid),
+			        this.getString(R.string.playtomics_api_key),
+			        this);
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			Logger.d(TAG, "NotFoundException="  + e.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Logger.d(TAG, "Exception="  + e.toString());		}
+        Playtomic.Log().view();
+        */
        // new Thread(new Runnable() {
        //     public void run() {
        //     	wordService.loadAll();

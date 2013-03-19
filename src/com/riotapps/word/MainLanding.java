@@ -5,6 +5,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.conn.ConnectTimeoutException;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gcm.GCMRegistrar;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -29,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -57,6 +61,12 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	boolean callingIntent = false;
 	private BroadcastReceiver gcmReceiver;
 	private BroadcastReceiver backgroundReceiver;
+	ApplicationContext appContext;
+	LayoutInflater inflater;
+	private boolean isListLoading = false;
+	private LoadListTask loadListTask;
+	private LoadListTask loadListTaskFromReceiver;
+	private View inflatedView;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,23 +94,27 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	    bStart.setOnClickListener(this);
 		bOptions.setOnClickListener(this);
 		bBadges.setOnClickListener(this);
+		this.appContext = (ApplicationContext)this.getApplicationContext();
 		
-		this.player = PlayerService.getPlayerFromLocal();
+		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflatedView = this.inflater.inflate(R.layout.gameyourturnlistitem, null);
+		
+		this.player = appContext.getPlayer(); //PlayerService.getPlayerFromLocal();
 		PlayerService.loadPlayerInHeader(this);
 		
-		SharedPreferences settings = Storage.getSharedPreferences();
-	    String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
+		//SharedPreferences settings = Storage.getSharedPreferences();
+	    //String completedDate = settings.getString(Constants.USER_PREFS_LATEST_COMPLETED_GAME_DATE, Constants.DEFAULT_COMPLETED_GAMES_DATE);
 
 	    
-	 	Bundle extras = getIntent().getExtras(); 
-	 	Boolean isGameListPrefetched = false;
-	 	if(extras !=null)
-	 	{
-	 		isGameListPrefetched = extras.getBoolean(Constants.EXTRA_GAME_LIST_PREFETCHED, false);
-	 	}
+	 	//Bundle extras = getIntent().getExtras(); 
+	 	//Boolean isGameListPrefetched = false;
+	 	//if(extras !=null)
+	 	//{
+	 	//	isGameListPrefetched = extras.getBoolean(Constants.EXTRA_GAME_LIST_PREFETCHED, false);
+	 	//}
 		
-	 	this.loadLists();
-	 	
+	  	this.loadLists();
+	 	ApplicationContext.captureTime(TAG, "loadLists ended");
 	 	/*
 	 	long lastPlayerCheckTime = GameService.getLastGameListCheckTime(this);
 		if (!isGameListPrefetched && Utils.convertNanosecondsToMilliseconds(System.nanoTime()) - lastPlayerCheckTime > Constants.LOCAL_GAME_LIST_STORAGE_DURATION_IN_MILLISECONDS){
@@ -130,8 +144,8 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		//}
 		//this.setupTimer();
 		
-		this.checkAlert();
-		ApplicationContext.captureTime(TAG, "checkAlert ended");
+	 	this.checkAlert();
+	 	ApplicationContext.captureTime(TAG, "checkAlert ended");
 		
 		this.setupGCMReceiver();
 		ApplicationContext.captureTime(TAG, "setupGCMReceiver ended");
@@ -139,6 +153,11 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		this.setupBackgroundReceiver();
 		
 		ApplicationContext.captureTime(TAG, "onCreate ended");
+		
+		
+	//	this.loadListTask = new LoadListTask();
+	//	this.loadListTask.execute("");
+		
     }
     
     private void checkAlert(){
@@ -149,6 +168,14 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	}
     }
     
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		loadListTaskFromReceiver = null;
+		loadListTask = null;		
+	}
 
 	private void setupGCMReceiver(){
 		//unregister receiver onStop
@@ -183,20 +210,59 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 			    	 Logger.d(TAG, "setupBackgroundReceiver loadlist about to be called");
 					//String messageGameId = intent.getStringExtra(Constants.EXTRA_GAME_ID);
 						((Activity) context).runOnUiThread(new handleLoadList());
+						
+						loadListTaskFromReceiver = new LoadListTask();
+						loadListTaskFromReceiver.execute("");
 			    }
 			};
 		}
 		
 		this.registerReceiver(this.backgroundReceiver,new IntentFilter(Constants.INTENT_GAME_LIST_REFRESHED));
 	}
-	
+	private class LoadListTask extends AsyncTask<String, Void, Boolean> {
+
+		public LoadListTask(){
+			isListLoading = true;
+		}
+		
+
+		@Override
+        protected Boolean doInBackground(String... params) {
+       	    int i = 0;
+			while (!isListLoading){
+				try {
+					i += 1;
+					if (i > 15){
+						isListLoading = true;
+						return false;
+					}
+					Thread.sleep(Constants.MAIN_LANDING_THREAD_SLEEP);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+          return true;
+        }      
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+       	  
+        	if (result.equals(true)){
+        		checkAlert();
+        		loadLists(); 
+        		isListLoading = false;
+        	}
+        }
+
+  }
     @Override
 	protected void onRestart() {
 		//Log.w(TAG, "onRestart called"); 
 		super.onRestart();
 		
 		if (this.player == null){
-			this.player = PlayerService.getPlayerFromLocal();
+			this.player = appContext.getPlayer(); //PlayerService.getPlayerFromLocal();
 		}
 		this.callingIntent = false; 
 		
@@ -261,7 +327,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 				// Toast.makeText(context, "return from background svc", Toast.LENGTH_LONG);
 				 //reload player
 				 Logger.d(TAG, "handleLoadList");
-				player = PlayerService.getPlayerFromLocal();
+				player = appContext.getPlayer(); //PlayerService.getPlayerFromLocal();
 				
 				checkAlert();
 				loadLists();
@@ -281,10 +347,18 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 
  
 	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		 EasyTracker.getInstance().activityStart(this);
+	}
+
+	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
 		//this.stopTimer();
+		 EasyTracker.getInstance().activityStop(this);
 		this.player = null;
 		
 		if (this.gcmReceiver != null) {
@@ -310,6 +384,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 
 	private void loadLists(){
  
+		ApplicationContext.captureTime(TAG, "loadList starting");
     	 Logger.d(TAG, "loadLists started active games=" + this.player.getActiveGamesYourTurn().size() + " opp games=" + this.player.getActiveGamesOpponentTurn().size());
 		LinearLayout llCompletedGames = (LinearLayout)findViewById(R.id.llCompletedGames);
     	LinearLayout llYourTurn = (LinearLayout)findViewById(R.id.llYourTurn);
@@ -319,6 +394,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	LinearLayout llOpponentsTurnWrapper = (LinearLayout)findViewById(R.id.llOpponentsTurnWrapper);
     	TextView tvWaiting = (TextView)findViewById(R.id.tvWaiting);
     	
+    	ApplicationContext.captureTime(TAG, "loadList view clears starting");
     	//clear out view
     	llYourTurn.removeAllViews();
     	llOpponentsTurn.removeAllViews();
@@ -327,16 +403,18 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	
   //	Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() size=" + this.player.getActiveGamesYourTurn().size() );
 
-    	
+    	ApplicationContext.captureTime(TAG, "loadList getActiveGamesYourTurn check starting");
     	int i = 1;
     	if (this.player.getActiveGamesYourTurn().size() > 0){
     		tvWaiting.setVisibility(View.GONE);
+    		
+        	ApplicationContext.captureTime(TAG, "loadList getActiveGamesYourTurn load starting");
     		
 	        for (Game g : this.player.getActiveGamesYourTurn()){
 	        	//Logger.w(TAG, "loadLists this.player.getActiveGamesYourTurn() game=" +g.getId() );
 
 	        	
-	        	 llYourTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesYourTurn().size() == i));
+	        	 llYourTurn.addView(getGameView(g, i == 1, this.player.getActiveGamesYourTurn().size() == i));
 	        	 i += 1;
 			}
 	        llYourTurnWrapper.setVisibility(View.VISIBLE);
@@ -354,59 +432,77 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     		}
     	}
 
+    	ApplicationContext.captureTime(TAG, "loadList getActiveGamesOpponentTurn check starting");
      //   Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() size=" + this.player.getActiveGamesOpponentTurn().size() );
     	i = 1;
     	if (this.player.getActiveGamesOpponentTurn().size() > 0){
-    	
+    		//LinearLayout llOpponents = new LinearLayout(context);
     		
+    		ApplicationContext.captureTime(TAG, "loadList getActiveGamesOpponentTurn load starting");
 	        for (Game g : this.player.getActiveGamesOpponentTurn()){
 	        	//Logger.w(TAG, "loadLists this.player.getActiveGamesOpponentTurn() game=" + g.getId() );
 	        	
-	        	llOpponentsTurn.addView(getGameYourTurnView(g, i == 1, this.player.getActiveGamesOpponentTurn().size() == i));
+	        	//llOpponents.addView(getGameView(g, i == 1, this.player.getActiveGamesOpponentTurn().size() == i));
+	        	llOpponentsTurn.addView(getGameView(g, i == 1, this.player.getActiveGamesOpponentTurn().size() == i));
 	        	 i += 1;
 			}
+	       /// llOpponentsTurn.addView(llOpponents);
 	        llOpponentsTurnWrapper.setVisibility(View.VISIBLE);
     	}
     	else {
     		llOpponentsTurnWrapper.setVisibility(View.GONE);
     	}
     	
-    	
+    	ApplicationContext.captureTime(TAG, "loadList getCompletedGames check starting");
      //   Logger.w(TAG, "loadLists this.player.getCompletedGames() size=" + this.player.getCompletedGames().size() );
     	i = 1;
     	if (this.player.getCompletedGames().size() > 0){
+    		//LinearLayout llCompleted = new LinearLayout(context);
+    		ApplicationContext.captureTime(TAG, "loadList getCompletedGames load starting");
 	        for (Game g : this.player.getCompletedGames()){
 	        	//Logger.w(TAG, "loadLists this.player.getCompletedGames() game=" + g.getId() );
 	        	
-	        	llCompletedGames.addView(getGameYourTurnView(g, i == 1, this.player.getCompletedGames().size() == i));
+	        	//llCompleted.addView(getGameView(g, i == 1, this.player.getCompletedGames().size() == i));
+	        	llCompletedGames.addView(getGameView(g, i == 1, this.player.getCompletedGames().size() == i));
 	        	 i += 1;
 			}
+	       // llCompletedGames.addView(llCompleted);
 	        llCompletedGamesWrapper.setVisibility(View.VISIBLE);
     	}
     	else {
+    		
     		llCompletedGamesWrapper.setVisibility(View.GONE);
     	}
-
+    	ApplicationContext.captureTime(TAG, "loadList completed");
     }
     
-    public View getGameYourTurnView(Game game, boolean firstItem, boolean lastItem ) {
+    public View getGameView(Game game, boolean firstItem, boolean lastItem ) {
     	
-    //	Logger.d(TAG, "getGameYourTurnView started");
-  		View view = LayoutInflater.from(this).inflate(R.layout.gameyourturnlistitem, null);
-  
+    //	Logger.d(TAG, "getGameView started");
+    //	ApplicationContext.captureTime(TAG, "getGameView inflate starting");
+  		//View view = LayoutInflater.from(this).inflate(R.layout.gameyourturnlistitem, null);
+  		View view = this.inflater.inflate(R.layout.gameyourturnlistitem, null);
+  		//View view = new View(context);
+  		//view = this.inflatedView;
+    	
+    //	ApplicationContext.captureTime(TAG, "getGameView inflate ended");
   		//just in case something fluky happened to the game and only one player was saved
   	 	int numPlayers = game.getPlayerGames().size();
-	 	//Logger.w(TAG, "getGameYourTurnView numPlayers=" + numPlayers);
+	 	//Logger.w(TAG, "getGameView numPlayers=" + numPlayers);
 	 	if (numPlayers == 1){
 	 		view.setVisibility(View.GONE);  
 	 		return view;
 	 	}
-	//	Logger.d(TAG, "getGameYourTurnView 1");
-  		 ImageFetcher imageLoader = new ImageFetcher(this, Constants.LARGE_AVATAR_SIZE, Constants.LARGE_AVATAR_SIZE, 0);
-         imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
- 	//	Logger.d(TAG, "getGameYourTurnView 2");
+	 	
+	//	Logger.d(TAG, "getGameView 1");
+  		// ImageFetcher imageLoader = new ImageFetcher(this, Constants.LARGE_AVATAR_SIZE, Constants.LARGE_AVATAR_SIZE, 0);
+         //imageLoader.setImageCache(ImageCache.findOrCreateCache(this, Constants.IMAGE_CACHE_DIR));
+ 	//	Logger.d(TAG, "getGameView 2");
   	   // TextView tvPlayerName = (TextView)view.findViewById(R.id.tvOpponent1);
 	 //	tvPlayerName.setText(game.getId()); //temp
+	 	
+	 //	ApplicationContext.captureTime(TAG, "getGameView view finds starting");
+	 	
         ImageView ivOpponentBadge_1 = (ImageView)view.findViewById(R.id.ivOpponentBadge_1);
 	 	ImageView ivOpponentBadge_2 = (ImageView)view.findViewById(R.id.ivOpponentBadge_2);
 	 	ImageView ivOpponentBadge_3 = (ImageView)view.findViewById(R.id.ivOpponentBadge_3);
@@ -428,6 +524,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	ImageView ivChatAlert = (ImageView)view.findViewById(R.id.ivChatAlert);
 	 	RelativeLayout llLastAction = (RelativeLayout)view.findViewById(R.id.llLastAction);
 	 	
+	 //	ApplicationContext.captureTime(TAG, "getGameView chat check starting");
 	 	if (!GameService.checkGameChatAlert(context, game, false)){
 	 		ivChatAlert.setVisibility(View.GONE);
 	 	}
@@ -446,14 +543,16 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	else{
 	 		tvOpponent_1.setText(opponentGames.get(0).getPlayer().getNameWithMaxLength(13));
 	 	}
-	 	//Logger.d(TAG, "getGameYourTurnView 4.1");
+	 	//Logger.d(TAG, "getGameView 4.1");
 	 	//RelativeLayout rlPlayer_1 = (RelativeLayout)view.findViewById(R.id.rlPlayer_1);
 		int opponentBadgeId_1 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + opponentGames.get(0).getPlayer().getBadgeDrawable(), null, null);
 		ivOpponentBadge_1.setImageResource(opponentBadgeId_1);
 
 		imageLoader.loadImage(opponentGames.get(0).getPlayer().getImageUrl(), ivOpponent1);  
-		//Logger.d(TAG, "getGameYourTurnView 5");
+		//Logger.d(TAG, "getGameView 5");
 		//optional 2nd opponent
+		
+	//	ApplicationContext.captureTime(TAG, "getGameView last item check starting");
 		
 		if (lastItem){
 			RelativeLayout rlLineItem = (RelativeLayout)view.findViewById(R.id.rlLineItem);
@@ -470,6 +569,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	//	}
 		//drawable/text_selector_bottom
 		
+	//	ApplicationContext.captureTime(TAG, "getGameView size check (1) starting");
 		if (opponentGames.size() >= 2){
 			if (opponentGames.size() == 2){
 				tvOpponent_2.setText(opponentGames.get(1).getPlayer().getNameWithMaxLength(19));
@@ -489,7 +589,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 	//	trOpponent2.setVisibility(View.GONE);
 	 		ivOpponent2.setVisibility(View.GONE);
 	 	}
-		//Logger.d(TAG, "getGameYourTurnView 6");
+		//Logger.d(TAG, "getGameView 6");
 	 	//optional 3rd opponent
 	 	if (opponentGames.size() >= 3){
 		 	
@@ -505,13 +605,15 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	 		rlPlayer_3.setVisibility(View.GONE);
 	 		ivOpponent3.setVisibility(View.GONE);
 	 	}
-		///Logger.d(TAG, "getGameYourTurnView 7");
+		///Logger.d(TAG, "getGameView 7");
 	 	
 	 	int badgeSize = Utils.convertDensityPixelsToPixels(context, 11);
 	 	int badgeRightMargin = Utils.convertDensityPixelsToPixels(context, 2);
 	 	int textSize;
 	 	
 	 	int badgeTopMargin;
+	 	
+	// 	ApplicationContext.captureTime(TAG, "getGameView size check (2) starting");
 		if (opponentGames.size() == 1){
 			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 5);
 			textSize = Utils.convertDensityPixelsToPixels(context, 14);
@@ -579,6 +681,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 
 		}
 	 	
+		//ApplicationContext.captureTime(TAG, "getGameView almost over starting");
 	 	view.setTag(game.getId());
 	 	view.setOnClickListener(this);
   	    return view;

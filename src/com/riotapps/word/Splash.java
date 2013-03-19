@@ -9,13 +9,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gcm.GCMRegistrar;
+import com.playtomic.android.api.Playtomic;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.services.BackgroundService;
 import com.riotapps.word.services.ProcessBridge;
+import com.riotapps.word.services.WordLoaderService;
 import com.riotapps.word.ui.DialogManager;
 import com.riotapps.word.utils.*;
 import com.riotapps.word.utils.Enums.RequestType;
@@ -55,6 +59,8 @@ public class Splash  extends FragmentActivity {
         this.startBackgroundService();
         //sendMessage(this, "123", "message from Wordsmash");
         
+      //  Playtomic.Log(//).play();
+      
         this.processGCM();
          
         if (this.gameId != null){
@@ -80,6 +86,8 @@ public class Splash  extends FragmentActivity {
      }
     
     private void startBackgroundService(){
+    	this.startService(new Intent(this, WordLoaderService.class));
+    	
     	Intent bridgeIntent = new Intent(this, ProcessBridge.class);
     	this.startService(bridgeIntent);
     	
@@ -132,7 +140,24 @@ public class Splash  extends FragmentActivity {
     */
 	}
     
-	 private class GCMTask extends AsyncTask<String, Void, String> {
+    
+    
+	 @Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		 EasyTracker.getInstance().activityStart(this);
+	}
+
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		 EasyTracker.getInstance().activityStop(this);
+	}
+
+	private class GCMTask extends AsyncTask<String, Void, String> {
 
          @Override
          protected String doInBackground(String... params) {
@@ -196,7 +221,9 @@ public class Splash  extends FragmentActivity {
 						 captureTime("NetworkTask mainlanding intent starting");
 	            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
 	            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
-	            		 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+	            		// intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+	            		 
+	            		 ApplicationContext.captureTime(TAG, "MainLanding activity starting");
 	            		 this.startActivity(intent); 
 					}
 					catch (Exception e){
@@ -205,7 +232,7 @@ public class Splash  extends FragmentActivity {
 						
 						//start over at connect activity
 						intent = new Intent(this, com.riotapps.word.Welcome.class);
-			        	intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			        	//intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 			 	      	this.startActivity(intent); 
 					}
 				}

@@ -35,6 +35,7 @@ public class Constants {
  	public static final int DEFAULT_CONNECTION_TIMEOUT = 12000;
 	public static final int DEFAULT_SOCKET_CONNECTION_TIMEOUT = 20000;
 	public static final int INITIAL_CONNECTIVITY_THREAD_SLEEP = 1000;
+	public static final int MAIN_LANDING_THREAD_SLEEP = 500;
 	public static final int REGISTERED_FB_FRIENDS_CACHE_DURATION = 604800000; //a week of milliseconds
 	public static final int SPLASH_ACTIVITY_TIMEOUT = 500;
 	public static final int NETWORK_CONNECTIVITY_CHECK_DURATION = 2000;

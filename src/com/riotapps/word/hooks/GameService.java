@@ -466,7 +466,13 @@ public class GameService {
 	}
 	
 	public static Game handleCreateGameResponse(String result){// InputStream iStream){
-		return handleGameResponse(result); 
+		Game game = handleGameResponse(result);
+		
+		addNewGameToActiveGames(game);
+		//add game new game to active games
+		
+		
+		return game; 
 	}
 	
 	public static Game handleGetGameResponse(String result){// InputStream iStream){
@@ -1528,6 +1534,18 @@ public class GameService {
 					words.get(13).getWord(), words.get(14).getWord(), words.get(15).getWord());
 		}
 	}
+  	
+  	private static void addNewGameToActiveGames(Game game){
+  		Logger.d(TAG, "addNewGameToActiveGames gameId=" + game.getId());
+  		
+  		ApplicationContext appContext = (ApplicationContext)ApplicationContext.getAppContext().getApplicationContext();
+  		
+  		Logger.d(TAG, "addNewGameToActiveGames games before=" + appContext.getPlayer().getActiveGamesYourTurn().size());
+	    appContext.getPlayer().getActiveGamesYourTurn().add(0, game);
+  		Logger.d(TAG, "addNewGameToActiveGames games after=" + appContext.getPlayer().getActiveGamesYourTurn().size());
+	    PlayerService.putPlayerToLocal(appContext.getPlayer()); 
+  		
+  	}
   	
   	private static void moveActiveGameYourTurnToOpponentsTurn(Game game){
   		//in this scenario, player has just played a turn and game is not over, and we and updating the local game lists

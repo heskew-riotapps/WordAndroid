@@ -8,6 +8,7 @@ import com.google.ads.Ad;
 import com.google.ads.AdListener;
 import com.google.ads.AdRequest;
 import com.google.gson.Gson;
+import com.playtomic.android.api.Playtomic;
 import com.revmob.RevMob;
 import com.revmob.RevMobAdsListener;
 import com.revmob.ads.fullscreen.RevMobFullscreen;
@@ -71,6 +72,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ads.AdRequest.ErrorCode;
+import com.google.analytics.tracking.android.EasyTracker;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -193,14 +196,17 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gamesurface);
- 
-	    this.player = PlayerService.getPlayerFromLocal(); 
+		ApplicationContext appContext = (ApplicationContext)this.getApplicationContext();
+	    this.player = appContext.getPlayer(); //PlayerService.getPlayerFromLocal(); 
 		this.tvNumPoints = (TextView)findViewById(R.id.tvNumPoints);
  
 		 Display display = getWindowManager().getDefaultDisplay(); 
 	     this.windowHeight = display.getHeight();  // deprecated
 	     
 	     this.captureTime("onCreate starting");
+	     
+	    // Playtomic.Log().play();
+	   //  Playtomic.Log().forceSend();
 	     
 	  	this.scoreboard = (RelativeLayout)findViewById(R.id.scoreboard);
 	  	this.scoreboardHeight = this.scoreboard.getHeight();
@@ -239,7 +245,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		//this.wordService = new WordService(context);
 	 	this.captureTime("alphabet service started");
 		
-		ApplicationContext appContext = (ApplicationContext)this.getApplicationContext();
+	
 		//appContext.getWordService()
 		
 	 	this.captureTime("gamesurfaceview starting");
@@ -879,7 +885,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	//	}
 	//	catch(Exception e){}
 		super.onStop();
-		
+		 EasyTracker.getInstance().activityStop(this);
 		if (this.isChartBoostActive){
 			
 			if (this.cb.hasCachedInterstitial()){ this.cb.clearCache(); }
@@ -905,6 +911,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		Logger.d(TAG, "onPause called");
+		//Playtomic.Log().freeze();
 		super.onPause();
 		if (this.runningTask != null){
     		this.runningTask.cancel(true);
@@ -941,6 +948,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		Logger.d(TAG, "onResume called");
 	//	this.captureTime("onResume starting");
+	//	Playtomic.Log().unfreeze();
 		super.onResume();
 	//	this.captureTime("unfreezeButtons starting");
 
@@ -1058,7 +1066,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+		EasyTracker.getInstance().activityStart(this); // Add this method.
 		Logger.d(TAG, "onStart isChartBoostActive=" + isChartBoostActive + " isRevMobActive=" + isRevMobActive);
 		//Toast.makeText(this, "onstart cb=" + isChartBoostActive + " rm="  + isRevMobActive, Toast.LENGTH_SHORT).show();
 		

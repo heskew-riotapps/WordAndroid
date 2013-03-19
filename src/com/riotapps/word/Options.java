@@ -12,6 +12,7 @@ import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.Error.ErrorType;
 import com.riotapps.word.ui.CustomButtonDialog;
 import com.riotapps.word.ui.CustomDialog;
+import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.AsyncNetworkRequest;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
@@ -80,7 +81,22 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	       
 	    }
 	
-	    @Override 
+	    
+	    
+	    
+	    @Override
+		public void onBackPressed() {
+			// TODO Auto-generated method stub
+			super.onBackPressed();
+			
+			 Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+    		 this.startActivity(intent); 
+		}
+
+
+
+
+		@Override 
 	    public void onClick(View v) {
 	    	Intent intent;
 	    	

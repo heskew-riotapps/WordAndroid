@@ -67,9 +67,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	GameThread gameThread = null;
 	boolean isThreadRunning = false;
 	SurfaceHolder surfaceHolder;
-	Typeface bonusTypeface;
-	Typeface letterTypeface;
-	Typeface letterValueTypeface;
+	//Typeface bonusTypeface;
+	//Typeface letterTypeface;
+	//Typeface letterValueTypeface;
 	private int currentX = 0;
     private int currentY = 20;
     private int fullWidth;
@@ -345,9 +345,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 this.gameThread = new GameThread(holder, this);
 		
 		 setFocusable(true);
-		 this.bonusTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_BOARD_FONT);
-		 this.letterTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_FONT); 
-		 this.letterValueTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_VALUE_FONT); 
+		 //this.bonusTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_BOARD_FONT);
+		 //this.letterTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_FONT); 
+		 //this.letterValueTypeface = Typeface.createFromAsset(context.getAssets(), Constants.GAME_LETTER_VALUE_FONT); 
 		 this.holder.setFormat(PixelFormat.TRANSPARENT);// necessary
 		 
 		 isTablet = getResources().getBoolean(R.bool.isTablet);
@@ -997,9 +997,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 
             	 //the user is starting to drag a tile that has already been placed
              	 //if (targetTile != null && targetTile.isDraggable()){
-            	 if (this.getTargetTile() != null && this.getTargetTile().isDraggable()){
+            	 if (this.getTargetTile() != null && this.getTargetTile().isDraggable()  && this.getTargetTile().getPlacedLetter().length() > 0){
             		 
-            		 Logger.d(TAG, "onTouch action_DOWN targetTile.isDraggable");
+            		 Logger.d(TAG, "onTouch action_DOWN targetTile.isDraggable"); ///xxxx
             		 //targetTile.setDraggingLetter(targetTile.getPlacedLetter());
             		 //targetTile.removePlacement();
             		 //targetTile.setDragging(true);
@@ -1174,7 +1174,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 else {
             		 //we are coming out of a move action here...let's determine if the momentum scroll should be triggered
         			 //Logger.w(TAG,"onTouchEvent: ACTION_UP number of coordinates" + this.coordinates.size());
-            		 this.parent.captureTime(TAG + " find tile starting");
+            	//	 this.parent.captureTime(TAG + " find tile starting");
         			 //first check to see if a tray tile is being dragged. if so this means the tray tile is being dropped
             		 //if ((this.currentTrayTile != null && this.currentTrayTile.isDragging()) || this.getDraggingTile() != null){
         			 if ((this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()) || this.getDraggingTile() != null){
@@ -1186,12 +1186,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
         				 //what the closed eligible drop candidate was (either on a board tile or on the tray)
         				 //but first let's start with determining (the easy way) if we dropped on a board tile 
 
-        				 this.parent.captureTime(TAG + " setClosestDropTarget starting");
+        			//	 this.parent.captureTime(TAG + " setClosestDropTarget starting");
         				 //we need to find where the tile was dropped.  because it was dropped somewhere.  this method will 
         				 //determine the closest available drop target to the dropped location (hence the name)
         				 this.setClosestDropTarget();
         				 
-        				 this.parent.captureTime(TAG + " setClosestDropTarget ended");
+        		//		 this.parent.captureTime(TAG + " setClosestDropTarget ended");
         				// this.targetTileId = this.findClosestOpenTile(this.currentX, this.currentY);
         				
         				 if (this.getTargetTile() != null){
@@ -1375,11 +1375,15 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             	 //if so, change pending state to dragging state  
             	 if (this.getDraggingTile() != null && this.getDraggingTile().isDragPending()){
             		 this.getDraggingTile().setDrag();
+            		 
+            		 Logger.d(TAG, "DRAG PENDING letter=" + this.getDraggingTile().getPlacedLetter());
             	 }
             	 //check to see if a board tile is being dragged
             	 else if (this.getDraggingTile() != null){
             		 //this.readyToDraw = true;
             		 setToReadyDraw = true;
+            		 Logger.d(TAG, "getDraggingTile != null letter=" + this.getDraggingTile().getPlacedLetter());
+            		 
             	 }
             	 //check to see if a tray tile is being dragged
             	 //else if (this.currentTrayTile != null && this.currentTrayTile.isDragging()){
@@ -1632,10 +1636,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 smallestSummedDifference = summedDifference;
 				 }
 					// Logger.d(TAG, "findClosestOpenTile xCenter=" + (zoomed ? tile.getxPositionCenterRelativeZoomed() : tile.getxPositionCenter()) + " yCenter=" +  (zoomed ? tile.getyPositionCenterRelativeZoomed() : tile.getyPositionCenter()));
-					  Logger.d(TAG, "findClosestTrayTile summedDifference=" + summedDifference + " smallestSummedDifference=" + smallestSummedDifference);
+			//		  Logger.d(TAG, "findClosestTrayTile summedDifference=" + summedDifference + " smallestSummedDifference=" + smallestSummedDifference);
 			 
 			 }
-			 Logger.d(TAG, "findClosestTrayTile closestTile.Id=" + tileId);
+		//	 Logger.d(TAG, "findClosestTrayTile closestTile.Id=" + tileId);
 		//}
 	
 		 return new DropTarget(tileId, smallestSummedDifference); //dropTargetTile;
@@ -1648,11 +1652,12 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		 int xPosition = this.currentX;
 		 int yPosition = this.currentY;
 		 
-		 this.parent.captureTime(TAG + " setClosestDropTarget started");
+	//	 this.parent.captureTime(TAG + " setClosestDropTarget started");
 		// Logger.d(TAG, "setClosestDropTarget pre xPosition=" + xPosition + " yPosition=" + yPosition);
 		 //if the finger location is outside of the visible bounds of the game surface
 		 //instead of using specific finger location from onTouchEvent, let's use the center of the dragging tile 
 		 if (this.visibleAreaRect.isCoordinateWithinArea(xPosition, yPosition)){
+		
 			 Coordinate center = this.findCenterOfDraggingTile();
 			 
 			 xPosition = center.getxLocation();
@@ -1685,7 +1690,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 this.clearTargetTile();
 		 }
 		// Logger.d(TAG, "trayDrop this.targetTileId=" + this.targetTileId + " dropTargetTrayTileId=" + this.dropTargetTrayTileId);
-		 this.parent.captureTime(TAG + " setClosestDropTarget ending");
+		// this.parent.captureTime(TAG + " setClosestDropTarget ending");
 	 }
 	 
 	 private DropTarget findClosestOpenTile(int xPosition, int yPosition){
@@ -2026,7 +2031,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
      	 pLetter.setColor(Color.parseColor(this.parent.getString(R.color.game_board_dragging_tile_letter)));
      	 pLetter.setTextSize(Math.round(this.draggingTileSize * .78));
      	 pLetter.setAntiAlias(true); 
-     	 pLetter.setTypeface(this.letterTypeface);
+     	 pLetter.setTypeface(ApplicationContext.getLetterTypeface()); //(this.letterTypeface);
 	     Rect boundsLetter = new Rect();
 	     Rect boundsLetterHeight = new Rect();
 	     
@@ -2386,7 +2391,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
      	 p.setTextSize(textSize);
 	     p.setAntiAlias(true);
-	     p.setTypeface(this.bonusTypeface);
+	     p.setTypeface(ApplicationContext.getBonusTypeface()); //(this.bonusTypeface);
 	     Rect bounds = new Rect();
 	 
 	     p.getTextBounds(lastActionText, 0, lastActionText.length(), bounds);
@@ -2428,7 +2433,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
      		 pRandom.setTextSize(textSize);
      		 pRandom.setAntiAlias(true);
-     		 pRandom.setTypeface(this.bonusTypeface);
+     		 pRandom.setTypeface(ApplicationContext.getBonusTypeface()); //(this.bonusTypeface);
      	     Rect boundsRandom = new Rect();
      	 
      	     pRandom.getTextBounds(randoms, 0, randoms.length(), boundsRandom);	
@@ -2534,7 +2539,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		     	 pLetter.setColor(Color.parseColor(this.parent.getString(R.color.game_board_tray_tile_letter)));
 		     	 pLetter.setTextSize(Math.round(this.trayTileSize * .78));
 		     	 pLetter.setAntiAlias(true); 
-		     	 pLetter.setTypeface(this.letterTypeface);
+		     	 pLetter.setTypeface(ApplicationContext.getLetterTypeface()); //(this.letterTypeface);
 			     Rect boundsLetter = new Rect();
 			     Rect boundsLetterHeight = new Rect();
 			     
@@ -2599,19 +2604,19 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		//
 		//first check says "if the recall button is showing yet the try is not not full after an ACTION_UP event, switch to recall
 		
-		Logger.d(TAG, "setButtonStates called isButtonStateInShuffle=" + this.isButtonStateInShuffle + " this.isTrayFull=" + this.isTrayFull());
+		//Logger.d(TAG, "setButtonStates called isButtonStateInShuffle=" + this.isButtonStateInShuffle + " this.isTrayFull=" + this.isTrayFull());
 		
 		if (this.isButtonStateInShuffle && !this.isTrayFull()){
 			this.parent.switchToRecall();
 			this.parent.switchToPlay();
 			this.isButtonStateInShuffle = false;
-			Logger.d(TAG, "setButtonStates switchToRecall called isButtonStateInShuffle=" + this.isButtonStateInShuffle);
+			//Logger.d(TAG, "setButtonStates switchToRecall called isButtonStateInShuffle=" + this.isButtonStateInShuffle);
 		}
 		else if (!this.isButtonStateInShuffle && this.isTrayFull()){
 			this.parent.switchToShuffle();
 			this.parent.switchToSkip();
 			this.isButtonStateInShuffle = true;
-			Logger.d(TAG, "setButtonStates switchToShuffle called isButtonStateInShuffle=" + this.isButtonStateInShuffle);
+		//	Logger.d(TAG, "setButtonStates switchToShuffle called isButtonStateInShuffle=" + this.isButtonStateInShuffle);
 		}
 	}
 	
@@ -2619,7 +2624,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		//gameSurface class will default the button to shuffle.
 		//we just need to change it here if the tray is not full
 		
-		Logger.d(TAG, "setInitialButtonStates called isButtonStateInShuffle=" + this.isButtonStateInShuffle + " this.isTrayFull=" + this.isTrayFull());
+		//Logger.d(TAG, "setInitialButtonStates called isButtonStateInShuffle=" + this.isButtonStateInShuffle + " this.isTrayFull=" + this.isTrayFull());
 		
 		if (!this.isTrayFull()){
 			this.parent.switchToRecall();
@@ -2807,9 +2812,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				numLettersInTray += 1;
 			}
 		}
-		Logger.d(TAG, "isTrayFull numLettersInTray=" + numLettersInTray);  
-		Logger.d(TAG, "isTrayFull this.parent.getGameState().getLocations().size()=" + this.parent.getGameState().getLocations().size());
-		Logger.d(TAG, "isTrayFull this.parent.contextPlayerGame.getTrayLetters().size()=" + this.parent.contextPlayerGame.getTrayLetters().size());
+		//Logger.d(TAG, "isTrayFull numLettersInTray=" + numLettersInTray);  
+		//Logger.d(TAG, "isTrayFull this.parent.getGameState().getLocations().size()=" + this.parent.getGameState().getLocations().size());
+		//Logger.d(TAG, "isTrayFull this.parent.contextPlayerGame.getTrayLetters().size()=" + this.parent.contextPlayerGame.getTrayLetters().size());
 		
 		//some letters are out of the tray, only recall is allowed now, not shuffling
 		return (numLettersInTray == this.parent.contextPlayerGame.getTrayLetters().size()); //this.parent.getGameState().getLocations().size());
@@ -3230,7 +3235,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
     	 p.setColor(Color.parseColor(this.parent.getString(R.color.game_board_bonus_text)));
 	     p.setTextSize(Math.round(tileWidth * .6));
 	     p.setAntiAlias(true);
-	     p.setTypeface(this.bonusTypeface);
+	     p.setTypeface(ApplicationContext.getBonusTypeface()); //(this.bonusTypeface);
 	     Rect bounds = new Rect();
 	     p.getTextBounds(text, 0, text.length(), bounds);
 	     int textLeft =  xPosition + midPoint - (Math.round(bounds.width() / 2));
@@ -3245,7 +3250,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     	 pLetter.setColor(Color.parseColor(isLastPlayed ? this.parent.getString(R.color.game_board_board_last_played_tile_letter) : this.parent.getString(R.color.game_board_board_tile_letter))); //(Color.DKGRAY);
 	     	 pLetter.setTextSize(Math.round(tileWidth * .78));
 	     	 pLetter.setAntiAlias(true); 
-	     	 pLetter.setTypeface(this.letterTypeface);
+	     	 pLetter.setTypeface(ApplicationContext.getLetterTypeface()); //(this.letterTypeface);
 		     Rect boundsLetter = new Rect();
 		     Rect boundsLetterHeight = new Rect();
 		     

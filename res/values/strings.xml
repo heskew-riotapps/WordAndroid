@@ -23,6 +23,9 @@
     <string name="rev_mob_main_landing_banner">5128d816f95d861800000069</string>
     <string name="rev_mob_main_landing_banner">5128d816f95d861800000069</string>
     
+    <string name="playtomics_guid">677d2619c62640b5</string>
+	<string name="playtomics_api_key">c77086d28be34cdaa1f3db380fb381</string>
+
     <string name="app_name">WordSmash</string>
     <string name="join_via_facebook">connect with facebook</string>
 	<string name="join_via_native">connect with your email address</string>

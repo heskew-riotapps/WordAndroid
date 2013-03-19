@@ -529,6 +529,8 @@ public class PlayerService {
 		     // Call commit()
 		     editor.commit();
 		 } 
+		 ApplicationContext appContext = (ApplicationContext)ApplicationContext.getAppContext().getApplicationContext();
+	     appContext.setPlayer(player);
 
 		gson = null;	 	
 			 
@@ -783,6 +785,10 @@ public class PlayerService {
 	        editor.putString(Constants.USER_PREFS_AUTH_TOKEN, player.getAuthToken());
 	        editor.putString(Constants.USER_PREFS_USER_ID, player.getId());
 	        editor.putString(Constants.USER_PREFS_PLAYER_JSON, gson.toJson(player));
+	        
+	        ApplicationContext appContext = (ApplicationContext)ApplicationContext.getAppContext().getApplicationContext();
+	        appContext.setPlayer(player);
+	        
 	    	// Check if we're running on GingerBread or above
 			 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			     // If so, call apply()

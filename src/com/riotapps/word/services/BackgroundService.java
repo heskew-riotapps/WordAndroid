@@ -84,8 +84,8 @@ public class BackgroundService extends Service {
 		  // this.runningTask = new MainTask();
 		  // this.runningTask.execute("");
 		   
-		   this.wordLoaderTask = new LoadWordsTask();
-		   this.wordLoaderTask.execute("");
+		  // this.wordLoaderTask = new LoadWordsTask();
+		  // this.wordLoaderTask.execute("");
 		   
 		   if (storedToken.length() > 0){
 			   this.getGameList();

@@ -42,7 +42,7 @@
 		   		android:layout_height="54dp"
 			    android:id="@+id/ivOpponent3"	
 			    android:background="@drawable/image_border"
-			    android:layout_marginLeft="0dp"
+			    android:layout_marginLeft="-1dp"
 			    android:paddingTop="1dp"
 		        android:scaleType="fitXY"  
 		        android:layout_toRightOf="@id/ivOpponent2"	    
