@@ -76,6 +76,7 @@
 	
 	<string name="msg_not_connected">WordSmash cannot find a network connection. To work properly, WordSmash has to talk to the mother ship.</string>
 	<string name="msg_connection_timeout">The network connection took too long to return. To work properly, WordSmash has to talk to the mother ship.</string>
+	<string name="validation_max_games_reached">You've reached the maximum number of active games.</string>
 	<string name="validation_email_required">Please enter your email to connect to play.  Never fear, it will not be shared.</string>
 	<string name="validation_nickname_required">Please enter your nickname.  This will be the name to other players see.</string>
 	<string name="validation_nickname_invalid">Your nickname can only contain letters, numbers, spaces, dots, and hyphens.</string>

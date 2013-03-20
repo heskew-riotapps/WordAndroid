@@ -293,6 +293,10 @@ public class Player implements Parcelable{
 		return this.activeGamesYourTurn.size() + this.activeGamesOpponentTurn.size() + this.completedGames.size();
 	}
 	
+	public int getNumActiveGames(){
+		return this.activeGamesYourTurn.size() + this.activeGamesOpponentTurn.size();
+	}
+	
 	public List<Game> getActiveGamesYourTurn() {
 		return activeGamesYourTurn;
 	}

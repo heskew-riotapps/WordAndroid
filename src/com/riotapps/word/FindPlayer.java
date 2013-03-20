@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
@@ -71,7 +72,20 @@ public class FindPlayer extends FragmentActivity implements View.OnClickListener
 			break;
     	}
     }  
-	
+	@Override
+	protected void onStart() {
+		 
+		super.onStart();
+		 EasyTracker.getInstance().activityStart(this);
+	}
+
+
+	@Override
+	protected void onStop() {
+	 
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this);
+	}
 	private void findPlayer(){
 		try {
 			String url = PlayerService.setupFindPlayerByNickname(context, etFindPlayer.getText().toString());

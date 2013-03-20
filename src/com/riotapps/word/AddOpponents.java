@@ -1,33 +1,18 @@
 package com.riotapps.word;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.Arrays;
-import java.util.List;
-import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.LoggingBehavior;
 import com.facebook.Session.StatusCallback;
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.FacebookError;
-import com.facebook.android.Util;
-import com.facebook.android.AsyncFacebookRunner.RequestListener;
-import com.facebook.android.Facebook.DialogListener;
- 
 import com.facebook.FacebookException;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Tracker;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -41,12 +26,9 @@ import com.riotapps.word.utils.ImageCache;
 import com.riotapps.word.utils.ImageFetcher;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.NetworkTaskResult;
-import com.riotapps.word.utils.ServerResponse;
 import com.riotapps.word.utils.Enums.RequestType;
 import com.riotapps.word.utils.Storage;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -54,15 +36,11 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class AddOpponents extends FragmentActivity implements View.OnClickListener{
 	
@@ -74,11 +52,23 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 	AddOpponents context = this;
 	Game game;
 	private Bundle savedInstanceState;
+	private Tracker tracker;
  
 	private SharedPreferences settings;
 	private Session session;
 	
 	private boolean appRequestsSent = false;
+	
+	public Tracker getTracker() {
+		if (this.tracker == null){
+			this.tracker = EasyTracker.getTracker();
+		}
+		return tracker;
+	}
+
+	public void setTracker(Tracker tracker) {
+		this.tracker = tracker;
+	}
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -161,7 +151,18 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
 
     }
     
-    
+    private void trackEvent(String action, String label, int value){
+    	this.trackEvent(action, label, (long)value);
+    }
+	  
+    private void trackEvent(String action, String label, long value){
+		try{
+			this.tracker.sendEvent(Constants.TRACKER_CATEGORY_ADD_OPPONENTS, action,label, value);
+		}
+		catch (Exception e){
+  			Logger.d(TAG, "trackEvent e=" + e.toString());
+		}
+	}
     
     @Override
 	public void onBackPressed() {
@@ -220,28 +221,37 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     	Intent intent;
     	switch(v.getId()){  
         case R.id.tvStartByNickname:  
+        	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_FIND_BY_NICKNAME, this.game.getPlayerGames().size());
+        	
           	intent = new Intent(this.context, FindPlayer.class);
           	intent.putExtra(Constants.EXTRA_GAME, this.game);
 			this.context.startActivity(intent);
 			break;
         case R.id.tvStartByFacebook:  
+        	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_FIND_BY_FACEBOOK, this.game.getPlayerGames().size());
+        	
         	intent = new Intent(this.context, ChooseFBFriends.class);
         	intent.putExtra(Constants.EXTRA_GAME, this.game);
 			this.context.startActivity(intent);
 			break;
-	    case R.id.tvStartByOpponent:  
+	    case R.id.tvStartByOpponent:
+	    	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_FIND_BY_OPPONENT, this.game.getPlayerGames().size());
+	    	
 	    	intent = new Intent(this.context, PreviousOpponents.class);
 			intent.putExtra(Constants.EXTRA_GAME, this.game);
 			this.context.startActivity(intent);
 			break;
     
 	    case R.id.bStartGame:  
+	    	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_START_GAME, this.game.getPlayerGames().size());
     		//don't forget to sign up for google web services notifications!!!!!! 
 			Logger.d(TAG, "bStartGame clicked");
 			this.handleGameStart();
 		
 			break;
 	    case R.id.bCancelGame:  
+	    	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_CANCEL_GAME, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+	    	
 	    	this.handleCancel();
 			break;
     	}
@@ -459,7 +469,20 @@ public class AddOpponents extends FragmentActivity implements View.OnClickListen
     }
     
     */
- 
+	@Override
+	protected void onStart() {
+		 
+		super.onStart();
+		 EasyTracker.getInstance().activityStart(this);
+	}
+
+
+	@Override
+	protected void onStop() {
+	 
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this);
+	}
     private void handleFacebookAppRequest() {
     	
     	if (!this.appRequestsSent){

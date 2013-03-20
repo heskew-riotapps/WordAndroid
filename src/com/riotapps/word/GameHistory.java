@@ -3,6 +3,7 @@ package com.riotapps.word;
  
 import java.util.Collections;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.riotapps.word.hooks.FBFriend;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
@@ -69,7 +70,20 @@ public class GameHistory extends FragmentActivity{
 		super.onBackPressed();
 	}
 
+@Override
+protected void onStart() {
+	 
+	super.onStart();
+	 EasyTracker.getInstance().activityStart(this);
+}
 
+
+@Override
+protected void onStop() {
+ 
+	super.onStop();
+	EasyTracker.getInstance().activityStop(this);
+}
 
 private void loadList(){
  

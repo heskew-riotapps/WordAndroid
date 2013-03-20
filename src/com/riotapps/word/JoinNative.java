@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectTimeoutException;
 
  
+import com.google.analytics.tracking.android.EasyTracker;
 import com.riotapps.word.hooks.Error.ErrorType;
 import com.riotapps.word.hooks.ErrorService;
 import com.riotapps.word.hooks.Player;
@@ -72,7 +73,20 @@ public class JoinNative extends FragmentActivity implements View.OnClickListener
 	            break;  
 	        }  
 	      }
-	    
+		@Override
+		protected void onStart() {
+			 
+			super.onStart();
+			 EasyTracker.getInstance().activityStart(this);
+		}
+
+
+		@Override
+		protected void onStop() {
+		 
+			super.onStop();
+			EasyTracker.getInstance().activityStop(this);
+		}
 	    private void processPlayer(){
 	    	
 	    	try {

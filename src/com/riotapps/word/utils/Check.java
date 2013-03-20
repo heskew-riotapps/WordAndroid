@@ -7,4 +7,9 @@ public class Check {
 		
 		 if (!assertion) throw new PreconditionException(message);
 	}
+	
+	public static void Require(boolean assertion, String message, int errorCode) throws PreconditionException {
+		
+		 if (!assertion) throw new PreconditionException(message, errorCode);
+	}
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<resources tools:ignore="TypographyDashes" >
+<resources>
   <!--Replace placeholder ID with your tracking ID-->
   <string name="ga_trackingId">UA-39417202-1</string>
   <string name="ga_appName">WordSmash</string>

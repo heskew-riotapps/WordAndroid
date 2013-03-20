@@ -1,5 +1,7 @@
 package com.riotapps.word;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Tracker;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
@@ -23,6 +25,18 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
 	TextView tvStartByNickname;
 	Player player;
 	Context context = this;
+	private Tracker tracker;
+	
+	public Tracker getTracker() {
+		if (this.tracker == null){
+			this.tracker = EasyTracker.getTracker();
+		}
+		return tracker;
+	}
+
+	public void setTracker(Tracker tracker) {
+		this.tracker = tracker;
+	}
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,12 +89,41 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
      
     }
     
+    private void trackEvent(String action, String label, int value){
+    	this.trackEvent(action, label, (long)value);
+    }
+    
+    private void trackEvent(String action, String label, long value){
+  		try{
+  			this.tracker.sendEvent(Constants.TRACKER_CATEGORY_START_GAME, action,label, value);
+  		}
+  		catch (Exception e){
+  			Logger.d(TAG, "trackEvent e=" + e.toString());
+  		}
+  	}
+    
+	@Override
+	protected void onStart() {
+		 
+		super.onStart();
+		 EasyTracker.getInstance().activityStart(this);
+	}
+
+
+	@Override
+	protected void onStop() {
+	 
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this);
+	}
     
     @Override 
     public void onClick(View v) {
     	Intent intent;
     	switch(v.getId()){  
-        case R.id.tvStartByNickname:  
+        case R.id.tvStartByNickname:
+        	 this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_FIND_BY_NICKNAME, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+        	
           	 intent = new Intent(this.context, FindPlayer.class);
      	     try {
 				intent.putExtra(Constants.EXTRA_GAME, GameService.createGame(context, player));
@@ -91,7 +134,9 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
      	     }
  
 			break;
-        case R.id.tvStartByFacebook:  
+        case R.id.tvStartByFacebook: 
+        	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_FIND_BY_FACEBOOK, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+        	
          	 intent = new Intent(this.context, ChooseFBFriends.class);
     	     try {
 				intent.putExtra(Constants.EXTRA_GAME, GameService.createGame(context, player));
@@ -102,7 +147,9 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
     	     }
 
 			break;
-	    case R.id.tvStartByOpponent:  
+	    case R.id.tvStartByOpponent: 
+	    	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_FIND_BY_OPPONENT, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+	    	
 	    	 intent = new Intent(this.context, PreviousOpponents.class);
 		     try {
 					intent.putExtra(Constants.EXTRA_GAME, GameService.createGame(context, player));
@@ -113,10 +160,14 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
 		     }
 		     break;
 	    case R.id.bBadges:  
+	    	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_BADGES, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+	    	
         	intent = new Intent(getApplicationContext(), Badges.class);
 			startActivity(intent);
 			break; 
         case R.id.bOptions:  
+        	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_OPTIONS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+        	
         	intent = new Intent(getApplicationContext(), Options.class);
 			startActivity(intent);
 			break;

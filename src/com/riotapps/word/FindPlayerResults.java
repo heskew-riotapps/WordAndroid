@@ -1,5 +1,6 @@
 package com.riotapps.word;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.Player;
@@ -71,7 +72,20 @@ public class FindPlayerResults extends FragmentActivity  implements View.OnClick
 			
 		}
 
+		@Override
+		protected void onStart() {
+			 
+			super.onStart();
+			 EasyTracker.getInstance().activityStart(this);
+		}
 
+
+		@Override
+		protected void onStop() {
+		 
+			super.onStop();
+			EasyTracker.getInstance().activityStop(this);
+		}
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){  

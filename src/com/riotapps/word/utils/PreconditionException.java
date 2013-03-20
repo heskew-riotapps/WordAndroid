@@ -8,6 +8,10 @@ public class PreconditionException extends DesignByContractException {
         super(message);
     }
     
+    public PreconditionException(String message, int errorCode) {
+        super(message, errorCode);
+    }
+    
     public PreconditionException(String message, Throwable throwable) {
         super(message, throwable);
     }

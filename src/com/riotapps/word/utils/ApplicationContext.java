@@ -1,6 +1,5 @@
 package com.riotapps.word.utils;
-
-import com.playtomic.android.api.Playtomic;
+ 
 import com.riotapps.word.GameSurface;
 import com.riotapps.word.R;
 import com.riotapps.word.hooks.Player;
@@ -53,7 +52,7 @@ public class ApplicationContext extends Application{
 	private static Typeface letterTypeface; 
 	private static Typeface letterValueTypeface; 
 	
-	private Playtomic playtomic = null;
+	//private Playtomic playtomic = null;
 	
 	private Player player = null;
 	

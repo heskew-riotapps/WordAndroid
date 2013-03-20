@@ -8,7 +8,6 @@ import com.google.ads.Ad;
 import com.google.ads.AdListener;
 import com.google.ads.AdRequest;
 import com.google.gson.Gson;
-import com.playtomic.android.api.Playtomic;
 import com.revmob.RevMob;
 import com.revmob.RevMobAdsListener;
 import com.revmob.ads.fullscreen.RevMobFullscreen;
@@ -44,19 +43,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -69,10 +65,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.ads.AdRequest.ErrorCode;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Tracker;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -111,6 +106,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	 private RevMobFullscreen revMobFullScreen;
 	 private boolean hasFinalPostTurnRun = false;
 	 private boolean isBoundToGCMService = false;
+ 
 	 
 	 private Timer timer = null;
 	 private Timer runawayAdTimer = null;
@@ -143,6 +139,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	public PlayerGame contextPlayerGame;
 	private BroadcastReceiver gcmReceiver;
 	private WordLoaderThread wordLoaderThread = null;
+	private Tracker tracker;
  
 
 	public Game getGame() {
@@ -159,6 +156,17 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 
 	public void setScoreboardHeight(int scoreboardHeight) {
 		this.scoreboardHeight = scoreboardHeight;
+	}
+
+	public Tracker getTracker() {
+		if (this.tracker == null){
+			this.tracker = EasyTracker.getTracker();
+		}
+		return tracker;
+	}
+
+	public void setTracker(Tracker tracker) {
+		this.tracker = tracker;
 	}
 
 	public int getWindowHeight() {
@@ -1186,6 +1194,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		    	    	
 		    	switch(v.getId()){  
 			        case R.id.bShuffle:  
+			        	 this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+				        			Constants.TRACKER_LABEL_SHUFFLE, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.gameSurfaceView.shuffleTray();
 			        	this.unfreezeButtons();
 			        	break;
@@ -1202,13 +1212,19 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 					 
 						break;
 			        case R.id.bCancel:  
+			        	this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_CANCEL_INITIAL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.handleCancel();
 						break;
 			        case R.id.bRecall:
+			        	this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_RECALL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.gameSurfaceView.recallLetters();
 			        	this.unfreezeButtons();
 						break;
 			        case R.id.bPlay:
+			        	this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_PLAY_INITIAL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	//this.loadPlaySpinner();
 			        	v.post(new Runnable() {
 		                    public void run() {
@@ -1219,18 +1235,28 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			        	//this.gameSurfaceView.onPlayClick();
 						break;
 			       case R.id.bSkip:
+			    	   this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_SKIP_INITIAL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.gameSurfaceView.onPlayClick();
 						break;
 			       case R.id.bSwap:
+			    	   this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_SWAP_INITIAL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.onSwapClick();
 						break;
-			        case R.id.bDecline:  
+			        case R.id.bDecline: 
+			        	 this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+				        			Constants.TRACKER_LABEL_DECLINE_INITIAL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.handleDecline();
 						break;
 			        case R.id.bResign:  
+			        	 this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+				        			Constants.TRACKER_LABEL_RESIGN_INITIAL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.handleResign();
 						break;
 			        case R.id.bRematch:  
+			        	 this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+				        			Constants.TRACKER_LABEL_REMATCH_INITIAL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.handleRematch();
 						break;
 		    	}
@@ -1260,11 +1286,16 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		    });
 		}
 	 
-	 public void onFinishPlayErrors(final String message) {
+	 public void onFinishPlayErrors(final String message, final int code) {
 		    runOnUiThread(new Runnable() {
 		        public void run() {
 		            // use data here
 		        	//unloadPlaySpinner();
+					
+		        	//record error code from rule check
+		        	trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+		        			Constants.TRACKER_LABEL_PLAY_WITH_ERRORS, (long)code);
+		        	
 		        	openAlertDialog(context.getString(R.string.sorry), message);
 					unfreezeButtons();
 		        }
@@ -1294,6 +1325,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		@Override
 				public void onClick(View v) {
 		 			dialog.dismiss(); 
+		 			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+		        			Constants.TRACKER_LABEL_CANCEL_OK, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+		 			
 		 			handleGameCancelOnClick();
 		 		
 		 		}
@@ -1303,6 +1337,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			 		@Override
 					public void onClick(View v) {
 			 			dialog.dismiss(); 
+			 			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_CANCEL_DISMISS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+			 			
 			 			unfreezeButtons();
 			 		}
 				});
@@ -1310,8 +1347,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	     	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
-					unfreezeButtons();
+					trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+		        			Constants.TRACKER_LABEL_CANCEL_CANCEL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 					
+					unfreezeButtons();
 				}
 			});  
 	    	dialog.show();	
@@ -1328,6 +1367,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		@Override
 				public void onClick(View v) {
 		 			dialog.dismiss(); 
+		 			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+		        			Constants.TRACKER_LABEL_DECLINE_OK, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+		 			
 		 			handleGameDeclineOnClick();
 		 		
 		 		}
@@ -1337,6 +1379,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		@Override
 				public void onClick(View v) {
 		 			dialog.dismiss(); 
+		 			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+		        			Constants.TRACKER_LABEL_DECLINE_DISMISS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+
 		 			unfreezeButtons();
 		 		}
 			});
@@ -1344,6 +1389,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
+		 			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+		        			Constants.TRACKER_LABEL_DECLINE_CANCEL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+
 					unfreezeButtons();
 					
 				}
@@ -1363,6 +1411,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		@Override
 				public void onClick(View v) {
 		 			dialog.dismiss(); 
+		 			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_RESIGN_OK, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+		 			
 		 			handleGameResignOnClick();
 		 		
 		 		}
@@ -1372,6 +1423,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			 		@Override
 					public void onClick(View v) {
 			 			dialog.dismiss(); 
+			 			 trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+				        			Constants.TRACKER_LABEL_RESIGN_DISMISS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+			 			
 			 			unfreezeButtons();
 			 		}
 				});
@@ -1379,6 +1433,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
+		 			 trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_RESIGN_CANCEL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+
 					unfreezeButtons();
 					
 				}
@@ -1420,6 +1477,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 		@Override
 				public void onClick(View v) {
 		 			dialog.dismiss(); 
+		 			 trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_REMATCH_OK, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+		 			 
 		 			handleGameRematchOnClick();
 		 		
 		 		}
@@ -1429,6 +1489,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 			 		@Override
 					public void onClick(View v) {
 			 			dialog.dismiss(); 
+			 			 trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+				        			Constants.TRACKER_LABEL_REMATCH_DISMISS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+			 			 
 			 			unfreezeButtons();
 			 		}
 				});
@@ -1436,6 +1499,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
+					 trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_REMATCH_CANCEL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+					
 					unfreezeButtons();
 					
 				}
@@ -1885,6 +1951,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		bCancel.setOnClickListener(new View.OnClickListener() {
 	    			@Override
 	    			public void onClick(View v) {
+	    				trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_SWAP_DISMISS_OUTSIDE, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 	    				unfreezeButtons();
 	    				dismiss();
 	    			}
@@ -1895,6 +1963,10 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		close.setOnClickListener(new View.OnClickListener() {
 	    	 		@Override
 	    			public void onClick(View v) {
+	    	 			
+	    	 			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_SWAP_DISMISS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+	    	 			
 	    	 			unfreezeButtons();
 	    				dismiss();
 	    			}
@@ -1903,6 +1975,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		this.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
+						trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_SWAP_CANCEL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+						
 						unfreezeButtons();
 						
 					}
@@ -1921,6 +1996,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    	public void handleOKClick(){
 	    		//if no swapped letters were picked, inform user
 	    		if (!letter_1 && !letter_2 && !letter_3 && !letter_4 && !letter_5 && !letter_6 && !letter_7){
+	    			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+		        			Constants.TRACKER_LABEL_SWAP_NONE_CLICKED, this.swapped.size());
+	    			
 	    			DialogManager.SetupAlert(context, context.getString(R.string.oops), context.getString(R.string.gameboard_swap_dialog_please_choose_text), Constants.DEFAULT_DIALOG_CLOSE_TIMER_MILLISECONDS);
 	    		}
 	    		//call handler in main class, passing the swapped letters
@@ -1933,6 +2011,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    			if (letter_6) {this.swapped.add(this.letters.get(5));}
 	    			if (letter_7) {this.swapped.add(this.letters.get(6));}
 	    			
+	    			trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+		        			Constants.TRACKER_LABEL_SWAP_OK, this.swapped.size());
+
 	    			this.dismiss();
 	    			handleGameSwapOnClick(this.swapped);
 	    		}
@@ -2691,4 +2772,17 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				}
 			}
  	*/
+		
+	    private void trackEvent(String action, String label, int value){
+	    	this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, action, label, (long)value);
+	    }
+		   
+		public void trackEvent(String category, String action, String label, long value){
+			try{
+				this.tracker.sendEvent(category, action,label, value);
+			}
+			catch (Exception e){
+	  			Logger.d(TAG, "trackEvent e=" + e.toString());
+			}
+		}
 }

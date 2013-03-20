@@ -952,7 +952,7 @@ public class GameService {
 		//check to determine that overlays did not happen on same letter
 		for (GameTile tile : placedTiles){
 			Logger.d(TAG, "tile original=" + tile.getOriginalLetter() + " placed=" + tile.getPlacedLetter());
-			Check.Require(!tile.getOriginalLetter().equals(tile.getPlacedLetter()),  context.getString(R.string.game_play_invalid_overlay));
+			Check.Require(!tile.getOriginalLetter().equals(tile.getPlacedLetter()),  context.getString(R.string.game_play_invalid_overlay), Constants.ERROR_CODE_OVERLAY_PREVIOUS_LETTER);
 		}
 		 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "placedTiles", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
 	     runningTime = System.nanoTime();
@@ -980,13 +980,13 @@ public class GameService {
 	     runningTime = System.nanoTime();
  
 		//the first turn (that plays letters) must have more than one letter played (every word must be at least two letters long
-	 	Check.Require(game.getTurn() > 1 || isFirstPlayedWord && placedTiles.size() > 1, context.getString(R.string.game_play_too_few_letters));
+	 	Check.Require(game.getTurn() > 1 || isFirstPlayedWord && placedTiles.size() > 1, context.getString(R.string.game_play_too_few_letters), Constants.ERROR_CODE_TOO_FEW_LETTERS);
 	 	//Check.Require(game.getTurn() > 1 || game.getTurn() == 1 && placedTiles.size() > 1, context.getString(R.string.game_play_too_few_letters));
  
 		 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isMoveInValidStartPosition starting", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
 	     runningTime = System.nanoTime();
 	     
-	 	Check.Require(isMoveInValidStartPosition(layout, game, placedTiles, isFirstPlayedWord), context.getString(R.string.game_play_invalid_start_position));
+	 	Check.Require(isMoveInValidStartPosition(layout, game, placedTiles, isFirstPlayedWord), context.getString(R.string.game_play_invalid_start_position), Constants.ERROR_CODE_INVALID_START_POSITION);
 	//	if (!this.isMoveInValidStartPosition(layout, game, placedTiles)){
 	//		return R.string.game_play_invalid_start_position;
 	//	}
@@ -998,7 +998,7 @@ public class GameService {
 	 	 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "getPlacedAxis", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
 	     runningTime = System.nanoTime();
 	 	
-	 	Check.Require(axis == "x" || axis == "y", context.getString(R.string.game_play_invalid_axis));
+	 	Check.Require(axis == "x" || axis == "y", context.getString(R.string.game_play_invalid_axis), Constants.ERROR_CODE_INVALID_AXIS);
 	 	
 	 	//create a sorted set of integers for easier comparison and locating in gap check
         SortedSet<Integer> playedSet = new TreeSet<Integer>();     
@@ -1014,13 +1014,13 @@ public class GameService {
 	 	 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isMoveFreeOfGaps starting", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
 	     runningTime = System.nanoTime();
 	     
-        Check.Require(isMoveFreeOfGaps(axis, playedSet, placedSet), context.getString(R.string.game_play_invalid_gaps));
+        Check.Require(isMoveFreeOfGaps(axis, playedSet, placedSet), context.getString(R.string.game_play_invalid_gaps), Constants.ERROR_CODE_INVALID_GAPS);
         
 
 	 	 Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isMoveFreeOfGaps ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
 	     runningTime = System.nanoTime();
         
-        Check.Require(isFirstPlayedWord || isWordConnectedToPlayedWords(placedTiles, playedTiles), context.getString(R.string.game_play_invalid_gaps_placed_words));
+        Check.Require(isFirstPlayedWord || isWordConnectedToPlayedWords(placedTiles, playedTiles), context.getString(R.string.game_play_invalid_gaps_placed_words), Constants.ERROR_CODE_INVALID_PLACEMENT);
        // Check.Require(game.getTurn() == 1 || isWordConnectedToPlayedWords(placedTiles, playedTiles), context.getString(R.string.game_play_invalid_gaps_placed_words));
         
         Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "isWordConnectedToPlayedWords ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
@@ -1075,7 +1075,7 @@ public class GameService {
 	     runningTime = System.nanoTime();
 	 
 
-        Check.Require(invalidWords.size() == 0, getInvalidWordsMessage(context, invalidWords));
+        Check.Require(invalidWords.size() == 0, getInvalidWordsMessage(context, invalidWords), Constants.ERROR_CODE_INVALID_WORDS);
 
         Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "getInvalidWordsMessage ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
 	     runningTime = System.nanoTime();
@@ -1574,7 +1574,8 @@ public class GameService {
   		//now add it (back) to the list
   		player.getActiveGamesOpponentTurn().add(0, game);
 
-  		Gson gson = new Gson();  
+  		PlayerService.putPlayerToLocal(player);
+  	/*	Gson gson = new Gson();  
 	        
         //update player to shared preferences
 	    SharedPreferences settings = Storage.getSharedPreferences();
@@ -1589,7 +1590,8 @@ public class GameService {
 		 } else {
 		     // Call commit()
 		     editor.commit();
-		 }  
+		 } 
+		 */ 
 	}
 
 	private static void moveGameToCompletedList(Game game){

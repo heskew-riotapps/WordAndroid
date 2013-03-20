@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Tracker;
 import com.google.android.gcm.GCMRegistrar;
 import com.riotapps.word.hooks.Game;
 import com.riotapps.word.hooks.GameService;
@@ -67,6 +68,18 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	private LoadListTask loadListTask;
 	private LoadListTask loadListTaskFromReceiver;
 	private View inflatedView;
+    private Tracker tracker;
+	
+	public Tracker getTracker() {
+		if (this.tracker == null){
+			this.tracker = EasyTracker.getTracker();
+		}
+		return tracker;
+	}
+
+	public void setTracker(Tracker tracker) {
+		this.tracker = tracker;
+	}
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -168,6 +181,18 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	}
     }
     
+    private void trackEvent(String action, String label, int value){
+    	this.trackEvent(action, label, (long)value);
+    }
+    
+    private void trackEvent(String action, String label, long value){
+  		try{
+  			this.tracker.sendEvent(Constants.TRACKER_CATEGORY_MAIN_LANDING, action,label, value);
+  		}
+  		catch (Exception e){
+  			Logger.d(TAG, "trackEvent e=" + e.toString());
+  		}
+  	}
 
 	@Override
 	protected void onDestroy() {
@@ -702,14 +727,29 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     	
     	switch(v.getId()){  
         case R.id.bStart:  
-        	intent = new Intent(getApplicationContext(), StartGame.class);
-			startActivity(intent);
+        
+        	
+        	if (this.player.getNumActiveGames() >= Constants.MAX_ACTIVE_GAMES){
+        		this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_START_GAME_MAX_REACHED, this.player.getNumActiveGames());
+        		
+        		DialogManager.SetupAlert(this, this.getString(R.string.oops), this.getString(R.string.validation_max_games_reached));
+        	}
+        	else {
+        		this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_START_GAME, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+        		
+            	intent = new Intent(getApplicationContext(), StartGame.class);
+    			startActivity(intent);
+        	}
 			break;
         case R.id.bBadges:  
+        	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_BADGES, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+        	
         	intent = new Intent(getApplicationContext(), Badges.class);
 			startActivity(intent);
 			break; 
         case R.id.bOptions:  
+        	this.trackEvent(Constants.TRACKER_ACTION_BUTTON_TAPPED, Constants.TRACKER_LABEL_OPTIONS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+        	
         	intent = new Intent(getApplicationContext(), Options.class);
 			startActivity(intent);
 			break;

@@ -52,6 +52,71 @@ public class Constants {
 	public static final int DEFAULT_AVATAR_SIZE = 34;
 	public static final int LARGE_AVATAR_SIZE = 54;
 	public static final int BADGE_SIZE = 10;
+	public static final int MAX_ACTIVE_GAMES = 40;
+	
+	/**============================================
+	 * tracker constants
+	 *=============================================*/
+	public static final String TRACKER_CATEGORY_GAMEBOARD = "game_surface";
+	public static final String TRACKER_CATEGORY_START_GAME = "start_game";
+	public static final String TRACKER_CATEGORY_MAIN_LANDING = "main_landing";
+	public static final String TRACKER_CATEGORY_ADD_OPPONENTS = "add_opponents";
+	public static final String TRACKER_LABEL_START_GAME = "start_game";
+	public static final String TRACKER_LABEL_START_GAME_MAX_REACHED = "start_game_max_reached";
+	public static final String TRACKER_LABEL_CANCEL_GAME = "cancel_game";
+	public static final String TRACKER_LABEL_BADGES = "badges";
+	public static final String TRACKER_LABEL_OPTIONS = "options";
+	public static final String TRACKER_LABEL_FIND_BY_NICKNAME = "by_nickname";
+	public static final String TRACKER_LABEL_FIND_BY_FACEBOOK = "by_facebook";
+	public static final String TRACKER_LABEL_FIND_BY_OPPONENT = "by_opponent";
+	public static final String TRACKER_ACTION_BUTTON_TAPPED = "button_click";
+	public static final String TRACKER_LABEL_RECALL = "recall_letters";
+	public static final String TRACKER_LABEL_SHUFFLE = "shuffle";
+	public static final String TRACKER_LABEL_PLAY_INITIAL = "play_initial";
+	public static final String TRACKER_LABEL_PLAY_CANCEL = "play_cancel";
+	public static final String TRACKER_LABEL_PLAY_DISMISS = "play_dismiss";
+	public static final String TRACKER_LABEL_PLAY_OK = "play_ok";
+	public static final String TRACKER_LABEL_SKIP_INITIAL = "skip_initial";
+	public static final String TRACKER_LABEL_SKIP_CANCEL = "skip_cancel";
+	public static final String TRACKER_LABEL_SKIP_DISMISS = "skip_dismiss";
+	public static final String TRACKER_LABEL_SKIP_OK = "skip_ok";
+	public static final String TRACKER_LABEL_SWAP_INITIAL = "swap_initial";
+	public static final String TRACKER_LABEL_SWAP_CANCEL = "swap_cancel";
+	public static final String TRACKER_LABEL_SWAP_DISMISS = "swap_dismiss";
+	public static final String TRACKER_LABEL_SWAP_DISMISS_OUTSIDE = "swap_dismiss_outside";
+	public static final String TRACKER_LABEL_SWAP_NONE_CLICKED = "swap_none_clicked";
+	public static final String TRACKER_LABEL_SWAP_OK = "swap_ok";
+	public static final String TRACKER_LABEL_DECLINE_INITIAL = "decline_initial";
+	public static final String TRACKER_LABEL_DECLINE_CANCEL = "decline_cancel";
+	public static final String TRACKER_LABEL_DECLINE_DISMISS = "decline_dismiss";
+	public static final String TRACKER_LABEL_DECLINE_OK = "decline_ok";
+	public static final String TRACKER_LABEL_RESIGN_INITIAL = "resign_initial";
+	public static final String TRACKER_LABEL_RESIGN_CANCEL = "resign_cancel";
+	public static final String TRACKER_LABEL_RESIGN_DISMISS = "resign_dismiss";
+	public static final String TRACKER_LABEL_RESIGN_OK = "resign_ok";
+	public static final String TRACKER_LABEL_REMATCH_INITIAL = "rematch_initial";
+	public static final String TRACKER_LABEL_REMATCH_CANCEL = "rematch_cancel";
+	public static final String TRACKER_LABEL_REMATCH_DISMISS = "rematch_dismiss";
+	public static final String TRACKER_LABEL_REMATCH_OK = "rematch_ok";
+	public static final String TRACKER_LABEL_CANCEL_INITIAL = "cancel_initial";
+	public static final String TRACKER_LABEL_CANCEL_CANCEL = "cancel_cancel";
+	public static final String TRACKER_LABEL_CANCEL_DISMISS = "cancel_dismiss";
+	public static final String TRACKER_LABEL_CANCEL_OK = "cancel_ok";
+	public static final String TRACKER_LABEL_PLAY_WITH_ERRORS = "play_with_errors";
+	public static final long TRACKER_DEFAULT_OPTION_VALUE = 0;
+	
+	
+	/**============================================
+	 * error codes. can change to eum later
+	 *=============================================*/
+	public static final int ERROR_CODE_OVERLAY_PREVIOUS_LETTER = 1;
+	public static final int ERROR_CODE_TOO_FEW_LETTERS = 2;
+	public static final int ERROR_CODE_INVALID_START_POSITION = 3;
+	public static final int ERROR_CODE_INVALID_AXIS = 4;
+	public static final int ERROR_CODE_INVALID_GAPS = 5;
+	public static final int ERROR_CODE_INVALID_PLACEMENT = 6;
+	public static final int ERROR_CODE_INVALID_WORDS = 7;
+ 
 
 	/**============================================
 	 * intent extras

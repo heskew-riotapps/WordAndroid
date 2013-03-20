@@ -2703,12 +2703,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			final PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService, false);
 
 			this.parent.onFinishPlayNoErrors(placedResult);
-			
-		 
-		
+
 		}
 		catch (DesignByContractException e){
-			this.parent.onFinishPlayErrors(e.getMessage());
+			
+			this.parent.onFinishPlayErrors(e.getMessage(), e.getErrorCode());
 			//this.parent.openAlertDialog(this.parent.getString(R.string.sorry), e.getMessage());
 			//this.parent.unfreezeButtons();
 		}
@@ -2737,6 +2736,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 		@Override
 					public void onClick(View v) {
 			 			dialog.dismiss(); 
+			 			parent.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_SKIP_OK, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+			 			
 			 			parent.handleGameSkipOnClick();
 			 		}
 				});
@@ -2745,6 +2747,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 		@Override
 					public void onClick(View v) {
 			 			dialog.dismiss(); 
+			 			parent.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_SKIP_DISMISS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			 			parent.unfreezeButtons();
 			 			
 			 		}
@@ -2754,6 +2758,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
+						parent.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_SKIP_CANCEL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+						
 						parent.unfreezeButtons();
 						
 					}
@@ -2776,6 +2783,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 		@Override
 					public void onClick(View v) {
 			 			dialog.dismiss(); 
+			 			parent.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_PLAY_OK, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+			 			
 			 			parent.handleGamePlayOnClick(placedResult);
 			 		}
 				});
@@ -2784,6 +2794,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			 		@Override
 					public void onClick(View v) {
 			 			dialog.dismiss(); 
+			 			parent.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_PLAY_DISMISS, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+			 			
 			 			parent.unfreezeButtons();
 			 		}
 				});
@@ -2791,6 +2804,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		    	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
+						parent.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
+			        			Constants.TRACKER_LABEL_PLAY_CANCEL, Constants.TRACKER_DEFAULT_OPTION_VALUE);
+						
 						parent.unfreezeButtons();
 						
 					}
