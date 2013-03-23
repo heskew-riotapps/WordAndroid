@@ -641,8 +641,9 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	// 	ApplicationContext.captureTime(TAG, "getGameView size check (2) starting");
 		if (opponentGames.size() == 1){
 			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 5);
-			textSize = Utils.convertDensityPixelsToPixels(context, 14);
-			tvOpponent_1.setTextSize(16);
+			//textSize = Utils.convertDensityPixelsToPixels(context, 14);
+			textSize = this.getResources().getInteger(R.integer.main_landing_1_opponent_text_size);
+			tvOpponent_1.setTextSize(textSize);
 			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
 		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_1.setLayoutParams(rlp);
@@ -662,9 +663,10 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		
 			
 			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 5);
-			textSize = Utils.convertDensityPixelsToPixels(context, 12);
-			tvOpponent_1.setTextSize(15);
-			tvOpponent_2.setTextSize(15);	
+			//textSize = Utils.convertDensityPixelsToPixels(context, 12);
+			textSize = this.getResources().getInteger(R.integer.main_landing_2_opponents_text_size);
+			tvOpponent_1.setTextSize(textSize);
+			tvOpponent_2.setTextSize(textSize);	
 			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
 		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_2.setLayoutParams(rlp);
@@ -684,10 +686,11 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 		else{
 			
 			badgeTopMargin = Utils.convertDensityPixelsToPixels(context, 2);
-			textSize = Utils.convertDensityPixelsToPixels(context, 11);
-			tvOpponent_1.setTextSize(11);
-			tvOpponent_2.setTextSize(11);	
-			tvOpponent_3.setTextSize(11);
+		//	textSize = Utils.convertDensityPixelsToPixels(context, 11);
+			textSize = this.getResources().getInteger(R.integer.main_landing_3_opponents_text_size);
+			tvOpponent_1.setTextSize(textSize);
+			tvOpponent_2.setTextSize(textSize);	
+			tvOpponent_3.setTextSize(textSize);
 			RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(badgeSize, badgeSize);
 		    rlp.setMargins(0, badgeTopMargin, badgeRightMargin, 0); // llp.setMargins(left, top, right, bottom);
 		    ivOpponentBadge_3.setLayoutParams(rlp);
@@ -854,7 +857,7 @@ private void handleGameClick(String gameId){
 	            	 try{
 	            		 if (fetchGame){
 			            	 
-			            	 Game game = GameService.handleCreateGameResponse(result.getResult());
+			            	 Game game = GameService.handleGetGameResponse(result.getResult());
 			    
 			            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
 			            	 //was not working and driving me crazy

@@ -3,4 +3,7 @@
     <integer name="scoreboard_height">44</integer>
      <integer name="gameboard_button_area_height">56</integer>
      <integer name="player_image_width">44</integer>
+          <integer name="main_landing_1_opponent_text_size">16</integer>
+     <integer name="main_landing_2_opponents_text_size">15</integer>
+     <integer name="main_landing_3_opponents_text_size">13</integer>
 </resources>

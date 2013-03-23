@@ -21,12 +21,7 @@
     android:orientation="vertical" >
    
      <include android:id="@+id/topAreaLayout" layout="@layout/toparealayout" />
-   <ScrollView   
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent" 
-    	android:fadingEdge="none"
-    	
-    	 >
+
    <LinearLayout
          style="@style/LayoutFormStyle"
         
@@ -34,6 +29,7 @@
 	<LinearLayout
 		style="@style/FormBackgroundStyle"
 		android:layout_marginTop="5dp"
+		android:layout_marginBottom="5dp"
 	>
 	<RelativeLayout
 		style="@style/FormHeaderWrapperStyle"
@@ -44,6 +40,24 @@
         android:text="@string/quick_rules_title" 
         />
     </RelativeLayout>
+    <LinearLayout 
+            style="@style/ContentAreaTextBottomStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+         android:orientation="vertical"
+        >
+    <ScrollView   
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" 
+    	android:fadingEdge="none"
+    	
+    	 >
+	<LinearLayout 
+	   	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent" 
+		android:orientation="vertical"
+	    > 
+	
     <com.riotapps.word.ui.MainFontTextView
         style="@style/ContentAreaTextStyle"
         android:text="@string/quick_rules_1" 
@@ -62,11 +76,14 @@
         />
    <com.riotapps.word.ui.MainFontTextView
        style="@style/ContentAreaTextAreaBottomStyle"
-        android:text="@string/quick_rules_5" 
+        android:text="@string/quick_rules_5"
+        android:paddingBottom="15dp" 
         />
-  
+  </LinearLayout>
+ </ScrollView> 
+</LinearLayout>
    </LinearLayout>
    </LinearLayout>
-   </ScrollView>
+   
 </LinearLayout>
 </RelativeLayout>

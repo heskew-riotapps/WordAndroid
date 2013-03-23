@@ -45,7 +45,7 @@ public class Constants {
 	public static final long GAME_SURFACE_CHECK_INTERVAL_IN_MILLISECONDS = 120000;// = 2 minutes
 	public static final long GAME_SURFACE_CHECK_START_AFTER_RESTART_IN_MILLISECONDS = 18000;// 2 seconds;
 	public static final long GAME_SURFACE_INTERSTITIAL_AD_CHECK_IN_MILLISECONDS = 7000;// = 7 seconds;
-	public static final long BACKGROUND_GAME_LIST_DELAY_IN_MILLISECONDS = 3000;// = 300000;
+	public static final long BACKGROUND_GAME_LIST_DELAY_IN_MILLISECONDS = 2000;// = 300000;
 	
 	public static final String FACEBOOK_PERMISSIONS = "email";
 	public static final int NUM_LOCAL_COMPLETED_GAMES_TO_STORE = 10;

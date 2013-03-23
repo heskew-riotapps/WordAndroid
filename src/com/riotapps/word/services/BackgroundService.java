@@ -60,15 +60,15 @@ public class BackgroundService extends Service {
 	   this.player = null;
 	   this.task = null;
 	   //this.runningTask = null;
-	   this.wordLoaderTask = null;
+	  // this.wordLoaderTask = null;
 	   
    }
 
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       //code to execute when the service is starting up
-	   Logger.d(TAG, "onStartCommand called");
-	   if (!this.isProcessed){
+	   Logger.d(TAG, "onStartCommand called this.isProcessed=" + this.isProcessed);
+	  // if (!this.isProcessed){
 		   //this.player = PlayerService.getPlayerFromLocal();
 		   this.storedToken = intent.getStringExtra(Constants.EXTRA_PLAYER_TOKEN);  //PlayerService.getAuthTokenFromLocal();
 		   this.lastAlertActivationDate = intent.getStringExtra(Constants.EXTRA_PLAYER_LAST_ALERT_ACTIVATION_DATE); 
@@ -88,9 +88,15 @@ public class BackgroundService extends Service {
 		  // this.wordLoaderTask.execute("");
 		   
 		   if (storedToken.length() > 0){
+			   try {
+					Thread.sleep(Constants.BACKGROUND_GAME_LIST_DELAY_IN_MILLISECONDS);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			   this.getGameList();
 		   }
-	   }
+	  // }
 	   
 	 
 	   return START_STICKY;

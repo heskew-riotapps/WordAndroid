@@ -402,9 +402,9 @@ public class Splash  extends FragmentActivity {
 		            		 
 		            		 //if we are in game context (from gcm notification), re-route to GameSurface
 		            		 if (gameId != null){
-		            			 captureTime("NetworkTaskhandleCreateGameResponse starting");
-		            		 	 Game game = GameService.handleCreateGameResponse(result.getResult());
-		            		 	 captureTime("NetworkTaskhandleCreateGameResponse ended");
+		            			 captureTime("NetworkTaskhandleGetGameResponse starting");
+		            		 	 Game game = GameService.handleGetGameResponse(result.getResult());
+		            		 	 captureTime("NetworkTaskhandleGetGameResponse ended");
 				            	 //saving game locally instead of passing by parcel because nested parcelable classes with lists of more nests
 				            	 //was not working and driving me crazy
 				            	 GameService.putGameToLocal(game);

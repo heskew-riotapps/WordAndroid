@@ -1717,7 +1717,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 	    		             case 200:  
 	    		             case 201: 
 	    		            	 if (this.actionType == GameAction.GameActionType.REFRESH){
-	    		            		 game = GameService.handleCreateGameResponse(result.getResult());
+	    		            		 game = GameService.handleGetGameResponse(result.getResult());
 	    		     			    
 	    			            	 GameService.putGameToLocal(game);
 	    			            	 gameState = GameStateService.clearGameState(game.getId());
