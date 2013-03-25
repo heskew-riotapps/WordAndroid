@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gcm.GCMRegistrar;
@@ -217,9 +218,22 @@ public class Splash  extends FragmentActivity {
 					try{
 						//Player player = PlayerService.getPlayerFromLocal(); 
 						
-						 captureTime("NetworkTask mainlanding intent starting");
-	            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
-	            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+
+						captureTime("handleprocessing getApplicationContext starting");
+						ApplicationContext appContext = (ApplicationContext)this.getApplicationContext();
+						Player player = appContext.getPlayer(); //PlayerService.getPlayerFromLocal();
+						captureTime("handleprocessing getPlayer ending");
+						
+						 if (player.getTotalNumLocalGames() == 0){
+		            		 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
+		            	 }
+		            	 else {
+		            		 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+		            		 intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
+		            	 }
+						// captureTime("NetworkTask mainlanding intent starting");
+	            		// intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+	            		// intent.putExtra(Constants.EXTRA_GAME_LIST_PREFETCHED, true);
 	            		// intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 	            		 
 	            		 ApplicationContext.captureTime(TAG, "MainLanding activity starting");

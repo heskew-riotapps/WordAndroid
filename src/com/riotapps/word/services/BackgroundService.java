@@ -70,7 +70,9 @@ public class BackgroundService extends Service {
 	   Logger.d(TAG, "onStartCommand called this.isProcessed=" + this.isProcessed);
 	  // if (!this.isProcessed){
 		   //this.player = PlayerService.getPlayerFromLocal();
-		   this.storedToken = intent.getStringExtra(Constants.EXTRA_PLAYER_TOKEN);  //PlayerService.getAuthTokenFromLocal();
+	
+	   	if (intent != null){
+	   		this.storedToken = intent.getStringExtra(Constants.EXTRA_PLAYER_TOKEN);  //PlayerService.getAuthTokenFromLocal();
 		   this.lastAlertActivationDate = intent.getStringExtra(Constants.EXTRA_PLAYER_LAST_ALERT_ACTIVATION_DATE); 
 		   this.completedDate = intent.getStringExtra(Constants.EXTRA_PLAYER_COMPLETED_DATE); 
 		   this.registrationId = intent.getStringExtra(Constants.EXTRA_PLAYER_GCM_RID); 
@@ -96,6 +98,7 @@ public class BackgroundService extends Service {
 				}
 			   this.getGameList();
 		   }
+	   	}
 	  // }
 	   
 	 
@@ -383,8 +386,8 @@ public class BackgroundService extends Service {
 	}
 	
 	private void handleCompleted(){
-		if (this.isGameFetcherCompleted && this.isWordLoaderCompleted){
+		//if (this.isGameFetcherCompleted && this.isWordLoaderCompleted){
 			this.stopSelf();
-		}
+		//}
 	}
 }

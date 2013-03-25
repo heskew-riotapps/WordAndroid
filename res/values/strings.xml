@@ -196,7 +196,7 @@
                                than the player\'s score, making the opponent the winner.  In a three-player or four-player game, the game continues even after a player concedes as long as 
                                there are at least two active players in the game.  When there are only two players left in the game and one of the players concedes,
                                the rules for a two-player game applies in terms of conceding.</string>
-    <string name="full_rules_finish_5">If a turn has not been taken for 2 weeks (or so), the player whose turn is pending will automatically "concede".</string>                            
+    <string name="full_rules_finish_5">If a turn has not been taken for 10 days (or so), the player whose turn is pending will automatically "concede".</string>                            
     <string name="full_rules_dictionary_1">The Dictionary</string>                                                                 		
     <string name="full_rules_dictionary_2">The original source for the dictionary is 
                         <a href="http://code.google.com/p/dotnetperls-controls/downloads/detail?name=enable1.txt">Enhanced North American Benchmark Lexicon (ENABLE)</a>. 

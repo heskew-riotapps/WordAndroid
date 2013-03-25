@@ -117,7 +117,24 @@ public class StartGame extends FragmentActivity implements View.OnClickListener{
 		EasyTracker.getInstance().activityStop(this);
 	}
     
-    @Override 
+    @Override
+	public void onBackPressed() {
+		//super.onBackPressed();
+		
+		 if (player.getTotalNumLocalGames() == 0){
+				Intent startMain = new Intent(Intent.ACTION_MAIN);
+				startMain.addCategory(Intent.CATEGORY_HOME);
+				startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(startMain);
+				this.finish();
+		 }
+		 else{
+			 this.finish();
+		 }
+		//if games = 0, leave app because that means this is starting point for opening app
+	}
+
+	@Override 
     public void onClick(View v) {
     	Intent intent;
     	switch(v.getId()){  

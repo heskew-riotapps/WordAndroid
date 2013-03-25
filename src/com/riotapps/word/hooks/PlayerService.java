@@ -1,6 +1,7 @@
 package com.riotapps.word.hooks;
 
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -465,7 +466,7 @@ public class PlayerService {
 		Check.Require(nickname.length() > 0, ctx.getString(R.string.validation_nickname_required_for_search));
 		//validate there are not  funky characters in the string
 		
-		String url = String.format(Constants.REST_FIND_PLAYER_BY_NICKNAME, nickname);
+		String url = String.format(Constants.REST_FIND_PLAYER_BY_NICKNAME,  URLEncoder.encode(nickname));
 		
 		return url;
 	}

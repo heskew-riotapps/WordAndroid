@@ -400,11 +400,12 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
 	@Override
 	public void onBackPressed() {
 		// do nothing if back is pressed
-		//super.onBackPressed();
+		
 		Intent startMain = new Intent(Intent.ACTION_MAIN);
 		startMain.addCategory(Intent.CATEGORY_HOME);
 		startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(startMain);
+		this.finish(); 
 	}
 
 	private void loadLists(){

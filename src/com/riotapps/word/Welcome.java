@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.hooks.Player;
+import com.riotapps.word.hooks.PlayerService;
  
 public class Welcome  extends FragmentActivity implements View.OnClickListener{
 	private static final String TAG = Welcome.class.getSimpleName();
@@ -32,7 +33,10 @@ public class Welcome  extends FragmentActivity implements View.OnClickListener{
         txtFB = (TextView) findViewById(R.id.byFacebook);
         txtFB.setOnClickListener(this);
         txtNative = (TextView) findViewById(R.id.byEmail);
-        txtNative.setOnClickListener(this);   
+        txtNative.setOnClickListener(this);  
+        
+        //just in case we get here in a weird state
+        PlayerService.clearLocalStorageAndCache(this);
     }
 
 	@Override

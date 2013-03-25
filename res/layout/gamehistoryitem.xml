@@ -46,7 +46,6 @@
 		    android:layout_marginTop="5dp"
 		    android:layout_width="fill_parent"    
 		    android:layout_height="1dp" 
-		    android:layout_below="@id/rlItem"
 		    android:layout_marginBottom="0dp"
 		    android:id="@+id/llBottomBorder">
 	    
@@ -55,8 +54,6 @@
 				android:layout_width="fill_parent"
 				android:layout_height="1dp"
 				android:background="@color/form_border_color"
-				 android:layout_below="@id/rlItem"
-			 
  			     />
 	    </LinearLayout>
  

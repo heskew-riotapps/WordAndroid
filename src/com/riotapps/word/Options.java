@@ -44,7 +44,9 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 		TextView tvGravatar;
 		TextView tvAbout;
 		Button bLogout;
-		
+		Player player;
+		ApplicationContext appContext;
+		 
 		final FragmentActivity context = this;
 
 			
@@ -52,8 +54,8 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.options);
-
-	        Player player = PlayerService.getPlayerFromLocal();		
+	        this.appContext = (ApplicationContext)this.getApplicationContext();
+	        this.player = appContext.getPlayer(); 
 	        
 	        tvAbout = (TextView) findViewById(R.id.tvAbout);
 	        tvFBAccountSettings = (TextView) findViewById(R.id.tvFBAccountSettings);
@@ -103,7 +105,13 @@ public class Options extends FragmentActivity implements View.OnClickListener{
 			// TODO Auto-generated method stub
 			super.onBackPressed();
 			
-			 Intent intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+			Intent intent;
+			 if (this.player.getTotalNumLocalGames() == 0){
+				 intent = new Intent(this.context, com.riotapps.word.StartGame.class);
+			 }
+			 else{
+				 intent = new Intent(this.context, com.riotapps.word.MainLanding.class);
+			 }
     		 this.startActivity(intent); 
 		}
 
