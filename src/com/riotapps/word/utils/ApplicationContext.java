@@ -148,7 +148,13 @@ public class ApplicationContext extends Application{
        // }).start();
     }
 
-    public static Context getAppContext() {
+    @Override
+	public void onTerminate() {
+		// TODO Auto-generated method stub
+		super.onTerminate();
+	}
+
+	public static Context getAppContext() {
         return ApplicationContext.context;
     }
 

@@ -59,6 +59,33 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 	
 	ApplicationContext appContext;
+	
+	 private static Bitmap bgPlacedTileFull;
+		private static Bitmap bgPlacedTileZoomed;
+		private static Bitmap bgPlayedTileFull;
+		private static Bitmap bgPlayedTileZoomed;
+		private static Bitmap bgLastPlayedTileFull;
+		private static Bitmap bgLastPlayedTileZoomed;
+		
+		private static Bitmap bgBaseScaled = null;
+		private static Bitmap bgBaseZoomed = null;
+		private static Bitmap bg4LScaled = null;
+		private static Bitmap bg4LZoomed = null;
+		private static Bitmap bg3LScaled = null;
+		private static Bitmap bg3LZoomed = null;
+		private static Bitmap bg3WScaled = null;
+		private static Bitmap bg3WZoomed = null;
+		private static Bitmap bg2LScaled = null;
+		private static Bitmap bg2LZoomed = null; 
+		private static Bitmap bg2WScaled = null;
+		private static Bitmap bg2WZoomed = null;	
+		private static Bitmap bgStarterScaled = null;
+		private static Bitmap bgStarterZoomed = null;
+		private static Bitmap bgTrayBaseScaled = null;
+		private static Bitmap bgTrayEmptyScaled = null;
+		private static Bitmap bgTrayBaseDragging = null;
+		private static Bitmap bgTrayBackground = null;
+	
 	int absoluteTop = 0;
 	int absoluteLeft = 0;
 	
