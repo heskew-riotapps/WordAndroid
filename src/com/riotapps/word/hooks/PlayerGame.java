@@ -79,6 +79,7 @@ public class PlayerGame implements Parcelable{
 	@SerializedName("t_l")
 	private List<String> trayLetters = new ArrayList<String>();
 	
+	
 	public List<String> getTrayLetters() {
 		return trayLetters;
 	}
@@ -188,7 +189,22 @@ public class PlayerGame implements Parcelable{
 		this.player = player;
 	}
 	
-	
+	public boolean isActive(){
+		//declined and cancelled
+		//NO_TRANSLATION(0), (no action yet)
+		//ACTIVE(1),
+		//CANCELLED(2),
+		//DECLINED(3),
+		//WON(4),
+		//LOST(5),
+		//DRAW(6),
+		//RESIGNED(7) //a temp status, will be changed to LOST after the game is over????
+		//DECLINED_BY_INVITEES(8),
+		if (this.status == 1 || this.status == 4 || this.status == 5 || this.status == 6 || this.status == 7){
+			return true;
+		}
+		return false;
+	}
 
 	public int getPlayerOrder() {
 		return playerOrder;

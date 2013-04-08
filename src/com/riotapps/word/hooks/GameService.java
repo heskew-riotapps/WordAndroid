@@ -25,7 +25,6 @@ import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.Constants;
 import com.riotapps.word.utils.DesignByContractException;
 import com.riotapps.word.utils.Check;
-import com.riotapps.word.utils.IOHelper;
 import com.riotapps.word.utils.Logger;
 import com.riotapps.word.utils.Storage;
 import com.riotapps.word.utils.Utils;
@@ -37,12 +36,14 @@ import com.riotapps.word.ui.RowCol;
 import com.riotapps.word.utils.NetworkConnectivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.riotapps.word.hooks.WordService;
  
  
 @SuppressLint("NewApi")
 public class GameService {
 	private static final String TAG = GameService.class.getSimpleName();
-
+	
+	 
 	
 	public static void updateLastGameListCheckTime(){
 		
@@ -428,7 +429,7 @@ public class GameService {
 			//also update win Totals for the winner
 			boolean isWinner = false;
 			Player player = PlayerService.getPlayerFromLocal();
-			for (PlayerGame pg : game.getPlayerGames()){
+			for (PlayerGame pg : game.getActivePlayerGames()){
 				if (pg.isWinner() && pg.getPlayerId().equals(player.getId())){
 					if(pg.getWinNum() > player.getNumWins()) {
 						player.setNumWins(pg.getWinNum());
@@ -555,7 +556,7 @@ public class GameService {
          
          game.getOpponents_().clear();
          
-         for (PlayerGame pg : game.getPlayerGames()){
+         for (PlayerGame pg : game.getActivePlayerGames()){
 			pg.setPlayer(PlayerService.getPlayerFromOpponentList(player.getOpponents(), currentPlayer, pg.getPlayerId()));
          }
 		 
@@ -646,7 +647,7 @@ public class GameService {
 		 int playerIndex4 = -1;
 		 
 		 String activePlayer; 
-		 int playerGameCount = game.getPlayerGames().size();
+		 int playerGameCount = game.getActivePlayerGames().size();
 		 
 		 //Log.d(TAG,"num players=" + playerGameCount); 
 		 
@@ -655,7 +656,7 @@ public class GameService {
 			 
 			// Log.d(TAG,"x=" + x);
 		 //for (PlayerGame pg : this.game.getPlayerGames()) {
-		    PlayerGame pg = game.getPlayerGames().get(x);	
+		    PlayerGame pg = game.getActivePlayerGames().get(x);	
 		  //  Log.d(TAG,"player=" + pg.getPlayer().getId());
 			 if (pg.getPlayer().getId() != null && pg.getPlayer().getId().equals(player.getId())) {
 				// Log.d(TAG,"contextplayermatch=" + pg.getPlayer().getId());
@@ -681,7 +682,7 @@ public class GameService {
 			 //i'm sure there is a 2 line formula that will shrink this code but i'm tired and settling for switch statements
 			 for(int x = 0; x < playerGameCount; x++){
 				
-			    PlayerGame pg = game.getPlayerGames().get(x);
+			    PlayerGame pg = game.getActivePlayerGames().get(x);
 			    if (x != contextPlayerIndex){
 			    	//we already know where the context player (the player logged in right now) is
 			    	//let's find the order to display the others
@@ -781,54 +782,69 @@ public class GameService {
 		 TextView tvContextPlayerScore = (TextView)context.findViewById(R.id.tvPlayerScore_1);
 		 ImageView ivContextPlayerBadge = (ImageView)context.findViewById(R.id.ivPlayerBadge_1);
 		 ImageView ivContextPlayerTurn = (ImageView)context.findViewById(R.id.ivPlayerTurn_1);
+		 ImageView ivContextWhiteFlag = (ImageView)context.findViewById(R.id.ivWhiteFlag_1);
 		 
 		 TextView tvPlayer2 = (TextView)context.findViewById(R.id.tvPlayer_2);
 		 TextView tvPlayerScore2 = (TextView)context.findViewById(R.id.tvPlayerScore_2);
 		 ImageView ivPlayerBadge2 = (ImageView)context.findViewById(R.id.ivPlayerBadge_2);
 		 ImageView ivPlayerTurn2 = (ImageView)context.findViewById(R.id.ivPlayerTurn_2);
+		 ImageView ivWhiteFlag2 = (ImageView)context.findViewById(R.id.ivWhiteFlag_2);
 
 		 TextView tvPlayer3 = (TextView)context.findViewById(R.id.tvPlayer_3);
 		 TextView tvPlayerScore3 = (TextView)context.findViewById(R.id.tvPlayerScore_3);
 		 ImageView ivPlayerBadge3 = (ImageView)context.findViewById(R.id.ivPlayerBadge_3);
 		 ImageView ivPlayerTurn3 = (ImageView)context.findViewById(R.id.ivPlayerTurn_3);
+		 ImageView ivWhiteFlag3 = (ImageView)context.findViewById(R.id.ivWhiteFlag_3);
 		 
 		 TextView tvPlayer4 = (TextView)context.findViewById(R.id.tvPlayer_4);
 		 TextView tvPlayerScore4 = (TextView)context.findViewById(R.id.tvPlayerScore_4);
 		 ImageView ivPlayerBadge4 = (ImageView)context.findViewById(R.id.ivPlayerBadge_4);
 		 ImageView ivPlayerTurn4 = (ImageView)context.findViewById(R.id.ivPlayerTurn_4);
+		 ImageView ivWhiteFlag4 = (ImageView)context.findViewById(R.id.ivWhiteFlag_4);
 		 
 		 //position 1
-		 String contextPlayer = game.getPlayerGames().get(contextPlayerIndex).getPlayer().getName();
-		 if (contextPlayer.length() > 25 || playerGameCount > 2){contextPlayer = game.getPlayerGames().get(contextPlayerIndex).getPlayer().getAbbreviatedName();}
+		 String contextPlayer = game.getActivePlayerGames().get(contextPlayerIndex).getPlayer().getName();
+		 if (contextPlayer.length() > 25 || playerGameCount > 2){contextPlayer = game.getActivePlayerGames().get(contextPlayerIndex).getPlayer().getAbbreviatedName();}
 		 tvContextPlayer.setText(contextPlayer);
-		 tvContextPlayerScore.setText(Integer.toString(game.getPlayerGames().get(contextPlayerIndex).getScore()));
-		 int contextPlayerBadgeId = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(contextPlayerIndex).getPlayer().getBadgeDrawable(), null, null);
+		 tvContextPlayerScore.setText(Integer.toString(game.getActivePlayerGames().get(contextPlayerIndex).getScore()));
+		 int contextPlayerBadgeId = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getActivePlayerGames().get(contextPlayerIndex).getPlayer().getBadgeDrawable(), null, null);
 		 ivContextPlayerBadge.setImageResource(contextPlayerBadgeId);
-		 if (game.getPlayerGames().get(contextPlayerIndex).isTurn() == false){
+		 if (game.getActivePlayerGames().get(contextPlayerIndex).isTurn() == false){
 			 ivContextPlayerTurn.setVisibility(View.INVISIBLE);
 		 }
 		 else{
 			 ivContextPlayerTurn.setVisibility(View.VISIBLE);
 		 }
+		 if (game.getActivePlayerGames().get(contextPlayerIndex).getStatus() == 7){
+			 ivContextWhiteFlag.setVisibility(View.VISIBLE);
+		 }
+		 else{
+			 ivContextWhiteFlag.setVisibility(View.GONE);
+		 }
 
 		 //position 2
-		 String player2 = game.getPlayerGames().get(playerIndex2).getPlayer().getName();
-		 if (player2.length() > 25 || playerGameCount > 2){player2 = game.getPlayerGames().get(playerIndex2).getPlayer().getAbbreviatedName();}
+		 String player2 = game.getActivePlayerGames().get(playerIndex2).getPlayer().getName();
+		 if (player2.length() > 25 || playerGameCount > 2){player2 = game.getActivePlayerGames().get(playerIndex2).getPlayer().getAbbreviatedName();}
 		 tvPlayer2.setText(player2);
-		 tvPlayerScore2.setText(Integer.toString(game.getPlayerGames().get(playerIndex2).getScore()));
-		 int playerBadgeId2 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(playerIndex2).getPlayer().getBadgeDrawable(), null, null);
+		 tvPlayerScore2.setText(Integer.toString(game.getActivePlayerGames().get(playerIndex2).getScore()));
+		 int playerBadgeId2 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getActivePlayerGames().get(playerIndex2).getPlayer().getBadgeDrawable(), null, null);
 		 ivPlayerBadge2.setImageResource(playerBadgeId2);
-		 if (game.getPlayerGames().get(playerIndex2).isTurn() == false){
+		 if (game.getActivePlayerGames().get(playerIndex2).isTurn() == false){
 			 ivPlayerTurn2.setVisibility(View.INVISIBLE);	 
 		 }
 		 else{
 			 ivPlayerTurn2.setVisibility(View.VISIBLE);
 		 }
-
+		 if (game.getActivePlayerGames().get(playerIndex2).getStatus() == 7){
+			 ivWhiteFlag2.setVisibility(View.VISIBLE);
+		 }
+		 else{
+			 ivWhiteFlag2.setVisibility(View.GONE);
+		 }
 		 //if neither context player and player 2 are currently taking their turn, 
 		 //collapse the turn image column on the left
-		 if (game.getPlayerGames().get(playerIndex2).isTurn() == false &&
-				 game.getPlayerGames().get(contextPlayerIndex).isTurn() == false) {
+		 if (game.getActivePlayerGames().get(playerIndex2).isTurn() == false &&
+				 game.getActivePlayerGames().get(contextPlayerIndex).isTurn() == false) {
 			 ivContextPlayerTurn.setVisibility(View.GONE);
 			 ivPlayerTurn2.setVisibility(View.GONE);
 		 }
@@ -840,21 +856,27 @@ public class GameService {
 			 tvPlayerScore4.setVisibility(View.INVISIBLE);
 			 ivPlayerBadge4.setVisibility(View.INVISIBLE);
 			 ivPlayerTurn4.setVisibility(View.INVISIBLE);	
+			 ivWhiteFlag4.setVisibility(View.GONE);
 			 
 			 //position 3
-			 String player3 = game.getPlayerGames().get(playerIndex3).getPlayer().getName();
-			 if (player3.length() > 25 || playerGameCount > 2){player3 = game.getPlayerGames().get(playerIndex3).getPlayer().getAbbreviatedName();}
+			 String player3 = game.getActivePlayerGames().get(playerIndex3).getPlayer().getName();
+			 if (player3.length() > 25 || playerGameCount > 2){player3 = game.getActivePlayerGames().get(playerIndex3).getPlayer().getAbbreviatedName();}
 			 tvPlayer3.setText(player3);
-			 tvPlayerScore3.setText(Integer.toString(game.getPlayerGames().get(playerIndex3).getScore()));
-			 int playerBadgeId3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(playerIndex3).getPlayer().getBadgeDrawable(), null, null);
+			 tvPlayerScore3.setText(Integer.toString(game.getActivePlayerGames().get(playerIndex3).getScore()));
+			 int playerBadgeId3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getActivePlayerGames().get(playerIndex3).getPlayer().getBadgeDrawable(), null, null);
 			 ivPlayerBadge3.setImageResource(playerBadgeId3);
-			 if (game.getPlayerGames().get(playerIndex3).isTurn() == false){
+			 if (game.getActivePlayerGames().get(playerIndex3).isTurn() == false){
 				 ivPlayerTurn3.setVisibility(View.INVISIBLE);
 			 }
 			 else{
 				 ivPlayerTurn3.setVisibility(View.VISIBLE);
 			 }
-
+			 if (game.getActivePlayerGames().get(playerIndex3).getStatus() == 7){
+				 ivWhiteFlag3.setVisibility(View.VISIBLE);
+			 }
+			 else{
+				 ivWhiteFlag3.setVisibility(View.GONE);
+			 }
 		 }
 		 else if (playerGameCount == 2)
 		 {
@@ -863,40 +885,54 @@ public class GameService {
 			 tvPlayerScore3.setVisibility(View.GONE);
 			 ivPlayerBadge3.setVisibility(View.GONE);
 			 ivPlayerTurn3.setVisibility(View.GONE);
+			 ivWhiteFlag3.setVisibility(View.GONE);
 			 
 			 tvPlayer4.setVisibility(View.GONE);
 			 tvPlayerScore4.setVisibility(View.GONE);
 			 ivPlayerBadge4.setVisibility(View.GONE);
 			 ivPlayerTurn4.setVisibility(View.GONE);	 
+			 ivWhiteFlag4.setVisibility(View.GONE);
+
 		 }
 		 else if (playerGameCount == 4){
 			 
 			 //position 3
-			 String player3 = game.getPlayerGames().get(playerIndex3).getPlayer().getName();
-			 if (player3.length() > 25 || playerGameCount > 2){player3 = game.getPlayerGames().get(playerIndex3).getPlayer().getAbbreviatedName();}
+			 String player3 = game.getActivePlayerGames().get(playerIndex3).getPlayer().getName();
+			 if (player3.length() > 25 || playerGameCount > 2){player3 = game.getActivePlayerGames().get(playerIndex3).getPlayer().getAbbreviatedName();}
 			 tvPlayer3.setText(player3);
-			 tvPlayerScore3.setText(Integer.toString(game.getPlayerGames().get(playerIndex3).getScore()));
-			 int playerBadgeId3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(playerIndex3).getPlayer().getBadgeDrawable(), null, null);
+			 tvPlayerScore3.setText(Integer.toString(game.getActivePlayerGames().get(playerIndex3).getScore()));
+			 int playerBadgeId3 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getActivePlayerGames().get(playerIndex3).getPlayer().getBadgeDrawable(), null, null);
 			 ivPlayerBadge3.setImageResource(playerBadgeId3);
-			 if (game.getPlayerGames().get(playerIndex3).isTurn() == false){
+			 if (game.getActivePlayerGames().get(playerIndex3).isTurn() == false){
 				 ivPlayerTurn3.setVisibility(View.INVISIBLE);
 			 }
 			 else{
 				 ivPlayerTurn3.setVisibility(View.VISIBLE);
 			 }
-
+			 if (game.getActivePlayerGames().get(playerIndex3).getStatus() == 7){
+				 ivWhiteFlag3.setVisibility(View.VISIBLE);
+			 }
+			 else{
+				 ivWhiteFlag3.setVisibility(View.GONE);
+			 }
 			 //position 4
-			 String player4 = game.getPlayerGames().get(playerIndex4).getPlayer().getName();
-			 if (player4.length() > 25 || playerGameCount > 2){player4 = game.getPlayerGames().get(playerIndex4).getPlayer().getAbbreviatedName();}
+			 String player4 = game.getActivePlayerGames().get(playerIndex4).getPlayer().getName();
+			 if (player4.length() > 25 || playerGameCount > 2){player4 = game.getActivePlayerGames().get(playerIndex4).getPlayer().getAbbreviatedName();}
 			 tvPlayer4.setText(player4);
-			 tvPlayerScore4.setText(Integer.toString(game.getPlayerGames().get(playerIndex4).getScore()));
-			 int playerBadgeId4 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getPlayerGames().get(playerIndex4).getPlayer().getBadgeDrawable(), null, null);
+			 tvPlayerScore4.setText(Integer.toString(game.getActivePlayerGames().get(playerIndex4).getScore()));
+			 int playerBadgeId4 = context.getResources().getIdentifier("com.riotapps.word:drawable/" + game.getActivePlayerGames().get(playerIndex4).getPlayer().getBadgeDrawable(), null, null);
 			 ivPlayerBadge4.setImageResource(playerBadgeId4);
-			 if (game.getPlayerGames().get(playerIndex4).isTurn() == false){
+			 if (game.getActivePlayerGames().get(playerIndex4).isTurn() == false){
 				 ivPlayerTurn4.setVisibility(View.INVISIBLE);
 			 }
 			 else{
 				 ivPlayerTurn4.setVisibility(View.VISIBLE);
+			 }
+			 if (game.getActivePlayerGames().get(playerIndex4).getStatus() == 7){
+				 ivWhiteFlag4.setVisibility(View.VISIBLE);
+			 }
+			 else{
+				 ivWhiteFlag4.setVisibility(View.GONE);
 			 }
 		 }
 		 
@@ -932,7 +968,7 @@ public class GameService {
 	
 	//return int that represents the display message
 	public static PlacedResult checkPlayRules(Context context, TileLayout layout, Game game, List<GameTile> boardTiles, 
-					List<com.riotapps.word.ui.TrayTile> trayTiles, AlphabetService alphabetService, WordService wordService,
+					List<com.riotapps.word.ui.TrayTile> trayTiles, //AlphabetService alphabetService, // WordService wordService,
 					boolean bypassValidWordCheck) throws DesignByContractException{
 		
 		long runningTime = System.nanoTime();
@@ -1028,7 +1064,7 @@ public class GameService {
         
         
         //determine the words that have been played
-        List<PlacedWord> words = getWords(layout, axis, placedTiles, playedTiles, alphabetService, context);
+        List<PlacedWord> words = getWords(layout, axis, placedTiles, playedTiles);
         
         Logger.d(TAG, String.format("%1$s - time since last capture=%2$s", "getWords ended", Utils.convertNanosecondsToMilliseconds(System.nanoTime() - runningTime)));
 	     runningTime = System.nanoTime();
@@ -1055,13 +1091,13 @@ public class GameService {
         
         List<PlacedWord> invalidWords = new ArrayList<PlacedWord>();
 
-		ApplicationContext appContext = (ApplicationContext)context.getApplicationContext();
+		//ApplicationContext appContext = (ApplicationContext)context.getApplicationContext();
         
         for (PlacedWord word : words)
         {
             totalPoints += word.getTotalPoints();
             if (!bypassValidWordCheck){
-            	if (appContext.getWordService().isWordValid(word.getWord().toLowerCase()) == false)
+            	if (WordService.isWordValid(word.getWord().toLowerCase()) == false)
             	//if (WordService.isWordValid(word.getWord().toLowerCase()) == false)
             	{
             	//	Logger.d(TAG, "checkPlayRules invalid word=" + word.getWord());
@@ -1255,7 +1291,7 @@ public class GameService {
 	//played tiles = tiles with letters that were placed on the board during previous turns
 	//placed word = words that were formed this turn by the placed tiles (in combination with previously played tiles_
 	private static List<PlacedWord> getWords(TileLayout layout, String axis, List<GameTile> placedTiles, 
-				List<PlayedTile> playedTiles, AlphabetService alphabetService, Context context) throws DesignByContractException {
+				List<PlayedTile> playedTiles) throws DesignByContractException {
 
 		List<PlacedWord> words = new ArrayList<PlacedWord>();
      
@@ -1266,7 +1302,7 @@ public class GameService {
         //we will be building the word and accumulating the points and multipliers as we go along        
         //let's start out by grabbing the first letter in the placed list
         word.setWord(placedTiles.get(0).getPlacedLetter());
-        word.setPoints(getTileValue(placedTiles.get(0).getId(), placedTiles.get(0).getPlacedLetter(), playedTiles, layout, alphabetService));
+        word.setPoints(getTileValue(placedTiles.get(0).getId(), placedTiles.get(0).getPlacedLetter(), playedTiles, layout));
         word.setMultiplier(getWordMultiplier(placedTiles.get(0).getId(), playedTiles, layout));
 
 
@@ -1279,10 +1315,10 @@ public class GameService {
         
 
         //first go forward (to the right or down)
-        getLettersAlongOnAxis(word, axis, placedTiles.get(0).getId(), placedTiles, playedTiles, true, true, layout, alphabetService);
+        getLettersAlongOnAxis(word, axis, placedTiles.get(0).getId(), placedTiles, playedTiles, true, true, layout);
 
         //then go backward (to the left or up)
-        getLettersAlongOnAxis(word, axis, placedTiles.get(0).getId(), placedTiles, playedTiles, true, false, layout, alphabetService);
+        getLettersAlongOnAxis(word, axis, placedTiles.get(0).getId(), placedTiles, playedTiles, true, false, layout);
 
 
         //it's possible to have a word that is only one letter long now
@@ -1309,11 +1345,11 @@ public class GameService {
         {
         	word = new PlacedWord();
             word.setWord(tile.getPlacedLetter());
-            word.setPoints(getTileValue(tile.getId(), tile.getPlacedLetter(), playedTiles, layout, alphabetService));
+            word.setPoints(getTileValue(tile.getId(), tile.getPlacedLetter(), playedTiles, layout));
             word.setMultiplier(getWordMultiplier(tile.getId(), playedTiles, layout));
 
-            getLettersAlongOnAxis(word, axis, tile.getId(), placedTiles, playedTiles, false, true, layout, alphabetService);
-            getLettersAlongOnAxis(word, axis, tile.getId(), placedTiles, playedTiles, false, false, layout, alphabetService);
+            getLettersAlongOnAxis(word, axis, tile.getId(), placedTiles, playedTiles, false, true, layout);
+            getLettersAlongOnAxis(word, axis, tile.getId(), placedTiles, playedTiles, false, false, layout);
 
             //add word to the word  list if it's longer than one letter
             if (word.getWord().length() > 1)
@@ -1355,7 +1391,7 @@ public class GameService {
 	
 	
 	 private static void getLettersAlongOnAxis(PlacedWord word, String axis, int startingPosition, List<GameTile> placedTiles, 
-	            List<PlayedTile> playedTiles, boolean onMainAxis, boolean proceedBackward, TileLayout layout, AlphabetService alphabetService)  {
+	            List<PlayedTile> playedTiles, boolean onMainAxis, boolean proceedBackward, TileLayout layout)  {
 		 
 		 boolean loop = true;
 		 int tilePosition = 0;
@@ -1407,7 +1443,7 @@ public class GameService {
                 if (proceedBackward == true) { word.setWord(letter + word.getWord()); } else { word.setWord(word.getWord() + letter); }
 
                 //keep track of the points as the word is being constructed
-                word.setPoints(word.getPoints() + getTileValue(tilePosition, letter, playedTiles, layout, alphabetService));
+                word.setPoints(word.getPoints() + getTileValue(tilePosition, letter, playedTiles, layout));
 
                 word.setMultiplier(word.getMultiplier() * getWordMultiplier(tilePosition, playedTiles, layout));
 
@@ -1447,7 +1483,7 @@ public class GameService {
         }
 
 	 
-	  public static int getTileValue(int tileId, String letter, List<PlayedTile> playedTiles, TileLayout layout, AlphabetService alphabetService)
+	  public static int getTileValue(int tileId, String letter, List<PlayedTile> playedTiles, TileLayout layout)
       {
           int multiplier = 1;
 
@@ -1456,7 +1492,7 @@ public class GameService {
           {
               multiplier = TileLayoutService.getLetterMultiplier(tileId, layout);
           }
-          return alphabetService.getLetterValue(letter) * multiplier;
+          return AlphabetService.getLetterValue(letter) * multiplier;
       }
 
       public static int getWordMultiplier(int tileId, List<PlayedTile> playedTiles, TileLayout layout)

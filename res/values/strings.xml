@@ -394,6 +394,8 @@
 	   <string name="game_last_action_skipped">%s skipped a turn</string>
 	   <string name="game_last_action_resigned_context">You conceded</string>
 	   <string name="game_last_action_resigned">%s conceded</string>
+	   <string name="game_last_action_declined_game_active_context">You declined this game</string>
+	   <string name="game_last_action_declined_game_active">%s declined this game</string>
 	   <string name="few_seconds_ago">a few seconds ago</string>
 	   <string name="seconds_ago">%s seconds ago</string>
 	   <string name="about_a_minute_ago">about a minute ago</string>
@@ -405,6 +407,8 @@
 	   <string name="game_last_action_list_declined">%2$s declined %1$s</string>
 	   <string name="game_last_action_list_resigned_context">You conceded %s</string>
 	   <string name="game_last_action_list_resigned">%2$s conceded %1$s</string>
+	   <string name="game_last_action_list_declined_context">You declined this game</string>
+	   <string name="game_last_action_list_declined">%s declined this game</string>
 	   <string name="game_last_action_list_started_context">You started this game %s</string>
 	   <string name="game_last_action_list_started">%2$s started this game %1$s</string>
 	   <string name="game_last_action_list_undetermined">The last action is undetermined.</string>

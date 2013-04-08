@@ -58,39 +58,39 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.parent = parent;
 	}
 	
-	ApplicationContext appContext;
+//	ApplicationContext appContext;
 	
 	 private static Bitmap bgPlacedTileFull;
-		private static Bitmap bgPlacedTileZoomed;
-		private static Bitmap bgPlayedTileFull;
-		private static Bitmap bgPlayedTileZoomed;
-		private static Bitmap bgLastPlayedTileFull;
-		private static Bitmap bgLastPlayedTileZoomed;
-		
-		private static Bitmap bgBaseScaled = null;
-		private static Bitmap bgBaseZoomed = null;
-		private static Bitmap bg4LScaled = null;
-		private static Bitmap bg4LZoomed = null;
-		private static Bitmap bg3LScaled = null;
-		private static Bitmap bg3LZoomed = null;
-		private static Bitmap bg3WScaled = null;
-		private static Bitmap bg3WZoomed = null;
-		private static Bitmap bg2LScaled = null;
-		private static Bitmap bg2LZoomed = null; 
-		private static Bitmap bg2WScaled = null;
-		private static Bitmap bg2WZoomed = null;	
-		private static Bitmap bgStarterScaled = null;
-		private static Bitmap bgStarterZoomed = null;
-		private static Bitmap bgTrayBaseScaled = null;
-		private static Bitmap bgTrayEmptyScaled = null;
-		private static Bitmap bgTrayBaseDragging = null;
-		private static Bitmap bgTrayBackground = null;
+	private static Bitmap bgPlacedTileZoomed;
+	private static Bitmap bgPlayedTileFull;
+	private static Bitmap bgPlayedTileZoomed;
+	private static Bitmap bgLastPlayedTileFull;
+	private static Bitmap bgLastPlayedTileZoomed;
+	
+	private static Bitmap bgBaseScaled = null;
+	private static Bitmap bgBaseZoomed = null;
+	private static Bitmap bg4LScaled = null;
+	private static Bitmap bg4LZoomed = null;
+	private static Bitmap bg3LScaled = null;
+	private static Bitmap bg3LZoomed = null;
+	private static Bitmap bg3WScaled = null;
+	private static Bitmap bg3WZoomed = null;
+	private static Bitmap bg2LScaled = null;
+	private static Bitmap bg2LZoomed = null; 
+	private static Bitmap bg2WScaled = null;
+	private static Bitmap bg2WZoomed = null;	
+	private static Bitmap bgStarterScaled = null;
+	private static Bitmap bgStarterZoomed = null;
+	private static Bitmap bgTrayBaseScaled = null;
+	private static Bitmap bgTrayEmptyScaled = null;
+	private static Bitmap bgTrayBaseDragging = null;
+	private static Bitmap bgTrayBackground = null;
 	
 	int absoluteTop = 0;
 	int absoluteLeft = 0;
 	
 	GameSurfaceView me = this;
-	Context context;
+//	Context context;
 	GameThread gameThread = null;
 	boolean isThreadRunning = false;
 	SurfaceHolder surfaceHolder;
@@ -279,24 +279,22 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
     
     //private TrayTile currentTrayTile = null;
-    private Bitmap trayBackground;
+   /// private Bitmap trayBackground;
     private Bitmap logo;
     private boolean surfaceCreated = false;
-    
-	//private Bitmap bgTray;// = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+ 	private boolean shuffleRedraw = false;
+	private boolean afterPlayRedraw = false;
+	private boolean recallLettersRedraw = false;
+	/*
 	private Bitmap bgTrayBaseScaled;
 	private Bitmap bgTrayEmptyScaled;
 	private Bitmap bgTrayBaseDragging; 
-	private boolean shuffleRedraw = false;
-	private boolean afterPlayRedraw = false;
-	private boolean recallLettersRedraw = false;
 	private Bitmap bgPlacedTileFull;
 	private Bitmap bgPlacedTileZoomed;
 	private Bitmap bgPlayedTileFull;
 	private Bitmap bgPlayedTileZoomed;
 	private Bitmap bgLastPlayedTileFull;
 	private Bitmap bgLastPlayedTileZoomed;
-	
 	private Bitmap bgBaseScaled;
 	private Bitmap bgBaseZoomed;
 	private Bitmap bg4LScaled;
@@ -311,7 +309,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	private Bitmap bg2WZoomed;	
 	private Bitmap bgStarterScaled;
 	private Bitmap bgStarterZoomed;
-	
+	*/
 	
 	public boolean isReadyToDraw() {
 		return readyToDraw;
@@ -326,8 +324,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	List<TrayTile> trayTiles = new ArrayList<TrayTile>();
     TileLayout defaultLayout;
     TileLayoutService layoutService;
-    AlphabetService alphabetService;
-    WordService wordService;
+   // AlphabetService alphabetService;
+  //  WordService wordService;
    
 
  
@@ -353,18 +351,18 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		// TODO Auto-generated constructor stub
 	}
 
-	public void construct(Context context, AlphabetService alphabetService, WordService wordService, GameSurface parent, ApplicationContext appContext ) {
+	public void construct( GameSurface parent) {
 		//Log.w(TAG, "construct called");
 		this.parent = parent;
-		this.appContext = appContext;
+		//this.appContext = appContext;
 		this.parent.captureTime(TAG + " construct starting");
 		
-		this.context = context;
+		//this.context = context;
 		this.layoutService = new TileLayoutService();
-		this.defaultLayout = layoutService.GetDefaultLayout(context);
+		this.defaultLayout = layoutService.GetDefaultLayout(parent);
 		
-		this.alphabetService = alphabetService; //new AlphabetService(context);
-		this.wordService = wordService;
+	//	this.alphabetService = alphabetService; //new AlphabetService(context);
+		//this.wordService = wordService;
 		//
 		  this.setZOrderOnTop(true);
 		 this.holder = getHolder();
@@ -465,7 +463,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 
 	 	 this.parent.captureTime("SetDerivedValues before getHeight");		
 	 	  this.height = this.getHeight() - 
-		 		 Utils.convertDensityPixelsToPixels(context, this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height));// - 
+		 		 Utils.convertDensityPixelsToPixels(parent, this.parent.getResources().getInteger(com.riotapps.word.R.integer.gameboard_button_area_height));// - 
 		 		// Utils.convertDensityPixelsToPixels(context, this.parent.getResources().getInteger(com.riotapps.word.R.integer.scoreboard_height));// + 6;// lp.height; //getMeasuredHeight();
 
 	//	 Logger.d(TAG, "SetDerivedValues  this.height=" +  this.height );
@@ -502,108 +500,106 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		this.parent.captureTime("SetDerivedValues before bitmaps");
 		  
 		
-		 if (this.appContext.getBgTrayBaseScaled() == null) {
-			this.bgTrayBaseScaled = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);//decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_bg, this.trayTileSize,this.trayTileSize);
-			this.bgTrayBaseScaled = Bitmap.createScaledBitmap(this.bgTrayBaseScaled, this.trayTileSize , this.trayTileSize, false);
-			//this.bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
-		//Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
-			this.appContext.setBgTrayBaseScaled(this.bgTrayBaseScaled);
+		 if (GameSurfaceView.bgTrayBaseScaled == null) {
+			GameSurfaceView.bgTrayBaseScaled = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);//decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_bg, this.trayTileSize,this.trayTileSize);
+			GameSurfaceView.bgTrayBaseScaled = Bitmap.createScaledBitmap(GameSurfaceView.bgTrayBaseScaled, this.trayTileSize , this.trayTileSize, false);
+ 
+			//this.appContext.setBgTrayBaseScaled(this.bgTrayBaseScaled);
 		 }
-		 else {
-			this.bgTrayBaseScaled = this.appContext.getBgTrayBaseScaled();
-		 }
+		// else {
+		//	this.bgTrayBaseScaled = this.appContext.getBgTrayBaseScaled();
+		// }
 
-		 if (this.appContext.getBgTrayBaseDragging() == null) {
-			this.bgTrayBaseDragging = decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_bg, this.draggingTileSize,this.draggingTileSize);
-			this.bgTrayBaseDragging = Bitmap.createScaledBitmap(this.bgTrayBaseDragging, this.draggingTileSize , this.draggingTileSize, false);
-			//this.bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
-		//Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
-			this.appContext.setBgTrayBaseDragging(this.bgTrayBaseDragging);
+		 if (GameSurfaceView.bgTrayBaseDragging == null) {
+			GameSurfaceView.bgTrayBaseDragging = decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_bg, this.draggingTileSize,this.draggingTileSize);
+			GameSurfaceView.bgTrayBaseDragging = Bitmap.createScaledBitmap(GameSurfaceView.bgTrayBaseDragging, this.draggingTileSize , this.draggingTileSize, false);
+
+		//	this.appContext.setBgTrayBaseDragging(this.bgTrayBaseDragging);
 		 }
-		 else {
-			this.bgTrayBaseDragging = this.appContext.getBgTrayBaseDragging();
-		 }
+		// else {
+		//	this.bgTrayBaseDragging = this.appContext.getBgTrayBaseDragging();
+		// }
 		
-		 if (this.appContext.getBgTrayBackground() == null) {
-			Bitmap bgTray = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
-			this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
-			this.appContext.setBgTrayBackground(this.trayBackground);
+		 if (GameSurfaceView.bgTrayBackground == null) {
+			 GameSurfaceView.bgTrayBackground = BitmapFactory.decodeResource(getResources(), R.drawable.sbd_bg);
+			 GameSurfaceView.bgTrayBackground = Bitmap.createScaledBitmap(GameSurfaceView.bgTrayBackground, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
+			//this.appContext.setBgTrayBackground(this.trayBackground);
 		 }
-		 else {
-			this.trayBackground = this.appContext.getBgTrayBackground();
-		 }
+	//	 else {
+	//		this.trayBackground = this.appContext.getBgTrayBackground();
+	//	 }
 		//Bitmap bgTrayBase = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_bg);
 		
 		//this.bgTrayBaseScaled = Bitmap.createScaledBitmap(bgTrayBase, this.trayTileSize , this.trayTileSize, false);
 		
-		 if (this.appContext.getBgTrayEmptyScaled() == null) {
-			this.bgTrayEmptyScaled = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_empty_bg); //decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_empty_bg, this.trayTileSize,this.trayTileSize);
+		 if (GameSurfaceView.bgTrayEmptyScaled == null) {
+			GameSurfaceView.bgTrayEmptyScaled = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_empty_bg); //decodeSampledBitmapFromResource(getResources(), R.drawable.tray_tile_empty_bg, this.trayTileSize,this.trayTileSize);
 		//Bitmap bgTrayEmpty = BitmapFactory.decodeResource(getResources(), R.drawable.tray_tile_empty_bg);
-			this.bgTrayEmptyScaled = Bitmap.createScaledBitmap(bgTrayEmptyScaled, this.trayTileSize , this.trayTileSize, false);
-			this.appContext.setBgTrayEmptyScaled(this.bgTrayEmptyScaled);
+			GameSurfaceView.bgTrayEmptyScaled = Bitmap.createScaledBitmap(GameSurfaceView.bgTrayEmptyScaled, this.trayTileSize , this.trayTileSize, false);
+			//this.appContext.setBgTrayEmptyScaled(this.bgTrayEmptyScaled);
 		 }
-		 else {
-			this.bgTrayEmptyScaled = this.appContext.getBgTrayEmptyScaled();
-		 }
+		// else {
+		//	this.bgTrayEmptyScaled = this.appContext.getBgTrayEmptyScaled();
+		// }
 	//	this.bgTrayBaseDragging = Bitmap.createScaledBitmap(bgTrayBase, this.draggingTileSize, this.draggingTileSize, false);
 		//this.trayBackground = Bitmap.createScaledBitmap(bgTray, this.fullWidth, this.trayTileSize + (TRAY_VERTICAL_MARGIN * 2), false);
 		
-		 if (this.appContext.getBgPlacedTileZoomed() == null){
-			this.bgPlacedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_placed_bg, this.zoomedTileWidth,this.zoomedTileWidth);
-			this.bgPlacedTileZoomed = Bitmap.createScaledBitmap(bgPlacedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-			this.appContext.setBgPlacedTileZoomed(this.bgPlacedTileZoomed);
+		 if (GameSurfaceView.bgPlacedTileZoomed == null){
+			GameSurfaceView.bgPlacedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_placed_bg, this.zoomedTileWidth,this.zoomedTileWidth);
+			GameSurfaceView.bgPlacedTileZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bgPlacedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			//this.appContext.setBgPlacedTileZoomed(this.bgPlacedTileZoomed);
 		 }
-		 else {
-			this.bgPlacedTileZoomed = this.appContext.getBgPlacedTileZoomed();
-		 }
+		// else {
+		//	this.bgPlacedTileZoomed = this.appContext.getBgPlacedTileZoomed();
+		 //}
 		
-		 if (this.appContext.getBgPlacedTileFull() == null) {
-			 this.bgPlacedTileFull = Bitmap.createScaledBitmap(this.bgPlacedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-			 this.appContext.setBgPlacedTileFull(this.bgPlacedTileFull);
+		 if (GameSurfaceView.bgPlacedTileFull == null) {
+			 GameSurfaceView.bgPlacedTileFull = Bitmap.createScaledBitmap(GameSurfaceView.bgPlacedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			 //this.appContext.setBgPlacedTileFull(this.bgPlacedTileFull);
 		 } 
-		 else {
-			 this.bgPlacedTileFull = this.appContext.getBgPlacedTileFull();
-		 }
+		// else {
+		//	 this.bgPlacedTileFull = this.appContext.getBgPlacedTileFull();
+		// }
 		// Bitmap bgPlacedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_placed_bg);
 		// this.bgPlacedTileFull = Bitmap.createScaledBitmap(bgPlacedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 		 //this.bgPlacedTileZoomed = Bitmap.createScaledBitmap(bgPlacedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 
-		 if (this.appContext.getBgLastPlayedTileZoomed() == null) {
-			this.bgLastPlayedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_last_played_bg, this.zoomedTileWidth,this.zoomedTileWidth);
-			this.bgLastPlayedTileZoomed = Bitmap.createScaledBitmap(this.bgLastPlayedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-			this.appContext.setBgLastPlayedTileZoomed(this.bgLastPlayedTileZoomed);
+		 if (GameSurfaceView.bgLastPlayedTileZoomed == null) {
+			GameSurfaceView.bgLastPlayedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_last_played_bg, this.zoomedTileWidth,this.zoomedTileWidth);
+			GameSurfaceView.bgLastPlayedTileZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bgLastPlayedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		//	this.appContext.setBgLastPlayedTileZoomed(this.bgLastPlayedTileZoomed);
 		 }
-		 else {
-			this.bgLastPlayedTileZoomed = this.appContext.getBgLastPlayedTileZoomed();
-		 }
+		// else {
+	//		this.bgLastPlayedTileZoomed = this.appContext.getBgLastPlayedTileZoomed();
+	//	 }
 		
-		 if (this.appContext.getBgLastPlayedTileFull() == null) {
-			 this.bgLastPlayedTileFull = Bitmap.createScaledBitmap(this.bgLastPlayedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-			 this.appContext.setBgLastPlayedTileFull(this.bgLastPlayedTileFull);
+		 if (GameSurfaceView.bgLastPlayedTileFull == null) {
+			 GameSurfaceView.bgLastPlayedTileFull = Bitmap.createScaledBitmap(GameSurfaceView.bgLastPlayedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+		// this.appContext.setBgLastPlayedTileFull(this.bgLastPlayedTileFull);
 		 }
-		 else {
-			this.bgLastPlayedTileFull = this.appContext.getBgLastPlayedTileFull();
-		 }
+		// else {
+		//	this.bgLastPlayedTileFull = this.appContext.getBgLastPlayedTileFull();
+		// }
 		 //Bitmap bgLastPlayedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_last_played_bg);
 		// this.bgLastPlayedTileFull = Bitmap.createScaledBitmap(bgLastPlayedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 		// this.bgLastPlayedTileZoomed = Bitmap.createScaledBitmap(bgLastPlayedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
 
-		 if (this.appContext.getBgPlayedTileZoomed() == null) {
-			this.bgPlayedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_played_bg, this.zoomedTileWidth,this.zoomedTileWidth);
-			this.bgPlayedTileZoomed = Bitmap.createScaledBitmap(this.bgPlayedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-			this.appContext.setBgPlayedTileZoomed(this.bgPlayedTileZoomed);
+		 if (GameSurfaceView.bgPlayedTileZoomed == null) {
+			GameSurfaceView.bgPlayedTileZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_played_bg, this.zoomedTileWidth,this.zoomedTileWidth);
+			GameSurfaceView.bgPlayedTileZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bgPlayedTileZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			//this.appContext.setBgPlayedTileZoomed(this.bgPlayedTileZoomed);
 		 }
-		 else {
-			this.bgPlayedTileZoomed = this.appContext.getBgPlayedTileZoomed();
-		 } 
+		// else {
+		//	this.bgPlayedTileZoomed = this.appContext.getBgPlayedTileZoomed();
+		// } 
 		
-		 if (this.appContext.getBgPlayedTileFull() == null) {
-			this.bgPlayedTileFull = Bitmap.createScaledBitmap(this.bgPlayedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-			this.appContext.setBgPlayedTileFull(this.bgPlayedTileFull);
+		 if (GameSurfaceView.bgPlayedTileFull == null) {
+			GameSurfaceView.bgPlayedTileFull = Bitmap.createScaledBitmap(GameSurfaceView.bgPlayedTileZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			//this.appContext.setBgPlayedTileFull(this.bgPlayedTileFull);
 		 }
-		 else {
-			this.bgPlayedTileFull = this.appContext.getBgPlayedTileFull();
-		 }
+		// else {
+		//	this.bgPlayedTileFull = this.appContext.getBgPlayedTileFull();
+		// }
 	//	 Bitmap bgPlayedTile = BitmapFactory.decodeResource(getResources(), R.drawable.tile_played_bg);
 	//	 this.bgPlayedTileFull = Bitmap.createScaledBitmap(bgPlayedTile, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
 	//	 this.bgPlayedTileZoomed = Bitmap.createScaledBitmap(bgPlayedTile, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
@@ -632,152 +628,137 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 //				 decodeSampledBitmapFromResource(getResources(), R.id.myimage, 100, 100));
 		 //Bitmap bgBase = BitmapFactory.decodeResource(getResources(), R.drawable.blank_tile_bg);
 
-		if (this.appContext.getBgBaseZoomed() == null) {
-			this.bgBaseZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.blank_tile_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-			this.bgBaseZoomed = Bitmap.createScaledBitmap(this.bgBaseZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
-			this.appContext.setBgBaseZoomed(this.bgBaseZoomed);
+		if (GameSurfaceView.bgBaseZoomed == null) {
+			GameSurfaceView.bgBaseZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.blank_tile_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			GameSurfaceView.bgBaseZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bgBaseZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
+			//this.appContext.setBgBaseZoomed(this.bgBaseZoomed);
 		}
-		else {
-			this.bgBaseZoomed = this.appContext.getBgBaseZoomed();
+	//	else {
+	//		this.bgBaseZoomed = this.appContext.getBgBaseZoomed();
 			//Logger.d(TAG, "bgBaseZoomed retrieved from memory");
-		}
+	//	}
 		
-		if (this.appContext.getBgBaseScaled() == null) {
-			this.bgBaseScaled = Bitmap.createScaledBitmap(this.bgBaseZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-			this.appContext.setBgBaseScaled(this.bgBaseScaled);
+		if (GameSurfaceView.bgBaseScaled == null) {
+			GameSurfaceView.bgBaseScaled = Bitmap.createScaledBitmap(GameSurfaceView.bgBaseZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			//this.appContext.setBgBaseScaled(this.bgBaseScaled);
 		}
-		else {
-			this.bgBaseScaled = this.appContext.getBgBaseScaled();
-			//Logger.d(TAG, "bgBaseScaled retrieved from memory");
-		}
-//		 this.bgBaseScaled = Bitmap.createScaledBitmap(bgBase, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-//		 this.bgBaseZoomed = Bitmap.createScaledBitmap(bgBase, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+//		else {
+//			this.bgBaseScaled = this.appContext.getBgBaseScaled();
+//			//Logger.d(TAG, "bgBaseScaled retrieved from memory");
+//		}
+
 		 
 		 
 	//	 Bitmap bg4L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_4l_bg);
-		if (this.appContext.getBg4LZoomed() == null) {
-			this.bg4LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_4l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-			this.bg4LZoomed = Bitmap.createScaledBitmap(bg4LZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-			this.appContext.setBg4LZoomed(this.bg4LZoomed);
+		if (GameSurfaceView.bg4LZoomed == null) {
+			GameSurfaceView.bg4LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_4l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			GameSurfaceView.bg4LZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bg4LZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			//this.appContext.setBg4LZoomed(this.bg4LZoomed);
 		}
-		else {
-			this.bg4LZoomed = this.appContext.getBg4LZoomed();
-		}
+//		else {
+//			this.bg4LZoomed = this.appContext.getBg4LZoomed();
+//		}
 		
-		if (this.appContext.getBg4LScaled() == null) {
-			this.bg4LScaled = Bitmap.createScaledBitmap(bg4LZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
-			this.appContext.setBg4LScaled(this.bg4LScaled);
+		if (GameSurfaceView.bg4LScaled == null) {
+			GameSurfaceView.bg4LScaled = Bitmap.createScaledBitmap(GameSurfaceView.bg4LZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			//this.appContext.setBg4LScaled(this.bg4LScaled);
 		}
-		else {
-			this.bg4LScaled = this.appContext.getBg4LScaled();
-		}
-//		 this.bg4LScaled = Bitmap.createScaledBitmap(bg4L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-//		 this.bg4LZoomed = Bitmap.createScaledBitmap(bg4L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+//		else {
+//			this.bg4LScaled = this.appContext.getBg4LScaled();
+//		}
 
 		 
-		 if (this.appContext.getBg3LZoomed() == null){
+		 if (GameSurfaceView.bg3LZoomed == null){
 		// Bitmap bg3L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3l_bg);
-			 this.bg3LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_3l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-		 	 this.bg3LZoomed = Bitmap.createScaledBitmap(bg3LZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-		 	 this.appContext.setBg3LZoomed(this.bg3LZoomed);
+			 GameSurfaceView.bg3LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_3l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+		 	 GameSurfaceView.bg3LZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bg3LZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+		 	// this.appContext.setBg3LZoomed(this.bg3LZoomed);
 		 }
-		 else {
-			 this.bg3LZoomed = this.appContext.getBg3LZoomed();
-		 }
+	//	 else {
+	//		 this.bg3LZoomed = this.appContext.getBg3LZoomed();
+	//	 }
 		 
-		 if (this.appContext.getBg3LScaled() == null){
-			 this.bg3LScaled = Bitmap.createScaledBitmap(bg3LZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
-			 this.appContext.setBg3LScaled(this.bg3LScaled);
+		 if (GameSurfaceView.bg3LScaled == null){
+			 GameSurfaceView.bg3LScaled = Bitmap.createScaledBitmap(GameSurfaceView.bg3LZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			// this.appContext.setBg3LScaled(this.bg3LScaled);
 		 }
-		 else {
-			 this.bg3LScaled = this.appContext.getBg3LScaled();
-		 }
+	//	 else {
+	//		 this.bg3LScaled = this.appContext.getBg3LScaled();
+	//	 }
 		 
 	//	 Bitmap bg3W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_3w_bg);
-		 if (this.appContext.getBg3WZoomed() == null){
-			 this.bg3WZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_3w_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-			 this.bg3WZoomed = Bitmap.createScaledBitmap(bg3WZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-			 this.appContext.setBg3WZoomed(this.bg3WZoomed);
+		 if ( GameSurfaceView.bg3WZoomed == null){
+			 GameSurfaceView.bg3WZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_3w_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			 GameSurfaceView.bg3WZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bg3WZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			 //this.appContext.setBg3WZoomed(this.bg3WZoomed);
 		 }
-		 else {
-			 this.bg3WZoomed = this.appContext.getBg3WZoomed(); 
-		 }
+		// else {
+		//	 this.bg3WZoomed = this.appContext.getBg3WZoomed(); 
+		// }
 		 
-		 if (this.appContext.getBg3WScaled() == null) {
-			 this.bg3WScaled = Bitmap.createScaledBitmap(bg3WZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
-			 this.appContext.setBg3WScaled(this.bg3WScaled);
+		 if (GameSurfaceView.bg3WScaled == null) {
+			 GameSurfaceView.bg3WScaled = Bitmap.createScaledBitmap(GameSurfaceView.bg3WZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			 //this.appContext.setBg3WScaled(this.bg3WScaled);
 		 }
-		 else {
-			 this.bg3WScaled = this.appContext.getBg3WScaled();
-		 }
-//		 this.bg3WScaled = Bitmap.createScaledBitmap(bg3W, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-//		 this.bg3WZoomed = Bitmap.createScaledBitmap(bg3W, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+//		 else {
+//			 this.bg3WScaled = this.appContext.getBg3WScaled();
+//		 }
 
 		 
-	//	 Bitmap bg2L = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2l_bg);
-		 
-		 //Logger.d(TAG, "decodeSampledBitmapFromResource 2L target zoomed size=" + (this.zoomedTileWidth + 1) );
-		 if (this.appContext.getBg2LZoomed() == null) {
-			 this.bg2LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_2l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-				 //resize exactly
-			 this.bg2LZoomed = Bitmap.createScaledBitmap(bg2LZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
-			 this.appContext.setBg2LZoomed(this.bg2LZoomed);
+		 if (GameSurfaceView.bg2LZoomed == null) {
+			 GameSurfaceView.bg2LZoomed = decodeSampledBitmapFromResource(getResources(), R.drawable.tile_2l_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			 GameSurfaceView.bg2LZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bg2LZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
+			// this.appContext.setBg2LZoomed(this.bg2LZoomed);
 		 }
-		 else {
-			 this.bg2LZoomed = this.appContext.getBg2LZoomed();   
-		 }
+	//	 else {
+	//		 this.bg2LZoomed = this.appContext.getBg2LZoomed();   
+	//	 }
 		
 		 //Logger.d(TAG, "decodeSampledBitmapFromResource 2L actual zoomed size=" + this.bg2LZoomed.getHeight() );
-		 if (this.appContext.getBg2LScaled() == null) {
-			 this.bg2LScaled = Bitmap.createScaledBitmap(bg2LZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-			 this.appContext.setBg2LScaled(this.bg2LScaled);
+		 if ( GameSurfaceView.bg2LScaled == null) {
+			 GameSurfaceView.bg2LScaled = Bitmap.createScaledBitmap(GameSurfaceView.bg2LZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			// this.appContext.setBg2LScaled(this.bg2LScaled);
 		 }
-		 else {
-			 this.bg2LScaled = this.appContext.getBg2LScaled();
-		 }
-
-//		 this.bg2LScaled = Bitmap.createScaledBitmap(bg2L, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-//		 this.bg2LZoomed = Bitmap.createScaledBitmap(bg2L, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+//		 else {
+//			 this.bg2LScaled = this.appContext.getBg2LScaled();
+//		 }
 
 		 
-		//Bitmap bg2W = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2w_bg);
-		 if (this.appContext.getBg2WZoomed() == null) {
+		 if (GameSurfaceView.bg2WZoomed == null) {
 			 //this.bg2WZoomed = BitmapFactory.decodeResource(getResources(), R.drawable.tile_2w_bg);
-			 this.bg2WZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_2w_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-			 this.bg2WZoomed = Bitmap.createScaledBitmap(bg2WZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
-			 this.appContext.setBg2WZoomed(this.bg2WZoomed);
+			 GameSurfaceView.bg2WZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_2w_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
+			 GameSurfaceView.bg2WZoomed = Bitmap.createScaledBitmap(GameSurfaceView.bg2WZoomed, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1, false);
+			// this.appContext.setBg2WZoomed(this.bg2WZoomed);
 		 }
-		 else {
-			 this.bg2WZoomed = this.appContext.getBg2WZoomed();
-		 }
+//		 else {
+//			 this.bg2WZoomed = this.appContext.getBg2WZoomed();
+//		 }
 		 
-		 if (this.appContext.getBg2WScaled() == null) {
-			 this.bg2WScaled = Bitmap.createScaledBitmap(bg2WZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
-			 this.appContext.setBg2WScaled(this.bg2WScaled);
+		 if (GameSurfaceView.bg2WScaled == null) {
+			 GameSurfaceView.bg2WScaled = Bitmap.createScaledBitmap( GameSurfaceView.bg2WZoomed, this.fullViewTileWidth + 1, this.fullViewTileWidth + 1, false);
+			// this.appContext.setBg2WScaled(this.bg2WScaled);
 		 }
-		 else {
-			 this.bg2WScaled = this.appContext.getBg2WScaled();
-		 }
-		 
-		// Bitmap bgStarter = BitmapFactory.decodeResource(getResources(), R.drawable.tile_starter_bg);
-		 
-		 if (this.appContext.getBgStarterZoomed() == null) {
-			 this.bgStarterZoomed = BitmapFactory.decodeResource(getResources(), R.drawable.tile_starter_bg);
+//		 else {
+//			 this.bg2WScaled = this.appContext.getBg2WScaled();
+//		 }
+ 		 
+		 if (GameSurfaceView.bgStarterZoomed == null) {
+			 GameSurfaceView.bgStarterZoomed = BitmapFactory.decodeResource(getResources(), R.drawable.tile_starter_bg);
 			// this.bgStarterZoomed =  decodeSampledBitmapFromResource(getResources(), R.drawable.tile_starter_bg, this.zoomedTileWidth + 1, this.zoomedTileWidth + 1);
-			 this.bgStarterZoomed = Bitmap.createScaledBitmap(bgStarterZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
-			 this.appContext.setBgStarterZoomed(this.bgStarterZoomed);
+			 GameSurfaceView.bgStarterZoomed = Bitmap.createScaledBitmap( GameSurfaceView.bgStarterZoomed, this.zoomedTileWidth + 1 , this.zoomedTileWidth + 1, false);
+			// this.appContext.setBgStarterZoomed(this.bgStarterZoomed);
 		 }
-		 else {
-			 this.bgStarterZoomed = this.appContext.getBgStarterZoomed();
-		 }
+		// else {
+		//	 this.bgStarterZoomed = this.appContext.getBgStarterZoomed();
+		// }
 		 
-		 if (this.appContext.getBgStarterScaled() == null) {	 
-			 this.bgStarterScaled = Bitmap.createScaledBitmap(bgStarterZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
-			 this.appContext.setBgStarterScaled(this.bgStarterScaled);
+		 if (GameSurfaceView.bgStarterScaled == null) {	 
+			 GameSurfaceView.bgStarterScaled = Bitmap.createScaledBitmap( GameSurfaceView.bgStarterZoomed, this.fullViewTileWidth + 1 , this.fullViewTileWidth + 1, false);
+			// this.appContext.setBgStarterScaled(this.bgStarterScaled);
 		 }
-		 else {
-			 this.bgStarterScaled = this.appContext.getBgStarterScaled();
-		 }
+//		 else {
+//			 this.bgStarterScaled = this.appContext.getBgStarterScaled();
+//		 }
 		
 		 this.parent.captureTime("SetDerivedValues after bitmap loads");
 		//Toast t = Toast.makeText(context, "Hello " +  this.height + " " + this.fullWidth + " " + getMeasuredHeight() , Toast.LENGTH_LONG);   
@@ -882,6 +863,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 public void onDestroy(){
 		 Log.w(TAG, "onDestroy called");
 		this.surfaceDestroyed(this.surfaceHolder); 
+		this.parent = null;
 	 }
 	
 	 public void onWindowFocusChanged(){
@@ -1583,7 +1565,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	 private void resetPointsView(){
 		 if (!this.parent.getGame().isCompleted()){
 			 try{
-					PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService, true);
+					PlacedResult placedResult = GameService.checkPlayRules(parent, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, true);
 					this.parent.setPointsView(placedResult.getTotalPoints());
 				}
 				catch (DesignByContractException e){
@@ -1878,7 +1860,8 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				//	 this.isZoomed = false; ///turn off zoom since we are handling now
 				// }
 				 
-			//	 Logger.d(TAG, "onDraw this.isZoomed == true");
+			   Logger.d(TAG, "onDraw this.shuffleRedraw=" + this.shuffleRedraw);
+			   Logger.d(TAG, "onDraw this.trayTiles.get(0).getxPosition()=" + this.trayTiles.get(0).getxPosition() + " " + this.trayTiles.get(0).getxPositionDragging());
 				 //a tray tile has been tapped down
 				 if (this.currentTouchMotion == MotionEvent.ACTION_DOWN && 
 						 ((this.getCurrentTrayTile() != null && this.getCurrentTrayTile().isDragging()) || this.isBoardTileDragging())){
@@ -1889,10 +1872,10 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 else if (this.shuffleRedraw || this.recallLettersRedraw || this.afterPlayRedraw || this.trayTileTapped){
 					 //these actions just mean the board should be redrawn as is
 					 this.drawBoardOnMove(canvas, 0, 0);
-					 this.shuffleRedraw = false;
+				//	 this.shuffleRedraw = false;
 				//	 this.recallLettersRedraw = false;
-					 this.afterPlayRedraw = false;
-					 this.trayTileTapped = false;
+				//	 this.afterPlayRedraw = false;
+				//	 this.trayTileTapped = false;
 				 }
 				 else if (this.isMomentum){
 					 Log.w(TAG,"onDraw drawMomentumScroll about to be called");
@@ -2079,7 +2062,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     
 	     pValue.setTypeface(Typeface.SANS_SERIF);
 	     Rect boundsValue = new Rect();
-	     String value = Integer.toString(this.alphabetService.getLetterValue(letter));
+	     String value = Integer.toString(AlphabetService.getLetterValue(letter));
 	     pValue.getTextBounds(value, 0, value.length(), boundsValue);
 	     
 	     //find the midpoint and scoot over 5% to the left and 5% down
@@ -2101,7 +2084,9 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 	
 	private void drawBoardOnMove(Canvas canvas, int leftDiff, int topDiff){
-		Logger.d(TAG, "drawBoardOnMove");
+		Logger.d(TAG, "drawBoardOnMove leftDiff=" + leftDiff + " topDiff=" + topDiff);
+		
+		Logger.d(TAG, "drawBoardOnMove this.trayTiles.get(0).getxPosition()=" + this.trayTiles.get(0).getxPosition() + " " + this.trayTiles.get(0).getxPositionDragging());
 		 this.readyToDraw = false;
 		 this.parent.captureTime(TAG + " drawBoardOnMove started");
 		 boolean setReadyToDraw = false;
@@ -2539,7 +2524,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	
 	
 	private void drawTray(Canvas canvas){
-		Logger.d(TAG, "drawTray");
+		Logger.d(TAG, "drawTray called");
 		
 		Paint pBorder = new Paint(); 
 		pBorder.setColor(Color.parseColor(this.parent.getString(R.color.game_board_tray_border)));
@@ -2555,7 +2540,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	     
 	    // this.trayAreaTop = boundsBorder.top;
 	     
-		canvas.drawBitmap(this.trayBackground, 0, this.trayTop - TRAY_VERTICAL_MARGIN, null);
+		canvas.drawBitmap(GameSurfaceView.bgTrayBackground, 0, this.trayTop - TRAY_VERTICAL_MARGIN, null);
 		 
 		for (TrayTile tile : this.trayTiles) { 
 			 //canvas.drawBitmap(tile.getCurrentBitmap(),tile.getxPosition(), tile.getyPosition(), null);
@@ -2587,7 +2572,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			     
 			     pValue.setTypeface(Typeface.SANS_SERIF);
 			     Rect boundsValue = new Rect();
-			     String value = Integer.toString(this.alphabetService.getLetterValue(tile.getCurrentLetter()));
+			     String value = Integer.toString(AlphabetService.getLetterValue(tile.getCurrentLetter()));
 			     pValue.getTextBounds(value, 0, value.length(), boundsValue);
 			     
 			     //find the midpoint and scoot over 5% to the left and 5% down
@@ -2693,7 +2678,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
             tile.setLastPlayed(false);
 
 			if (tile.getPlacedLetter().length() > 0){
-				 tile.setOriginalBitmap(this.bgBaseScaled); //this will change as default bonus and played tiles are incorporated
+				 tile.setOriginalBitmap(GameSurfaceView.bgBaseScaled); //this will change as default bonus and played tiles are incorporated
 				 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(this.bgBaseZoomed); }
 				 
 				 tile.setOriginalLetter(tile.getPlacedLetter());
@@ -2727,7 +2712,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	public void onPlayClick(){
 		try{
 			this.parent.captureTime("onPlayClick checkPlayRules starting");
-			final PlacedResult placedResult = GameService.checkPlayRules(context, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, this.alphabetService, this.wordService, false);
+			final PlacedResult placedResult = GameService.checkPlayRules(parent, this.defaultLayout, this.parent.getGame(), this.tiles, this.trayTiles, false);
 
 			this.parent.onFinishPlayNoErrors(placedResult);
 
@@ -2753,11 +2738,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				    .create();
 				*/
 				//user is skipping this turn
-				final CustomButtonDialog dialog = new CustomButtonDialog(context, 
-		    			context.getString(R.string.game_play_skip_title), 
-		    			context.getString(R.string.game_play_skip_confirmation_text),
-		    			context.getString(R.string.yes),
-		    			context.getString(R.string.no));
+				final CustomButtonDialog dialog = new CustomButtonDialog(parent, 
+						parent.getString(R.string.game_play_skip_title), 
+						parent.getString(R.string.game_play_skip_confirmation_text),
+						parent.getString(R.string.yes),
+						parent.getString(R.string.no));
 		    	
 		    	dialog.setOnOKClickListener(new View.OnClickListener() {
 			 		@Override
@@ -2799,11 +2784,11 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 			}
 			else{
 				//loop through placed words and show confirmation messages 
-				final CustomButtonDialog dialog = new CustomButtonDialog(context, 
-		    			context.getString(R.string.game_play_title), 
-		    			GameService.getPlacedWordsMessage(context, placedResult.getPlacedWords()),
-		    			context.getString(R.string.yes),
-		    			context.getString(R.string.no),
+				final CustomButtonDialog dialog = new CustomButtonDialog(parent, 
+						parent.getString(R.string.game_play_title), 
+		    			GameService.getPlacedWordsMessage(parent, placedResult.getPlacedWords()),
+		    			parent.getString(R.string.yes),
+		    			parent.getString(R.string.no),
 		    			R.layout.played_word_dialog);
 		    	
 		    	dialog.setOnOKClickListener(new View.OnClickListener() {
@@ -2864,7 +2849,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 	}
 	
 	public void shuffleTray(){
-		
+		Logger.d(TAG, "shuffleTray called");
 		//make sure that tray is full of letters (the number that are left in the player's tray from the server)
 		if (!this.isTrayFull()){
 			return;
@@ -2959,7 +2944,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 				 PlayedTile playedTile = this.parent.getGameState().getPlayedTileByPosition(tile.getId());
 				 if (playedTile != null){
 					 tile.setOriginalBitmap(bgBaseScaled); //this will change as default bonus and played tiles are incorporated
-					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgBaseZoomed); }
+					 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(GameSurfaceView.bgBaseZoomed); }
 	
 					 tile.setOriginalLetter(playedTile.getLetter());
 					 //was this tile placed in the previous turn???
@@ -2972,36 +2957,36 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 					 switch (TileLayoutService.getDefaultTile(tile.getId(), this.defaultLayout)) {
 					 case FourLetter:
 						 tile.setOriginalBitmap(bg4LScaled); //this will change as default bonus and played tiles are incorporated
-						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg4LZoomed); }
-						 tile.setOriginalText(this.context.getString(R.string.tile_4L));
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(GameSurfaceView.bg4LZoomed); }
+						 tile.setOriginalText(this.parent.getString(R.string.tile_4L));
 						 break;
 					 case ThreeWord:
 						 tile.setOriginalBitmap(bg3WScaled); //this will change as default bonus and played tiles are incorporated
-						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg3WZoomed); }
-						 tile.setOriginalText(this.context.getString(R.string.tile_3W));
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(GameSurfaceView.bg3WZoomed); }
+						 tile.setOriginalText(this.parent.getString(R.string.tile_3W));
 						 break;
 					 case ThreeLetter:
 						 tile.setOriginalBitmap(bg3LScaled); //this will change as default bonus and played tiles are incorporated
-						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg3LZoomed); }
-						 tile.setOriginalText(this.context.getString(R.string.tile_3L));
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(GameSurfaceView.bg3LZoomed); }
+						 tile.setOriginalText(this.parent.getString(R.string.tile_3L));
 						 break;
 					 case TwoWord:
 						 tile.setOriginalBitmap(bg2WScaled); //this will change as default bonus and played tiles are incorporated
-						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg2WZoomed); }
-						 tile.setOriginalText(this.context.getString(R.string.tile_2W));
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(GameSurfaceView.bg2WZoomed); }
+						 tile.setOriginalText(this.parent.getString(R.string.tile_2W));
 						 break;
 					 case TwoLetter:
 						 tile.setOriginalBitmap(bg2LScaled); //this will change as default bonus and played tiles are incorporated
-						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bg2LZoomed); }
-						 tile.setOriginalText(this.context.getString(R.string.tile_2L));
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(GameSurfaceView.bg2LZoomed); }
+						 tile.setOriginalText(this.parent.getString(R.string.tile_2L));
 						 break;
 					 case Starter:
 						 tile.setOriginalBitmap(bgStarterScaled); //this will change as default bonus and played tiles are incorporated
-						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgStarterZoomed); }
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(GameSurfaceView.bgStarterZoomed); }
 						 break;
 					 case None:
 						 tile.setOriginalBitmap(bgBaseScaled); //this will change as default bonus and played tiles are incorporated
-						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(bgBaseZoomed); }
+						 if (this.isZoomAllowed == true){ tile.setOriginalBitmapZoomed(GameSurfaceView.bgBaseZoomed); }
 						 break;
 					 }
 				 }
@@ -3314,7 +3299,7 @@ public class GameSurfaceView extends SurfaceView  implements SurfaceHolder.Callb
 		     
 		     pValue.setTypeface(Typeface.SANS_SERIF);
 		     Rect boundsValue = new Rect();
-		     String value = Integer.toString(this.alphabetService.getLetterValue(letter));
+		     String value = Integer.toString(AlphabetService.getLetterValue(letter));
 		     pValue.getTextBounds(value, 0, value.length(), boundsValue);
 		     
 		     //find the midpoint and scoot over 5% to the left and 5% down

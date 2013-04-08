@@ -30,6 +30,11 @@
 				       	android:id="@+id/ivPlayerBadge_1"
 					   	style="@style/ScoreboardBadgeStyle"
 				   />
+    		     <ImageView  
+				       	android:id="@+id/ivWhiteFlag_1"
+				       	android:src="@drawable/white_flag"
+					   	style="@style/ScoreboardBadgeStyle"
+				   />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
 		            android:id="@+id/tvPlayer_1"
 		            style="@style/ScoreboardPlayerStyle"
@@ -44,6 +49,11 @@
 				   />
 		         <ImageView 
 				       	android:id="@+id/ivPlayerBadge_3"
+					   	style="@style/ScoreboardBadgeStyle"
+				   />
+		         <ImageView  
+				       	android:id="@+id/ivWhiteFlag_3"
+				       	android:src="@drawable/white_flag"
 					   	style="@style/ScoreboardBadgeStyle"
 				   />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
@@ -64,6 +74,11 @@
 				       	android:id="@+id/ivPlayerBadge_2"
 					   	style="@style/ScoreboardBadgeStyle" 
 				   />
+		         <ImageView  
+				       	android:id="@+id/ivWhiteFlag_2"
+				       	android:src="@drawable/white_flag"
+					   	style="@style/ScoreboardBadgeStyle"
+				   />
 		        <com.riotapps.word.ui.ScoreboardFontTextView
 		            android:id="@+id/tvPlayer_2"
 		            style="@style/ScoreboardPlayerStyle"
@@ -78,6 +93,11 @@
 				/>
 		       <ImageView 
 				       	android:id="@+id/ivPlayerBadge_4"
+					   	style="@style/ScoreboardBadgeStyle"
+				   />
+		       <ImageView  
+				       	android:id="@+id/ivWhiteFlag_4"
+				       	android:src="@drawable/white_flag"
 					   	style="@style/ScoreboardBadgeStyle"
 				   />
 		        <com.riotapps.word.ui.ScoreboardFontTextView

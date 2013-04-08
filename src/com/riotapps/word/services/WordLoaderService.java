@@ -1,5 +1,6 @@
 package com.riotapps.word.services;
 
+import com.riotapps.word.hooks.GameService;
 import com.riotapps.word.hooks.WordService;
 import com.riotapps.word.utils.ApplicationContext;
 import com.riotapps.word.utils.Constants;
@@ -64,84 +65,109 @@ public class WordLoaderService extends Service {
 
          @Override
          protected String doInBackground(String... params) {
-        	   ApplicationContext appContext = (ApplicationContext)getApplicationContext();
+        	//   ApplicationContext appContext = (ApplicationContext)getApplicationContext();
         	   try{
-        		   appContext.getWordService().isWordValid("aaa");     			  
+        		   WordService.isWordValid("aaa"); 
+        		  // appContext.getWordService().isWordValid("aaa");     			  
         		   captureTime("letter a - loaded");
         		   
-        		   appContext.getWordService().isWordValid("bbb");
+        		   WordService.isWordValid("bbb");
+        		   //appContext.getWordService().isWordValid("bbb");
         		   captureTime("letter b - loaded");
         		   
-        		   appContext.getWordService().isWordValid("ccc");     			  
+        		   WordService.isWordValid("ccc");
+        		  // appContext.getWordService().isWordValid("ccc");     			  
         		   captureTime("letter c - loaded");
         		   
-        		   appContext.getWordService().isWordValid("ddd");
+        		   WordService.isWordValid("ddd");
+        		 //  appContext.getWordService().isWordValid("ddd");
         		   captureTime("letter d - loaded");
         		   
-        		   appContext.getWordService().isWordValid("eee");     			  
+        		   WordService.isWordValid("eee");
+        		 //  appContext.getWordService().isWordValid("eee");     			  
         		   captureTime("letter e - loaded");
         		   
-        		   appContext.getWordService().isWordValid("fff");
+        		   WordService.isWordValid("fff");
+        		//  appContext.getWordService().isWordValid("fff");
         		   captureTime("letter f - loaded");
         		   
-        		   appContext.getWordService().isWordValid("ggg");     			  
+        		   WordService.isWordValid("gg");
+        		//   appContext.getWordService().isWordValid("ggg");     			  
         		   captureTime("letter g - loaded");
         		   
-        		   appContext.getWordService().isWordValid("hhh");
+        		   WordService.isWordValid("hhh");
         		   captureTime("letter h - loaded");
         		   
-        		   appContext.getWordService().isWordValid("iii");     			  
+        		   WordService.isWordValid("iii");
+        		 //  appContext.getWordService().isWordValid("iii");     			  
         		   captureTime("letter i - loaded");
         		   
-        		   appContext.getWordService().isWordValid("jjj");
+        		   WordService.isWordValid("jjj");
+        		  // appContext.getWordService().isWordValid("jjj");
         		   captureTime("letter j - loaded");
         		   
-        		   appContext.getWordService().isWordValid("kkk");     			  
+        		   WordService.isWordValid("kkk");
+        		//   appContext.getWordService().isWordValid("kkk");     			  
         		   captureTime("letter k - loaded");
         		   
-        		   appContext.getWordService().isWordValid("lll");
+        		   WordService.isWordValid("lll");
+        		//   appContext.getWordService().isWordValid("lll");
         		   captureTime("letter l - loaded");
         		   
-        		   appContext.getWordService().isWordValid("mmm");     			  
+        		   WordService.isWordValid("mmm");
+        		 ///  appContext.getWordService().isWordValid("mmm");     			  
         		   captureTime("letter m - loaded");
-        		   
-        		   appContext.getWordService().isWordValid("nnn");
+        		 
+        		   WordService.isWordValid("nnn");
+        		 //  appContext.getWordService().isWordValid("nnn");
         		   captureTime("letter n - loaded");
         		   
-        		   appContext.getWordService().isWordValid("ooo");     			  
+        		   WordService.isWordValid("ooo");
+        		 //  appContext.getWordService().isWordValid("ooo");     			  
         		   captureTime("letter o - loaded");
         		   
-        		   appContext.getWordService().isWordValid("ppp");
+        		   WordService.isWordValid("ppp");
+        		   //appContext.getWordService().isWordValid("ppp");
         		   captureTime("letter p - loaded");
         		   
-        		   appContext.getWordService().isWordValid("qqq");     			  
+        		   WordService.isWordValid("qqq");
+        		   //appContext.getWordService().isWordValid("qqq");     			  
         		   captureTime("letter q - loaded");
         		   
-        		   appContext.getWordService().isWordValid("rrr");
+        		   WordService.isWordValid("rrr");
+        		 ///  appContext.getWordService().isWordValid("rrr");
         		   captureTime("letter r - loaded");
         		   
-        		   appContext.getWordService().isWordValid("sss");     			  
+        		   WordService.isWordValid("sss");
+        		//   appContext.getWordService().isWordValid("sss");     			  
         		   captureTime("letter s - loaded");
         		   
-        		   appContext.getWordService().isWordValid("ttt");
+        		   WordService.isWordValid("ttt");
+        		  // appContext.getWordService().isWordValid("ttt");
         		   captureTime("letter t - loaded");
         		   
-        		   appContext.getWordService().isWordValid("uuu");     			  
+        		   WordService.isWordValid("uuu");
+        		 // appContext.getWordService().isWordValid("uuu");     			  
         		   captureTime("letter u - loaded");
         		   
-        		   appContext.getWordService().isWordValid("vvv");
+        		   WordService.isWordValid("vvv");
+        		///   appContext.getWordService().isWordValid("vvv");
         		   captureTime("letter v - loaded");
          		   
-        		   appContext.getWordService().isWordValid("www");
+        		   WordService.isWordValid("www");
+        		//   appContext.getWordService().isWordValid("www");
         		   captureTime("letter w - loaded");
         		   
-        		   appContext.getWordService().isWordValid("xxx");     			  
+        		   WordService.isWordValid("xxx");
+        		///  appContext.getWordService().isWordValid("xxx");     			  
         		   captureTime("letter x- loaded");
         		   
-        		   appContext.getWordService().isWordValid("yyy");
+        		   WordService.isWordValid("yyy");
+        	///	   appContext.getWordService().isWordValid("yyy");
         		   captureTime("letter y - loaded");
-        		   
-        		   appContext.getWordService().isWordValid("zzz");     			  
+        		
+        		   WordService.isWordValid("zzz");
+        		///   appContext.getWordService().isWordValid("zzz");     			  
         		   captureTime("letter z - loaded");  		   
         	   
         	   }

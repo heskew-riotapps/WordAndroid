@@ -174,10 +174,12 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     }
     
     private void checkAlert(){
-    	if (this.player.getLatestAlerts().size() > 0){
-	    	 if (!PlayerService.checkAlertAlreadyShown(this, this.player.getLatestAlerts().get(0).getId(), this.player.getLatestAlerts().get(0).getActivationDateString())) {	
-				 DialogManager.SetupAlert(this, !this.player.getLatestAlerts().get(0).getTitle().equals("") ? this.player.getLatestAlerts().get(0).getTitle() : this.getString(R.string.alert_default_title), this.player.getLatestAlerts().get(0).getText());
-			 }
+    	if (this.player != null){
+	    	if (this.player.getLatestAlerts().size() > 0){
+		    	 if (!PlayerService.checkAlertAlreadyShown(this, this.player.getLatestAlerts().get(0).getId(), this.player.getLatestAlerts().get(0).getActivationDateString())) {	
+					 DialogManager.SetupAlert(this, !this.player.getLatestAlerts().get(0).getTitle().equals("") ? this.player.getLatestAlerts().get(0).getTitle() : this.getString(R.string.alert_default_title), this.player.getLatestAlerts().get(0).getText());
+				 }
+	    	}
     	}
     }
     
@@ -187,6 +189,7 @@ public class MainLanding extends FragmentActivity implements View.OnClickListene
     
     private void trackEvent(String action, String label, long value){
   		try{
+  			Logger.d(TAG, "trackEvent this.tracker is null=" + (this.tracker == null));
   			this.tracker.sendEvent(Constants.TRACKER_CATEGORY_MAIN_LANDING, action,label, value);
   		}
   		catch (Exception e){

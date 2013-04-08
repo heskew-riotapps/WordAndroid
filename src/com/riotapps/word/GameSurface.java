@@ -204,8 +204,8 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gamesurface);
-		ApplicationContext appContext = (ApplicationContext)this.getApplicationContext();
-	    this.player = appContext.getPlayer(); //PlayerService.getPlayerFromLocal(); 
+		//ApplicationContext appContext = (ApplicationContext)this.getApplicationContext();
+	    this.player = ((ApplicationContext)this.getApplicationContext()).getPlayer(); //PlayerService.getPlayerFromLocal(); 
 		this.tvNumPoints = (TextView)findViewById(R.id.tvNumPoints);
  
 		 Display display = getWindowManager().getDefaultDisplay(); 
@@ -257,7 +257,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		//appContext.getWordService()
 		
 	 	this.captureTime("gamesurfaceview starting");
-		this.gameSurfaceView.construct(this, this.alphabetService, appContext.getWordService(), this, appContext);
+		this.gameSurfaceView.construct(this);
 		//this.gameSurfaceView.setParent(this);
 	 	this.captureTime("gamesurfaceview started");		
 	
@@ -306,13 +306,13 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		
 	 	boolean isAdMob = Constants.INTERSTITIAL_ADMOB;
 	 	boolean isChartBoost = Constants.INTERSTITIAL_CHARTBOOST;
-		boolean isRevMob = Constants.INTERSTITIAL_REVMOB;
+		boolean isRevMob = false; //Constants.INTERSTITIAL_REVMOB;
 		final int useRevMob = 0;
 		
 	 	if (!Constants.HIDE_ALL_ADS)
 	 	{
 	 		//assign either chartboost or revmob randomly
-	 		if (isChartBoost && isRevMob){
+	 		/*if (isChartBoost && isRevMob){
 	 			
 	 			int coinFlip = (int)(Math.random() * 2);
  
@@ -323,13 +323,14 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		 			isRevMob = false;
 				}
 			}
-
+*/
 	 		if (isRevMob){
 	 			Logger.d(TAG, "setupAdServer isRevMob=true");
 	 			
 	 			
 		 		this.isRevMobActive = true;
 		 		this.revmob = RevMob.start(this, this.getString(R.string.rev_mob_app_id));
+		 
 	 		}
 	 		else if (isChartBoost){
 	 			Logger.d(TAG, "setupAdServer isCharBoost=true");
@@ -854,6 +855,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		Logger.d(TAG, "onDestroy called");
 		
 		this.gameSurfaceView.onDestroy();
+	//this.appContext = null;
 		
 	//	if (this.wordLoaderThread != null){
 	//		this.wordLoaderThread.interrupt();
@@ -903,6 +905,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		}
 		
 		if (this.isRevMobActive){
+		//	this.revmob.
 			this.revMobFullScreen = null;
 			this.revmobListener = null;
 			this.revmob = null;		
@@ -1194,6 +1197,7 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 		    	    	
 		    	switch(v.getId()){  
 			        case R.id.bShuffle:  
+			        	Logger.d(TAG, "bShuffle clicked");
 			        	 this.trackEvent(Constants.TRACKER_CATEGORY_GAMEBOARD, Constants.TRACKER_ACTION_BUTTON_TAPPED,
 				        			Constants.TRACKER_LABEL_SHUFFLE, Constants.TRACKER_DEFAULT_OPTION_VALUE);
 			        	this.gameSurfaceView.shuffleTray();
@@ -2782,7 +2786,9 @@ public class GameSurface extends FragmentActivity implements View.OnClickListene
 				this.tracker.sendEvent(category, action,label, value);
 			}
 			catch (Exception e){
-	  			Logger.d(TAG, "trackEvent e=" + e.toString());
+	  			Logger.d(TAG, "trackEvent category=" + (category == null ? "null" : category) + " action=" + (action == null ? "null" : action) 
+	  					 + " label=" + (label == null ? "null" : label)  + " value=" + value +" e=" + e.toString());
+	  			
 			}
 		}
 }

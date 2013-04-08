@@ -60,7 +60,8 @@ public class Game implements Parcelable, Comparable<Game> {
 	private boolean showCompletionAlert;
 	private boolean refreshedFromChat;
 
-	
+	private List<PlayerGame> activePlayerGames = null;
+	private List<PlayerGame> opponentPlayerGames = null;
 	
 	private Player _lastTurnPlayer;
 	private PlayerGame _contextPlayerGame;
@@ -114,7 +115,9 @@ public class Game implements Parcelable, Comparable<Game> {
 
 	private Player getLastTurnPlayer(){
 		if (this._lastTurnPlayer == null) {
-			for (PlayerGame pg : this.getPlayerGames()){
+		   for (PlayerGame pg : this.getPlayerGames()){
+
+		//	for (PlayerGame pg : this.getActivePlayerGames()){
 				if (pg.getPlayer().getId().equals(this.lastTurnPlayerId)){
 					this._lastTurnPlayer = pg.getPlayer();
 				}
@@ -224,6 +227,24 @@ public class Game implements Parcelable, Comparable<Game> {
 	public List<PlayerGame> getPlayerGames() {
 		return playerGames;
 	}
+	
+	public List<PlayerGame> getActivePlayerGames() {
+		if (this.activePlayerGames == null){
+			this.activePlayerGames = new ArrayList<PlayerGame>();
+		 	
+			int x = 1;
+			 for (PlayerGame pg : this.getPlayerGames()){ 
+	        	if ( pg.isActive()){
+	        		//adjust game order if needed, this is because the scoreboard needs the proper relative order, with no missing values
+	        		//they should always from the server in playerOrder, so just readjust that order by bypassig the declined players
+	        		pg.setPlayerOrder(x);
+	        		this.activePlayerGames.add(pg);
+	        		x += 1;
+	        	}
+			}
+		}
+	    return this.activePlayerGames;
+	}
 
 	public List<PlayedTile> getPlayedTiles() {
 		return playedTiles;
@@ -252,14 +273,41 @@ public class Game implements Parcelable, Comparable<Game> {
 	
 	public List<PlayerGame> getOpponentPlayerGames(Player contextPlayer){ 
 		//assume the context player is the first playergame
-		List<PlayerGame> ret = new ArrayList<PlayerGame>();
-		
-		 for (PlayerGame pg : this.getPlayerGames()){ 
-         	if (!pg.getPlayer().getId().equals(contextPlayer.getId())){
-         		ret.add(pg);
-         	}
+		if (this.opponentPlayerGames == null){
+			this.opponentPlayerGames = new ArrayList<PlayerGame>();
+
+			//for an active game we don't want any declined players in the mix
+			if (this.isActive()){
+				 for (PlayerGame pg : this.getPlayerGames()){ 
+		         	if (!pg.getPlayer().getId().equals(contextPlayer.getId()) && 
+		         			pg.isActive()){
+		         		this.opponentPlayerGames.add(pg);
+		         	}
+				 }
+			}
+			else {
+				//for completed games, only show those that did not decline
+				for (PlayerGame pg : this.getPlayerGames()){ 
+		         	if (!pg.getPlayer().getId().equals(contextPlayer.getId()) && 
+		         			pg.isActive()){
+		         	
+		         		this.opponentPlayerGames.add(pg);
+		         	}
+				 }
+			
+				if (this.opponentPlayerGames.size() == 0){
+					//for completed games, just in case all of the opponents declined, go ahead and return them,
+					//just so the list has opponents in it 
+					for (PlayerGame pg : this.getPlayerGames()){ 
+			         	if (!pg.getPlayer().getId().equals(contextPlayer.getId())){
+			         		this.opponentPlayerGames.add(pg);
+			         	}
+					 }
+					
+				}
+			}
 		}
-		  return ret;
+		return this.opponentPlayerGames;
 	}
 	
 	public boolean isContextPlayerStarter(Player contextPlayer){ 
@@ -465,6 +513,10 @@ public class Game implements Parcelable, Comparable<Game> {
 		return this.status == 3 || this.getStatus() == 4;
 	}
 	
+	public boolean isActive(){
+		return this.status == 1;
+	}
+	
 	public int getLastTurnAction() {
 		return lastTurnAction;
 	}
@@ -498,7 +550,7 @@ public class Game implements Parcelable, Comparable<Game> {
 		PlayerGame contextPlayerGame = this.getContextPlayerGame(contextPlayerId);
 
 		//Logger.d(TAG, "getLastActionText lastAction=" + this.lastTurnAction + " " + this.getLastAction().toString() + " isContext=" + isContext);
-
+		Logger.d(TAG, "getLastActionText this.getStatus() ()=" + this.getStatus() );
 		if (this.getStatus() == 3) { //game over
 			if (this.getNumActiveOpponents() + 1 == 2){
 				PlayerGame singleOpponent = this.getOpponentPlayerGames(contextPlayerGame.getPlayer()).get(0);
@@ -538,6 +590,7 @@ public class Game implements Parcelable, Comparable<Game> {
 			return context.getString(R.string.game_last_action_declined);
 		}
 		else{
+			Logger.d(TAG, "getLastActionText this.getLastAction()=" + this.getLastAction());
 			switch (this.getLastAction()){
 				case ONE_LETTER_SWAPPED:
 					if (isContext){
@@ -666,7 +719,14 @@ public class Game implements Parcelable, Comparable<Game> {
 					}
 					else{
 						return String.format(context.getString(R.string.game_last_action_resigned), opponentName);				
-					}		
+					}
+				case DECLINED: 
+					if (isContext){
+						return context.getString(R.string.game_last_action_declined_game_active_context);
+					}
+					else{
+						return String.format(context.getString(R.string.game_last_action_declined_game_active), opponentName);				
+					}
 				
 				case CANCELLED:
 					return "cancelled"; ///probably not associated with game action, more of a pg status
@@ -780,7 +840,7 @@ public class Game implements Parcelable, Comparable<Game> {
 			 }
 		}
 		else if (this.getStatus() == 4) { //declined{
-			return String.format(context.getString(R.string.game_last_action_list_declined), timeSince, opponentName);
+			return String.format(context.getString(R.string.game_last_action_list_declined), opponentName, timeSince);
 		}
 		else {
 				switch (this.getLastAction()){
@@ -914,6 +974,13 @@ public class Game implements Parcelable, Comparable<Game> {
 							return String.format(context.getString(R.string.game_last_action_list_resigned), timeSince, this.getLastTurnPlayer().getAbbreviatedName());				
 						}	
 						
+					case DECLINED: 
+						if (isContext){
+							return context.getString(R.string.game_last_action_list_declined_context);
+						}
+						else{
+							return String.format(context.getString(R.string.game_last_action_list_declined), opponentName);				
+						}
 					case CANCELLED:
 						return "cancelled"; ///probably not associated with game action, more of a pg status
 						

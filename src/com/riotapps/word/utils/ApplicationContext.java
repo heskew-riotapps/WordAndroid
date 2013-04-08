@@ -1,25 +1,18 @@
 package com.riotapps.word.utils;
  
-import com.riotapps.word.GameSurface;
-import com.riotapps.word.R;
 import com.riotapps.word.hooks.Player;
 import com.riotapps.word.hooks.PlayerService;
 import com.riotapps.word.hooks.WordService;
 
-import android.R.integer;
 import android.app.Application;
 import android.content.Context;
-import android.content.res.Resources.NotFoundException;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.util.Log;
-import android.view.ViewGroup.LayoutParams;
 
 public class ApplicationContext extends Application{
 	private static final String TAG = ApplicationContext.class.getSimpleName();
     private static Context context;
     private WordService wordService;
-    
+    /*
     private Bitmap bgPlacedTileFull;
 	private Bitmap bgPlacedTileZoomed;
 	private Bitmap bgPlayedTileFull;
@@ -45,6 +38,8 @@ public class ApplicationContext extends Application{
 	private Bitmap bgTrayEmptyScaled = null;
 	private Bitmap bgTrayBaseDragging = null;
 	private Bitmap bgTrayBackground = null;
+	*/
+	
 	private static Typeface mainFontTypeface;
 	private static Typeface scoreboardFontTypeface;
 	private static Typeface scoreboardButtonFontTypeface;
@@ -165,7 +160,7 @@ public class ApplicationContext extends Application{
 	public void setWordService(WordService wordService) {
 		this.wordService = wordService;
 	}
-
+/*
 	public Bitmap getBgPlacedTileFull() {
 		return bgPlacedTileFull;
 	}
@@ -357,7 +352,7 @@ public class ApplicationContext extends Application{
 	public void setBgTrayBackground(Bitmap bgTrayBackground) {
 		this.bgTrayBackground = bgTrayBackground;
 	}
-
+*/
  
     
     
